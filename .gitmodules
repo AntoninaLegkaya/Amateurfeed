@@ -1,0 +1,3 @@
+[submodule "common-library"]
+	path = common-library
+	url = git@gitlab.kharkov.dbbest.com:android/android-common-library.git
