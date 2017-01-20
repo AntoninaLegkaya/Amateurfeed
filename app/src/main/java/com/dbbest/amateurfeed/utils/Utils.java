@@ -17,11 +17,23 @@ public class Utils {
         return false;
     }
 
-    public static boolean isFirstNameValid(String firstName) {
+    public static boolean isFullNameValid(String firstName) {
         return false;
     }
 
-    public static boolean isLastNameValid(String lastName) {
+    public static boolean isPhoneValid(String phone) {
+        return false;
+    }
+    public static boolean isAddressValid(String address) {
+        return false;
+    }
+    public static boolean isDeviceIdValid(String deviceId) {
+        return false;
+    }
+    public static boolean isOsTypeValid(String osType) {
+        return false;
+    }
+    public static boolean isDeviceTokenValid(String deviceToken) {
         return false;
     }
 }

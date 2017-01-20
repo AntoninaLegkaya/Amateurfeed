@@ -1,7 +1,13 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Amateurfeed</string>
+
+    <!--Login Screen-->
     <string name="ok_button">Ok</string>
     <string name="sign_up_button">Sign up</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
+
+    <!--Dialog-->
+    <string name="cancel">Cancel</string>
+    <string name="ok" tools:ignore="Typos">OK</string>
 </resources>

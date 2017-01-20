@@ -24,7 +24,7 @@ public class SignUpPresenter extends Presenter<SignUpView> implements CommandRes
 
     private CommandResultReceiver mResultReceiver;
 
-    public void registration(String email, String firstName, String lastName, String password) {
+    public void registration(String email, String fullName, String phone, String address, String password, String deviceId, String osType, String deviceToken) {
 
         if (getView() != null) {
             SignUpView view = getView();
@@ -36,17 +36,17 @@ public class SignUpPresenter extends Presenter<SignUpView> implements CommandRes
                 view.showEmailValidationError();
                 return;
             }
-            if (TextUtils.isEmpty(firstName)) {
+            if (TextUtils.isEmpty(fullName)) {
                 view.showEmptyEmailError();
                 return;
-            } else if (!Utils.isFirstNameValid(firstName)) {
+            } else if (!Utils.isFullNameValid(fullName)) {
                 view.showEmailValidationError();
                 return;
             }
-            if (TextUtils.isEmpty(lastName)) {
+            if (TextUtils.isEmpty(phone)) {
                 view.showEmptyEmailError();
                 return;
-            } else if (!Utils.isLastNameValid(lastName)) {
+            } else if (!Utils.isPhoneValid(phone)) {
                 view.showEmailValidationError();
                 return;
             }
@@ -62,9 +62,31 @@ public class SignUpPresenter extends Presenter<SignUpView> implements CommandRes
                 return;
             }
 
+            if (TextUtils.isEmpty(deviceId)) {
+                view.showEmptyEmailError();
+                return;
+            } else if (!Utils.isDeviceIdValid(deviceId)) {
+                view.showEmailValidationError();
+                return;
+            }
 
+            if (TextUtils.isEmpty(osType)) {
+                view.showEmptyEmailError();
+                return;
+            } else if (!Utils.isOsTypeValid(osType)) {
+                view.showEmailValidationError();
+                return;
+            }
+
+            if (TextUtils.isEmpty(deviceToken)) {
+                view.showEmptyEmailError();
+                return;
+            } else if (!Utils.isDeviceTokenValid(deviceToken)) {
+                view.showEmailValidationError();
+                return;
+            }
             view.showProgressDialog();
-            Command command = new RegistrationCommand(email, firstName, lastName, password);
+            Command command = new RegistrationCommand(email,  fullName,  phone,  address,  password,  deviceId,  osType,  deviceToken);
             command.send(CODE_REGISTRATION, mResultReceiver);
 
 

@@ -12,6 +12,7 @@ import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
+import com.dbbest.amateurfeed.model.CurrentUser;
 
 /**
  * Created by antonina on 19.01.17.
@@ -39,7 +40,7 @@ public class LoginCommand extends Command {
     @Override
     public void execute() {
         //TODO RestApiClient
-        RestApiClient apiClient = App.getFactory().restClient();
+        RestApiClient apiClient = App.getApiFactory().restClient();
         ResponseWrapper<RegistrationResponse> response = apiClient.login(mLoginRequest);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {
@@ -47,6 +48,12 @@ public class LoginCommand extends Command {
                 RegistrationResponse data = response.data();
                 AuthToken authToken = new AuthToken();
                 authToken.update(data.getAccessToken());
+
+                CurrentUser user = new CurrentUser();
+                user.setId(data.getUserId());
+                user.setName(data.getUserName());
+                user.setRole(data.getRole());
+                user.setProfileImage(data.getProfileImage());
 
 
             }

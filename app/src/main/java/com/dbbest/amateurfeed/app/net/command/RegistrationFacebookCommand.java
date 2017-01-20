@@ -2,13 +2,15 @@ package com.dbbest.amateurfeed.app.net.command;
 
 import android.os.Bundle;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequest;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequest;
 import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
+import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
+import com.dbbest.amateurfeed.model.AuthToken;
 
 /**
  * Created by antonina on 19.01.17.
@@ -36,11 +38,14 @@ public class RegistrationFacebookCommand extends Command {
 
     @Override
     public void execute() {
-        // RestApiClient apiClient = restClient();
-        ResponseWrapper<RegistrationResponse> response=null;
-//                = apiClient.registrationFacebook(mRegistrationFacebookRequest);
+        RestApiClient apiClient = App.getApiFactory().restClient();
+        ResponseWrapper<RegistrationResponse> response = apiClient.registrationFacebook(mRegistrationFacebookRequest);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {
+                RegistrationResponse data = response.data();
+                AuthToken authToken = new AuthToken();
+                authToken.update(data.getAccessToken());
+
 
             } else {
                 Bundle bundle = getStatusBundle(response);

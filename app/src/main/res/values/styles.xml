@@ -48,6 +48,18 @@
     <style name="ButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/button</item>
+
+    </style>
+    <!--Style for warning dialog-->
+    <style name="WarningDialogMessageTextStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/warning_dialog_message_text</item>
+        <item name="android:textSize">@dimen/warning_dialog_message_text_size</item>
+    </style>
+    <style name="WarningDialogButtonStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/warning_dialog_button_text</item>
+        <item name="android:textSize">@dimen/warning_dialog_button_text_size</item>
     </style>
 
 </resources>

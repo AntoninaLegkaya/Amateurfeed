@@ -8,7 +8,9 @@ import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.request.LoginRequest;
 import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequest;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequest;
+import com.dbbest.amateurfeed.app.net.request.ResetRequest;
 import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
+import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.utils.ActionUtils;
 
@@ -72,6 +74,10 @@ public class RestApiClient {
 
     public ResponseWrapper<RegistrationResponse> login(LoginRequest request) {
         return executeCall(mApiService.login(request));
+    }
+
+    public ResponseWrapper<ResetResponse> forgotPassword(ResetRequest request) {
+        return executeCall(mApiService.forgotPassword(request));
     }
 
 }

@@ -36,7 +36,7 @@ public class RegistrationCommand extends Command {
     @Override
     public void execute() {
         //TODO RestApiClient
-        RestApiClient apiClient = App.getFactory().restClient();
+        RestApiClient apiClient = App.getApiFactory().restClient();
         ResponseWrapper<RegistrationResponse> response = apiClient.registration(mRegistrationRequest);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {

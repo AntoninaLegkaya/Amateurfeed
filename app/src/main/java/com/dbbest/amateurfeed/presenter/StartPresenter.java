@@ -20,8 +20,8 @@ import com.facebook.login.LoginManager;
  * Created by antonina on 19.01.17.
  */
 
-public class StartPresenter extends Presenter<StartView> implements CommandResultReceiver.CommandListener ,
-        UserLocationProvider.LocationProviderListener{
+public class StartPresenter extends Presenter<StartView> implements CommandResultReceiver.CommandListener,
+        UserLocationProvider.LocationProviderListener {
 
     private static final String INCORRECT_PASSWORD_MSG_RESPONSE = "The password is incorrect";
     private static final String BANNED_ACCOUNT_MSG_RESPONSE = "Sorry, but this account is deleted.";
@@ -37,7 +37,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
     private CommandResultReceiver mResultReceiver;
     private UserLocationProvider mLocationProvider;
 
-    public void login(String email, String password,String deviceId, String osType,String deviceToken) {
+    public void login(String email, String password, String deviceId, String osType, String deviceToken) {
 
         if (getView() != null) {
             StartView view = getView();
@@ -63,7 +63,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
             view.showProgressDialog();
         }
-        Command command = new LoginCommand(email, password, deviceId, osType,deviceToken);
+        Command command = new LoginCommand(email, password, deviceId, osType, deviceToken);
         command.send(CODE_LOGIN, mResultReceiver);
     }
 
@@ -80,7 +80,6 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
     }
 
 
-
     @Override
     protected void onAttachView(@NonNull StartView view) {
         super.onAttachView(view);
@@ -94,6 +93,11 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
     @Override
     public void onSuccess(int code, Bundle data) {
+        if (getView() != null) {
+            if (code == CODE_LOGIN) {
+                getView().navigateToHomeScreen();
+            }
+        }
 
     }
 
@@ -110,7 +114,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
                     getView().showErrorIncorrectPassword();
                 } else if (errMessage != null && errMessage.equals(BANNED_ACCOUNT_MSG_RESPONSE)) {
                     getView().showBannedAccountError();
-                }else{
+                } else {
                     getView().showErrorLoginDialog();
                 }
             }

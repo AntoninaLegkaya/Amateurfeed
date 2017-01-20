@@ -3,7 +3,9 @@ package com.dbbest.amateurfeed.app.net.retrofit;
 import com.dbbest.amateurfeed.app.net.request.LoginRequest;
 import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequest;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequest;
+import com.dbbest.amateurfeed.app.net.request.ResetRequest;
 import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
+import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 
 import retrofit2.Call;
@@ -25,4 +27,7 @@ public interface RestApiServices {
 
     @POST("/api/account/login")
     Call<ResponseWrapper<RegistrationResponse>> login(@Body LoginRequest request);
+
+    @POST("/api/account/forgot")
+    Call<ResponseWrapper<ResetResponse>> forgotPassword(@Body ResetRequest request);
 }

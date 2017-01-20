@@ -16,6 +16,13 @@
     <color name="black">#000000</color>
     <color name="blue">#03A9F4</color>
 
+    <!--Warning Dialog-->
+    <color name="app_black">#FF1D1D26</color>
+    <color name="app_blue_text">#FF008EFF</color>
+    <color name="dialog_white_background">#f8f8fa</color>
+    <color name="warning_dialog_message_text">@color/app_black</color>
+    <color name="warning_dialog_button_text">@color/app_blue_text</color>
+    <color name="warning_dialog_divider_color">#d6d6da</color>
 
 
 </resources>

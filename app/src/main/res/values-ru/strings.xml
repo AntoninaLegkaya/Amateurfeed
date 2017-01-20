@@ -5,4 +5,6 @@
     <string name="sign_up_button">Зарегистрироваться</string>
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Завершить</string>
 </resources>
