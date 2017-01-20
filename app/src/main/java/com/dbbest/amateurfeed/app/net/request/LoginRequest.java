@@ -24,20 +24,33 @@ public class LoginRequest implements Parcelable {
     @SerializedName("latitude")
     private double mLatitude;
 
+    @SerializedName("deviceId")
+    private String mDeviceId;
 
-    public LoginRequest(String email, String password, double longitude, double latitude) {
+    //    'Ios','Android','Unknown',
+    @SerializedName("osType")
+    private String mOsType;
+
+    @SerializedName("deviceToken")
+    private String mDeviceToken;
+
+
+    public LoginRequest(String email, String password,String deviceId, String osType,String deviceToken) {
         mEmail = email;
         mPassword = password;
-        mLongitude = longitude;
-        mLatitude = latitude;
+        mDeviceId = deviceId;
+        mOsType = osType;
+        mDeviceToken=deviceToken;
+
     }
 
 
     private LoginRequest(Parcel in) {
         mEmail = in.readString();
         mPassword = in.readString();
-        mLongitude = in.readDouble();
-        mLatitude = in.readDouble();
+        mDeviceId = in.readString();
+        mOsType = in.readString();
+        mDeviceToken=in.readString();
     }
 
     @Override
@@ -49,8 +62,10 @@ public class LoginRequest implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mEmail);
         dest.writeString(mPassword);
-        dest.writeDouble(mLongitude);
-        dest.writeDouble(mLatitude);
+        dest.writeString(mDeviceId);
+        dest.writeString(mOsType);
+        dest.writeString(mDeviceToken);
+
     }
 
     public static final Parcelable.Creator<LoginRequest> CREATOR = new Parcelable.Creator<LoginRequest>() {

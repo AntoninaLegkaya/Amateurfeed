@@ -37,7 +37,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
     private CommandResultReceiver mResultReceiver;
     private UserLocationProvider mLocationProvider;
 
-    public void login(String email, String password, double latitude, double longitude) {
+    public void login(String email, String password,String deviceId, String osType,String deviceToken) {
 
         if (getView() != null) {
             StartView view = getView();
@@ -63,7 +63,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
             view.showProgressDialog();
         }
-        Command command = new LoginCommand(email, password, latitude, longitude);
+        Command command = new LoginCommand(email, password, deviceId, osType,deviceToken);
         command.send(CODE_LOGIN, mResultReceiver);
     }
 
@@ -79,12 +79,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
         command.send(CODE_REGISTRATION_FB, mResultReceiver);
     }
 
-    public void resetPassword(String email) {
-    }
 
-
-    public void registrateUser(String email) {
-    }
 
     @Override
     protected void onAttachView(@NonNull StartView view) {

@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- using the "Light Blue" Material Palette -->
+    <color name="primary_dark">#303F9F</color>  <!-- 700 -->
+    <color name="primary">#3F51B5</color>  <!-- 500 -->
+    <color name="primary_light">#C5CAE9</color> <!-- 100 -->
+    <color name="accent">#000000</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#525252</color>
+    <color name="hint_text">#737373</color>
+    <color name="divides_text">#929292</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#cccccc</color>
+    <color name="grey_700">#646464</color>
+    <color name="black">#000000</color>
+    <color name="blue">#03A9F4</color>
+
+
+
 </resources>

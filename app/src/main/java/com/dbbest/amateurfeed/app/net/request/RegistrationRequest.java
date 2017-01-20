@@ -15,42 +15,52 @@ public class RegistrationRequest implements Parcelable {
     @SerializedName("email")
     private String mEmail;
 
+    @SerializedName("fullName")
+    private String mFullName;
+
+    @SerializedName("phone")
+    private String mPhone;
+
+    @SerializedName("address")
+    private String mAddress;
+
     @SerializedName("password")
     private String mPassword;
 
-    @SerializedName("firstName")
-    private String mFirstName;
+    @SerializedName("deviceId")
+    private String mDeviceId;
 
-    @SerializedName("lastName")
-    private String mLastName;
+    //    'Ios','Android','Unknown',
+    @SerializedName("osType")
+    private String mOsType;
 
-    @SerializedName("longitude")
-    private double mLongitude;
-
-    @SerializedName("latitude")
-    private double mLatitude;
+    @SerializedName("deviceToken")
+    private String mDeviceToken;
 
 
-    public RegistrationRequest(String email, String password, double longitude, double latitude) {
+    public RegistrationRequest(String email, String fullName, String phone, String address, String password, String deviceId, String osType, String deviceToken) {
         mEmail = email;
+        mFullName = fullName;
+        mPhone = phone;
+        mAddress = address;
         mPassword = password;
-        mLongitude = longitude;
-        mLatitude = latitude;
+        mDeviceId = deviceId;
+        mOsType = osType;
+        mDeviceToken = deviceToken;
     }
 
-    public RegistrationRequest(String email, String firstName, String lastName, String password) {
-        mEmail = email;
-        mPassword = password;
-        mFirstName = firstName;
-        mLastName = lastName;
-    }
 
 
     private RegistrationRequest(Parcel in) {
         mEmail = in.readString();
+        mFullName = in.readString();
+        mPhone = in.readString();
+        mAddress = in.readString();
         mPassword = in.readString();
-        mLongitude = in.readDouble();
-        mLatitude = in.readDouble();
+        mDeviceId = in.readString();
+        mOsType = in.readString();
+        mDeviceToken = in.readString();
+
     }
 
     @Override
@@ -61,11 +71,13 @@ public class RegistrationRequest implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mEmail);
+        dest.writeString(mFullName);
+        dest.writeString(mPhone);
+        dest.writeString(mAddress);
         dest.writeString(mPassword);
-        dest.writeString(mFirstName);
-        dest.writeString(mLastName);
-        dest.writeDouble(mLongitude);
-        dest.writeDouble(mLatitude);
+        dest.writeString(mDeviceId);
+        dest.writeString(mOsType);
+        dest.writeString(mDeviceToken);
     }
 
     public static final Parcelable.Creator<RegistrationRequest> CREATOR = new Parcelable.Creator<RegistrationRequest>() {
