@@ -12,6 +12,8 @@ import com.dbbest.amateurfeed.presenter.HomePresenter;
 import android.support.design.widget.Snackbar;
 
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
+import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.view.HomeView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabSelectedListener;
@@ -45,11 +47,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
                         break;
                     case R.id.search_tab:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+                                SearchFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
                         Snackbar.make(coordinatorLayout, "Search Item Selected", Snackbar.LENGTH_LONG).show();
 
                         break;
                     case R.id.profile_tab:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                ProfileFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
                         Snackbar.make(coordinatorLayout, "Profile Item Selected", Snackbar.LENGTH_LONG).show();
                         break;
                 }
