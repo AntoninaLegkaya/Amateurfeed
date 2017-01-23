@@ -7,4 +7,5 @@
     <string name="password">Пароль</string>
     <string name="ok">ОК</string>
     <string name="cancel">Завершить</string>
+    <string name="profile_toolbar_label">Личные данные</string>
 </resources>

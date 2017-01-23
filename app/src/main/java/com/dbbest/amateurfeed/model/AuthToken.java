@@ -88,7 +88,10 @@ public class AuthToken implements ActiveRecord<AuthToken> {
 
 
     private String readToken() {
-        return preferences().getString(KEY_AUTH_TOKEN, null);
+        if (preferences() != null) {
+            return preferences().getString(KEY_AUTH_TOKEN, null);
+        }
+        return null;
     }
 
 
@@ -98,6 +101,11 @@ public class AuthToken implements ActiveRecord<AuthToken> {
 
 
     private SharedPreferences preferences() {
-        return App.instance().getSharedPreferences(AUTH_FILE_NAME, Context.MODE_PRIVATE);
+        if (App.instance() != null) {
+            return App.instance().getSharedPreferences(AUTH_FILE_NAME, Context.MODE_PRIVATE);
+        }
+        return null;
+
+
     }
 }

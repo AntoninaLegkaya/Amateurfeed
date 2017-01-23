@@ -24,5 +24,9 @@
     <color name="warning_dialog_button_text">@color/app_blue_text</color>
     <color name="warning_dialog_divider_color">#d6d6da</color>
 
+    <!--Tab Navigation-->
+    <color name="colorTabItem">#E91E63</color>
+    <color name="colorTabItemDark">#C2185B</color>
+    <color name="colorTabItemAccent">#4CAF50</color>
 
 </resources>

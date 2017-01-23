@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.ui.fragments.ProfileRootFragment;
-import com.dbbest.amateurfeed.ui.fragments.RootHomeFragment;
+import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchRootFragment;
 
 
@@ -15,7 +15,7 @@ import com.dbbest.amateurfeed.ui.fragments.SearchRootFragment;
 
 public enum HomeTab {
 
-    HOME("home_root_tag", R.drawable.tab_home_selector, RootHomeFragment.class),
+    HOME("home_root_tag", R.drawable.tab_home_selector, FeedNewsFragment.class),
     SEARCH("search_home_root_tag", R.drawable.tab_search_selector, SearchRootFragment.class),
     PROFILE("profile_home_root_tag", R.drawable.tab_profile_selector, ProfileRootFragment.class);
 
@@ -25,9 +25,9 @@ public enum HomeTab {
     @DrawableRes
     int iconRes;
 
-    public Class<? extends RootHomeFragment> fragmentClass;
+    public Class<? extends FeedNewsFragment> fragmentClass;
 
-    HomeTab(String tab, @DrawableRes int iconRes, Class<? extends RootHomeFragment> fragmentClass) {
+    HomeTab(String tab, @DrawableRes int iconRes, Class<? extends FeedNewsFragment> fragmentClass) {
         this.tag = tab;
         this.iconRes = iconRes;
         this.fragmentClass = fragmentClass;

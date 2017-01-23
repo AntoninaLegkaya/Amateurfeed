@@ -60,7 +60,8 @@ public class SplashActivity extends AppCompatActivity {
             intent = UiActivityNavigation.homeActivity(SplashActivity.this);
 
         } else {
-            intent = UiActivityNavigation.startActivity(SplashActivity.this);
+            intent = UiActivityNavigation.homeActivity(SplashActivity.this);
+//            intent = UiActivityNavigation.startActivity(SplashActivity.this);
 
         }
         startActivity(intent);

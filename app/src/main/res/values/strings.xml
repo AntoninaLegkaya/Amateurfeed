@@ -10,4 +10,7 @@
     <!--Dialog-->
     <string name="cancel">Cancel</string>
     <string name="ok" tools:ignore="Typos">OK</string>
+    <!--Profile-->
+
+    <string name="profile_toolbar_label">Profile</string>
 </resources>
