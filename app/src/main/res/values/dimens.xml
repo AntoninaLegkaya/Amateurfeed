@@ -17,7 +17,14 @@
     <dimen name="match_dialog_avatar_size">120dp</dimen>
 
     <!--TabHome-->
-    <dimen name="tab_item_text_size">16sp</dimen>
+    <dimen name="tab_item_text_size">14sp</dimen>
     <!--Tool Bar Home-->
     <dimen name="tool_bar_item_text_size">48sp</dimen>
+    <!--Profile item-->
+    <dimen name="profile_item_extra_padding">0dp</dimen>
+    <dimen name="profile_info_horizontal_padding">32dp</dimen>
+    <dimen name="profile_padding_bottom">16dp</dimen>
+    <dimen name="profile_padding_top">16dp</dimen>
+    <dimen name="profile_padding_right">16dp</dimen>
+    <dimen name="profile_icon">60dp</dimen>
 </resources>

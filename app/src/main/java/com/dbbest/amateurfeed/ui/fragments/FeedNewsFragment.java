@@ -6,14 +6,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.FeedListPresenter;
 import com.dbbest.amateurfeed.view.FeedView;
 import com.dbbest.amateurfeed.view.HomeView;
+import com.melnykov.fab.FloatingActionButton;
 
 /**
  * Created by antonina on 20.01.17.
@@ -22,8 +25,8 @@ import com.dbbest.amateurfeed.view.HomeView;
 public class FeedNewsFragment extends Fragment implements View.OnClickListener, FeedView, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String PARAM_KEY = "param_key";
-
-    FeedListPresenter mPresenter;
+    private RecyclerView mRecyclerView;
+    private FeedListPresenter mPresenter;
 
     public static FeedNewsFragment newInstance(String key) {
         FeedNewsFragment fragment = new FeedNewsFragment();
@@ -63,7 +66,20 @@ public class FeedNewsFragment extends Fragment implements View.OnClickListener, 
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_feed_list, container, false);
+
+
+        final View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.feed_list_view);
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.attachToRecyclerView(mRecyclerView);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(),"AddItem",Toast.LENGTH_SHORT).show();
+            }
+        });
+        return rootView;
     }
 
 

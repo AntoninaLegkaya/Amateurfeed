@@ -59,8 +59,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
                 }
             }
         });
-
-
+        // Use custom text appearance in tab titles.
+        bottomBar.setTextAppearance(R.style.TabHome);
     }
 
 
