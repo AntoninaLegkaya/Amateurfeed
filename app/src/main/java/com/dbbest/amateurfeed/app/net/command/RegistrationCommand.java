@@ -5,8 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.app.net.request.RegistrationRequest;
-import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
+import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
+import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
@@ -17,16 +17,16 @@ import com.dbbest.amateurfeed.model.AuthToken;
 
 public class RegistrationCommand extends Command {
 
-    private final RegistrationRequest mRegistrationRequest;
+    private final RegistrationRequestModel mRegistrationRequest;
 
 
     public RegistrationCommand(String email, String fullName, String phone, String address, String password, String deviceId, String osType, String deviceToken) {
-        mRegistrationRequest = new RegistrationRequest(email,  fullName,  phone,  address,  password,  deviceId,  osType,  deviceToken);
+        mRegistrationRequest = new RegistrationRequestModel(email,  fullName,  phone,  address,  password,  deviceId,  osType,  deviceToken);
     }
 
     protected RegistrationCommand(Parcel in) {
         super(in);
-        mRegistrationRequest = in.readParcelable(RegistrationRequest.class.getClassLoader());
+        mRegistrationRequest = in.readParcelable(RegistrationRequestModel.class.getClassLoader());
     }
 
     @Override
@@ -37,11 +37,11 @@ public class RegistrationCommand extends Command {
     public void execute() {
         //TODO RestApiClient
         RestApiClient apiClient = App.getApiFactory().restClient();
-        ResponseWrapper<RegistrationResponse> response = apiClient.registration(mRegistrationRequest);
+        ResponseWrapper<LoginResponseModel> response = apiClient.registration(mRegistrationRequest);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {
 
-                RegistrationResponse data = response.data();
+                LoginResponseModel data = response.data();
                 AuthToken authToken = new AuthToken();
                 authToken.update(data.getAccessToken());
 

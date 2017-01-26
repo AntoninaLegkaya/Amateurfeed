@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @SuppressWarnings("unused")
-public class RegistrationRequest implements Parcelable {
+public class RegistrationRequestModel implements Parcelable {
 
     @SerializedName("email")
     private String mEmail;
@@ -38,7 +38,7 @@ public class RegistrationRequest implements Parcelable {
     private String mDeviceToken;
 
 
-    public RegistrationRequest(String email, String fullName, String phone, String address, String password, String deviceId, String osType, String deviceToken) {
+    public RegistrationRequestModel(String email, String fullName, String phone, String address, String password, String deviceId, String osType, String deviceToken) {
         mEmail = email;
         mFullName = fullName;
         mPhone = phone;
@@ -51,7 +51,7 @@ public class RegistrationRequest implements Parcelable {
 
 
 
-    private RegistrationRequest(Parcel in) {
+    private RegistrationRequestModel(Parcel in) {
         mEmail = in.readString();
         mFullName = in.readString();
         mPhone = in.readString();
@@ -80,15 +80,15 @@ public class RegistrationRequest implements Parcelable {
         dest.writeString(mDeviceToken);
     }
 
-    public static final Parcelable.Creator<RegistrationRequest> CREATOR = new Parcelable.Creator<RegistrationRequest>() {
+    public static final Parcelable.Creator<RegistrationRequestModel> CREATOR = new Parcelable.Creator<RegistrationRequestModel>() {
         @Override
-        public RegistrationRequest createFromParcel(Parcel source) {
-            return new RegistrationRequest(source);
+        public RegistrationRequestModel createFromParcel(Parcel source) {
+            return new RegistrationRequestModel(source);
         }
 
         @Override
-        public RegistrationRequest[] newArray(int size) {
-            return new RegistrationRequest[size];
+        public RegistrationRequestModel[] newArray(int size) {
+            return new RegistrationRequestModel[size];
         }
     };
 }

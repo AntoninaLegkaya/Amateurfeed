@@ -5,11 +5,11 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
-import com.dbbest.amateurfeed.app.net.request.LoginRequest;
-import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequest;
-import com.dbbest.amateurfeed.app.net.request.RegistrationRequest;
-import com.dbbest.amateurfeed.app.net.request.ResetRequest;
-import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
+import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
+import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequestModel;
+import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
+import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
+import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.utils.ActionUtils;
@@ -64,19 +64,19 @@ public class RestApiClient {
     }
 
 
-    public ResponseWrapper<RegistrationResponse> registration(RegistrationRequest request) {
+    public ResponseWrapper<LoginResponseModel> registration(RegistrationRequestModel request) {
         return executeCall(mApiService.register(request));
     }
 
-    public ResponseWrapper<RegistrationResponse> registrationFacebook(RegistrationFaceBookRequest request) {
+    public ResponseWrapper<LoginResponseModel> registrationFacebook(RegistrationFaceBookRequestModel request) {
         return executeCall(mApiService.registerFacebook(request));
     }
 
-    public ResponseWrapper<RegistrationResponse> login(LoginRequest request) {
+    public ResponseWrapper<LoginResponseModel> login(LoginRequestModel request) {
         return executeCall(mApiService.login(request));
     }
 
-    public ResponseWrapper<ResetResponse> forgotPassword(ResetRequest request) {
+    public ResponseWrapper<ResetResponse> forgotPassword(ResetRequestPasswordModel request) {
         return executeCall(mApiService.forgotPassword(request));
     }
 

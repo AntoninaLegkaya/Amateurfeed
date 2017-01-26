@@ -9,19 +9,19 @@ import com.google.gson.annotations.SerializedName;
  * Created by antonina on 19.01.17.
  */
 
-public class ResetRequest implements Parcelable {
+public class ResetRequestPasswordModel implements Parcelable {
 
     @SerializedName("email")
     private String mEmail;
 
 
-    public ResetRequest(String email) {
+    public ResetRequestPasswordModel(String email) {
         mEmail = email;
 
     }
 
 
-    private ResetRequest(Parcel in) {
+    private ResetRequestPasswordModel(Parcel in) {
         mEmail = in.readString();
 
     }
@@ -37,15 +37,15 @@ public class ResetRequest implements Parcelable {
 
     }
 
-    public static final Parcelable.Creator<ResetRequest> CREATOR = new Parcelable.Creator<ResetRequest>() {
+    public static final Parcelable.Creator<ResetRequestPasswordModel> CREATOR = new Parcelable.Creator<ResetRequestPasswordModel>() {
         @Override
-        public ResetRequest createFromParcel(Parcel source) {
-            return new ResetRequest(source);
+        public ResetRequestPasswordModel createFromParcel(Parcel source) {
+            return new ResetRequestPasswordModel(source);
         }
 
         @Override
-        public ResetRequest[] newArray(int size) {
-            return new ResetRequest[size];
+        public ResetRequestPasswordModel[] newArray(int size) {
+            return new ResetRequestPasswordModel[size];
         }
     };
 }

@@ -5,9 +5,9 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequest;
-import com.dbbest.amateurfeed.app.net.request.RegistrationRequest;
-import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
+import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequestModel;
+import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
+import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
@@ -20,15 +20,15 @@ public class RegistrationFacebookCommand extends Command {
 
     private final static String KEY_IS_COMPLETED_PROFILE = "profile_completed";
 
-    private final RegistrationFaceBookRequest mRegistrationFacebookRequest;
+    private final RegistrationFaceBookRequestModel mRegistrationFacebookRequest;
 
     public RegistrationFacebookCommand(String code, double longitude, double latitude) {
-        mRegistrationFacebookRequest = new RegistrationFaceBookRequest(code, longitude, latitude);
+        mRegistrationFacebookRequest = new RegistrationFaceBookRequestModel(code, longitude, latitude);
     }
 
     private RegistrationFacebookCommand(Parcel in) {
         super(in);
-        mRegistrationFacebookRequest = in.readParcelable(RegistrationRequest.class.getClassLoader());
+        mRegistrationFacebookRequest = in.readParcelable(RegistrationRequestModel.class.getClassLoader());
     }
 
     @Override
@@ -39,10 +39,10 @@ public class RegistrationFacebookCommand extends Command {
     @Override
     public void execute() {
         RestApiClient apiClient = App.getApiFactory().restClient();
-        ResponseWrapper<RegistrationResponse> response = apiClient.registrationFacebook(mRegistrationFacebookRequest);
+        ResponseWrapper<LoginResponseModel> response = apiClient.registrationFacebook(mRegistrationFacebookRequest);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {
-                RegistrationResponse data = response.data();
+                LoginResponseModel data = response.data();
                 AuthToken authToken = new AuthToken();
                 authToken.update(data.getAccessToken());
 

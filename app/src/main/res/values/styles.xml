@@ -12,10 +12,18 @@
 
     <!--main activity toolbar style-->
 
-    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+    <style name="Toolbar" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>
         <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <!--Button-->
+    <style name="Toolbar.Button" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
     </style>
 
 
@@ -24,11 +32,7 @@
         <item name="preferenceFragmentCompatStyle">@style/PreferenceFixTheme</item>
     </style>
 
-    <!-- Custom Style for PreferenceFragmentCompat -->
-    <style name="AppPreferenceFragmentCompatStyle" parent="@style/PreferenceFragment.Material">
-        <!-- Custom layout for PreferenceFragmentCompat -->
-        <item name="android:layout">@layout/fragment_preference</item>
-    </style>
+
 
     <!-- Style for a custom Preference Entry -->
     <style name="AppPreference">

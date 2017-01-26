@@ -6,9 +6,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.app.net.request.LoginRequest;
-import com.dbbest.amateurfeed.app.net.request.RegistrationRequest;
-import com.dbbest.amateurfeed.app.net.response.RegistrationResponse;
+import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
+import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
+import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
@@ -21,15 +21,15 @@ import com.dbbest.amateurfeed.model.CurrentUser;
 public class LoginCommand extends Command {
 
 
-    private final LoginRequest mLoginRequest;
+    private final LoginRequestModel mLoginRequest;
 
     public LoginCommand(String email, String password, String deviceId, String osType, String deviceToken) {
-        mLoginRequest = new LoginRequest(email, password, deviceId, osType, deviceToken);
+        mLoginRequest = new LoginRequestModel(email, password, deviceId, osType, deviceToken);
     }
 
     private LoginCommand(Parcel in) {
         super(in);
-        mLoginRequest = in.readParcelable(RegistrationRequest.class.getClassLoader());
+        mLoginRequest = in.readParcelable(RegistrationRequestModel.class.getClassLoader());
     }
 
     @Override
@@ -41,11 +41,11 @@ public class LoginCommand extends Command {
     public void execute() {
         //TODO RestApiClient
         RestApiClient apiClient = App.getApiFactory().restClient();
-        ResponseWrapper<RegistrationResponse> response = apiClient.login(mLoginRequest);
+        ResponseWrapper<LoginResponseModel> response = apiClient.login(mLoginRequest);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {
 
-                RegistrationResponse data = response.data();
+                LoginResponseModel data = response.data();
                 AuthToken authToken = new AuthToken();
                 authToken.update(data.getAccessToken());
 

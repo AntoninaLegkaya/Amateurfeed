@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by antonina on 20.01.17.
  */
 
-public class ChangePasswordRequest implements Parcelable {
+public class ChangePasswordRequestModel implements Parcelable {
 
     @SerializedName("currentPassword")
     private String mCurrentPassword;
@@ -21,7 +21,7 @@ public class ChangePasswordRequest implements Parcelable {
     private String mConfirmPassword;
 
 
-    public ChangePasswordRequest(String currentPassword, String password, String confirmPassword) {
+    public ChangePasswordRequestModel(String currentPassword, String password, String confirmPassword) {
         mCurrentPassword = currentPassword;
         mConfirmPassword = confirmPassword;
         mPassword = password;
@@ -29,7 +29,7 @@ public class ChangePasswordRequest implements Parcelable {
     }
 
 
-    private ChangePasswordRequest(Parcel in) {
+    private ChangePasswordRequestModel(Parcel in) {
         mCurrentPassword = in.readString();
         mPassword = in.readString();
         mConfirmPassword = in.readString();
@@ -49,15 +49,15 @@ public class ChangePasswordRequest implements Parcelable {
 
     }
 
-    public static final Parcelable.Creator<ChangePasswordRequest> CREATOR = new Parcelable.Creator<ChangePasswordRequest>() {
+    public static final Parcelable.Creator<ChangePasswordRequestModel> CREATOR = new Parcelable.Creator<ChangePasswordRequestModel>() {
         @Override
-        public ChangePasswordRequest createFromParcel(Parcel source) {
-            return new ChangePasswordRequest(source);
+        public ChangePasswordRequestModel createFromParcel(Parcel source) {
+            return new ChangePasswordRequestModel(source);
         }
 
         @Override
-        public ChangePasswordRequest[] newArray(int size) {
-            return new ChangePasswordRequest[size];
+        public ChangePasswordRequestModel[] newArray(int size) {
+            return new ChangePasswordRequestModel[size];
         }
     };
 }

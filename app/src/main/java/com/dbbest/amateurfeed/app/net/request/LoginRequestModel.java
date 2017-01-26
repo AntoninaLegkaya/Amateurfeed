@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @SuppressWarnings("unused")
-public class LoginRequest implements Parcelable {
+public class LoginRequestModel implements Parcelable {
 
     @SerializedName("email")
     private String mEmail;
@@ -35,7 +35,7 @@ public class LoginRequest implements Parcelable {
     private String mDeviceToken;
 
 
-    public LoginRequest(String email, String password,String deviceId, String osType,String deviceToken) {
+    public LoginRequestModel(String email, String password, String deviceId, String osType, String deviceToken) {
         mEmail = email;
         mPassword = password;
         mDeviceId = deviceId;
@@ -45,7 +45,7 @@ public class LoginRequest implements Parcelable {
     }
 
 
-    private LoginRequest(Parcel in) {
+    private LoginRequestModel(Parcel in) {
         mEmail = in.readString();
         mPassword = in.readString();
         mDeviceId = in.readString();
@@ -68,15 +68,15 @@ public class LoginRequest implements Parcelable {
 
     }
 
-    public static final Parcelable.Creator<LoginRequest> CREATOR = new Parcelable.Creator<LoginRequest>() {
+    public static final Parcelable.Creator<LoginRequestModel> CREATOR = new Parcelable.Creator<LoginRequestModel>() {
         @Override
-        public LoginRequest createFromParcel(Parcel source) {
-            return new LoginRequest(source);
+        public LoginRequestModel createFromParcel(Parcel source) {
+            return new LoginRequestModel(source);
         }
 
         @Override
-        public LoginRequest[] newArray(int size) {
-            return new LoginRequest[size];
+        public LoginRequestModel[] newArray(int size) {
+            return new LoginRequestModel[size];
         }
     };
 }

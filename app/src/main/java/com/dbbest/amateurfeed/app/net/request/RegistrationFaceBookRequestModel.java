@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @SuppressWarnings("unused")
-public class RegistrationFaceBookRequest implements Parcelable {
+public class RegistrationFaceBookRequestModel implements Parcelable {
 
     @SerializedName("code")
     private String mCode;
@@ -30,7 +30,7 @@ public class RegistrationFaceBookRequest implements Parcelable {
     @SerializedName("deviceToken")
     private String mDeviceToken;
 
-    public RegistrationFaceBookRequest(String code, double longitude, double latitude) {
+    public RegistrationFaceBookRequestModel(String code, double longitude, double latitude) {
         mCode = code;
         mLongitude = longitude;
         mLatitude = latitude;
@@ -38,7 +38,7 @@ public class RegistrationFaceBookRequest implements Parcelable {
     }
 
 
-    private RegistrationFaceBookRequest(Parcel in) {
+    private RegistrationFaceBookRequestModel(Parcel in) {
         mCode = in.readString();
         mLongitude = in.readDouble();
         mLatitude = in.readDouble();
@@ -57,15 +57,15 @@ public class RegistrationFaceBookRequest implements Parcelable {
         dest.writeDouble(mLatitude);
     }
 
-    public static final Creator<RegistrationFaceBookRequest> CREATOR = new Parcelable.Creator<RegistrationFaceBookRequest>() {
+    public static final Creator<RegistrationFaceBookRequestModel> CREATOR = new Parcelable.Creator<RegistrationFaceBookRequestModel>() {
         @Override
-        public RegistrationFaceBookRequest createFromParcel(Parcel source) {
-            return new RegistrationFaceBookRequest(source);
+        public RegistrationFaceBookRequestModel createFromParcel(Parcel source) {
+            return new RegistrationFaceBookRequestModel(source);
         }
 
         @Override
-        public RegistrationFaceBookRequest[] newArray(int size) {
-            return new RegistrationFaceBookRequest[size];
+        public RegistrationFaceBookRequestModel[] newArray(int size) {
+            return new RegistrationFaceBookRequestModel[size];
         }
     };
 }

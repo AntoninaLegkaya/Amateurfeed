@@ -26,5 +26,6 @@
     <dimen name="profile_padding_bottom">16dp</dimen>
     <dimen name="profile_padding_top">16dp</dimen>
     <dimen name="profile_padding_right">16dp</dimen>
+    <dimen name="profile_padding_left">16dp</dimen>
     <dimen name="profile_icon">60dp</dimen>
 </resources>

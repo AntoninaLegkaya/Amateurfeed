@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.app.net.request.ResetRequest;
+import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
 import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
@@ -15,16 +15,16 @@ import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
  */
 
 public class ResetPasswordCommand extends Command {
-    private final ResetRequest mResetRequest;
+    private final ResetRequestPasswordModel mResetRequest;
 
     public ResetPasswordCommand(String email) {
-        mResetRequest = new ResetRequest(email);
+        mResetRequest = new ResetRequestPasswordModel(email);
     }
 
     protected ResetPasswordCommand(Parcel in) {
 
         super(in);
-        mResetRequest = in.readParcelable(ResetRequest.class.getClassLoader());
+        mResetRequest = in.readParcelable(ResetRequestPasswordModel.class.getClassLoader());
     }
 
     @Override

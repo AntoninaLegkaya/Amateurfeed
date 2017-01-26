@@ -19,4 +19,6 @@
     <string name="title_intent_change_password">Сменить пароль</string>
     <string name="title_intent_edite_profile">Редактировать профайл</string>
     <string name="edit_profile_toolbar_label">Редактировать Профиль</string>
+    <string name="cancel_button">Отклонить</string>
+    <string name="save_button">Сохранить</string>
 </resources>

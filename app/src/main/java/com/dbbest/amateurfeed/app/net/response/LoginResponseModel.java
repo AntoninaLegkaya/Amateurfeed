@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by antonina on 19.01.17.
  */
 
-public class RegistrationResponse {
+public class LoginResponseModel {
     @SerializedName("userId")
     private int mUserId;
 
@@ -23,7 +23,7 @@ public class RegistrationResponse {
     private String mProfileImage;
 
 
-    public RegistrationResponse(int userId, String accessToken, String userName, String role, String profileImage) {
+    public LoginResponseModel(int userId, String accessToken, String userName, String role, String profileImage) {
         mUserId = userId;
         mAccessToken = accessToken;
         mUserName = userName;

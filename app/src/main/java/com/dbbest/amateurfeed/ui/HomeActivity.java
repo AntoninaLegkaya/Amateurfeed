@@ -27,7 +27,7 @@ import com.roughike.bottombar.OnMenuTabSelectedListener;
 public class HomeActivity extends AppCompatActivity implements HomeView {
     private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
     private static final String SEARCH_FRAGMENT_TAG = "STAG";
-    private static final String PROFILE_FRAGMENT_TAG = "PTAG";
+    public static final String PROFILE_FRAGMENT_TAG = "PTAG";
     public static final String EDITE_PROFILE_FRAGMENT_TAG = "PREFTAG";
 
     private CoordinatorLayout coordinatorLayout;
