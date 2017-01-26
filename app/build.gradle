@@ -67,6 +67,7 @@ dependencies {
 
     compile "com.android.support:multidex:${multidex}"
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
+    compile 'com.takisoft.fix:preference-v7:25.0.1.0'
 
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
     compile "com.squareup.retrofit2:converter-gson:${retrofit}"

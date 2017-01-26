@@ -8,4 +8,15 @@
     <string name="ok">ОК</string>
     <string name="cancel">Завершить</string>
     <string name="profile_toolbar_label">Личные данные</string>
+    <string name="feed_toolbar_label">Лента</string>
+    <string name="search_toolbar_label">Поиск</string>
+    <string name="lable_activity_settings">Настройки</string>
+    <string name="pref_enable_notifications_false">Не доступно</string>
+    <string name="pref_enable_notifications_true">Доступно</string>
+    <string name="pref_enable_notifications_label">Включить Уведомления</string>
+    <string name="label_activity_settings">Настройки</string>
+    <string name="preference_toolbar_label">Настройки</string>
+    <string name="title_intent_change_password">Сменить пароль</string>
+    <string name="title_intent_edite_profile">Редактировать профайл</string>
+    <string name="edit_profile_toolbar_label">Редактировать Профиль</string>
 </resources>

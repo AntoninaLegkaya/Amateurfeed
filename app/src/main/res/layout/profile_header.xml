@@ -1,24 +1,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="@color/primary_light"
-             android:paddingBottom="@dimen/profile_padding_bottom"
-             android:paddingLeft="@dimen/profile_item_extra_padding"
-             android:paddingRight="@dimen/profile_item_extra_padding"
-             android:paddingTop="@dimen/profile_padding_top"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:fab="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/profile_padding_bottom"
+              android:paddingLeft="@dimen/profile_item_extra_padding"
+              android:paddingRight="@dimen/profile_item_extra_padding">
 
-    <ImageView
+    <ImageButton
+        android:id="@+id/settings_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
-        android:scaleType="center"
-        android:src="@drawable/ic_settings_black_24dp"
         android:paddingRight="@dimen/profile_padding_right"
+        android:scaleType="center"
 
-        />
+        android:background="@drawable/ic_settings_black_24dp"
+        android:elevation="8dp"
+       />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +32,7 @@
 
 
         <ImageView
-            android:id="@+id/list_item_icon"
+            android:id="@+id/uer_icon"
             android:layout_width="@dimen/profile_icon"
             android:layout_height="@dimen/profile_icon"
             android:layout_gravity="center"
@@ -43,9 +44,8 @@
 
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
             android:orientation="vertical">
 
             <TextView
@@ -55,7 +55,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/secondary_text"
-                tools:text="User"
+                android:text="User"
                 />
 
             <TextView
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/secondary_text"
-                tools:text="User@email.com"/>
+                android:text="User@email.com"/>
 
             <TextView
                 android:id="@+id/user_phone"
@@ -72,11 +72,43 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/secondary_text"
-                tools:text="+1111111111"/>
+                android:text="+1111111111"/>
         </LinearLayout>
 
 
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/divides_text"
+            android:paddingBottom="0.5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="5dp"
+            android:paddingTop="0.5dp"
+            android:src="@drawable/line_horizontal"
+            />
+
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab_edit"
+            android:layout_width="9dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="26dp"
+            android:src="@drawable/ic_edit_black_24dp"
+            fab:elevation="8dp"
+            fab:fab_colorNormal="@color/primary"
+            fab:fab_colorPressed="@color/primary_dark"
+            fab:fab_colorRipple="@color/primary_light"
+            fab:fab_shadow="true"
+            fab:fab_type="mini"/>
+    </FrameLayout>
 
 </LinearLayout>

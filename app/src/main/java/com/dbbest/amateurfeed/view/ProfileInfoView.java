@@ -10,4 +10,6 @@ import android.support.annotation.NonNull;
 
 public interface ProfileInfoView extends IView {
 
+
+
 }

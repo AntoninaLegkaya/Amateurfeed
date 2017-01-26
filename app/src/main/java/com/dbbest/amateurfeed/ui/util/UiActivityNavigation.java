@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.dbbest.amateurfeed.ui.HomeActivity;
 import com.dbbest.amateurfeed.ui.ResetPasswordActivity;
+import com.dbbest.amateurfeed.ui.SettingsActivity;
 import com.dbbest.amateurfeed.ui.SignUpActivity;
 import com.dbbest.amateurfeed.ui.StartActivity;
 
@@ -31,6 +32,7 @@ public class UiActivityNavigation {
     }
 
     public static Intent homeActivity(Context context) {return new Intent(context, HomeActivity.class);}
+    public static Intent settingsActivity(Context context) {return new Intent(context, SettingsActivity.class);}
 //    public static Intent startCamera() {
 //        return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //    }

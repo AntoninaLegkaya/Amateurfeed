@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="preferenceTheme">@style/AppPreferenceTheme</item>
     </style>
 
     <!--main activity toolbar style-->
@@ -15,18 +16,40 @@
         <item name="android:background">?attr/colorPrimary</item>
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>
         <item name="android:textColorPrimary">@color/white</item>
-
-
     </style>
 
 
+    <!-- Custom Preference Theme inherits from the v14 support library Material Theme -->
+    <style name="AppPreferenceTheme" parent="@style/PreferenceFixTheme">
+        <item name="preferenceFragmentCompatStyle">@style/PreferenceFixTheme</item>
+    </style>
 
+    <!-- Custom Style for PreferenceFragmentCompat -->
+    <style name="AppPreferenceFragmentCompatStyle" parent="@style/PreferenceFragment.Material">
+        <!-- Custom layout for PreferenceFragmentCompat -->
+        <item name="android:layout">@layout/fragment_preference</item>
+    </style>
+
+    <!-- Style for a custom Preference Entry -->
+    <style name="AppPreference">
+        <item name="android:layout">@layout/preference_material</item>
+    </style>
+
+
+    <!--Splash Screen Theme-->
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <!--Main Screen Theme-->
     <style name="AppTheme.Main" parent="AppTheme">
         <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+    <!--Setting Screen Theme-->
+    <style name="AppTheme.Settings" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="toolbarStyle">@style/Toolbar</item>
     </style>
 
     <!--Style for  Login Screen TextInputLayout-->

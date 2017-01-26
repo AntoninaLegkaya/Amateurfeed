@@ -19,7 +19,7 @@
     <color name="blue">#03A9F4</color>
 
     <!--Warning Dialog-->
-    <color name="app_black">#FF1D1D26</color>
+    <color name="app_black">#1d1d26</color>
     <color name="app_blue_text">#FF008EFF</color>
     <color name="dialog_white_background">#f8f8fa</color>
     <color name="warning_dialog_message_text">@color/app_black</color>

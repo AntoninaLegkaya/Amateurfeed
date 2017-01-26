@@ -10,10 +10,12 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 
 import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
+import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.view.HomeView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabSelectedListener;
@@ -24,6 +26,10 @@ import com.roughike.bottombar.OnMenuTabSelectedListener;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
     private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
+    private static final String SEARCH_FRAGMENT_TAG = "STAG";
+    private static final String PROFILE_FRAGMENT_TAG = "PTAG";
+    public static final String EDITE_PROFILE_FRAGMENT_TAG = "PREFTAG";
+
     private CoordinatorLayout coordinatorLayout;
     private HomePresenter mPresenter;
 
@@ -33,8 +39,17 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         mPresenter = new HomePresenter();
-
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.tabs_activity);
+        if(savedInstanceState==null){
+
+            Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+
+
+        }
+
+
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
         bottomBar.setItemsFromMenu(R.menu.bottom_tab, new OnMenuTabSelectedListener() {
             @Override
@@ -42,18 +57,18 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
                 switch (itemId) {
                     case R.id.home_tab:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                 FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+                                FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
                         Snackbar.make(coordinatorLayout, "Home Item Selected", Snackbar.LENGTH_LONG).show();
                         break;
                     case R.id.search_tab:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                SearchFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+                                SearchFragment.newInstance(""), SEARCH_FRAGMENT_TAG).commit();
                         Snackbar.make(coordinatorLayout, "Search Item Selected", Snackbar.LENGTH_LONG).show();
 
                         break;
                     case R.id.profile_tab:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                ProfileFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+                                ProfileFragment.newInstance(""), PROFILE_FRAGMENT_TAG).commit();
                         Snackbar.make(coordinatorLayout, "Profile Item Selected", Snackbar.LENGTH_LONG).show();
                         break;
                 }
@@ -78,6 +93,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     }
 
 
+
+
     @Override
     public void requestPermission(int code, @NonNull String... permissions) {
 
@@ -98,4 +115,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     public Context getContext() {
         return null;
     }
+
+
 }
