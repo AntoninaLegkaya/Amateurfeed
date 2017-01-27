@@ -61,7 +61,7 @@ public class FeedContract {
         public static final String COLUMN_LIKES = "likes";
 
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildUserNewsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -96,7 +96,7 @@ public class FeedContract {
         public static final String COLUMN_PHONE = "phone";
 
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildUserProfileUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -129,7 +129,7 @@ public class FeedContract {
         public static final String COLUMN_CREATE_DATE = "create_date";
 
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildCommentUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -152,7 +152,7 @@ public class FeedContract {
         public static final String COLUMN_NAME = "name";
 
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildTagUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -196,7 +196,7 @@ public class FeedContract {
 
         public static final String COLUMN_IS_MY = "is_my";
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildPreviewUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -223,7 +223,7 @@ public class FeedContract {
         public static final String COLUMN_IMAGE = "image";
 
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildCreatorUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -246,10 +246,13 @@ public class FeedContract {
         public static final String COLUMN_TAG_ID = "tag_id";
 
 
-        public static Uri buildLocationUri(long id) {
+        public static Uri buildPreviewTagUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
+
+
+
 
 
 }
