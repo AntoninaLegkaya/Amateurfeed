@@ -13,7 +13,7 @@ public class FeedDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 2;
 
-    static final String DATABASE_NAME = "feed.db";
+    public static final String DATABASE_NAME = "feed.db";
 
     public FeedDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -23,47 +23,46 @@ public class FeedDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         final String SQL_CREATE_USER_NEWS_TABLE = "CREATE TABLE " + FeedContract.UserNewsEntry.TABLE_NAME + " (" +
-                FeedContract.UserNewsEntry._ID + " INTEGER PRIMARY KEY," +
+                FeedContract.UserNewsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 FeedContract.UserNewsEntry.COLUMN_TITLE + " TEXT UNIQUE NOT NULL, " +
                 FeedContract.UserNewsEntry.COLUMN_UPDATE_DATE + " TEXT NOT NULL, " +
                 FeedContract.UserNewsEntry.COLUMN_STATUS + " TEXT NOT NULL, " +
-                FeedContract.UserNewsEntry.COLUMN_IMAGE + " TEXT NOT NULL " +
-                FeedContract.UserNewsEntry.COLUMN_LIKES + " INTEGER NOT NULL " +
+                FeedContract.UserNewsEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +
+                FeedContract.UserNewsEntry.COLUMN_LIKES + " INTEGER " +
                 " );";
 
 
         final String SQL_CREATE_PROFILE_USER_TABLE = "CREATE TABLE " + FeedContract.UserProfileEntry.TABLE_NAME + " (" +
-                FeedContract.UserProfileEntry._ID + " INTEGER PRIMARY KEY," +
+                FeedContract.UserProfileEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 FeedContract.UserProfileEntry.COLUMN_FULL_NAME + " TEXT UNIQUE NOT NULL, " +
                 FeedContract.UserProfileEntry.COLUMN_EMAIL + " TEXT NOT NULL, " +
                 FeedContract.UserProfileEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +
-                FeedContract.UserProfileEntry.COLUMN_SKYPE + " TEXT NOT NULL " +
-                FeedContract.UserProfileEntry.COLUMN_ADDRESS + " TEXT NOT NULL " +
-                FeedContract.UserProfileEntry.COLUMN_JOB + " TEXT NOT NULL " +
-                FeedContract.UserProfileEntry.COLUMN_PHONE + " TEXT NOT NULL " +
+                FeedContract.UserProfileEntry.COLUMN_SKYPE + " TEXT NOT NULL, " +
+                FeedContract.UserProfileEntry.COLUMN_ADDRESS + " TEXT NOT NULL, " +
+                FeedContract.UserProfileEntry.COLUMN_JOB + " TEXT NOT NULL, " +
+                FeedContract.UserProfileEntry.COLUMN_PHONE + " TEXT NOT NULL" +
                 " );";
 
 
         final String SQL_CREATE_COMMENT_USER_TABLE = "CREATE TABLE " + FeedContract.CommentEntry.TABLE_NAME + " (" +
-                FeedContract.CommentEntry._ID + " INTEGER PRIMARY KEY," +
+                FeedContract.CommentEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
                 FeedContract.CommentEntry.COLUMN_POST_ID + " INTEGER NOT NULL, " +
                 FeedContract.CommentEntry.COLUMN_CREATOR_KEY + " INTEGER NOT NULL, " +
                 FeedContract.CommentEntry.COLUMN_BODY + " TEXT UNIQUE NOT NULL, " +
                 FeedContract.CommentEntry.COLUMN_PARENT_COMMENT_ID + " INTEGER NOT NULL, " +
-                FeedContract.CommentEntry.COLUMN_CREATOR_ID + " INTEGER NOT NULL, " +
                 FeedContract.CommentEntry.COLUMN_CREATE_DATE + " TEXT UNIQUE NOT NULL, " +
                 // Set up the creator column as a foreign key to creator table.
                 " FOREIGN KEY (" + FeedContract.CommentEntry.COLUMN_CREATOR_KEY + ") REFERENCES " +
-                FeedContract.CreatorEntry.TABLE_NAME + " (" + FeedContract.CreatorEntry._ID + "), " +
+                FeedContract.CreatorEntry.TABLE_NAME + " (" + FeedContract.CreatorEntry._ID + ")" +
 
-                " );";
+                ");";
 
 
         final String SQL_CREATE_TAG_TABLE = "CREATE TABLE " + FeedContract.TagEntry.TABLE_NAME + " (" +
-                FeedContract.TagEntry._ID + " INTEGER PRIMARY KEY," +
-                FeedContract.TagEntry.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
-                " );";
+                FeedContract.TagEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                FeedContract.TagEntry.COLUMN_NAME + " TEXT NOT NULL " +
+                ");";
 
         final String SQL_CREATE_PREVIEW_TABLE = "CREATE TABLE " + FeedContract.PreviewEntry.TABLE_NAME + " (" +
                 // Why AutoIncrement here, and not above?
@@ -72,34 +71,34 @@ public class FeedDbHelper extends SQLiteOpenHelper {
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
                 FeedContract.PreviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FeedContract.PreviewEntry.COLUMN_COMMENT_KEY + " INTEGER NOT NULL," +
+                FeedContract.PreviewEntry.COLUMN_COMMENT_KEY + " INTEGER NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_TEXT + " TEXT NOT NULL, " +
-                FeedContract.PreviewEntry.COLUMN_LIKES + " INTEGER NOT NULL," +
-                FeedContract.PreviewEntry.COLUMN_IS_LIKE + " INTEGER NOT NULL," +
+                FeedContract.PreviewEntry.COLUMN_LIKES + " INTEGER NOT NULL, " +
+                FeedContract.PreviewEntry.COLUMN_IS_LIKE + " INTEGER NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_AUTHOR + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +
-                FeedContract.PreviewEntry.COLUMN_IS_MY + " INTEGER NOT NULL," +
+                FeedContract.PreviewEntry.COLUMN_IS_MY + " INTEGER, " +
 
                 // Set up the comment column as a foreign key to comment table.
                 " FOREIGN KEY (" + FeedContract.PreviewEntry.COLUMN_COMMENT_KEY + ") REFERENCES " +
-                FeedContract.CommentEntry.TABLE_NAME + " (" + FeedContract.CommentEntry._ID + "), " +
+                FeedContract.CommentEntry.TABLE_NAME + " (" + FeedContract.CommentEntry._ID + ")" +
 
                 " );";
 
         final String SQL_CREATE_CREATOR_TABLE = "CREATE TABLE " + FeedContract.CreatorEntry.TABLE_NAME + " (" +
-                FeedContract.CreatorEntry._ID + " INTEGER PRIMARY KEY," +
+                FeedContract.CreatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 FeedContract.CreatorEntry.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
                 FeedContract.CreatorEntry.COLUMN_IS_ADMIN + " INTEGER NOT NULL," +
-                FeedContract.CreatorEntry.COLUMN_IMAGE + " TEXT UNIQUE NOT NULL, " +
-                " );";
+                FeedContract.CreatorEntry.COLUMN_IMAGE + " TEXT UNIQUE NOT NULL " +
+                ");";
 
-        final String SQL_CREATE_PREVIEW_TAG_TABLE = "CREATE TABLE " + FeedContract.TagEntry.TABLE_NAME + " (" +
-                FeedContract.PreviewTagEntry._ID + " INTEGER PRIMARY KEY," +
+        final String SQL_CREATE_PREVIEW_TAG_TABLE = "CREATE TABLE " + FeedContract.PreviewTagEntry.TABLE_NAME + " (" +
+                FeedContract.PreviewTagEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 FeedContract.PreviewTagEntry.COLUMN_PREVIEW_ID + " INTEGER NOT NULL, " +
-                FeedContract.PreviewTagEntry.COLUMN_TAG_ID + " INTEGER NOT NULL, " +
+                FeedContract.PreviewTagEntry.COLUMN_TAG_ID + " INTEGER NOT NULL" +
                 " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_USER_NEWS_TABLE);

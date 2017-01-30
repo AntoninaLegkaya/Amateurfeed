@@ -2,6 +2,7 @@ package com.dbbest.amateurfeed.data;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -199,6 +200,20 @@ public class FeedContract {
         public static Uri buildPreviewUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
+        public static Uri buildIsMyPreview(String isMyFlag) {
+            return CONTENT_URI.buildUpon().appendPath(isMyFlag).build();
+        }
+
+        public static Uri buildPreviewTagById(int preview_id) {
+            return ContentUris.withAppendedId(CONTENT_URI, preview_id);
+//            return CONTENT_URI.buildUpon().appendPath(String.valueOf(preview_id)).build();
+        }
+
+        public static long getIdFromUri(Uri uri) {
+
+            return Long.parseLong(uri.getPathSegments().get(1));
+        }
     }
 
     /* Creator Entry*/
@@ -250,9 +265,6 @@ public class FeedContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
-
-
-
 
 
 }

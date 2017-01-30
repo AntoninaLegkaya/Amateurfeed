@@ -1,4 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--Content Provider-->
+    <string name="content_authority" translatable="false">com.dbbest.amateurfeed.app</string>
     <string name="app_name">Amateurfeed</string>
 
     <!--Login Screen-->

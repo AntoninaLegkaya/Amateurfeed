@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Created by antonina on 27.01.17.
@@ -20,17 +21,20 @@ public class FeedProvider extends ContentProvider {
     private FeedDbHelper mOpenHelper;
 
     static final int PREVIEW = 100;
-    static final int COMMENT = 101;
-    static final int PROFILE = 102;
-    static final int CREATOR = 103;
-    static final int TAG = 104;
-    static final int PREVIEW_TAG = 105;
-    static final int USER_NEWS = 300;
+    static final int COMMENT = 300;
+    static final int PROFILE = 400;
+    static final int CREATOR = 500;
+    static final int TAG = 600;
+    static final int PREVIEW_TAG = 700;
+    static final int PREVIEW_TAG_BY_ID = 101;
+    static final int USER_NEWS = 800;
 
     private static final SQLiteQueryBuilder sCommentByCreatorQueryBuilder;
 
+
     static {
         sCommentByCreatorQueryBuilder = new SQLiteQueryBuilder();
+
 
         //This is an inner join which looks like
         //comment INNER JOIN creator ON comment.creator_id = creator._id
@@ -44,20 +48,56 @@ public class FeedProvider extends ContentProvider {
     }
 
 
+    private static SQLiteQueryBuilder sPreviewByTagQueryBuilder;
+
+    static {
+
+        sPreviewByTagQueryBuilder = new SQLiteQueryBuilder();
+
+        //preview JOIN tag on table preview_tag
+        sPreviewByTagQueryBuilder.setTables(FeedContract.PreviewEntry.TABLE_NAME +
+                " LEFT OUTER JOIN " + FeedContract.PreviewTagEntry.TABLE_NAME +
+                " ON " + FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID + " = " + FeedContract.PreviewTagEntry.TABLE_NAME + "." + FeedContract.PreviewTagEntry.COLUMN_PREVIEW_ID +
+                " LEFT JOIN " + FeedContract.TagEntry.TABLE_NAME +
+                " ON " + FeedContract.TagEntry.TABLE_NAME +"."+ FeedContract.TagEntry._ID + " = " + FeedContract.PreviewTagEntry.TABLE_NAME + "." + FeedContract.PreviewTagEntry.COLUMN_TAG_ID);
+    }
+
+
     //creator._id = ?
     private static final String sCreatorSelection =
             FeedContract.CreatorEntry.TABLE_NAME +
 
                     "." + FeedContract.CreatorEntry._ID + " = ? ";
-    //preview_id=?
+    //preview._id = ?
     private static final String sPreviewSelection =
             FeedContract.PreviewEntry.TABLE_NAME +
                     "." + FeedContract.PreviewEntry._ID + " = ? ";
 
-    //comment_id=?
+    //comment._id=?
     private static final String sCommentSelection =
             FeedContract.CommentEntry.TABLE_NAME +
                     "." + FeedContract.CommentEntry._ID + " = ? ";
+
+    private Cursor getPreviewByIdSelection(
+            Uri uri, String[] projection, String sortOrder) {
+        long id = FeedContract.PreviewEntry.getIdFromUri(uri);
+
+        Cursor query = sPreviewByTagQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sPreviewSelection,
+                new String[]{Long.toString(id)},
+                null,
+                null,
+                sortOrder
+        );
+        Log.i("TestProvider", "projection: "+  projection );
+        Log.i("TestProvider", sPreviewByTagQueryBuilder.getTables() );
+        Log.i("TestProvider", "selection: "+  sPreviewSelection );
+        Log.i("TestProvider", "value  of selection: "+  id );
+
+        return query;
+    }
+
 
     static UriMatcher buildUriMatcher() {
 
@@ -73,8 +113,9 @@ public class FeedProvider extends ContentProvider {
         matcher.addURI(authority, FeedContract.PATH_PROFILE, PROFILE);
         matcher.addURI(authority, FeedContract.PATH_PREVIEW_TAG, PREVIEW_TAG);
         matcher.addURI(authority, FeedContract.PATH_USER_NEWS, USER_NEWS);
+        matcher.addURI(authority, FeedContract.PATH_PREVIEW+ "/#", PREVIEW_TAG_BY_ID);
 
-//        matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*/#", WEATHER_WITH_LOCATION_AND_DATE);
+//        matcher.addURI(authority, FeedContract.PATH_PREVIEW + "/*/#", PREVIEW_ID);
 
         return matcher;
     }
@@ -95,6 +136,8 @@ public class FeedProvider extends ContentProvider {
         switch (match) {
             case PREVIEW:
                 return FeedContract.PreviewEntry.CONTENT_TYPE;
+            case PREVIEW_TAG_BY_ID:
+                return FeedContract.PreviewEntry.CONTENT_ITEM_TYPE;
             case USER_NEWS:
                 return FeedContract.UserNewsEntry.CONTENT_TYPE;
             case COMMENT:
@@ -129,11 +172,17 @@ public class FeedProvider extends ContentProvider {
                         selection,
                         selectionArgs,
                         null,
-                        null,
-                        sortOrder
+                        sortOrder,
+                        null
                 );
                 break;
             }
+
+            case PREVIEW_TAG_BY_ID: {
+                retCursor = getPreviewByIdSelection(uri, projection, sortOrder);
+                break;
+            }
+
             case COMMENT: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         FeedContract.CommentEntry.TABLE_NAME,

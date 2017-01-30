@@ -76,7 +76,7 @@ public class RestApiClient {
         return executeCall(mApiService.login(request));
     }
 
-    public ResponseWrapper<ResetResponse> forgotPassword(ResetRequestPasswordModel request) {
+    public ResponseWrapper<Object> forgotPassword(ResetRequestPasswordModel request) {
         return executeCall(mApiService.forgotPassword(request));
     }
 

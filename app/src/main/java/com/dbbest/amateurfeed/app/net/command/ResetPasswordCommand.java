@@ -36,7 +36,7 @@ public class ResetPasswordCommand extends Command {
     public void execute() {
 
         RestApiClient apiClient = App.getApiFactory().restClient();
-        ResponseWrapper<ResetResponse> response = apiClient.forgotPassword(mResetRequest);
+        ResponseWrapper<Object> response = apiClient.forgotPassword(mResetRequest);
         if (response != null) {
             if (response.isSuccessful()) {
 
