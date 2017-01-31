@@ -65,13 +65,9 @@ public class FeedDbHelper extends SQLiteOpenHelper {
                 ");";
 
         final String SQL_CREATE_PREVIEW_TABLE = "CREATE TABLE " + FeedContract.PreviewEntry.TABLE_NAME + " (" +
-                // Why AutoIncrement here, and not above?
-                // Unique keys will be auto-generated in either case.  But for weather
-                // forecasting, it's reasonable to assume the user will want information
-                // for a certain date and all dates *following*, so the forecast data
-                // should be sorted accordingly.
+
                 FeedContract.PreviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FeedContract.PreviewEntry.COLUMN_COMMENT_KEY + " INTEGER NOT NULL, " +
+                FeedContract.PreviewEntry.COLUMN_POST_ID_KEY + " INTEGER NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_TEXT + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_LIKES + " INTEGER NOT NULL, " +
@@ -80,13 +76,13 @@ public class FeedDbHelper extends SQLiteOpenHelper {
                 FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +
-                FeedContract.PreviewEntry.COLUMN_IS_MY + " INTEGER, " +
+                FeedContract.PreviewEntry.COLUMN_IS_MY + " INTEGER "
 
                 // Set up the comment column as a foreign key to comment table.
-                " FOREIGN KEY (" + FeedContract.PreviewEntry.COLUMN_COMMENT_KEY + ") REFERENCES " +
-                FeedContract.CommentEntry.TABLE_NAME + " (" + FeedContract.CommentEntry._ID + ")" +
+//                + " FOREIGN KEY (" + FeedContract.PreviewEntry.COLUMN_POST_ID_KEY + ") REFERENCES " +
+//                FeedContract.CommentEntry.TABLE_NAME + " (" + FeedContract.CommentEntry._ID + ")" +
 
-                " );";
+                +" );";
 
         final String SQL_CREATE_CREATOR_TABLE = "CREATE TABLE " + FeedContract.CreatorEntry.TABLE_NAME + " (" +
                 FeedContract.CreatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

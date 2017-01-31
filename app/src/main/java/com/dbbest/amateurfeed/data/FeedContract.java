@@ -2,7 +2,6 @@ package com.dbbest.amateurfeed.data;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.Intent;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -16,17 +15,13 @@ public class FeedContract {
     // relationship between a domain name and its website.  A convenient string to use for the
     // content authority is the package name for the app, which is guaranteed to be unique on the
     // device.
-    public static final String CONTENT_AUTHORITY = "com.dbbest.amateurfeed.app";
+    public static final String AUTHORITY = "com.dbbest.amateurfeed.app";
 
-    // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
+    // Use AUTHORITY to create the base of all URI's which apps will use to contact
     // the content provider.
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
-    // Possible paths (appended to base content URI for possible URI's)
-    // For instance, content://com.example.android.sunshine.app/weather/ is a valid path for
-    // looking at weather data. content://com.example.android.sunshine.app/givemeroot/ will fail,
-    // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
-    // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
+
     public static final String PATH_PREVIEW = "preview";
     public static final String PATH_COMMENT = "comment";
     public static final String PATH_TAG = "tag";
@@ -44,9 +39,9 @@ public class FeedContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_USER_NEWS).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USER_NEWS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_USER_NEWS;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USER_NEWS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_USER_NEWS;
 
         // Table name
         public static final String TABLE_NAME = "user_news";
@@ -75,9 +70,9 @@ public class FeedContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_PROFILE).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROFILE;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PROFILE;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROFILE;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PROFILE;
 
         // Table name
         public static final String TABLE_NAME = "profile_user";
@@ -110,9 +105,9 @@ public class FeedContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_COMMENT).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_COMMENT;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_COMMENT;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_COMMENT;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_COMMENT;
 
         // Table name
         public static final String TABLE_NAME = "comment";
@@ -121,7 +116,7 @@ public class FeedContract {
         public static final String COLUMN_CREATOR_KEY = "creator_id";
 
 //        // Column with the foreign key into the comment table.
-//        public static final String COLUMN_COMMENT_KEY = "comment_child_id";
+//        public static final String COLUMN_POST_ID_KEY = "comment_child_id";
 
         public static final String COLUMN_POST_ID = "post_id";
         public static final String COLUMN_BODY = "body";
@@ -139,14 +134,16 @@ public class FeedContract {
 
     public static final class TagEntry implements BaseColumns {
 
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TAG).build();
+        public static final int TAG_ID_PATH_POSITION = 1;
 
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TAG;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TAG;
+        private static final String SCHEME = "content://";
+        private static final String PATH_TAG_ID = "/tag/";
 
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_TAG).build();
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY +PATH_TAG_ID);
+
+        public static final String CONTENT_TYPE =ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_TAG;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PROFILE;
         // Table name
         public static final String TABLE_NAME = "tag";
 
@@ -156,48 +153,65 @@ public class FeedContract {
         public static Uri buildTagUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+        public static Uri buildTagUriById(long id) {return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
+        }
     }
 
     /* Preview Entry*/
 
-    /* Inner class that defines the table contents of the preview table */
     public static final class PreviewEntry implements BaseColumns {
 
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_PREVIEW).build();
+        private static final String SCHEME = "content://";
+        private static final String PATH_PREVIEW = "/preview";
+        private static final String PATH_PREVIEW_ID = "/preview/";
+        public static final int PREVIEW_ID_PATH_POSITION = 1;
+        public static final Uri CONTENT_URI =  Uri.parse(SCHEME + AUTHORITY + PATH_PREVIEW);
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_PREVIEW_ID);
 
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PREVIEW;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PREVIEW;
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PREVIEW;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PREVIEW;
 
         // Table name
         public static final String TABLE_NAME = "preview";
 
-        //        // Column with the foreign key into the tag table.
-//        public static final String COLUMN_TAG_KEY = "tag_id";
-//
-        // Column with the foreign key into the comment table.
-        public static final String COLUMN_COMMENT_KEY = "post_id";
 
+        public static final String COLUMN_POST_ID_KEY = "id_post";
         public static final String COLUMN_TITLE = "title";
-
         public static final String COLUMN_TEXT = "text";
-
         public static final String COLUMN_LIKES = "likes";
         public static final String COLUMN_IS_LIKE = "is_like";
-
-
         public static final String COLUMN_AUTHOR = "author";
         public static final String COLUMN_AUTHOR_IMAGE = "author_image";
-
         public static final String COLUMN_CREATE_DATE = "create_date";
-
         public static final String COLUMN_IMAGE = "image";
-
         public static final String COLUMN_IS_MY = "is_my";
 
-        public static Uri buildPreviewUri(long id) {
+//        public static final String DEFAULT_SORT_ORDER = "author ASC";
+
+
+
+        public static final String[] DEFAULT_PROJECTION = new String[]{
+                PreviewEntry._ID,
+                PreviewEntry.COLUMN_POST_ID_KEY,
+                PreviewEntry.COLUMN_TITLE,
+                PreviewEntry.COLUMN_TEXT,
+                PreviewEntry.COLUMN_LIKES,
+                PreviewEntry.COLUMN_IS_LIKE,
+                PreviewEntry.COLUMN_AUTHOR,
+                PreviewEntry.COLUMN_AUTHOR_IMAGE,
+                PreviewEntry.COLUMN_CREATE_DATE,
+                PreviewEntry.COLUMN_IMAGE,
+                PreviewEntry.COLUMN_IS_MY
+
+        };
+
+
+        public static long getIdFromUri(Uri uri) {
+
+            return Long.parseLong(uri.getPathSegments().get(1));
+        }
+
+        public static Uri buildPreviewUriById(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
@@ -205,15 +219,8 @@ public class FeedContract {
             return CONTENT_URI.buildUpon().appendPath(isMyFlag).build();
         }
 
-        public static Uri buildPreviewTagById(int preview_id) {
-            return ContentUris.withAppendedId(CONTENT_URI, preview_id);
-//            return CONTENT_URI.buildUpon().appendPath(String.valueOf(preview_id)).build();
-        }
 
-        public static long getIdFromUri(Uri uri) {
 
-            return Long.parseLong(uri.getPathSegments().get(1));
-        }
     }
 
     /* Creator Entry*/
@@ -224,9 +231,9 @@ public class FeedContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_CREATOR).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CREATOR;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_CREATOR;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CREATOR;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_CREATOR;
 
         // Table name
         public static final String TABLE_NAME = "creator";
@@ -247,13 +254,17 @@ public class FeedContract {
 
     public static final class PreviewTagEntry implements BaseColumns {
 
+        private static final String SCHEME = "content://";
+        private static final String PATH_PREVIEW_TAG_ID = "/preview_tag/";
+
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_PREVIEW_TAG).build();
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_PREVIEW_TAG_ID);
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PREVIEW_TAG;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PREVIEW_TAG;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PREVIEW_TAG;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PREVIEW_TAG;
 
         // Table name
         public static final String TABLE_NAME = "preview_tag";
@@ -261,10 +272,9 @@ public class FeedContract {
         public static final String COLUMN_TAG_ID = "tag_id";
 
 
-        public static Uri buildPreviewTagUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
+        public static Uri buildTagUriById(long id) {
+            return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
         }
     }
-
 
 }
