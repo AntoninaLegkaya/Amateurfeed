@@ -4,6 +4,7 @@ package com.dbbest.amateurfeed.app.net.command;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
@@ -13,6 +14,7 @@ import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.CurrentUser;
+import com.dbbest.amateurfeed.utils.Utils;
 
 /**
  * Created by antonina on 19.01.17.
@@ -39,6 +41,9 @@ public class LoginCommand extends Command {
 
     @Override
     public void execute() {
+
+        Log.i(Utils.TAG_LOG, "Login Command: Execute Login request.....");
+
         //TODO RestApiClient
         RestApiClient apiClient = App.getApiFactory().restClient();
         ResponseWrapper<LoginResponseModel> response = apiClient.login(mLoginRequest);
@@ -47,7 +52,10 @@ public class LoginCommand extends Command {
 
                 LoginResponseModel data = response.data();
                 AuthToken authToken = new AuthToken();
+                Log.i(Utils.TAG_LOG, "Login Commend: AuthToken: " + data.getAccessToken());
                 authToken.update(data.getAccessToken());
+
+                notifySuccess(Bundle.EMPTY);
 
                 CurrentUser user = new CurrentUser();
                 user.setId(data.getUserId());
@@ -56,11 +64,16 @@ public class LoginCommand extends Command {
                 user.setProfileImage(data.getProfileImage());
 
 
+            } else {
+
+                Log.e(Utils.TAG_LOG, "Login Command: " + response.message());
+                notifyError(Bundle.EMPTY);
+
             }
-            notifySuccess(Bundle.EMPTY);
+
 
         } else {
-//            "Login response is null!"
+            Log.e(Utils.TAG_LOG, "Login Command: is null!");
             notifyError(Bundle.EMPTY);
         }
     }

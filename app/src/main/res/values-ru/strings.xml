@@ -21,4 +21,12 @@
     <string name="edit_profile_toolbar_label">Редактировать Профиль</string>
     <string name="cancel_button">Отклонить</string>
     <string name="save_button">Сохранить</string>
+    <string name="emptyEmailError">Пожалуста введите  e-mail</string>
+    <string name="emptyPasswordError">Пожалйста введите пароль</string>
+    <string name="incorrectEmail">\"Не корректный E-mail \"</string>
+    <string name="incorrectPassword">Не корректный пароль</string>
+    <string name="lengthPasswordError">Пароль длжен быть не меньше 6 символов</string>
+    <string name="characterPasswordError">Пароль должен содержать миниму один символ в малом регистре (\'а\'-\'я\')</string>
+    <string name="incorrectLoginDialog">Праверьте  e-mail и пароль! \\n Попробуйте еще раз!</string>
+    <string name="no_internet_connection">Нет связи с интернетом</string>
 </resources>

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 
+import com.dbbest.amateurfeed.ui.dialog.ProgressDialog;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 
 /**
@@ -17,5 +18,10 @@ public class UIDialogNavigation {
         return new WarningDialog.Builder()
                 .setMessageText(message)
                 .build();
+    }
+
+    @NonNull
+    public static DialogFragment showProgressDialog() {
+        return ProgressDialog.instance();
     }
 }

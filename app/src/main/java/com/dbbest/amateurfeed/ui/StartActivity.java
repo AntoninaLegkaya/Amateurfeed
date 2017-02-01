@@ -3,15 +3,20 @@ package com.dbbest.amateurfeed.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.StartPresenter;
+import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
+import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.StartView;
 import com.facebook.login.widget.LoginButton;
 
@@ -22,6 +27,8 @@ public class StartActivity extends AppCompatActivity implements StartView, View.
     private LoginButton mFacebookLoginButton;
     private AppCompatEditText mLoginEdit;
     private AppCompatEditText mPasswordEdit;
+    private Button mLoginBtn;
+    private DialogFragment mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,14 @@ public class StartActivity extends AppCompatActivity implements StartView, View.
 
         mLoginEdit = (AppCompatEditText) findViewById(R.id.login);
         mPasswordEdit = (AppCompatEditText) findViewById(R.id.password);
+        mLoginBtn = (Button) findViewById(R.id.login_button);
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(Utils.TAG_LOG, "Login button pressed");
+                mPresenter.login(mLoginEdit.getText().toString(), mPasswordEdit.getText().toString(), null, null, null);
+            }
+        });
     }
 
 
@@ -38,7 +53,6 @@ public class StartActivity extends AppCompatActivity implements StartView, View.
     public void onClick(View view) {
         if (view.getId() == R.id.login_button) {
 
-            mPresenter.login(mLoginEdit.getText().toString(), mPasswordEdit.getText().toString(), null, null, null);
 
         } else if (view.getId() == R.id.sign_up_button) {
             Intent intent = UiActivityNavigation.registerActivity(StartActivity.this);
@@ -64,87 +78,76 @@ public class StartActivity extends AppCompatActivity implements StartView, View.
     @Override
     public void showEmptyEmailError() {
 
+        UIDialogNavigation.showWarningDialog(R.string.emptyEmailError).show(getSupportFragmentManager(), "warn");
+
     }
 
     @Override
     public void showEmailValidationError() {
+        UIDialogNavigation.showWarningDialog(R.string.incorrectEmail).show(getSupportFragmentManager(), "warn");
 
     }
 
     @Override
     public void showEmptyPasswordError() {
-
+        UIDialogNavigation.showWarningDialog(R.string.emptyPasswordError).show(getSupportFragmentManager(), "warn");
     }
 
     @Override
     public void showPasswordLengthValidationError() {
+        UIDialogNavigation.showWarningDialog(R.string.lengthPasswordError).show(getSupportFragmentManager(), "warn");
 
     }
 
     @Override
     public void showPasswordValidationError() {
+        UIDialogNavigation.showWarningDialog(R.string.characterPasswordError).show(getSupportFragmentManager(), "warn");
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgressDialog = UIDialogNavigation.showProgressDialog();
+        mProgressDialog.show(getSupportFragmentManager(), "progress");
+
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+
+    }
+
+    @Override
+    public void navigateToHomeScreen() {
+        startActivity(UiActivityNavigation.homeActivity(StartActivity.this));
+    }
+
+    @Override
+    public void showErrorIncorrectPassword() {
+        UIDialogNavigation.showWarningDialog(R.string.incorrectPassword).show(getSupportFragmentManager(),"warn");
 
     }
 
     @Override
     public void showErrorConnectionDialog() {
 
+        UIDialogNavigation.showWarningDialog(R.string.no_internet_connection).show(getSupportFragmentManager(),"warn");
+
     }
 
     @Override
     public void showErrorLoginDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.incorrectLoginDialog).show(getSupportFragmentManager(), "warn");
 
     }
 
-    @Override
-    public void showProgressDialog() {
-
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-
-    }
-
-    @Override
-    public void navigateToHomeScreen() {
-
-    }
-
-    @Override
-    public void showPasswordResetSuccess() {
-
-    }
-
-    @Override
-    public void requestPermission(int code, @NonNull String... permissions) {
-
-    }
-
-    @Override
-    public void showSuccessRegistrationDialog() {
-
-    }
-
-    @Override
-    public void onSocialLoginCompleted() {
-
-    }
-
-    @Override
-    public void showErrorIncorrectPassword() {
-
-    }
-
-    @Override
-    public void showBannedAccountError() {
-
-    }
 
     @NonNull
     @Override
     public Context getContext() {
-        return null;
+        return this;
     }
 
 

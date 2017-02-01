@@ -28,4 +28,7 @@
     <dimen name="profile_padding_right">16dp</dimen>
     <dimen name="profile_padding_left">16dp</dimen>
     <dimen name="profile_icon">60dp</dimen>
+
+    <!--Progress Dialog-->
+    <dimen name="progress_progressbar_size">60dp</dimen>
 </resources>

@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -159,6 +160,7 @@ public class FeedProvider extends ContentProvider {
             Log.i("TestProvider", "Preview table: Author:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_AUTHOR)));
             Log.i("TestProvider", "Tag table: TAG_NAME:" + c.getString(c.getColumnIndex(FeedContract.TagEntry.COLUMN_NAME)));
 
+            Log.i("TestProvider", DatabaseUtils.dumpCursorToString(c));
 
         }
 

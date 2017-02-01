@@ -15,7 +15,6 @@ public class AuthToken implements ActiveRecord<AuthToken> {
 
     private static final String AUTH_FILE_NAME = ".auth";
     private static final String KEY_AUTH_TOKEN = "AUTH_TOKEN";
-    private static final String BEARER = "Bearer ";
 
     public AuthToken() {
 
@@ -30,18 +29,7 @@ public class AuthToken implements ActiveRecord<AuthToken> {
         return readToken();
     }
 
-    /**
-     * Return bearer token for request
-     *
-     * @return null if token is empty
-     */
-    public String bearer() {
-        String token = readToken();
-        if (TextUtils.isEmpty(token)) {
-            return null;
-        }
-        return BEARER + token;
-    }
+
 
     /**
      * Update token

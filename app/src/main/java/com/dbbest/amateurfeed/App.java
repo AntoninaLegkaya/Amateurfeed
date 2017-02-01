@@ -1,9 +1,11 @@
 package com.dbbest.amateurfeed;
 
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.app.net.retrofit.ApiFactory;
 import com.dbbest.amateurfeed.utils.FactoryImpl;
+import com.dbbest.amateurfeed.utils.Utils;
 
 /**
  * Created by antonina on 19.01.17.
@@ -39,5 +41,6 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+
     }
 }

@@ -24,6 +24,7 @@
             android:layout_gravity="center"
             android:layout_margin="16dp"
             android:gravity="fill"
+            android:textColor="@color/black"
             android:hint="@string/login"
             />
 
@@ -44,6 +45,7 @@
             android:layout_gravity="center"
             android:layout_margin="16dp"
             android:gravity="fill"
+            android:textColor="@color/black"
             android:hint="@string/password"
             />
 

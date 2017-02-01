@@ -78,7 +78,7 @@
     </style>
     <!--Style for Login Screen  Button-->
 
-    <style name="ButtonAppTheme" parent="Widget.AppCompat.Button.Colored">фт
+    <style name="ButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/button</item>
 
@@ -103,5 +103,9 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="Theme_ProgressDialog">
+        <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
+        <item name="colorAccent">@color/primary</item>
+    </style>
 
 </resources>

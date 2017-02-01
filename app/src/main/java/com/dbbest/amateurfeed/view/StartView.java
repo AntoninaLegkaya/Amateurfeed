@@ -29,15 +29,6 @@ public interface StartView extends IView {
 
     void navigateToHomeScreen();
 
-    void showPasswordResetSuccess();
-
-    void requestPermission(int code, @NonNull String... permissions);
-
-    void showSuccessRegistrationDialog();
-
-    void onSocialLoginCompleted();
-
     void showErrorIncorrectPassword();
 
-    void showBannedAccountError();
 }

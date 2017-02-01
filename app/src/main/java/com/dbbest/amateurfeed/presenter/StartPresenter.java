@@ -4,6 +4,7 @@ import android.common.framework.Presenter;
 import android.common.util.TextUtils;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.command.Command;
@@ -23,21 +24,18 @@ import com.facebook.login.LoginManager;
 public class StartPresenter extends Presenter<StartView> implements CommandResultReceiver.CommandListener,
         UserLocationProvider.LocationProviderListener {
 
-    private static final String INCORRECT_PASSWORD_MSG_RESPONSE = "The password is incorrect";
-    private static final String BANNED_ACCOUNT_MSG_RESPONSE = "Sorry, but this account is deleted.";
-
-
+    private static final String INCORRECT_PASSWORD_MSG_RESPONSE = "An error has occurred.";
     private static final int PERMISSION_LOCATION = 0;
+
 
     private static final int CODE_LOGIN = 0;
     private static final int CODE_REGISTRATION_FB = 1;
-    private static final int CODE_REGISTRATION_USER = 3;
-    private static final int CODE_RESET_PASSWORD = 4;
 
     private CommandResultReceiver mResultReceiver;
     private UserLocationProvider mLocationProvider;
 
     public void login(String email, String password, String deviceId, String osType, String deviceToken) {
+
 
         if (getView() != null) {
             StartView view = getView();
@@ -81,18 +79,9 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
 
     @Override
-    protected void onAttachView(@NonNull StartView view) {
-        super.onAttachView(view);
-    }
-
-    @Override
-    protected void onDetachView(@NonNull StartView view) {
-        super.onDetachView(view);
-    }
-
-
-    @Override
     public void onSuccess(int code, Bundle data) {
+        Log.i(Utils.TAG_LOG, "StartPresenter: Success");
+        getView().dismissProgressDialog();
         if (getView() != null) {
             if (code == CODE_LOGIN) {
                 getView().navigateToHomeScreen();
@@ -103,6 +92,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
     @Override
     public void onFail(int code, Bundle data) {
+        Log.e(Utils.TAG_LOG, "StartPresenter: onFail");
         if (getView() != null) {
             getView().dismissProgressDialog();
             int errCode = Command.grabErrorCode(data);
@@ -112,14 +102,30 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
             } else {
                 if (errMessage != null && errMessage.equals(INCORRECT_PASSWORD_MSG_RESPONSE)) {
                     getView().showErrorIncorrectPassword();
-                } else if (errMessage != null && errMessage.equals(BANNED_ACCOUNT_MSG_RESPONSE)) {
-                    getView().showBannedAccountError();
                 } else {
                     getView().showErrorLoginDialog();
                 }
             }
         }
     }
+
+
+    @Override
+    protected void onAttachView(@NonNull StartView view) {
+        super.onAttachView(view);
+        if (mResultReceiver == null) {
+            mResultReceiver = new CommandResultReceiver();
+        }
+        mResultReceiver.setListener(this);
+    }
+
+    @Override
+    protected void onDetachView(@NonNull StartView view) {
+        super.onDetachView(view);
+        if (mResultReceiver != null)
+            mResultReceiver.setListener(null);
+    }
+
 
     @Override
     public void onProgress(int code, Bundle data, int progress) {
@@ -135,4 +141,5 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
     public void onLocationPermissionsDenied() {
 
     }
+
 }

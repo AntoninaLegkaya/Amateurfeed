@@ -7,17 +7,20 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.CurrentUser;
 import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
+import com.dbbest.amateurfeed.utils.Utils;
 
 /**
  * Created by antonina on 19.01.17.
  */
 
 public class SplashActivity extends AppCompatActivity {
+
     private static final int FADE_DELAY = 500;
 
     private Handler mHandler = new Handler(new Handler.Callback() {
@@ -29,7 +32,6 @@ public class SplashActivity extends AppCompatActivity {
             return true;
         }
     });
-    private AuthToken mAuthToken;
 
 
     @Override
@@ -55,13 +57,16 @@ public class SplashActivity extends AppCompatActivity {
     private void nextScreen() {
         AuthToken authToken = App.getFactory().data().authToken();
         Intent intent;
+
+        Log.i(Utils.TAG_LOG, authToken.toString());
+        authToken.purge();
+
         if (authToken.isValid()) {
-            // TODO start login activity
+
             intent = UiActivityNavigation.homeActivity(SplashActivity.this);
 
         } else {
-            intent = UiActivityNavigation.homeActivity(SplashActivity.this);
-//            intent = UiActivityNavigation.startActivity(SplashActivity.this);
+            intent = UiActivityNavigation.startActivity(SplashActivity.this);
 
         }
         startActivity(intent);

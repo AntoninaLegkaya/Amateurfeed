@@ -47,4 +47,18 @@
     <!--Button-->
     <string name="cancel_button">Cancel</string>
     <string name="save_button">Save</string>
+
+
+    <!--Waring Dialog Start Screen-->
+    <string name="emptyEmailError">Please enter e-mail</string>
+    <string name="emptyPasswordError">Please enter password</string>
+    <string name="lengthPasswordError">Password should not be less than 6 characters </string>
+    <string name="characterPasswordError">Passwords must have at least one lowercase (\'a\'-\'z\')</string>
+    <string name="incorrectEmail">Incorrect e-mail address</string>
+    <string name="incorrectPassword">Incorrect password</string>
+    <string name="incorrectLoginDialog">Check e-mail and password! \n Try again!</string>
+
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="server_error">Server Error</string>
+
 </resources>
