@@ -10,7 +10,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.StartPresenter;
@@ -18,16 +18,23 @@ import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.StartView;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-public class StartActivity extends AppCompatActivity implements StartView, View.OnClickListener {
+public class StartActivity extends AppCompatActivity implements StartView {
 
     private StartPresenter mPresenter;
 
     private LoginButton mFacebookLoginButton;
+    private CallbackManager mCallbackManager;
     private AppCompatEditText mLoginEdit;
     private AppCompatEditText mPasswordEdit;
     private Button mLoginBtn;
+    private TextView mSignUpLink;
+    private TextView mResetPswLink;
     private DialogFragment mProgressDialog;
 
     @Override
@@ -46,21 +53,54 @@ public class StartActivity extends AppCompatActivity implements StartView, View.
                 mPresenter.login(mLoginEdit.getText().toString(), mPasswordEdit.getText().toString(), null, null, null);
             }
         });
+        mCallbackManager = CallbackManager.Factory.create();
+        mFacebookLoginButton = (LoginButton) findViewById(R.id.login_fb_button);
+        mFacebookLoginButton.setReadPermissions("email");
+        mFacebookLoginButton.setReadPermissions("public_profile");
+        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+        mSignUpLink = (TextView) findViewById(R.id.sign_up_link);
+        mSignUpLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.sign_up_link) {
+
+                    startActivity(UiActivityNavigation.registerActivity(StartActivity.this));
+
+
+                }
+            }
+        });
+
+        mResetPswLink = (TextView) findViewById(R.id.reset_link);
+        mResetPswLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.reset_link) {
+
+                    startActivity(UiActivityNavigation.resetPassActivity(StartActivity.this));
+
+
+                }
+            }
+        });
     }
 
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.login_button) {
-
-
-        } else if (view.getId() == R.id.sign_up_button) {
-            Intent intent = UiActivityNavigation.registerActivity(StartActivity.this);
-            startActivity(intent);
-        }
-
-        //TODO Implement Facebook button login
-    }
 
     @Override
     protected void onStart() {
@@ -126,14 +166,14 @@ public class StartActivity extends AppCompatActivity implements StartView, View.
 
     @Override
     public void showErrorIncorrectPassword() {
-        UIDialogNavigation.showWarningDialog(R.string.incorrectPassword).show(getSupportFragmentManager(),"warn");
+        UIDialogNavigation.showWarningDialog(R.string.incorrectPassword).show(getSupportFragmentManager(), "warn");
 
     }
 
     @Override
     public void showErrorConnectionDialog() {
 
-        UIDialogNavigation.showWarningDialog(R.string.no_internet_connection).show(getSupportFragmentManager(),"warn");
+        UIDialogNavigation.showWarningDialog(R.string.no_internet_connection).show(getSupportFragmentManager(), "warn");
 
     }
 

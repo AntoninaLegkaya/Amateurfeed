@@ -42,7 +42,6 @@ public class LoginCommand extends Command {
     @Override
     public void execute() {
 
-        Log.i(Utils.TAG_LOG, "Login Command: Execute Login request.....");
 
         //TODO RestApiClient
         RestApiClient apiClient = App.getApiFactory().restClient();
@@ -66,14 +65,13 @@ public class LoginCommand extends Command {
 
             } else {
 
-                Log.e(Utils.TAG_LOG, "Login Command: " + response.message());
+
                 notifyError(Bundle.EMPTY);
 
             }
 
 
         } else {
-            Log.e(Utils.TAG_LOG, "Login Command: is null!");
             notifyError(Bundle.EMPTY);
         }
     }

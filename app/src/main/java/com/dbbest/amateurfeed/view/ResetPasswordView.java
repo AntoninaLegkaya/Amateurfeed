@@ -13,11 +13,11 @@ public interface ResetPasswordView extends IView {
 
     void showSuccessDialog();
 
-    void showErrorConnectionDialog();
-
-    void showErrorRegistrationDialog();
+    void showErrorDialog();
 
     void showProgressDialog();
 
     void dismissProgressDialog();
+
+    void showErrorConnectionDialog();
 }

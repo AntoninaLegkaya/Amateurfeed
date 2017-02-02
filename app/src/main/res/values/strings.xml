@@ -6,9 +6,32 @@
 
     <!--Login Screen-->
     <string name="ok_button">Ok</string>
-    <string name="sign_up_button">Sign up</string>
-    <string name="login">Login</string>
+    <string name="link_sign_up_screen"><u>Sign up</u></string>
+    <string name="login">E-mail</string>
+
+    <string name="lable_sign_up">If you do not registered</string>
+    <string name="lable_toolbar_login_in">Login in</string>
+
+    <!--Sign Up Screen-->
+    <string name="lable_already_sign_up">If you already registered</string>
+    <string name="link_login_screen"><u>Login In</u></string>
+
+    <string name="lable_toolbar_sign_up">Sign Up</string>
+    <string name="sign_up_button">Registrate</string>
+
+    <string name="fullname">Full Name</string>
+    <string name="phone">Phone</string>
+    <string name="address">Address</string>
     <string name="password">Password</string>
+
+
+    <!--Forgot Password-->
+    <string name="lable_toolbar_forgot_password">Reset Password</string>
+    <string name="error_dialog_reset_password">Password was not reseted. \n Check e-mail!</string>
+    <string name="info_dialog_reset_password">Old Password was reseted. \n On your e-mail will be sent new Password</string>
+    <string name="lable_reset_password">If you forgot password </string>
+    <string name="link_reset_password_screen"> <u>Reset it</u> </string>
+    <string name="reset_button">Reset</string>
 
     <!--Setting Screen-->
     <string name="label_activity_settings">Settings</string>
@@ -60,5 +83,6 @@
 
     <string name="no_internet_connection">No internet connection</string>
     <string name="server_error">Server Error</string>
+
 
 </resources>

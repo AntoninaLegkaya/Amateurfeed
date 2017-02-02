@@ -1,6 +1,4 @@
 <resources>
-
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
@@ -12,7 +10,7 @@
 
     <!--main activity toolbar style-->
 
-    <style name="Toolbar" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="Toolbar" parent="Theme.AppCompat.NoActionBar">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>
         <item name="android:textColorPrimary">@color/white</item>
@@ -67,13 +65,13 @@
 
     <style name="AppTheme.TextFloatLabelAppearance" parent="TextAppearance.Design.Hint">
         <!-- Floating label appearance here -->
-        <item name="android:textColor">@color/accent</item>
+        <item name="android:textColor">@color/secondary_text</item>
         <item name="android:textSize">20sp</item>
     </style>
 
     <style name="AppTheme.TextErrorAppearance" parent="TextAppearance.Design.Error">
         <!-- Error message appearance here -->
-        <item name="android:textColor">#ff0000</item>
+        <item name="android:textColor">@color/secondary_text</item>
         <item name="android:textSize">20sp</item>
     </style>
     <!--Style for Login Screen  Button-->

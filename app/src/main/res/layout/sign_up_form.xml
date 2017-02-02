@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/emailInputLayout"
+        style="@style/Widget.Design.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="fill"
+            android:hint="@string/login"
+            android:textColor="@color/black"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/fullnameInputLayout"
+        style="@style/Widget.Design.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/fullname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="fill"
+            android:hint="@string/fullname"
+            android:textColor="@color/black"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/phoneInputLayout"
+        style="@style/Widget.Design.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="fill"
+            android:hint="@string/phone"
+            android:textColor="@color/black"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/addressInputLayout"
+        style="@style/Widget.Design.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="fill"
+            android:hint="@string/address"
+            android:textColor="@color/black"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/passwordInputLayout"
+        style="@style/Widget.Design.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="fill"
+            android:hint="@string/password"
+            android:textColor="@color/black"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

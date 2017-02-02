@@ -2,6 +2,7 @@ package com.dbbest.amateurfeed.app.net.retrofit;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
@@ -13,6 +14,7 @@ import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.utils.ActionUtils;
+import com.dbbest.amateurfeed.utils.Utils;
 
 import java.net.HttpURLConnection;
 
@@ -37,14 +39,14 @@ public class RestApiClient {
         try {
             Response<ResponseWrapper<T>> response = call.execute();
             if (!response.isSuccessful()) {
-//                ("Response code: %d, message: %s, successful: %b", response.code(), response.message(), response.isSuccessful());
+                Log.i(Utils.TAG_LOG, "Response code: " + response.code() + "message: " + response.message() + "successful: " + response.isSuccessful());
                 if (response.errorBody() != null) {
-//                   ("Error body: %s", response.errorBody().string());
+                    Log.i(Utils.TAG_LOG, "Error body: " + response.errorBody().string());
                 }
             }
 
             if (response.body() != null && !response.body().isSuccessful()) {
-//                ("Response body code: %d, message: %s, success: %b", response.body().code(), response.body().message(), response.body().isSuccessful());
+                Log.i(Utils.TAG_LOG, "Response body code: " + response.body().code() + "message: " + response.body().message() + "successful: " + response.body().isSuccessful());
                 if (response.body().code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                     String action = ActionUtils.ACTION_UNAUTHORIZED;
                     if (response.body().message() != null && response.body().message().equals(USER_BLOCKED_MSG_RESPONSE)) {
@@ -58,7 +60,7 @@ public class RestApiClient {
 
             return response.body();
         } catch (Exception e) {
-//           (e, "network error");
+            Log.e(Utils.TAG_LOG,"network error: "+ e);
             return NetworkUtil.handleError(e);
         }
     }

@@ -44,7 +44,6 @@ public class ResetPasswordCommand extends Command {
 
 
             } else {
-//                ("Forgot password response is null");
                 notifyError(Bundle.EMPTY);
             }
         } else {

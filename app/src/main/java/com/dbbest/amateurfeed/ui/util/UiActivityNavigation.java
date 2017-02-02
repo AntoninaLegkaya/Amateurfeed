@@ -22,8 +22,7 @@ public class UiActivityNavigation {
     public static Intent startActivity(Context context) {return new Intent(context, StartActivity.class);
     }
 
-    public static Intent registerActivity(Context context) {
-        return new Intent(context, SignUpActivity.class);
+    public static Intent registerActivity(Context context) {return new Intent(context, SignUpActivity.class);
     }
 
     public static Intent resetPassActivity(Context context) {

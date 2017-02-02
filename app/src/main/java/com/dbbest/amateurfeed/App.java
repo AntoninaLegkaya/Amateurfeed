@@ -6,6 +6,8 @@ import android.util.Log;
 import com.dbbest.amateurfeed.app.net.retrofit.ApiFactory;
 import com.dbbest.amateurfeed.utils.FactoryImpl;
 import com.dbbest.amateurfeed.utils.Utils;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 /**
  * Created by antonina on 19.01.17.
@@ -28,6 +30,7 @@ public class App extends MultiDexApplication {
 
 
     }
+
     public static FactoryImpl getFactory() {
         if (mFactory == null) {
             mFactory = new FactoryImpl();
@@ -40,6 +43,8 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         sInstance = this;
 
     }

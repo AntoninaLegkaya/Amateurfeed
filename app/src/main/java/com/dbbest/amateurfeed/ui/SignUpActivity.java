@@ -3,16 +3,14 @@ package com.dbbest.amateurfeed.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.presenter.SignUpPresenter;
+import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.view.SignUpView;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnMenuTabSelectedListener;
 
 /**
  * Created by antonina on 19.01.17.
@@ -21,13 +19,32 @@ import com.roughike.bottombar.OnMenuTabSelectedListener;
 public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
     private SignUpPresenter mPresenter;
+    private TextView mLoginScreenLink;
+    private TextView mResetPswLink;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sign_ap_activity);
+        setContentView(R.layout.sign_up);
         mPresenter = new SignUpPresenter();
+        mLoginScreenLink = (TextView) findViewById(R.id.login_link);
+        mLoginScreenLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(UiActivityNavigation.startActivity(SignUpActivity.this));
+            }
+        });
+        mResetPswLink = (TextView) findViewById(R.id.reset_link);
+        mResetPswLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.reset_link) {
+                    startActivity(UiActivityNavigation.resetPassActivity(SignUpActivity.this));
+                }
+            }
+        });
 
     }
 

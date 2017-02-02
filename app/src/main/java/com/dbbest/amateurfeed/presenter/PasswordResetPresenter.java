@@ -20,7 +20,7 @@ import com.dbbest.amateurfeed.view.SignUpView;
 public class PasswordResetPresenter extends Presenter<ResetPasswordView> implements CommandResultReceiver.CommandListener {
 
 
-    private static final int CODE_RESET_PASSWORD = 2;
+    private static final int CODE_RESET_PASSWORD = 0;
 
     private CommandResultReceiver mResetReceiver;
 
@@ -70,7 +70,10 @@ public class PasswordResetPresenter extends Presenter<ResetPasswordView> impleme
 
     @Override
     public void onFail(int code, Bundle data) {
-
+        if (getView() != null) {
+            getView().dismissProgressDialog();
+            getView().showErrorDialog();
+        }
     }
 
     @Override

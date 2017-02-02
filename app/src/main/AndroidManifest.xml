@@ -28,6 +28,11 @@
             android:name=".ui.SignUpActivity"
             android:theme="@style/AppTheme.Main"/>
         <activity
+            android:name=".ui.ResetPasswordActivity"
+            android:theme="@style/AppTheme.Main">
+
+        </activity>
+        <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/label_activity_settings"
             android:theme="@style/AppTheme.Settings"/>
