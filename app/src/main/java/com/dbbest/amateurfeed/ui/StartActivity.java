@@ -49,7 +49,7 @@ public class StartActivity extends AppCompatActivity implements StartView {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(Utils.TAG_LOG, "Login button pressed");
+
                 mPresenter.login(mLoginEdit.getText().toString(), mPasswordEdit.getText().toString(), null, null, null);
             }
         });

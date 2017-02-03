@@ -3,6 +3,7 @@ package com.dbbest.amateurfeed.app.net.command;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
@@ -10,6 +11,7 @@ import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
+import com.dbbest.amateurfeed.utils.Utils;
 
 /**
  * Created by antonina on 19.01.17.
@@ -21,7 +23,7 @@ public class RegistrationCommand extends Command {
 
 
     public RegistrationCommand(String email, String fullName, String phone, String address, String password, String deviceId, String osType, String deviceToken) {
-        mRegistrationRequest = new RegistrationRequestModel(email,  fullName,  phone,  address,  password,  deviceId,  osType,  deviceToken);
+        mRegistrationRequest = new RegistrationRequestModel(email, fullName, phone, address, password, deviceId, osType, deviceToken);
     }
 
     protected RegistrationCommand(Parcel in) {
@@ -33,6 +35,7 @@ public class RegistrationCommand extends Command {
     public void writeToParcel(int flags, Parcel dest) {
         dest.writeParcelable(mRegistrationRequest, flags);
     }
+
     @Override
     public void execute() {
         //TODO RestApiClient
@@ -44,13 +47,15 @@ public class RegistrationCommand extends Command {
                 LoginResponseModel data = response.data();
                 AuthToken authToken = new AuthToken();
                 authToken.update(data.getAccessToken());
+                Log.i(Utils.TAG_LOG, "yser image: " + data.getProfileImage());
+                notifySuccess(Bundle.EMPTY);
 
-
+            } else {
+                notifyError(Bundle.EMPTY);
             }
-            notifySuccess(Bundle.EMPTY);
+
 
         } else {
-//            "Login response is null!"
             notifyError(Bundle.EMPTY);
         }
     }

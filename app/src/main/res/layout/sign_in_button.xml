@@ -10,18 +10,18 @@
     <Button
         android:id="@+id/login_button"
         style="@style/ButtonAppTheme"
-        android:background="@drawable/button_shape"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/activity_vertical_margin"
         android:text="@string/ok_button"
-        android:textSize="14sp"/>
+       />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_fb_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:layout_gravity="center"
         android:visibility="gone" />
 
@@ -30,7 +30,12 @@
         layout="@layout/link_sign_up_screen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         />
+    <include layout="@layout/link_reset_screen">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+    </include>
 
 </LinearLayout>

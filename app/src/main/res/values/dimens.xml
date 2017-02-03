@@ -35,4 +35,11 @@
 
     <!--Button-->
     <dimen name="button_corner_radius">7dp</dimen>
+
+
+    <!--Image User-->
+    <dimen name="user_icon">100dp</dimen>
+
+    <!--ToolBar Image-->
+    <dimen name="toolbar_icon">40dp</dimen>
 </resources>

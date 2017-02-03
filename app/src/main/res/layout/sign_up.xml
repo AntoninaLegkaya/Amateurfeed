@@ -14,47 +14,43 @@
         app:popupTheme="@style/Toolbar"
         >
 
-
-        <TextView
-            android:id="@+id/toolbar_sign_up_title"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/lable_toolbar_sign_up"
-            android:textColor="@android:color/white"
-            />
+        <include layout="@layout/toolbar_icon"/>
+        <!--<TextView-->
+        <!--android:id="@+id/toolbar_sign_up_title"-->
+        <!--style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="@string/lable_toolbar_sign_up"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--/>-->
 
 
     </android.support.v7.widget.Toolbar>
+    <ImageView
+        android:id="@+id/user_icon"
+        android:layout_width="@dimen/user_icon"
+        android:layout_height="@dimen/user_icon"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+        android:layout_marginBottom="@dimen/abc_list_item_padding_horizontal_material"
+        android:adjustViewBounds="true"
+
+        />
 
     <include
         layout="@layout/sign_up_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <Button
-        android:id="@+id/sign_up_button"
-        style="@style/ButtonAppTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/button_shape"
-        android:text="@string/sign_up_button"
-        android:textSize="14sp"
-        android:layout_marginBottom="16dp"/>
-
-    <include
-        layout="@layout/link_login_screen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         />
 
     <include
-        layout="@layout/link_reset_screen"
+        layout="@layout/sign_up_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
         />
 
 

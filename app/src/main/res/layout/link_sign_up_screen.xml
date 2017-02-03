@@ -12,7 +12,8 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/activity_link_margin"
             android:text="@string/lable_sign_up"
-            android:textSize="16sp"/>
+            android:textColor="@color/secondary_text"
+           />
 
         <TextView
             android:id="@+id/sign_up_link"
@@ -24,6 +25,5 @@
             android:contextClickable="true"
             android:text="@string/link_sign_up_screen"
             android:textColor="@drawable/tab_text_link"
-            android:textSize="18sp"
             />
     </LinearLayout>

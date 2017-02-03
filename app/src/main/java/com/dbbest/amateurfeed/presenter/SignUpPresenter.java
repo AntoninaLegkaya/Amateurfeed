@@ -12,15 +12,13 @@ import com.dbbest.amateurfeed.app.net.command.RegistrationCommand;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.SignUpView;
 
-import static android.R.attr.data;
-
 /**
  * Created by antonina on 19.01.17.
  */
 
 public class SignUpPresenter extends Presenter<SignUpView> implements CommandResultReceiver.CommandListener {
 
-    private static final int CODE_REGISTRATION = 1;
+    private static final int CODE_REGISTRATION = 0;
 
     private CommandResultReceiver mResultReceiver;
 
@@ -37,17 +35,14 @@ public class SignUpPresenter extends Presenter<SignUpView> implements CommandRes
                 return;
             }
             if (TextUtils.isEmpty(fullName)) {
-                view.showEmptyEmailError();
+                view.showEmptyFullNameError();
                 return;
             } else if (!Utils.isFullNameValid(fullName)) {
-                view.showEmailValidationError();
+                view.showFullNameValidationError();
                 return;
             }
-            if (TextUtils.isEmpty(phone)) {
-                view.showEmptyEmailError();
-                return;
-            } else if (!Utils.isPhoneValid(phone)) {
-                view.showEmailValidationError();
+            if (!Utils.isPhoneValid(phone)) {
+                view.showPhoneValidationError();
                 return;
             }
 
@@ -62,29 +57,29 @@ public class SignUpPresenter extends Presenter<SignUpView> implements CommandRes
                 return;
             }
 
-            if (TextUtils.isEmpty(deviceId)) {
-                view.showEmptyEmailError();
-                return;
-            } else if (!Utils.isDeviceIdValid(deviceId)) {
-                view.showEmailValidationError();
-                return;
-            }
-
-            if (TextUtils.isEmpty(osType)) {
-                view.showEmptyEmailError();
-                return;
-            } else if (!Utils.isOsTypeValid(osType)) {
-                view.showEmailValidationError();
-                return;
-            }
-
-            if (TextUtils.isEmpty(deviceToken)) {
-                view.showEmptyEmailError();
-                return;
-            } else if (!Utils.isDeviceTokenValid(deviceToken)) {
-                view.showEmailValidationError();
-                return;
-            }
+//            if (TextUtils.isEmpty(deviceId)) {
+//                view.showEmptyEmailError();
+//                return;
+//            } else if (!Utils.isDeviceIdValid(deviceId)) {
+//                view.showEmailValidationError();
+//                return;
+//            }
+//
+//            if (TextUtils.isEmpty(osType)) {
+//                view.showEmptyEmailError();
+//                return;
+//            } else if (!Utils.isOsTypeValid(osType)) {
+//                view.showEmailValidationError();
+//                return;
+//            }
+//
+//            if (TextUtils.isEmpty(deviceToken)) {
+//                view.showEmptyEmailError();
+//                return;
+//            } else if (!Utils.isDeviceTokenValid(deviceToken)) {
+//                view.showEmailValidationError();
+//                return;
+//            }
             view.showProgressDialog();
             Command command = new RegistrationCommand(email,  fullName,  phone,  address,  password,  deviceId,  osType,  deviceToken);
             command.send(CODE_REGISTRATION, mResultReceiver);
@@ -114,6 +109,7 @@ public class SignUpPresenter extends Presenter<SignUpView> implements CommandRes
         if (getView() != null) {
             getView().dismissProgressDialog();
             getView().showSuccessDialog();
+            getView().navigateToStartScreen();
         }
     }
 

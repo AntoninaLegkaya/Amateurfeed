@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="wrap_content"
               android:orientation="vertical">
 
     <android.support.design.widget.TextInputLayout
@@ -20,9 +20,9 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:gravity="fill"
-            android:hint="@string/login"
+            android:hint="@string/email_required"
             android:textColor="@color/black"
-            />
+            style="@android:style/TextAppearance.Widget.EditText"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -44,7 +44,7 @@
             android:gravity="fill"
             android:hint="@string/fullname"
             android:textColor="@color/black"
-            />
+            style="@android:style/TextAppearance.Widget.EditText"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -66,31 +66,31 @@
             android:gravity="fill"
             android:hint="@string/phone"
             android:textColor="@color/black"
-            />
+            style="@android:style/TextAppearance.Widget.EditText"/>
 
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/addressInputLayout"
-        style="@style/Widget.Design.TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+    <!--<android.support.design.widget.TextInputLayout-->
+        <!--android:id="@+id/addressInputLayout"-->
+        <!--style="@style/Widget.Design.TextInputLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
 
-        >
+        <!--&gt;-->
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:gravity="fill"
-            android:hint="@string/address"
-            android:textColor="@color/black"
-            />
+        <!--<android.support.v7.widget.AppCompatEditText-->
+            <!--android:id="@+id/address"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_margin="8dp"-->
+            <!--android:gravity="fill"-->
+            <!--android:hint="@string/address"-->
+            <!--android:textColor="@color/black"-->
+            <!--/>-->
 
-    </android.support.design.widget.TextInputLayout>
+    <!--</android.support.design.widget.TextInputLayout>-->
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/passwordInputLayout"
@@ -107,9 +107,9 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:gravity="fill"
-            android:hint="@string/password"
+            android:hint="@string/password_required"
             android:textColor="@color/black"
-            />
+            style="@android:style/TextAppearance.Widget.EditText"/>
 
     </android.support.design.widget.TextInputLayout>
 

@@ -16,13 +16,15 @@ public interface SignUpView extends IView {
 
     void showEmptyPasswordError();
 
+    void showEmptyFullNameError();
+
+    void showFullNameValidationError();
+
+    void showPhoneValidationError();
+
     void showPasswordLengthValidationError();
 
     void showPasswordValidationError();
-
-    void showEmptyConfirmPasswordError();
-
-    void showConfirmPasswordValidationError();
 
     void showSuccessDialog();
 
@@ -33,4 +35,6 @@ public interface SignUpView extends IView {
     void showProgressDialog();
 
     void dismissProgressDialog();
+
+    void navigateToStartScreen();
 }

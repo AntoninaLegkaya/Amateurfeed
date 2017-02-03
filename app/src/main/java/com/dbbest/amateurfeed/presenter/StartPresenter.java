@@ -80,7 +80,6 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
     @Override
     public void onSuccess(int code, Bundle data) {
-        Log.i(Utils.TAG_LOG, "StartPresenter: Success");
         getView().dismissProgressDialog();
         if (getView() != null) {
             if (code == CODE_LOGIN) {

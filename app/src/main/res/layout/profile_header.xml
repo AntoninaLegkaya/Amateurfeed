@@ -32,7 +32,7 @@
 
 
         <ImageView
-            android:id="@+id/uer_icon"
+            android:id="@+id/user_icon"
             android:layout_width="@dimen/profile_icon"
             android:layout_height="@dimen/profile_icon"
             android:layout_gravity="center"

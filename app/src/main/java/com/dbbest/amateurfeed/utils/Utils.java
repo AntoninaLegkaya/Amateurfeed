@@ -12,17 +12,35 @@ public class Utils {
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
                     "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-    private static final Pattern PASSWORD_PATTERN=Pattern.compile(
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
             "(" +
-                  "(?=.*\\d)"+
+                    "(?=.*\\d)" +
 
-                  "(?=.*[a-z])"+
+                    "(?=.*[a-z])" +
 
-                     "." +
+                    "." +
 
-                                "{6,20}" +
-             ")"
-            );
+                    "{6,20}" +
+                    ")"
+    );
+
+    private static final Pattern NAME_PATTERN = Pattern.compile(
+            "^[a-zA-Z0-9а-яА-Я ёЁ]+$"
+
+    );
+    private static final Pattern PHONE_PATTERN = Pattern.compile(
+            "^(" +
+                    "(\\+3|8|\\+7|)[\\- ]?)" +
+                    "?(" +
+                    "\\(?" +
+                    "\\d{3}" +
+                    "\\)" +
+                    "?[\\- ]?" +
+                    ")" +
+                    "?[\\d\\- ]" +
+                    "{7,10}" +
+                    "$"
+    );
 
     public static boolean isEmailValid(String email) {
 
@@ -42,11 +60,13 @@ public class Utils {
     }
 
     public static boolean isFullNameValid(String firstName) {
-        return false;
+
+        return NAME_PATTERN.matcher(firstName).matches();
     }
 
     public static boolean isPhoneValid(String phone) {
-        return false;
+
+        return PHONE_PATTERN.matcher(phone).matches();
     }
 
     public static boolean isAddressValid(String address) {

@@ -13,16 +13,18 @@
     <string name="lable_toolbar_login_in">Login in</string>
 
     <!--Sign Up Screen-->
-    <string name="lable_already_sign_up">If you already registered</string>
+    <string name="lable_already_sign_up">Already have en account? </string>
     <string name="link_login_screen"><u>Login In</u></string>
 
     <string name="lable_toolbar_sign_up">Sign Up</string>
     <string name="sign_up_button">Registrate</string>
 
-    <string name="fullname">Full Name</string>
+    <string name="fullname">Name (required)</string>
     <string name="phone">Phone</string>
     <string name="address">Address</string>
     <string name="password">Password</string>
+    <string name="password_required">Password (required)</string>
+    <string name="email_required">Email (required)</string>
 
 
     <!--Forgot Password-->
@@ -30,7 +32,7 @@
     <string name="error_dialog_reset_password">Password was not reseted. \n Check e-mail!</string>
     <string name="info_dialog_reset_password">Old Password was reseted. \n On your e-mail will be sent new Password</string>
     <string name="lable_reset_password">If you forgot password </string>
-    <string name="link_reset_password_screen"> <u>Reset it</u> </string>
+    <string name="link_reset_password_screen"> <u>Forgot password</u> </string>
     <string name="reset_button">Reset</string>
 
     <!--Setting Screen-->
@@ -75,14 +77,20 @@
     <!--Waring Dialog Start Screen-->
     <string name="emptyEmailError">Please enter e-mail</string>
     <string name="emptyPasswordError">Please enter password</string>
+    <string name="emptyNameError">Please enter name</string>
     <string name="lengthPasswordError">Password should not be less than 6 characters </string>
     <string name="characterPasswordError">Passwords must have at least one lowercase (\'a\'-\'z\')</string>
     <string name="incorrectEmail">Incorrect e-mail address</string>
+    <string name="incorrectName">Incorrect Name</string>
+    <string name="incorrectPhone">Incorrect phone</string>
     <string name="incorrectPassword">Incorrect password</string>
     <string name="incorrectLoginDialog">Check e-mail and password! \n Try again!</string>
 
     <string name="no_internet_connection">No internet connection</string>
     <string name="server_error">Server Error</string>
+    <string name="error_registartion">Registration fail!</string>
+    <string name="success_registartion">Registration Success!</string>
+
 
 
 </resources>

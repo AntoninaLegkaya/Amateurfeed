@@ -31,6 +31,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -58,13 +59,13 @@ public interface RestApiServices {
     Call<ResponseWrapper<Object>> forgotPassword(@Body ResetRequestPasswordModel request);
 
     @POST("/api/account/changePassword")
-    Call<ResponseWrapper<Object>> changePassword(@Body ChangePasswordRequestModel request);
+    Call<ResponseWrapper<Object>> changePassword(@Header("Authorization") String token, @Body ChangePasswordRequestModel request);
 
     @POST("/api/account/device-info")
-    Call<Object> deviceInfo(@Body DeviceInfoModel infoModel);
+    Call<Object> deviceInfo(@Header("Authorization") String token, @Body DeviceInfoModel infoModel);
 
     @GET("/api/account/logout")
-    Call<ResponseWrapper<Object>> logout();
+    Call<ResponseWrapper<Object>> logout(@Header("Authorization") String token);
 
     @PUT("/api/account/unread-messages/count")
     Call<Object> putUnreadMessagesCount(@Body UnreadMessageCounterModel counterModel);
@@ -72,7 +73,7 @@ public interface RestApiServices {
 
     /*    <---- News----> */
 
-    @GET("/api/news?")
+    @GET("/api/news")
     Call<ResponseWrapper<ArrayList<NewsPreviewResponseModel>>> getSpecifiedNews(@Query("offset") int offset, @Query("count") int count);
 
     @POST("/api/news")
@@ -93,14 +94,14 @@ public interface RestApiServices {
     @POST("/api/news/add-comment")
     Call<ResponseWrapper<Object>> postComment(@Body FeedCommentModel commentModel);
 
-    @GET("/api/search?")
-    Call<ResponseWrapper<Dictionary<String, List>>> getMapUsersNews(@Query("searchParam") String searchParam);
+    @GET("/api/search")
+    Call<ResponseWrapper<Dictionary<String, List>>> getMapUsersNews(@Header("Authorization") String token, @Query("searchParam") String searchParam);
 
 
     /*    <---- Tag----> */
 
     @GET("/api/tags?")
-    Call<ResponseWrapper<ArrayList<TagModel>>> getTags(@Query("keyword") String keyword);
+    Call<ResponseWrapper<ArrayList<TagModel>>> getTags(@Header("Authorization") String token,@Query("keyword") String keyword);
 
 
     /*    <---- Upload----> */
@@ -112,11 +113,11 @@ public interface RestApiServices {
     /*    <---- User----> */
 
     @GET("/api/user")
-    Call<ResponseWrapper<UserProfileModel>> getSpecifiedUserInfo();
+    Call<ResponseWrapper<UserProfileModel>> getSpecifiedUserInfo(@Header("Authorization") String token);
 
     @PUT("/api/user")
-    Call<ResponseWrapper<Object>> putSpecifiedUserInfo(@Body UpdateProfileRequestModel updateProfileRequestModel);
+    Call<ResponseWrapper<Object>> putSpecifiedUserInfo(@Header("Authorization") String token, @Body UpdateProfileRequestModel updateProfileRequestModel);
 
     @PUT("/api/user/update-settings")
-    Call<Object> updateSettings(@Body UserSettingsModel isSettingsUpdateModel);
+    Call<Object> updateSettings(@Header("Authorization") String token, @Body UserSettingsModel isSettingsUpdateModel);
 }

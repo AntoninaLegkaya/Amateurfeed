@@ -45,4 +45,11 @@
     <string name="fullname">Имя</string>
     <string name="phone">Телефон</string>
     <string name="address">Адрес</string>
+    <string name="email_required">Эмейл (обязателен)</string>
+    <string name="password_required">Пароль (обязателен)</string>
+    <string name="error_registartion">Регистрация не была осущствлена</string>
+    <string name="success_registartion">Резистрация завершина Успешно!</string>
+    <string name="emptyNameError">Введите Имя</string>
+    <string name="incorrectName">Некорректно введено Имя</string>
+    <string name="incorrectPhone">Неверно введен номер телефона</string>
 </resources>
