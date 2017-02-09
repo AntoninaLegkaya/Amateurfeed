@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
+import com.dbbest.amateurfeed.utils.Utils;
+
 import java.util.HashMap;
 
 /**
@@ -155,7 +157,6 @@ public class FeedProvider extends ContentProvider {
 
         if (c.moveToFirst()) {
 
-            Log.i("TestProvider", "Preview table: POST_ID:" + c.getInt(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_POST_ID_KEY)));
             Log.i("TestProvider", "Preview table: TITLE:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_TITLE)));
             Log.i("TestProvider", "Preview table: Author:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_AUTHOR)));
             Log.i("TestProvider", "Tag table: TAG_NAME:" + c.getString(c.getColumnIndex(FeedContract.TagEntry.COLUMN_NAME)));
@@ -265,6 +266,7 @@ public class FeedProvider extends ContentProvider {
 
 
             case PREVIEW: {
+                Log.i(Utils.TAG_LOG, "FeedProvider query Get All Data from preview.table");
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         FeedContract.PreviewEntry.TABLE_NAME,
                         projection,

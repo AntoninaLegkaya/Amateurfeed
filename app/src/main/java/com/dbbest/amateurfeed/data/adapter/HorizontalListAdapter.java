@@ -1,0 +1,104 @@
+package com.dbbest.amateurfeed.data.adapter;
+
+/**
+ * Created by antonina on 07.02.17.
+ */
+
+import android.content.Context;
+import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.utils.Utils;
+
+public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAdapter.HorizontalViewHolder> {
+
+    private Context mContext;
+    private Cursor mCursor;
+
+
+    class HorizontalViewHolder extends RecyclerView.ViewHolder {
+
+        private final LinearLayout linearLayout;
+        private final TextView mTagName;
+
+        public HorizontalViewHolder(final View view) {
+            super(view);
+
+            mTagName = (TextView) view.findViewById(R.id.item_tag_name);
+            if (mTagName == null) {
+
+                Log.i(Utils.TAG_LOG, "Could not get Text field");
+
+            }
+            linearLayout = (LinearLayout) view.findViewById(R.id.layout_tag);
+            if (linearLayout == null) {
+
+                Log.i(Utils.TAG_LOG, " Could not get linearLayout");
+
+
+            }
+
+        }
+    }
+
+    public HorizontalListAdapter(Context context) {
+        mContext = context;
+    }
+
+    @Override
+    public HorizontalViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+
+        if (viewGroup instanceof RecyclerView) {
+
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_tag, viewGroup, false);
+            view.setFocusable(true);
+
+
+            return new HorizontalViewHolder(view);
+        } else
+
+        {
+            throw new RuntimeException("Not bound to RecyclerView");
+        }
+
+    }
+
+    @Override
+    public void onBindViewHolder(HorizontalViewHolder holder, final int position) {
+        final int adapterPosition = holder.getAdapterPosition();
+        if (holder.mTagName != null) {
+
+            String text = "#newTag";
+            holder.mTagName.setText(text);
+        }
+
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "Position clicked: " + adapterPosition, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+
+//         Unpack when configurate Cursor
+        if (null == mCursor) return 1;
+        return mCursor.getCount();
+
+    }
+
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
+    }
+}

@@ -115,8 +115,7 @@ public class FeedContract {
         // Column with the foreign key into the creator table.
         public static final String COLUMN_CREATOR_KEY = "creator_id";
 
-//        // Column with the foreign key into the comment table.
-//        public static final String COLUMN_POST_ID_KEY = "comment_child_id";
+       // Column with the foreign key into the comment table.
 
         public static final String COLUMN_POST_ID = "post_id";
         public static final String COLUMN_BODY = "body";
@@ -175,7 +174,6 @@ public class FeedContract {
         public static final String TABLE_NAME = "preview";
 
 
-        public static final String COLUMN_POST_ID_KEY = "id_post";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_TEXT = "text";
         public static final String COLUMN_LIKES = "likes";
@@ -192,7 +190,6 @@ public class FeedContract {
 
         public static final String[] DEFAULT_PROJECTION = new String[]{
                 PreviewEntry._ID,
-                PreviewEntry.COLUMN_POST_ID_KEY,
                 PreviewEntry.COLUMN_TITLE,
                 PreviewEntry.COLUMN_TEXT,
                 PreviewEntry.COLUMN_LIKES,

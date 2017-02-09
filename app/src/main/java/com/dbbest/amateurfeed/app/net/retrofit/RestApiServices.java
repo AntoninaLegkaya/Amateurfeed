@@ -74,7 +74,7 @@ public interface RestApiServices {
     /*    <---- News----> */
 
     @GET("/api/news")
-    Call<ResponseWrapper<ArrayList<NewsPreviewResponseModel>>> getSpecifiedNews(@Query("offset") int offset, @Query("count") int count);
+    Call<ResponseWrapper<ArrayList<NewsPreviewResponseModel>>> getSpecifiedNews(@Header("Authorization") String token, @Query("offset") int offset, @Query("count") int count);
 
     @POST("/api/news")
     Call<ResponseWrapper<NewsResponseModel>> addNewNews(@Body NewsCreateModel createModel);

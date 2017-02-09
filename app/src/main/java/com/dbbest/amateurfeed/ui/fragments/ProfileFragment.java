@@ -3,8 +3,14 @@ package com.dbbest.amateurfeed.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +18,14 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
 import com.dbbest.amateurfeed.presenter.ProfilePresenter;
 import com.dbbest.amateurfeed.ui.HomeActivity;
 import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.view.ProfileView;
 import com.melnykov.fab.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * Created by antonina on 23.01.17.
@@ -27,6 +36,8 @@ public class ProfileFragment extends Fragment implements ProfileView {
     private static final String PARAM_KEY = "param_key";
     private RecyclerView mRecyclerView;
     private ImageButton mSettingsBtn;
+    private ArrayList<String> stringArrayList;
+    private RecyclerView.Adapter adapter;
 
     ProfilePresenter mPresenter;
 
@@ -76,7 +87,7 @@ public class ProfileFragment extends Fragment implements ProfileView {
                     Toast.makeText(getActivity(), "Go to Settings Screen--->", Toast.LENGTH_SHORT).show();
 
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                           new  PrefFragment(), PREFERENCE_FRAGMENT_TAG).commit();
+                            new PrefFragment(), PREFERENCE_FRAGMENT_TAG).commit();
 //                    startActivity(UiActivityNavigation.settingsActivity(getActivity()));
 
                 }
@@ -92,14 +103,28 @@ public class ProfileFragment extends Fragment implements ProfileView {
             }
         });
 
-       FloatingActionButton fabEditeProfileBtn=(FloatingActionButton)rootView.findViewById(R.id.fab_edit);
+        FloatingActionButton fabEditeProfileBtn = (FloatingActionButton) rootView.findViewById(R.id.fab_edit);
         fabEditeProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                          EditProfileFragment.newInstance(""), HomeActivity.EDITE_PROFILE_FRAGMENT_TAG).commit();
+                        EditProfileFragment.newInstance(""), HomeActivity.EDITE_PROFILE_FRAGMENT_TAG).commit();
             }
         });
+
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        //set GridLayoutManager
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        mRecyclerView.setLayoutManager(layoutManager);
+        adapter = new GridViewAdapter(getActivity());
+        mRecyclerView.setAdapter(adapter);
 
         return rootView;
     }

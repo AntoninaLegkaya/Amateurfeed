@@ -67,7 +67,7 @@ public class FeedDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_PREVIEW_TABLE = "CREATE TABLE " + FeedContract.PreviewEntry.TABLE_NAME + " (" +
 
                 FeedContract.PreviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FeedContract.PreviewEntry.COLUMN_POST_ID_KEY + " INTEGER NOT NULL, " +
+//                FeedContract.PreviewEntry.COLUMN_POST_ID_KEY + " INTEGER NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_TEXT + " TEXT NOT NULL, " +
                 FeedContract.PreviewEntry.COLUMN_LIKES + " INTEGER NOT NULL, " +

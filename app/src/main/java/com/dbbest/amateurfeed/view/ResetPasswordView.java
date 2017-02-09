@@ -20,4 +20,6 @@ public interface ResetPasswordView extends IView {
     void dismissProgressDialog();
 
     void showErrorConnectionDialog();
+
+   void  navigateToStartScreen();
 }

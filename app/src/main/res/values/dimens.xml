@@ -40,6 +40,11 @@
     <!--Image User-->
     <dimen name="user_icon">100dp</dimen>
 
+    <!--Image User Preview-->
+    <dimen name="preview_icon">150dp</dimen>
+
     <!--ToolBar Image-->
     <dimen name="toolbar_icon">40dp</dimen>
+    <!--Grid  Recycle Layout Image-->
+    <dimen name="grid__recycle_icon">100dp</dimen>
 </resources>

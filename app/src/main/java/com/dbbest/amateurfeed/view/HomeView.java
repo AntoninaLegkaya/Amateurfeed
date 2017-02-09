@@ -8,10 +8,16 @@ import android.support.annotation.NonNull;
  */
 
 public interface HomeView extends IView {
-    void requestPermission(int code, @NonNull String... permissions);
+    void showSuccessDialog();
 
-    void onLoginSuccess();
+    void showErrorConnectionDialog();
 
-    void onLoginError();
+    void showErrorDialog();
+
+    void showProgressDialog();
+
+    void dismissProgressDialog();
+
+    void navigateToScreen();
 
 }

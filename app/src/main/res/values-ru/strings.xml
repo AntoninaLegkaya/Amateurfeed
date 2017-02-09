@@ -52,4 +52,7 @@
     <string name="emptyNameError">Введите Имя</string>
     <string name="incorrectName">Некорректно введено Имя</string>
     <string name="incorrectPhone">Неверно введен номер телефона</string>
+    <string name="empty_feed_list">Нет доступных  новостей</string>
+    <string name="get_news_error">Новости не доступны :(</string>
+    <string name="get_news_succes">Новости получены :)</string>
 </resources>

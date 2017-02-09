@@ -32,6 +32,7 @@ public class AuthToken implements ActiveRecord<AuthToken> {
             return null;
         }
         return BEARER + token;
+//        return token;
     }
 
 

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.GridLayout
+    android:id="@+id/item_my"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="8dp"
+    app:columnCount="2">
+
+
+    <ImageView
+        android:id="@+id/list_item_icon"
+        android:layout_width="120dp"
+        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+        android:adjustViewBounds="true"
+        android:maxHeight="@dimen/profile_icon"
+        android:maxWidth="@dimen/profile_icon"
+        app:layout_columnWeight="1"
+        app:layout_gravity="left"
+        app:layout_rowSpan="2"
+        tools:src="@mipmap/splash"/>
+
+    <TextView
+        android:id="@+id/list_item_name_textview"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+        android:fontFamily="sans-serif"
+        android:gravity="left"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/secondary_text"
+        app:layout_columnWeight="1"
+        app:layout_gravity="fill_horizontal"
+        tools:text="Name User"/>
+
+    <TextView
+        android:id="@+id/list_item_date_textview"
+        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+        android:fontFamily="sans-serif"
+        android:gravity="center_horizontal"
+        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/secondary_text"
+        app:layout_columnWeight="1"
+        app:layout_gravity="left"
+        tools:text="Today, April 03"/>
+
+    <TextView
+
+        android:id="@+id/list_item_title"
+        android:textColor="@color/app_blue_text"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+        android:padding="@dimen/abc_list_item_padding_horizontal_material"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1"
+        app:layout_gravity="fill_horizontal"
+        app:layout_rowSpan="2"
+        tools:text="This is First Text "
+        >
+    </TextView>>
+
+    <ImageView
+        android:id="@+id/list_item_image"
+        android:layout_width="@dimen/preview_icon"
+        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+        android:adjustViewBounds="true"
+        android:maxHeight="@dimen/preview_icon"
+        android:maxWidth="@dimen/preview_icon"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1"
+        app:layout_gravity="fill_horizontal"
+        app:layout_rowSpan="2"
+        tools:src="@mipmap/splash"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_tags_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1"
+        app:layout_rowSpan="2"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_comment_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1"
+        app:layout_rowSpan="2"
+        />
+
+    <LinearLayout
+        android:padding="@dimen/abc_list_item_padding_horizontal_material"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center"
+
+        >
+
+        <ImageButton
+            android:id="@+id/like_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:background="@drawable/ic_favorite_border_black_18dp"
+            android:elevation="8dp"
+            />
+
+        <TextView
+            android:id="@+id/list_item_likes_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/secondary_text"
+            app:layout_columnWeight="1"
+            app:layout_gravity="right"
+            tools:text="0"/>
+
+
+        >
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:padding="@dimen/abc_list_item_padding_horizontal_material"
+        app:layout_columnWeight="1"
+        app:layout_gravity="right"
+        >
+
+        <ImageButton
+            android:id="@+id/comment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:background="@drawable/ic_comment_black_24dp"
+            android:elevation="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:background="@drawable/ic_edit_black_24dp"
+            android:elevation="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_delete_black_24dp"
+            android:elevation="8dp"
+            />
+
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.GridLayout>
+
+

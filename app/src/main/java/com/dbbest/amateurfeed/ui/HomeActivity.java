@@ -1,21 +1,27 @@
 package com.dbbest.amateurfeed.ui;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
+import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
+import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabSelectedListener;
@@ -24,11 +30,12 @@ import com.roughike.bottombar.OnMenuTabSelectedListener;
  * Created by antonina on 19.01.17.
  */
 
-public class HomeActivity extends AppCompatActivity implements HomeView {
+public class HomeActivity extends AppCompatActivity implements HomeView, FeedNewsFragment.Callback {
     private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
     private static final String SEARCH_FRAGMENT_TAG = "STAG";
     public static final String PROFILE_FRAGMENT_TAG = "PTAG";
     public static final String EDITE_PROFILE_FRAGMENT_TAG = "PREFTAG";
+    private DialogFragment mProgressDialog;
 
     private CoordinatorLayout coordinatorLayout;
     private HomePresenter mPresenter;
@@ -38,16 +45,14 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
+
         mPresenter = new HomePresenter();
+        mPresenter.getNews(0, 20);
+
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.tabs_activity);
-        if(savedInstanceState==null){
-
-            Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
-
-
-        }
+        Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
 
 
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
@@ -93,23 +98,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     }
 
 
-
-
-    @Override
-    public void requestPermission(int code, @NonNull String... permissions) {
-
-    }
-
-    @Override
-    public void onLoginSuccess() {
-
-    }
-
-    @Override
-    public void onLoginError() {
-
-    }
-
     @NonNull
     @Override
     public Context getContext() {
@@ -117,4 +105,68 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     }
 
 
+    @Override
+    public void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+        Log.i(Utils.TAG_LOG, "Clik on Item......");
+        UIDialogNavigation.showWarningDialog(R.string.item).show(getSupportFragmentManager(), "info");
+    }
+
+    @Override
+    public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+        Log.i(Utils.TAG_LOG, "Add Like......");
+        UIDialogNavigation.showWarningDialog(R.string.like).show(getSupportFragmentManager(), "info");
+    }
+
+    @Override
+    public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+        Log.i(Utils.TAG_LOG, "Add Comment......");
+        UIDialogNavigation.showWarningDialog(R.string.comment).show(getSupportFragmentManager(), "info");
+    }
+
+    @Override
+    public void onEditeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+        Log.i(Utils.TAG_LOG, "Add Edit......");
+        UIDialogNavigation.showWarningDialog(R.string.edit).show(getSupportFragmentManager(), "info");
+    }
+
+    @Override
+    public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+        Log.i(Utils.TAG_LOG, "Add Delete......");
+        UIDialogNavigation.showWarningDialog(R.string.remove).show(getSupportFragmentManager(), "info");
+    }
+
+    @Override
+    public void showSuccessDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.get_news_succes).show(getSupportFragmentManager(), "warn");
+    }
+
+    @Override
+    public void showErrorConnectionDialog() {
+
+        UIDialogNavigation.showWarningDialog(R.string.no_internet_connection).show(getSupportFragmentManager(), "warn");
+
+    }
+
+    @Override
+    public void showErrorDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.get_news_error).show(getSupportFragmentManager(), "warn");
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgressDialog = UIDialogNavigation.showProgressDialog();
+        mProgressDialog.show(getSupportFragmentManager(), "progress");
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void navigateToScreen() {
+
+    }
 }

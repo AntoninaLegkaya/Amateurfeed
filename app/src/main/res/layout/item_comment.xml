@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/layout_comment"
+              android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    >
+
+
+    <TextView
+        android:id="@+id/comment_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Comment text"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:gravity="left"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/secondary_text"/>
+
+</LinearLayout>

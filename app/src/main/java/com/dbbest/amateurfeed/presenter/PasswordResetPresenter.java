@@ -65,6 +65,7 @@ public class PasswordResetPresenter extends Presenter<ResetPasswordView> impleme
         if (getView() != null) {
             getView().dismissProgressDialog();
             getView().showSuccessDialog();
+            getView().navigateToStartScreen();
         }
     }
 

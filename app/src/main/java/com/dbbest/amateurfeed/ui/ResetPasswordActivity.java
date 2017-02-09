@@ -126,6 +126,11 @@ public class ResetPasswordActivity extends AppCompatActivity implements ResetPas
 
     }
 
+    @Override
+    public void navigateToStartScreen() {
+        startActivity(UiActivityNavigation.startActivity(ResetPasswordActivity.this));
+    }
+
     @NonNull
     @Override
     public Context getContext() {

@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/feed_content"
+<FrameLayout
+
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:fab="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/feed_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:animateLayoutChanges="true"
-            app:popupTheme="@style/Toolbar">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:animateLayoutChanges="true"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/Toolbar"/>
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -30,43 +38,58 @@
                 android:layout_gravity="center"
                 android:text="@string/feed_toolbar_label"
                 android:textColor="@android:color/white"
+                app:layout_scrollFlags="scroll|enterAlways"
                 />
-        </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             >
 
-            <TextView
-                android:layout_width="258dp"
-                android:layout_height="302dp"
-                android:gravity="center"
-                android:text="In this place will be feed list"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/feed_list_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="feed news items"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
 
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    </LinearLayout>
+        <!-- empty list -->
+        <TextView
+            android:id="@+id/recycle_feed_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="@string/empty_feed_list"
+            android:textColor="@color/black"
+            app:layout_anchor="@+id/feed_list_view"
+            app:layout_anchorGravity="fill"
+            />
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"
-        fab:elevation="8dp"
-        fab:fab_colorNormal="@color/primary"
-        fab:fab_colorPressed="@color/primary_dark"
-        fab:fab_colorRipple="@color/primary_light"
-        fab:fab_shadow="false"/>
-</android.support.design.widget.CoordinatorLayout>
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add_white_24dp"
+            fab:elevation="8dp"
+            fab:fab_colorNormal="@color/primary"
+            fab:fab_colorPressed="@color/primary_dark"
+            fab:fab_colorRipple="@color/primary_light"
+            fab:fab_shadow="false"/>
+    </android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

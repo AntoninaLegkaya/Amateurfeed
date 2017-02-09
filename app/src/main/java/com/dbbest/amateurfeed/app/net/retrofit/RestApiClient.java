@@ -11,12 +11,14 @@ import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
 import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
 import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
+import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.utils.ActionUtils;
 import com.dbbest.amateurfeed.utils.Utils;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -37,16 +39,19 @@ public class RestApiClient {
 
     private <T> ResponseWrapper<T> executeCall(Call<ResponseWrapper<T>> call) {
         try {
+            Log.i(Utils.TAG_LOG, "Url Request: " + call.request().url());
+            Log.i(Utils.TAG_LOG, "Header Request: " + call.request().headers().toString());
             Response<ResponseWrapper<T>> response = call.execute();
+
             if (!response.isSuccessful()) {
-                Log.i(Utils.TAG_LOG, "Response code: " + response.code() + "message: " + response.message() + "successful: " + response.isSuccessful());
+                Log.i(Utils.TAG_LOG, "Response code: " + response.code() + " message: " + response.message() + "successful: " + response.isSuccessful());
                 if (response.errorBody() != null) {
                     Log.i(Utils.TAG_LOG, "Error body: " + response.errorBody().string());
                 }
             }
 
             if (response.body() != null && !response.body().isSuccessful()) {
-                Log.i(Utils.TAG_LOG, "Response body code: " + response.body().code() + "message: " + response.body().message() + "successful: " + response.body().isSuccessful());
+                Log.i(Utils.TAG_LOG, "Response body code: " + response.body().code() + " message: " + response.body().message() + "successful: " + response.body().isSuccessful());
                 if (response.body().code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                     String action = ActionUtils.ACTION_UNAUTHORIZED;
                     if (response.body().message() != null && response.body().message().equals(USER_BLOCKED_MSG_RESPONSE)) {
@@ -56,11 +61,16 @@ public class RestApiClient {
                     LocalBroadcastManager.getInstance(App.instance())
                             .sendBroadcast(intent);
                 }
+                if (response.body().code() == HttpURLConnection.HTTP_SERVER_ERROR) {
+
+                    Log.i(Utils.TAG_LOG, "Error code: " + response.body().code() + "message: Server Error");
+
+                }
             }
 
             return response.body();
         } catch (Exception e) {
-            Log.e(Utils.TAG_LOG,"network error: "+ e);
+            Log.e(Utils.TAG_LOG, "network error: " + e);
             return NetworkUtil.handleError(e);
         }
     }
@@ -80,6 +90,11 @@ public class RestApiClient {
 
     public ResponseWrapper<Object> forgotPassword(ResetRequestPasswordModel request) {
         return executeCall(mApiService.forgotPassword(request));
+    }
+
+    public ResponseWrapper<ArrayList<NewsPreviewResponseModel>> getNews(String token, int offset, int count) {
+
+        return executeCall(mApiService.getSpecifiedNews(token, offset, count));
     }
 
 }

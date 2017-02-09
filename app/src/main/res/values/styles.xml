@@ -15,6 +15,12 @@
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>
         <item name="android:textColorPrimary">@color/white</item>
     </style>
+    <!--Toolbar Profile Fragment-->
+    <style name="Toolbar.Profile" parent="Theme.AppCompat.NoActionBar">
+        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+        <item name="android:textColorPrimary">@color/app_black</item>
+        <item name="android:background">@color/white</item>
+    </style>
 
     <!--Button-->
     <style name="Toolbar.Button" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">

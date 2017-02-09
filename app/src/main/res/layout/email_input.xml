@@ -19,6 +19,7 @@
         android:gravity="fill"
         android:hint="@string/login"
         android:textColor="@color/black"
+        android:text="tonychka1684@mail.ru"
         style="@android:style/TextAppearance.Widget.EditText"/>
 
 </android.support.design.widget.TextInputLayout>
