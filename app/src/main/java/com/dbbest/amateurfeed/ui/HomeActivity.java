@@ -15,6 +15,7 @@ import com.dbbest.amateurfeed.presenter.HomePresenter;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;

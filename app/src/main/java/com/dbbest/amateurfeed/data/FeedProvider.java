@@ -219,6 +219,8 @@ public class FeedProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
+        getContext().deleteDatabase(FeedDbHelper.DATABASE_NAME);
+
         mOpenHelper = new FeedDbHelper(getContext());
         return true;
     }

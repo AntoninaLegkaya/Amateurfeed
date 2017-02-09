@@ -213,7 +213,6 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     public void onBindViewHolder(PreviewAdapterViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         boolean useLongToday;
-//        int viewType = getItemViewType(position);
 
 
         Glide.with(mContext)
@@ -258,6 +257,14 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
                 .error(R.drawable.art_snow)
                 .crossFade()
                 .into(holder.mImageView);
+        int mIsLike = mCursor.getInt(FeedNewsFragment.COL_IS_LIKE);
+        if (mIsLike == 1) {
+            holder.mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
+
+        } else if (mIsLike == 0) {
+
+            holder.mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        }
 
 // this enables better animations. even if we lose state due to a device rotation,
         // the animator can use this to re-find the original view

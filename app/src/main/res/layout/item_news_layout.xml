@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:background="@drawable/ic_favorite_border_black_18dp"
+            android:background="@drawable/ic_favorite_border_white_24dp"
             android:elevation="8dp"
             />
 
