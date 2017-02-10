@@ -11,6 +11,7 @@ import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.GetNewsCommand;
 import com.dbbest.amateurfeed.app.net.command.RegistrationCommand;
+import com.dbbest.amateurfeed.app.net.command.SetLikeCommand;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
 import com.dbbest.amateurfeed.view.SignUpView;
@@ -22,21 +23,37 @@ import com.dbbest.amateurfeed.view.SignUpView;
 public class HomePresenter extends Presenter<HomeView> implements CommandResultReceiver.CommandListener {
 
     private static final int CODE_GET_NEWS = 0;
+    private static final int CODE_LIKE_NEWS = 1;
 
     private CommandResultReceiver mResultReceiver;
 
-    public void getNews( int offset, int count) {
+    public void getNews(int offset, int count) {
         if (getView() != null) {
             HomeView view = getView();
 
             view.showProgressDialog();
         }
-        Command command = new GetNewsCommand( offset,  count);
+        Command command = new GetNewsCommand(offset, count);
         command.send(CODE_GET_NEWS, mResultReceiver);
 
 
     }
 
+    public void putLike(int id, int isLike) {
+        boolean like = true;
+        if (getView() != null) {
+            HomeView view = getView();
+
+            view.showProgressDialog();
+        }
+        if (isLike == 0) {
+            like = false;
+        }
+        Command command = new SetLikeCommand(id, like);
+        command.send(CODE_LIKE_NEWS, mResultReceiver);
+
+
+    }
 
     @Override
     protected void onAttachView(@NonNull HomeView view) {

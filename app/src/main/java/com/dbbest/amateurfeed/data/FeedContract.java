@@ -2,6 +2,7 @@ package com.dbbest.amateurfeed.data;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -115,7 +116,7 @@ public class FeedContract {
         // Column with the foreign key into the creator table.
         public static final String COLUMN_CREATOR_KEY = "creator_id";
 
-       // Column with the foreign key into the comment table.
+        // Column with the foreign key into the comment table.
 
         public static final String COLUMN_POST_ID = "post_id";
         public static final String COLUMN_BODY = "body";
@@ -139,9 +140,9 @@ public class FeedContract {
         private static final String PATH_TAG_ID = "/tag/";
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_TAG).build();
-        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY +PATH_TAG_ID);
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_TAG_ID);
 
-        public static final String CONTENT_TYPE =ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_TAG;
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_TAG;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PROFILE;
         // Table name
         public static final String TABLE_NAME = "tag";
@@ -152,7 +153,9 @@ public class FeedContract {
         public static Uri buildTagUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-        public static Uri buildTagUriById(long id) {return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
+
+        public static Uri buildTagUriById(long id) {
+            return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
         }
     }
 
@@ -164,7 +167,7 @@ public class FeedContract {
         private static final String PATH_PREVIEW = "/preview";
         private static final String PATH_PREVIEW_ID = "/preview/";
         public static final int PREVIEW_ID_PATH_POSITION = 1;
-        public static final Uri CONTENT_URI =  Uri.parse(SCHEME + AUTHORITY + PATH_PREVIEW);
+        public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_PREVIEW);
         public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_PREVIEW_ID);
 
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_PREVIEW;
@@ -187,7 +190,6 @@ public class FeedContract {
 //        public static final String DEFAULT_SORT_ORDER = "author ASC";
 
 
-
         public static final String[] DEFAULT_PROJECTION = new String[]{
                 PreviewEntry._ID,
                 PreviewEntry.COLUMN_TITLE,
@@ -203,21 +205,30 @@ public class FeedContract {
         };
 
 
-        public static long getIdFromUri(Uri uri) {
+        public static int getIdFromUri(Uri uri) {
 
-            return Long.parseLong(uri.getPathSegments().get(1));
+            return Integer.parseInt(uri.getPathSegments().get(1));
         }
 
         public static Uri buildPreviewUriById(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
+
+        public static Uri buildPreviewUriByAuthor(String  author) {
+            return CONTENT_URI.buildUpon().appendPath(author).build();
+        }
+
+
         public static Uri buildIsMyPreview(String isMyFlag) {
             return CONTENT_URI.buildUpon().appendPath(isMyFlag).build();
         }
 
 
+        public static String getAuthorFromUri(Uri uri) {
 
+            return uri.getPathSegments().get(1);
+        }
     }
 
     /* Creator Entry*/

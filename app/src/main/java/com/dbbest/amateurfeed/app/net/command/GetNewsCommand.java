@@ -37,9 +37,9 @@ public class GetNewsCommand extends Command {
         Log.i(Utils.TAG_LOG, "Create get News command");
         AuthToken authToken = new AuthToken();
         mNewsRequestModel = new NewsRequestModel(offset, count, authToken.bearer());
-        Log.i(Utils.TAG_LOG, "Get News Command: AuthToken: " + mNewsRequestModel.getAccessToken());
-        Log.i(Utils.TAG_LOG, "Get News Command: Offset: " + mNewsRequestModel.getOffset());
-        Log.i(Utils.TAG_LOG, "Get News Command: Count: " + mNewsRequestModel.getCount());
+//        Log.i(Utils.TAG_LOG, "Get News Command: AuthToken: " + mNewsRequestModel.getAccessToken());
+//        Log.i(Utils.TAG_LOG, "Get News Command: Offset: " + mNewsRequestModel.getOffset());
+//        Log.i(Utils.TAG_LOG, "Get News Command: Count: " + mNewsRequestModel.getCount());
     }
 
     private GetNewsCommand(Parcel in) {
@@ -52,7 +52,6 @@ public class GetNewsCommand extends Command {
     public void execute() {
         Log.i(Utils.TAG_LOG, "Execute get News command");
 
-        //TODO RestApiClient
         RestApiClient apiClient = App.getApiFactory().restClient();
 
         ResponseWrapper<ArrayList<NewsPreviewResponseModel>> response = apiClient.getNews(mNewsRequestModel.getAccessToken(), mNewsRequestModel.getOffset(), mNewsRequestModel.getCount());

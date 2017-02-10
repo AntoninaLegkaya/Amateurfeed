@@ -6,13 +6,13 @@ import android.util.Log;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
+import com.dbbest.amateurfeed.app.net.request.LikeModel;
 import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
 import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
 import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
-import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.utils.ActionUtils;
 import com.dbbest.amateurfeed.utils.Utils;
@@ -41,6 +41,9 @@ public class RestApiClient {
         try {
             Log.i(Utils.TAG_LOG, "Url Request: " + call.request().url());
             Log.i(Utils.TAG_LOG, "Header Request: " + call.request().headers().toString());
+            if (call.request().body() != null) {
+                Log.i(Utils.TAG_LOG, "Body Request: " + call.request().body().toString());
+            }
             Response<ResponseWrapper<T>> response = call.execute();
 
             if (!response.isSuccessful()) {
@@ -95,6 +98,12 @@ public class RestApiClient {
     public ResponseWrapper<ArrayList<NewsPreviewResponseModel>> getNews(String token, int offset, int count) {
 
         return executeCall(mApiService.getSpecifiedNews(token, offset, count));
+    }
+
+
+    public ResponseWrapper<Object> isLike(String token, long id, LikeModel model) {
+
+        return executeCall(mApiService.isLikeNews(token, model, id));
     }
 
 }

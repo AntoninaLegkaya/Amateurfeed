@@ -1,8 +1,7 @@
 package com.dbbest.amateurfeed.app.net.retrofit;
 
-import android.content.Intent;
-
 import com.dbbest.amateurfeed.app.net.request.ChangePasswordRequestModel;
+import com.dbbest.amateurfeed.app.net.request.LikeModel;
 import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
@@ -11,7 +10,6 @@ import com.dbbest.amateurfeed.app.net.request.UpdateProfileRequestModel;
 import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
-import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.model.DeviceInfoModel;
@@ -89,7 +87,7 @@ public interface RestApiServices {
     Call<ResponseWrapper<ArrayList<UserNewsModel>>> getSpecifiedNewsByUser();
 
     @PUT("/api/news/{id}/like")
-    Call<ResponseWrapper<Object>> likeNews(@Path("id") int id);
+    Call<ResponseWrapper<Object>> isLikeNews(@Header("Authorization") String token, @Body LikeModel model, @Path("id") long id);
 
     @POST("/api/news/add-comment")
     Call<ResponseWrapper<Object>> postComment(@Body FeedCommentModel commentModel);
@@ -100,8 +98,8 @@ public interface RestApiServices {
 
     /*    <---- Tag----> */
 
-    @GET("/api/tags?")
-    Call<ResponseWrapper<ArrayList<TagModel>>> getTags(@Header("Authorization") String token,@Query("keyword") String keyword);
+    @GET("/api/tags")
+    Call<ResponseWrapper<ArrayList<TagModel>>> getTags(@Header("Authorization") String token, @Query("keyword") String keyword);
 
 
     /*    <---- Upload----> */

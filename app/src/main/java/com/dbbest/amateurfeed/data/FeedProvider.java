@@ -24,6 +24,7 @@ public class FeedProvider extends ContentProvider {
 
 
     public static long TEST_TAG_ID = 1;
+    public static String TEST_TAG_AUTHOR ="Tony";
     public static long TEST_ID = 1;
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -31,6 +32,7 @@ public class FeedProvider extends ContentProvider {
 
     static final int PREVIEW = 100;
     static final int PREVIEW_ID = 101;
+    static final int PREVIEW_AUTHOR = 102;
     static final int COMMENT = 300;
     static final int PROFILE = 400;
     static final int CREATOR = 500;
@@ -43,6 +45,7 @@ public class FeedProvider extends ContentProvider {
     private static final SQLiteQueryBuilder sCommentByCreatorQueryBuilder;
     private static final SQLiteQueryBuilder sPreviewByTagQueryBuilder;
     private static final SQLiteQueryBuilder sPreviewByIdQueryBuilder;
+    private static final SQLiteQueryBuilder sPreviewByAuthorQueryBuilder;
     private static final SQLiteQueryBuilder sTagByIdQueryBuilder;
     private static HashMap<String, String> sPreviewProjectionMap = new HashMap<String, String>();
 
@@ -94,6 +97,14 @@ public class FeedProvider extends ContentProvider {
     }
 
     static {
+        sPreviewByAuthorQueryBuilder = new SQLiteQueryBuilder();
+
+        sPreviewByAuthorQueryBuilder.setTables(FeedContract.PreviewEntry.TABLE_NAME);
+
+
+    }
+
+    static {
         sTagByIdQueryBuilder = new SQLiteQueryBuilder();
 
         sTagByIdQueryBuilder.setTables(FeedContract.TagEntry.TABLE_NAME);
@@ -108,6 +119,11 @@ public class FeedProvider extends ContentProvider {
     private static final String sPreviewSelection =
             FeedContract.PreviewEntry.TABLE_NAME +
                     "." + FeedContract.PreviewEntry._ID + " = ? ";
+
+    //preview._author = ?
+    private static final String sPreviewSelectionAuthor =
+            FeedContract.PreviewEntry.TABLE_NAME +
+                    "." + FeedContract.PreviewEntry.COLUMN_AUTHOR + " = ? ";
 
     //comment._id=?
     private static final String sCommentSelection =
@@ -139,12 +155,34 @@ public class FeedProvider extends ContentProvider {
         return qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
     }
 
+    private Cursor getPreviewByAuthor(Uri uri, String[] projection,String sortOrder) {
+
+            String author = FeedContract.PreviewEntry.getAuthorFromUri(uri);
+        Log.i("TestProvider", "Get Selector Preview Tablew: athor: "+ author);
+
+            String[] selectionArgs;
+            String selection;
+
+
+                selectionArgs = new String[]{author};
+                selection = sPreviewSelectionAuthor;
+
+            return sPreviewByAuthorQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
+
+    }
 
     private Cursor getPreviewByIdPreviewTagSelection(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 //        sPreviewByTagQueryBuilder.setProjectionMap(sPreviewProjectionMap);
-      //  sPreviewByTagQueryBuilder.appendWhere(FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID + "=" + uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION));
+        //  sPreviewByTagQueryBuilder.appendWhere(FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID + "=" + uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION));
 
-        sPreviewByTagQueryBuilder.appendWhere(FeedContract.PreviewTagEntry.TABLE_NAME + "." + FeedContract.PreviewTagEntry.COLUMN_PREVIEW_ID + "="+uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION));
+        sPreviewByTagQueryBuilder.appendWhere(FeedContract.PreviewTagEntry.TABLE_NAME + "." + FeedContract.PreviewTagEntry.COLUMN_PREVIEW_ID + "=" + uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION));
 
         Cursor c = sPreviewByTagQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
@@ -202,6 +240,7 @@ public class FeedProvider extends ContentProvider {
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, FeedContract.PATH_PREVIEW, PREVIEW);
         matcher.addURI(authority, FeedContract.PATH_PREVIEW + "/#", PREVIEW_ID);
+        matcher.addURI(authority, FeedContract.PATH_PREVIEW + "/*", PREVIEW_AUTHOR);
         matcher.addURI(authority, FeedContract.PATH_COMMENT, COMMENT);
         matcher.addURI(authority, FeedContract.PATH_CREATOR, CREATOR);
         matcher.addURI(authority, FeedContract.PATH_TAG, TAG);
@@ -236,6 +275,8 @@ public class FeedProvider extends ContentProvider {
                 return FeedContract.PreviewEntry.CONTENT_TYPE;
             case PREVIEW_ID:
                 return FeedContract.PreviewEntry.CONTENT_ITEM_TYPE;
+            case PREVIEW_AUTHOR:
+                return FeedContract.PreviewEntry.CONTENT_TYPE;
             case PREVIEW_TAG_ID:
                 return FeedContract.PreviewTagEntry.CONTENT_ITEM_TYPE;
             case USER_NEWS:
@@ -285,6 +326,12 @@ public class FeedProvider extends ContentProvider {
             case PREVIEW_ID: {
                 Log.i("TestProvider", "Get Item from Preview Tablew by ID");
                 retCursor = getPreviewByIdSelection(uri, projection, selection, selectionArgs, sortOrder);
+                break;
+            }
+
+            case PREVIEW_AUTHOR: {
+                Log.i("TestProvider", "Get Item from Preview Tablew by Author");
+                retCursor = getPreviewByAuthor(uri, projection,  sortOrder);
                 break;
             }
 
@@ -434,8 +481,7 @@ public class FeedProvider extends ContentProvider {
                     TEST_TAG_ID = _id;
                     Log.i("TestProvider", "Insert values in Tag table ne _id: " + _id);
                     returnUri = ContentUris.withAppendedId(FeedContract.TagEntry.CONTENT_ID_URI_BASE, _id);
-                }
-                else
+                } else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }

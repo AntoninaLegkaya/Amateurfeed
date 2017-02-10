@@ -1,6 +1,7 @@
 package com.dbbest.amateurfeed.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,20 +9,19 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 
 import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
 
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
-import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
 import com.roughike.bottombar.BottomBar;
@@ -37,6 +37,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
     public static final String PROFILE_FRAGMENT_TAG = "PTAG";
     public static final String EDITE_PROFILE_FRAGMENT_TAG = "PREFTAG";
     private DialogFragment mProgressDialog;
+
+    private int mLikeImage = R.drawable.ic_favorite_black_24dp;
+    private int mDisLikeImage = R.drawable.ic_favorite_border_black_24dp;
 
     private CoordinatorLayout coordinatorLayout;
     private HomePresenter mPresenter;
@@ -114,13 +117,39 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
 
     @Override
     public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-        Log.i(Utils.TAG_LOG, "Add Like......");
-        UIDialogNavigation.showWarningDialog(R.string.like).show(getSupportFragmentManager(), "info");
+        int count = 0;
+        String mCountLikes = (vh.mLikesCountView.getText()).toString();
+        if (mCountLikes != null) {
+            count = Integer.parseInt(mCountLikes);
+            Log.i(Utils.TAG_LOG, "Count Likes: " + count);
+        }
+        if (vh.mLikeButton.getTag() == "1") {
+
+
+            vh.mLikeButton.setTag("0");
+            vh.mLikeButton.setImageResource(mDisLikeImage);
+            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
+            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), 0);
+            vh.mLikesCountView.setText(String.valueOf(count - 1));
+
+
+        } else if (vh.mLikeButton.getTag() == "0") {
+
+            vh.mLikeButton.setTag("1");
+            vh.mLikeButton.setImageResource(mLikeImage);
+            vh.mLikesCountView.setText(String.valueOf(count + 1));
+            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
+            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), 1);
+        }
+
+
+
     }
 
     @Override
     public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-        Log.i(Utils.TAG_LOG, "Add Comment......");
+
+
         UIDialogNavigation.showWarningDialog(R.string.comment).show(getSupportFragmentManager(), "info");
     }
 
@@ -169,5 +198,16 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
     @Override
     public void navigateToScreen() {
 
+    }
+
+    @Override
+    public void showSuccessLikeDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.set_like_succes).show(getSupportFragmentManager(), "warn");
+
+    }
+
+    @Override
+    public void showErrorLikeDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.set_like_error).show(getSupportFragmentManager(), "warn");
     }
 }

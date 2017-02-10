@@ -119,48 +119,62 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-//            mCursor.moveToPosition(adapterPosition);
+            int id ;
+            if (mCursor != null) {
+                mCursor.moveToPosition(adapterPosition);
 
-            if (view.getId() == R.id.like_button) {
-                mLikeClickHandler.onClick(this);
-            }
-            if (view.getId() == R.id.item || view.getId() == R.id.item_my) {
-                mClickHandler.onClick(this);
-                mICM.onClick(this);
-            }
-            if (view.getId() == R.id.comment_button) {
-                mCommentClickHandler.onClick(this);
-            }
-            if (view.getId() == R.id.edit_button) {
-                mEditClickHandler.onClick(this);
-            }
-            if (view.getId() == R.id.delete_button) {
-                mRemoveClickHandler.onClick(this);
-            }
 
+                int idx = mCursor.getColumnIndex(FeedContract.PreviewEntry._ID);
+                Log.i(Utils.TAG_LOG, "PreviewAdapter Index COLUMN ID: " + idx);
+                id = mCursor.getInt(idx);
+                Log.i(Utils.TAG_LOG, "PreviewAdapter You Get Item By ID: " + id);
+
+
+                if (view.getId() == R.id.like_button) {
+                    mLikeClickHandler.onClick(this, id);
+                    mICM.onClick(this);
+                }
+                if (view.getId() == R.id.item || view.getId() == R.id.item_my) {
+                    mClickHandler.onClick(this, id);
+                    mICM.onClick(this);
+                }
+                if (view.getId() == R.id.comment_button) {
+                    mCommentClickHandler.onClick(this, id);
+                    mICM.onClick(this);
+                }
+                if (view.getId() == R.id.edit_button) {
+                    mEditClickHandler.onClick(this, id);
+                    mICM.onClick(this);
+                }
+                if (view.getId() == R.id.delete_button) {
+                    mRemoveClickHandler.onClick(this, id);
+                    mICM.onClick(this);
+                }
+
+            }
         }
 
     }
 
 
     public interface FeedAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh);
+        void onClick(PreviewAdapterViewHolder vh, int id);
     }
 
     public interface FeedCommentAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh);
+        void onClick(PreviewAdapterViewHolder vh, int id);
     }
 
     public interface FeedLikeAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh);
+        void onClick(PreviewAdapterViewHolder vh, int id);
     }
 
     public interface FeedEditAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh);
+        void onClick(PreviewAdapterViewHolder vh, int id);
     }
 
     public interface FeedRemoveAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh);
+        void onClick(PreviewAdapterViewHolder vh, int id);
     }
 
 
@@ -236,7 +250,6 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         try {
 
             day = Utils.getFriendlyDayString(mContext, Utils.getLongFromString(date), true);
-            Log.i(Utils.TAG_LOG, "Day Item : " + day);
         } catch (ParseException e) {
             e.printStackTrace();
             Log.e(Utils.TAG_LOG, "Date Item Invalid");
@@ -260,10 +273,12 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         int mIsLike = mCursor.getInt(FeedNewsFragment.COL_IS_LIKE);
         if (mIsLike == 1) {
             holder.mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
+            holder.mLikeButton.setTag("1");
 
         } else if (mIsLike == 0) {
 
             holder.mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            holder.mLikeButton.setTag("0");
         }
 
 // this enables better animations. even if we lose state due to a device rotation,

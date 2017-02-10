@@ -20,4 +20,8 @@ public interface HomeView extends IView {
 
     void navigateToScreen();
 
+    void showSuccessLikeDialog();
+
+    void showErrorLikeDialog();
+
 }

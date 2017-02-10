@@ -79,7 +79,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
 
     public static final int COL_FEED_ID = 0;
-//    public static final int COL_POST_ID_KEY = 1;
+    //    public static final int COL_POST_ID_KEY = 1;
     public static final int COL_TITLTE = 1;
     public static final int COL_TEXT = 2;
     public static final int COL_LIKES = 3;
@@ -219,37 +219,35 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 new PreviewAdapter.FeedAdapterOnClickHandler() {
                     @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh) {
-                        Uri uri = null;
-                        ((Callback) getActivity()).onItemSelected(uri, vh);
+                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, int id) {
+                        ((Callback) getActivity()).onItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
                     }
                 },
                 new PreviewAdapter.FeedCommentAdapterOnClickHandler() {
                     @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh) {
+                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, int id) {
                         Uri uri = null;
                         ((Callback) getActivity()).onCommentItemSelected(uri, vh);
                     }
                 },
                 new PreviewAdapter.FeedLikeAdapterOnClickHandler() {
                     @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh) {
-                        Uri uri = null;
-                        ((Callback) getActivity()).onLikeItemSelected(uri, vh);
+                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, int id) {
+                        ((Callback) getActivity()).onLikeItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
 
 
                     }
                 },
                 new PreviewAdapter.FeedEditAdapterOnClickHandler() {
                     @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh) {
+                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, int id) {
                         Uri uri = null;
                         ((Callback) getActivity()).onEditeItemSelected(uri, vh);
                     }
                 },
                 new PreviewAdapter.FeedRemoveAdapterOnClickHandler() {
                     @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh) {
+                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, int id) {
                         Uri uri = null;
                         ((Callback) getActivity()).onDeleteItemSelected(uri, vh);
                     }

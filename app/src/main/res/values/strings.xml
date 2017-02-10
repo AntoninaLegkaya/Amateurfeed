@@ -96,6 +96,7 @@
 
     <!--Dialog check button-->
     <string name="like" translatable="false">Like</string>
+    <string name="dislike" translatable="false">Dislike</string>
     <string name="comment" translatable="false">Comment</string>
     <string name="edit" translatable="false">Edit</string>
     <string name="remove" translatable="false">Delete</string>
@@ -107,15 +108,17 @@
     <!--News Feed-->
 <string name="get_news_succes">I get it! :)</string>
     <string name="get_news_error">I can get it! :(</string>
+    <string name="set_like_succes" translatable="false">I like/dislike it! :)</string>
+    <string name="set_like_error" translatable="false">I can like/dislike it! :(</string>
 
     <!-- Date format [CHAR LIMIT=NONE] -->
     <string name="format_full_friendly_date" translatable="false"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
 
     <!-- Language-specific constants -->
-    <string name="today">Today</string>
+    <string name="today" translatable="false">Today</string>
 
     <!-- For labelling tomorrow's forecast [CHAR LIMIT=15] -->
-    <string name="yesterday">Yesterday</string>
+    <string name="yesterday" translatable="false">Yesterday</string>
 
 
 </resources>
