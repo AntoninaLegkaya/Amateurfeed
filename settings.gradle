@@ -1,1 +1,3 @@
 include ':app'
+include ':common-library'
+project(':common-library').projectDir = new File('common-library/android-common-library')
