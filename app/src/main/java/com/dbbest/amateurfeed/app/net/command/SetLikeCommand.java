@@ -19,29 +19,25 @@ import com.dbbest.amateurfeed.utils.Utils;
 
 public class SetLikeCommand extends Command {
     private LikeModel mLikeRequestModel;
-    private IdModel mIdModel;
-    private final int mId;
+    private final long mId;
     private boolean mIsLike;
 
     private SetLikeCommand(Parcel in) {
         super(in);
         mLikeRequestModel = in.readParcelable(LikeModel.class.getClassLoader());
-//        mIdModel = in.readParcelable(IdModel.class.getClassLoader());
         mId = in.readInt();
     }
 
-    public SetLikeCommand(int id, boolean isLike) {
+    public SetLikeCommand(long id, boolean isLike) {
         mId = id;
         mIsLike = isLike;
         mLikeRequestModel = new LikeModel(mIsLike);
-//        mIdModel = new IdModel(id);
     }
 
     @Override
     public void writeToParcel(int flags, Parcel dest) {
         dest.writeParcelable(mLikeRequestModel, flags);
-//        dest.writeParcelable(mIdModel, flags);
-        dest.writeInt(mId);
+        dest.writeLong(mId);
     }
 
 
@@ -54,8 +50,8 @@ public class SetLikeCommand extends Command {
 
         AuthToken authToken = new AuthToken();
         RestApiClient apiClient = App.getApiFactory().restClient();
-        Log.i(Utils.TAG_LOG, "Like command (long) id: " + Long.valueOf(mId).longValue());
-        ResponseWrapper<Object> response = apiClient.isLike(authToken.bearer(), Long.valueOf(mId).longValue(), mLikeRequestModel);
+        Log.i(Utils.TAG_LOG, "Like command (long) id: " +mId);
+        ResponseWrapper<Object> response = apiClient.isLike(authToken.bearer(),mId, mLikeRequestModel);
         if (response != null) {
             if (response.isSuccessful()) {
                 Log.i(Utils.TAG_LOG, "Response message: " + response.message());

@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
         setContentView(R.layout.home_activity);
 
         mPresenter = new HomePresenter();
-        mPresenter.getNews(0, 20);
+        mPresenter.getNews(0, 10);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.tabs_activity);
         Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();

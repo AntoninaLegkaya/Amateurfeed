@@ -55,6 +55,7 @@ ext {
     googlePlaySevices = '9.6.1'
     facebookSdk = '4.16.0'
     glide = '3.7.0'
+    stetho = '1.4.1'
 }
 
 dependencies {
@@ -71,6 +72,11 @@ dependencies {
 
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
     compile "com.squareup.retrofit2:converter-gson:${retrofit}"
+
+    compile "com.facebook.stetho:stetho:${stetho}"
+    compile "com.facebook.stetho:stetho-okhttp3:${stetho}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okhttp}"
+
 
     compile "com.facebook.android:facebook-android-sdk:${facebookSdk}"
     compile project(path: ':common-library')

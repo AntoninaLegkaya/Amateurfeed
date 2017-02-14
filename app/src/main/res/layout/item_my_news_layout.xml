@@ -39,9 +39,9 @@
         android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
         android:fontFamily="sans-serif"
         android:gravity="center_horizontal"
-        android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/secondary_text"
+        android:textSize="16sp"
         app:layout_columnWeight="1"
         app:layout_gravity="left"
         tools:text="Today, April 03"/>
@@ -49,10 +49,10 @@
     <TextView
 
         android:id="@+id/list_item_title"
-        android:textColor="@color/app_blue_text"
         android:layout_width="wrap_content"
         android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
         android:padding="@dimen/abc_list_item_padding_horizontal_material"
+        android:textColor="@color/app_blue_text"
         app:layout_columnSpan="2"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
@@ -84,14 +84,14 @@
         app:layout_rowSpan="2"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_comment_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        app:layout_rowSpan="2"
-        />
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/list_comment_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_columnSpan="2"-->
+        <!--app:layout_columnWeight="1"-->
+        <!--app:layout_rowSpan="2"-->
+        <!--/>-->
 
     <LinearLayout
         android:padding="@dimen/abc_list_item_padding_horizontal_material"
@@ -123,7 +123,6 @@
             tools:text="0"/>
 
 
-        >
     </LinearLayout>
 
 
@@ -133,15 +132,33 @@
         app:layout_gravity="right"
         >
 
-        <ImageButton
-            android:id="@+id/comment_button"
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:background="@drawable/ic_comment_black_24dp"
-            android:elevation="8dp"
-            />
+            android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/comment_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_comment_black_24dp"
+                android:elevation="8dp"
+                />
+            <TextView
+                android:id="@+id/list_item_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/secondary_text"
+                android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+                tools:text="0"/>
+        </LinearLayout>
+
 
         <ImageButton
             android:id="@+id/edit_button"

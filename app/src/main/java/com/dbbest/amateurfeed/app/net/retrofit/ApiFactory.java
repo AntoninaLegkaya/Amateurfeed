@@ -1,9 +1,12 @@
 package com.dbbest.amateurfeed.app.net.retrofit;
 
 import com.dbbest.amateurfeed.BuildConfig;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -21,8 +24,13 @@ public class ApiFactory {
 
     public  Retrofit retrofit() {
         if (mRetrofit == null) {
+
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(BuildConfig.API_SERVER_URL)
+                    .client(new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).addInterceptor(new StethoInterceptor()).build())
                     .addConverterFactory(GsonConverterFactory.create(gson()))
                     .build();
         }

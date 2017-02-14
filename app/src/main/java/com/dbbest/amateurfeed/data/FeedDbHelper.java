@@ -49,9 +49,9 @@ public class FeedDbHelper extends SQLiteOpenHelper {
 
                 FeedContract.CommentEntry.COLUMN_POST_ID + " INTEGER NOT NULL, " +
                 FeedContract.CommentEntry.COLUMN_CREATOR_KEY + " INTEGER NOT NULL, " +
-                FeedContract.CommentEntry.COLUMN_BODY + " TEXT UNIQUE NOT NULL, " +
+                FeedContract.CommentEntry.COLUMN_BODY + " TEXT  NOT NULL, " +
                 FeedContract.CommentEntry.COLUMN_PARENT_COMMENT_ID + " INTEGER NOT NULL, " +
-                FeedContract.CommentEntry.COLUMN_CREATE_DATE + " TEXT UNIQUE NOT NULL, " +
+                FeedContract.CommentEntry.COLUMN_CREATE_DATE + " TEXT  NOT NULL, " +
                 // Set up the creator column as a foreign key to creator table.
                 " FOREIGN KEY (" + FeedContract.CommentEntry.COLUMN_CREATOR_KEY + ") REFERENCES " +
                 FeedContract.CreatorEntry.TABLE_NAME + " (" + FeedContract.CreatorEntry._ID + ")" +
@@ -61,7 +61,9 @@ public class FeedDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_TAG_TABLE = "CREATE TABLE " + FeedContract.TagEntry.TABLE_NAME + " (" +
                 FeedContract.TagEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FeedContract.TagEntry.COLUMN_NAME + " TEXT NOT NULL " +
+                FeedContract.TagEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+                FeedContract.TagEntry.COLUMN_TAG_ID + " INTEGER NOT NULL, " +
+                FeedContract.TagEntry.COLUMN_PREVIEW_ID + " INTEGER NOT NULL " +
                 ");";
 
         final String SQL_CREATE_PREVIEW_TABLE = "CREATE TABLE " + FeedContract.PreviewEntry.TABLE_NAME + " (" +
@@ -82,13 +84,13 @@ public class FeedDbHelper extends SQLiteOpenHelper {
 //                + " FOREIGN KEY (" + FeedContract.PreviewEntry.COLUMN_POST_ID_KEY + ") REFERENCES " +
 //                FeedContract.CommentEntry.TABLE_NAME + " (" + FeedContract.CommentEntry._ID + ")" +
 
-                +" );";
+                + " );";
 
         final String SQL_CREATE_CREATOR_TABLE = "CREATE TABLE " + FeedContract.CreatorEntry.TABLE_NAME + " (" +
                 FeedContract.CreatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 FeedContract.CreatorEntry.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
                 FeedContract.CreatorEntry.COLUMN_IS_ADMIN + " INTEGER NOT NULL," +
-                FeedContract.CreatorEntry.COLUMN_IMAGE + " TEXT UNIQUE NOT NULL " +
+                FeedContract.CreatorEntry.COLUMN_IMAGE + " TEXT UNIQUE  " +
                 ");";
 
         final String SQL_CREATE_PREVIEW_TAG_TABLE = "CREATE TABLE " + FeedContract.PreviewTagEntry.TABLE_NAME + " (" +

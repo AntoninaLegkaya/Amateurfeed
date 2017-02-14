@@ -2,6 +2,8 @@ package com.dbbest.amateurfeed.app.net.command;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,11 +16,13 @@ import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.FeedProvider;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.CurrentUser;
 import com.dbbest.amateurfeed.model.NewsRequestModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.model.UserFeedCommentModel;
+import com.dbbest.amateurfeed.model.UserFeedCreator;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.utils.Utils;
 
@@ -34,12 +38,8 @@ public class GetNewsCommand extends Command {
 
 
     public GetNewsCommand(int offset, int count) {
-        Log.i(Utils.TAG_LOG, "Create get News command");
         AuthToken authToken = new AuthToken();
         mNewsRequestModel = new NewsRequestModel(offset, count, authToken.bearer());
-//        Log.i(Utils.TAG_LOG, "Get News Command: AuthToken: " + mNewsRequestModel.getAccessToken());
-//        Log.i(Utils.TAG_LOG, "Get News Command: Offset: " + mNewsRequestModel.getOffset());
-//        Log.i(Utils.TAG_LOG, "Get News Command: Count: " + mNewsRequestModel.getCount());
     }
 
     private GetNewsCommand(Parcel in) {
@@ -50,7 +50,7 @@ public class GetNewsCommand extends Command {
 
     @Override
     public void execute() {
-        Log.i(Utils.TAG_LOG, "Execute get News command");
+        Log.i(Utils.TAG_LOG, "Execute Command get News....");
 
         RestApiClient apiClient = App.getApiFactory().restClient();
 
@@ -61,7 +61,7 @@ public class GetNewsCommand extends Command {
             if (response.isSuccessful() && response.data() != null) {
 
                 ArrayList<NewsPreviewResponseModel> data = response.data();
-                // Insert the new weather information into the database
+                // Insert the new news information into the database
                 Vector<ContentValues> cVVector = new Vector<ContentValues>(data.size());
 
 
@@ -69,10 +69,10 @@ public class GetNewsCommand extends Command {
                 for (NewsPreviewResponseModel preview : data) {
                     // These are the values that will be collected.
 
-                    int post_id;
+                    long _id;
                     String mTitle;
                     String mText;
-                    ArrayList<TagModel> mTags;
+
                     int mLikes;
                     boolean mIsLike;
                     String mAuthor;
@@ -80,8 +80,20 @@ public class GetNewsCommand extends Command {
                     String mCreateDate;
                     String mImage;
                     boolean mIsMy;
+
+                    /****TagModel**/
+
+                    ArrayList<TagModel> mTags;
+                    int _idTag;
+                    String mNameTag;
+
+
+                    /** UserFeedCommentModel **/
+
                     ArrayList<UserFeedCommentModel> mComments;
 
+
+                    _id = preview.getId();
                     mTitle = preview.getTitle();
                     mText = preview.getText();
                     mTags = preview.getTags();
@@ -93,9 +105,39 @@ public class GetNewsCommand extends Command {
                     mImage = preview.getImage();
                     mIsMy = preview.isMy();
 
+                    mComments = preview.getComments();
+
+
+                    getCommentModel(mComments);
+
+                    // Insert the tags news information into the database
+
+                    Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(mTags.size());
+
+                    for (TagModel tag : mTags) {
+                        ContentValues tagValues = new ContentValues();
+                        _idTag = tag.getId();
+                        mNameTag = tag.getName();
+                        tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, _idTag);
+                        tagValues.put(FeedContract.TagEntry.COLUMN_NAME, mNameTag);
+                        tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, _id);
+
+                        cVTagsVector.add(tagValues);
+
+                    }
+
+                    // add  Tags to database
+                    if (cVTagsVector.size() > 0) {
+                        ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
+                        cVTagsVector.toArray(cvArray);
+                        App.instance().getContentResolver().bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
+
+
+                    }
 
                     ContentValues previewValues = new ContentValues();
 
+                    previewValues.put(FeedContract.PreviewEntry._ID, _id);
                     previewValues.put(FeedContract.PreviewEntry.COLUMN_TITLE, mTitle);
                     previewValues.put(FeedContract.PreviewEntry.COLUMN_TEXT, mText);
                     previewValues.put(FeedContract.PreviewEntry.COLUMN_LIKES, mLikes);
@@ -134,7 +176,7 @@ public class GetNewsCommand extends Command {
                     i = i + 1;
                 }
 
-                // add to database
+                // add to  preview table
                 if (cVVector.size() > 0) {
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
                     cVVector.toArray(cvArray);
@@ -159,6 +201,109 @@ public class GetNewsCommand extends Command {
         } else {
             notifyError(Bundle.EMPTY);
         }
+
+    }
+
+    private void getCommentModel(ArrayList<UserFeedCommentModel> mComments) {
+        ArrayList<ArrayList<UserFeedCommentModel>> childArray = new ArrayList<>();
+        int _idComment;
+        int post_id;
+        String body;
+        int parentCommentId;
+        UserFeedCreator mCreator;
+        String createCommentDate;
+        ArrayList<UserFeedCommentModel> childrenComment;
+
+        int creator_id;
+        String mCreatorName;
+        String mImage;
+
+        Vector<ContentValues> cVCommentVector = new Vector<ContentValues>(mComments.size());
+        Vector<ContentValues> cVCreatorVector = new Vector<ContentValues>(mComments.size());
+
+        for (UserFeedCommentModel mComment : mComments) {
+
+
+            ContentValues creatorValues = new ContentValues();
+
+
+            _idComment = mComment.getId();
+            post_id = mComment.getPostId();
+            body = mComment.getBody();
+            parentCommentId = mComment.getParentCommentId();
+
+
+            mCreator = mComment.getCreator();
+            creator_id = mCreator.getId();
+            mCreatorName = mCreator.getName();
+            int mIsAdmin = (mCreator.isAdmin() ? 1 : 0);
+            mImage = mCreator.getImage();
+
+
+            Uri uriCreatorId = FeedContract.CreatorEntry.buildCreatorUriById(creator_id);
+
+//            Log.i(Utils.TAG_LOG, "Check Creator" + "_ID: " + creator_id);
+
+            Cursor cursor = App.instance().getContentResolver().query(
+                    uriCreatorId,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            if (!cursor.moveToFirst()) {
+
+                creatorValues.put(FeedContract.CreatorEntry._ID, creator_id);
+                creatorValues.put(FeedContract.CreatorEntry.COLUMN_NAME, mCreatorName);
+                creatorValues.put(FeedContract.CreatorEntry.COLUMN_IS_ADMIN, mIsAdmin);
+                creatorValues.put(FeedContract.CreatorEntry.COLUMN_IMAGE, mImage);
+
+                cVCreatorVector.add(creatorValues);
+
+                if (cVCreatorVector.size() > 0) {
+                    ContentValues[] cvArray = new ContentValues[cVCreatorVector.size()];
+                    cVCreatorVector.toArray(cvArray);
+                    App.instance().getContentResolver().bulkInsert(FeedContract.CreatorEntry.CONTENT_URI, cvArray);
+
+                    cVCreatorVector.clear();
+                }
+
+            }
+
+
+            createCommentDate = mComment.getCreatedate();
+            childrenComment = mComment.getChildren();
+
+
+            ContentValues commentValues = new ContentValues();
+            commentValues.put(FeedContract.CommentEntry._ID, _idComment);
+//            Log.i(Utils.TAG_LOG, "Id Comment: " + _idComment + " mCreator.name: " + mCreatorName + " Body  Comment: " + body);
+            commentValues.put(FeedContract.CommentEntry.COLUMN_POST_ID, post_id);
+            commentValues.put(FeedContract.CommentEntry.COLUMN_BODY, body);
+            commentValues.put(FeedContract.CommentEntry.COLUMN_PARENT_COMMENT_ID, parentCommentId);
+            commentValues.put(FeedContract.CommentEntry.COLUMN_CREATOR_KEY, mCreator.getId());
+            commentValues.put(FeedContract.CommentEntry.COLUMN_CREATE_DATE, createCommentDate);
+
+            cVCommentVector.add(commentValues);
+
+            childArray.add(childrenComment);
+
+
+        }
+
+        if (cVCommentVector.size() > 0) {
+            ContentValues[] cvArray = new ContentValues[cVCommentVector.size()];
+            cVCommentVector.toArray(cvArray);
+            App.instance().getContentResolver().bulkInsert(FeedContract.CommentEntry.CONTENT_URI, cvArray);
+
+
+        }
+
+
+        for (ArrayList<UserFeedCommentModel> feedCommentModels : childArray) {
+            getCommentModel(feedCommentModels);
+        }
+
 
     }
 

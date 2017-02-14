@@ -1,17 +1,14 @@
 package com.dbbest.amateurfeed;
 
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 
 import com.dbbest.amateurfeed.app.net.retrofit.ApiFactory;
 import com.dbbest.amateurfeed.utils.FactoryImpl;
-import com.dbbest.amateurfeed.utils.Utils;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.stetho.Stetho;
 
-/**
- * Created by antonina on 19.01.17.
- */
+
 
 public class App extends MultiDexApplication {
     private static App sInstance;
@@ -27,8 +24,6 @@ public class App extends MultiDexApplication {
             sApiFactory = new ApiFactory();
         }
         return sInstance.sApiFactory;
-
-
     }
 
     public static FactoryImpl getFactory() {
@@ -45,6 +40,7 @@ public class App extends MultiDexApplication {
         super.onCreate();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        Stetho.initializeWithDefaults(this);
         sInstance = this;
 
     }

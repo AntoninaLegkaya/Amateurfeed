@@ -39,7 +39,7 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
 
     }
 
-    public void putLike(int id, int isLike) {
+    public void putLike(long id, int isLike) {
         boolean like = true;
         if (getView() != null) {
             HomeView view = getView();

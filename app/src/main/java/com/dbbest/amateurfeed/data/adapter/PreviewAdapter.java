@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
@@ -36,14 +39,12 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_ITEM_EMPTY = 2;
 
-    private static final int VIEW_TYPE_TODAY = 3;
-    private static final int VIEW_TYPE_PASS_DAY = 4;
     private final View mEmptyView;
     private final ItemChoiceManager mICM;
     private RecyclerView mHorizontalList;
-    private RecyclerView mVerticalList;
+    //    private RecyclerView mVerticalList;
+//    private VerticalListAdapter mVerticalListAdapter;
     private HorizontalListAdapter mHorizontalListAdapter;
-    private VerticalListAdapter mVerticalListAdapter;
 
 
     private final FeedAdapterOnClickHandler mClickHandler;
@@ -51,6 +52,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     private final FeedLikeAdapterOnClickHandler mLikeClickHandler;
     private final FeedEditAdapterOnClickHandler mEditClickHandler;
     private final FeedRemoveAdapterOnClickHandler mRemoveClickHandler;
+
 
     public PreviewAdapter(Context context, View emptyView, int choiceMode, FeedAdapterOnClickHandler clickHandler, FeedCommentAdapterOnClickHandler commentClickHandler, FeedLikeAdapterOnClickHandler likeClickHandler, FeedEditAdapterOnClickHandler editeClickHandler, FeedRemoveAdapterOnClickHandler removeClickHandler) {
         mContext = context;
@@ -64,6 +66,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         mICM.setChoiceMode(choiceMode);
     }
 
+
     public class PreviewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final ImageView mIconView;
@@ -72,6 +75,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         public final TextView mDateView;
         public final ImageView mImageView;
         public final TextView mLikesCountView;
+        public final TextView mCommentCountView;
         public final ImageButton mLikeButton;
         public final ImageButton mCommentButton;
         public final ImageButton mEditButton;
@@ -88,6 +92,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             mFullNameView = (TextView) itemView.findViewById(R.id.list_item_name_textview);
             mTitleView = (TextView) itemView.findViewById(R.id.list_item_title);
             mLikesCountView = (TextView) itemView.findViewById(R.id.list_item_likes_count);
+            mCommentCountView = (TextView) itemView.findViewById(R.id.list_item_comment_count);
 
             mLikeButton = (ImageButton) itemView.findViewById(R.id.like_button);
             mLikeButton.setOnClickListener(this);
@@ -107,26 +112,27 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             mHorizontalListAdapter = new HorizontalListAdapter(mContext);
             mHorizontalList.setAdapter(mHorizontalListAdapter);
 
-            mVerticalList = (RecyclerView) itemView.findViewById(R.id.list_comment_view);
-            mVerticalList.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-            mVerticalListAdapter = new VerticalListAdapter(mContext);
-            mVerticalList.setAdapter(mVerticalListAdapter);
+//            mVerticalList = (RecyclerView) itemView.findViewById(R.id.list_comment_view);
+//            mVerticalList.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+//            mVerticalListAdapter = new VerticalListAdapter(mContext);
+//            mVerticalList.setAdapter(mVerticalListAdapter);
+//            mVerticalList.setHasFixedSize(true);
             mHorizontalList.setHasFixedSize(true);
-            mVerticalList.setHasFixedSize(true);
+
         }
 
 
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            int id ;
+            long id;
             if (mCursor != null) {
                 mCursor.moveToPosition(adapterPosition);
 
 
                 int idx = mCursor.getColumnIndex(FeedContract.PreviewEntry._ID);
                 Log.i(Utils.TAG_LOG, "PreviewAdapter Index COLUMN ID: " + idx);
-                id = mCursor.getInt(idx);
+                id = mCursor.getLong(idx);
                 Log.i(Utils.TAG_LOG, "PreviewAdapter You Get Item By ID: " + id);
 
 
@@ -158,23 +164,23 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
 
     public interface FeedAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, int id);
+        void onClick(PreviewAdapterViewHolder vh, long id);
     }
 
     public interface FeedCommentAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, int id);
+        void onClick(PreviewAdapterViewHolder vh, long id);
     }
 
     public interface FeedLikeAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, int id);
+        void onClick(PreviewAdapterViewHolder vh, long id);
     }
 
     public interface FeedEditAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, int id);
+        void onClick(PreviewAdapterViewHolder vh, long id);
     }
 
     public interface FeedRemoveAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, int id);
+        void onClick(PreviewAdapterViewHolder vh, long id);
     }
 
 
@@ -280,6 +286,33 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             holder.mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
             holder.mLikeButton.setTag("0");
         }
+        long mIdPreview = mCursor.getLong(FeedNewsFragment.COL_FEED_ID);
+        Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
+
+
+        Cursor mCursorComments = App.instance().getContentResolver().query(
+                uriCommentList,
+                null,
+                null,
+                null,
+                null
+        );
+        int count = mCursorComments.getCount();
+        holder.mCommentCountView.setText(String.valueOf(count));
+
+        Uri uriTagsList = FeedContract.TagEntry.getTagsListById(mIdPreview);
+        Cursor mCursorTags = App.instance().getContentResolver().query(
+                uriTagsList,
+                null,
+                null,
+                null,
+                null
+        );
+
+        if (mCursorTags.moveToFirst()) {
+            mHorizontalListAdapter.swapCursor(mCursorTags);
+        }
+
 
 // this enables better animations. even if we lose state due to a device rotation,
         // the animator can use this to re-find the original view
@@ -319,8 +352,6 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
-
-
         notifyDataSetChanged();
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }

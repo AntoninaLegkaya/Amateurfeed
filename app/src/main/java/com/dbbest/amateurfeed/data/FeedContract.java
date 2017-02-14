@@ -102,13 +102,10 @@ public class FeedContract {
 
     public static final class CommentEntry implements BaseColumns {
 
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_COMMENT).build();
-
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_COMMENT;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_COMMENT;
+        public static final int COMMENT_ID_PATH_POSITION = 1;
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_COMMENT).build();
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_COMMENT;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_COMMENT;
 
         // Table name
         public static final String TABLE_NAME = "comment";
@@ -121,13 +118,19 @@ public class FeedContract {
         public static final String COLUMN_POST_ID = "post_id";
         public static final String COLUMN_BODY = "body";
         public static final String COLUMN_PARENT_COMMENT_ID = "parent_comment_id";
-        public static final String COLUMN_CREATOR_ID = "creator_id";
         public static final String COLUMN_CREATE_DATE = "create_date";
 
 
         public static Uri buildCommentUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
+        public static Uri getCommentsListById(long id) {
+
+            return CONTENT_URI.buildUpon().appendPath(Long.toString(id)).build();
+        }
+
+
     }
 
     /* Tag Entry*/
@@ -147,7 +150,9 @@ public class FeedContract {
         // Table name
         public static final String TABLE_NAME = "tag";
 
+        public static final String COLUMN_TAG_ID = "tag_id";
         public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_PREVIEW_ID = "preview_id";
 
 
         public static Uri buildTagUri(long id) {
@@ -156,6 +161,11 @@ public class FeedContract {
 
         public static Uri buildTagUriById(long id) {
             return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
+        }
+
+        public static Uri getTagsListById(long id) {
+
+            return CONTENT_URI.buildUpon().appendPath(Long.toString(id)).build();
         }
     }
 
@@ -205,9 +215,9 @@ public class FeedContract {
         };
 
 
-        public static int getIdFromUri(Uri uri) {
+        public static long getIdFromUri(Uri uri) {
 
-            return Integer.parseInt(uri.getPathSegments().get(1));
+            return Long.parseLong(uri.getPathSegments().get(1));
         }
 
         public static Uri buildPreviewUriById(long id) {
@@ -215,7 +225,7 @@ public class FeedContract {
         }
 
 
-        public static Uri buildPreviewUriByAuthor(String  author) {
+        public static Uri buildPreviewUriByAuthor(String author) {
             return CONTENT_URI.buildUpon().appendPath(author).build();
         }
 
@@ -234,14 +244,15 @@ public class FeedContract {
     /* Creator Entry*/
 
     public static final class CreatorEntry implements BaseColumns {
+        public static final int CREATOR_ID_PATH_POSITION = 1;
 
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CREATOR).build();
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CREATOR).build();
+        private static final String SCHEME = "content://";
+        private static final String PATH_CREATOR_ID = "/creator/";
 
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_CREATOR;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_CREATOR;
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_CREATOR;
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_CREATOR_ID);
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_CREATOR;
 
         // Table name
         public static final String TABLE_NAME = "creator";
@@ -255,6 +266,15 @@ public class FeedContract {
 
         public static Uri buildCreatorUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildCreatorUriById(long id) {
+            return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
+        }
+
+        public static long getIdFromUri(Uri uri) {
+
+            return Long.parseLong(uri.getPathSegments().get(1));
         }
     }
 

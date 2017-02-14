@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.utils.Utils;
 
 public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAdapter.HorizontalViewHolder> {
@@ -73,17 +75,20 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
 
     @Override
     public void onBindViewHolder(HorizontalViewHolder holder, final int position) {
-        final int adapterPosition = holder.getAdapterPosition();
+//        for (int i = 0; i < mCursor.getCount(); i++) {
+        mCursor.moveToFirst();
+        if (mCursor.moveToNext()) ;
         if (holder.mTagName != null) {
-
-            String text = "#newTag";
-            holder.mTagName.setText(text);
+//            holder.mTagName.setText(mCursor.getString(FeedNewsFragment.COL_TAG_NAME));
+//            Log.i(Utils.TAG_LOG, "Set Tag to List:   " + mCursor.getString(FeedNewsFragment.COL_TAG_NAME));
         }
+
+//        }
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Position clicked: " + adapterPosition, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Position clicked: " + position, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -91,8 +96,7 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
     @Override
     public int getItemCount() {
 
-//         Unpack when configurate Cursor
-        if (null == mCursor) return 1;
+        if (null == mCursor) return 0;
         return mCursor.getCount();
 
     }
