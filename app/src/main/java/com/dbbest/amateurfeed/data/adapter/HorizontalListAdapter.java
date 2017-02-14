@@ -75,15 +75,16 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
 
     @Override
     public void onBindViewHolder(HorizontalViewHolder holder, final int position) {
-//        for (int i = 0; i < mCursor.getCount(); i++) {
-        mCursor.moveToFirst();
-        if (mCursor.moveToNext()) ;
-        if (holder.mTagName != null) {
-//            holder.mTagName.setText(mCursor.getString(FeedNewsFragment.COL_TAG_NAME));
-//            Log.i(Utils.TAG_LOG, "Set Tag to List:   " + mCursor.getString(FeedNewsFragment.COL_TAG_NAME));
-        }
+        Cursor cursor = mCursor;
 
-//        }
+        if (cursor.moveToPosition(position)) {
+            if (holder.mTagName != null) {
+                String tag = Utils.foramatTagName(mContext, cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+                holder.mTagName.setText(tag);
+                Log.i(Utils.TAG_LOG, "Set Tag to List:   " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+            }
+
+        }
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

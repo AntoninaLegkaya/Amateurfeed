@@ -79,9 +79,10 @@
         android:id="@+id/list_tags_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_columnSpan="2"
+        android:fontFamily="sans-serif"
         app:layout_columnWeight="1"
         app:layout_rowSpan="2"
+        app:layout_columnSpan="2"
         />
 
     <!--<android.support.v7.widget.RecyclerView-->

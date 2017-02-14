@@ -121,4 +121,8 @@
     <string name="yesterday" translatable="false">Yesterday</string>
 
 
+    <!-- Tag format [CHAR LIMIT=NONE] -->
+    <string name="format_tag" translatable="false"><xliff:g id="name"><u>#%1$s</u></xliff:g></string>
+
+
 </resources>

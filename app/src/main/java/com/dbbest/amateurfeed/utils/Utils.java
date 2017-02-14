@@ -172,4 +172,10 @@ public class Utils {
 
         return -1;
     }
+
+    public static String foramatTagName(Context context, String tag) {
+
+        int formatId = R.string.format_tag;
+        return String.format(context.getString(formatId), tag);
+    }
 }

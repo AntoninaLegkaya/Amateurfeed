@@ -117,7 +117,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 //            mVerticalListAdapter = new VerticalListAdapter(mContext);
 //            mVerticalList.setAdapter(mVerticalListAdapter);
 //            mVerticalList.setHasFixedSize(true);
-            mHorizontalList.setHasFixedSize(true);
+//            mHorizontalList.setHasFixedSize(true);
 
         }
 
@@ -234,7 +234,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         mCursor.moveToPosition(position);
         boolean useLongToday;
 
-
+        long mIdPreview = mCursor.getLong(FeedNewsFragment.COL_FEED_ID);
         Glide.with(mContext)
                 .load(mCursor.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
                 .error(R.drawable.art_snow)
@@ -243,7 +243,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
         String fullName =
                 mCursor.getString(FeedNewsFragment.COL_AUTHOR);
-        holder.mFullNameView.setText(fullName);
+        holder.mFullNameView.setText(fullName+ String.valueOf(mIdPreview));
 
 
         String title =
@@ -286,7 +286,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             holder.mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
             holder.mLikeButton.setTag("0");
         }
-        long mIdPreview = mCursor.getLong(FeedNewsFragment.COL_FEED_ID);
+
         Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
 
 

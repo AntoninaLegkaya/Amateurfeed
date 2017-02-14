@@ -82,6 +82,7 @@
             app:layout_columnSpan="2"
             app:layout_columnWeight="1"
             app:layout_rowSpan="2"
+            android:fontFamily="sans-serif"
 
             />
 

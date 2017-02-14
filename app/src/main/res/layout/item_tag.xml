@@ -16,6 +16,6 @@
         android:textSize="14sp"
         android:fontFamily="sans-serif"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/secondary_text"
+        android:textColor="@drawable/tab_text_link"
         tools:text="#Tag1"/>
 </LinearLayout>
