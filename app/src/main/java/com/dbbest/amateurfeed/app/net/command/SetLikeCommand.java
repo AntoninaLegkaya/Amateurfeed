@@ -1,5 +1,6 @@
 package com.dbbest.amateurfeed.app.net.command;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,6 +10,7 @@ import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.LikeModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
+import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.IdModel;
 import com.dbbest.amateurfeed.utils.Utils;
@@ -61,6 +63,8 @@ public class SetLikeCommand extends Command {
 
 
                 notifySuccess(Bundle.EMPTY);
+
+
 
             } else {
                 notifyError(Bundle.EMPTY);

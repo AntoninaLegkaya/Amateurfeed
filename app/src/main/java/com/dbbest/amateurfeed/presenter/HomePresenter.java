@@ -1,8 +1,6 @@
 package com.dbbest.amateurfeed.presenter;
 
 import android.common.framework.Presenter;
-import android.common.util.TextUtils;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -10,11 +8,8 @@ import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.GetNewsCommand;
-import com.dbbest.amateurfeed.app.net.command.RegistrationCommand;
 import com.dbbest.amateurfeed.app.net.command.SetLikeCommand;
-import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
-import com.dbbest.amateurfeed.view.SignUpView;
 
 /**
  * Created by antonina on 20.01.17.
@@ -31,7 +26,7 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
         if (getView() != null) {
             HomeView view = getView();
 
-            view.showProgressDialog();
+//            view.showProgressDialog();
         }
         Command command = new GetNewsCommand(offset, count);
         command.send(CODE_GET_NEWS, mResultReceiver);
@@ -74,8 +69,13 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
     @Override
     public void onSuccess(int code, Bundle data) {
         if (getView() != null) {
-            getView().dismissProgressDialog();
-            getView().showSuccessDialog();
+            if (code == CODE_GET_NEWS) {
+                getView().refreshFragmentFeedLoader();
+            } else if (code == CODE_LIKE_NEWS) {
+                getView().dismissProgressDialog();
+                getView().showSuccessLikeDialog();
+                getView().updateColumnLikeInBd();
+            }
         }
     }
 
@@ -88,6 +88,9 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
                 getView().showErrorConnectionDialog();
             } else {
                 getView().showErrorDialog();
+                if (code == CODE_LIKE_NEWS) {
+                    getView().showErrorLikeDialog();
+                }
             }
         }
     }

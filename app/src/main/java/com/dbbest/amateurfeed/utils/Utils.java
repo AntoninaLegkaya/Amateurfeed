@@ -7,6 +7,7 @@ import com.dbbest.amateurfeed.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
 
 public class Utils {
     public static final String TAG_LOG = "Log";
+    public static final String TAG_LOG_LOAD_NEW_DATA = "Get news";
     public static final String DATE_FORMAT = "yyyyMMdd";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
@@ -79,12 +81,17 @@ public class Utils {
         return PHONE_PATTERN.matcher(phone).matches();
     }
 
-    public static long getLongFromString(String currentDate) throws ParseException {
+    public static long getLongFromString(String currentDate) {
 
 
 //    "2010-10-15T09:27:37";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        Date parseDate = format.parse(currentDate);
+        Date parseDate = null;
+        try {
+            parseDate = format.parse(currentDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return parseDate.getTime();
 
 
@@ -150,6 +157,16 @@ public class Utils {
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
             return dayFormat.format(dateInMillis);
         }
+    }
+
+    public static long getTodayLongDate() {
+
+        Calendar currDate = Calendar.getInstance();
+        currDate.set(Calendar.HOUR_OF_DAY, 0);
+        currDate.set(Calendar.MINUTE, 0);
+
+        return currDate.getTimeInMillis();
+
     }
 
     public static boolean isAddressValid(String address) {

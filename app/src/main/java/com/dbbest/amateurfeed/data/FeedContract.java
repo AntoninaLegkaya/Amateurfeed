@@ -224,6 +224,10 @@ public class FeedContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
+        public static Uri buildSetLikeInPreviewUriById(long id) {
+
+            return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
+        }
 
         public static Uri buildPreviewUriByAuthor(String author) {
             return CONTENT_URI.buildUpon().appendPath(author).build();

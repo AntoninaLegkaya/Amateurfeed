@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,15 +50,17 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     private final FeedLikeAdapterOnClickHandler mLikeClickHandler;
     private final FeedEditAdapterOnClickHandler mEditClickHandler;
     private final FeedRemoveAdapterOnClickHandler mRemoveClickHandler;
+    private final FeedAdapterLoadNews mLoadNewsHandler;
 
 
-    public PreviewAdapter(Context context, View emptyView, int choiceMode, FeedAdapterOnClickHandler clickHandler, FeedCommentAdapterOnClickHandler commentClickHandler, FeedLikeAdapterOnClickHandler likeClickHandler, FeedEditAdapterOnClickHandler editeClickHandler, FeedRemoveAdapterOnClickHandler removeClickHandler) {
+    public PreviewAdapter(Context context, View emptyView, int choiceMode, FeedAdapterOnClickHandler clickHandler, FeedCommentAdapterOnClickHandler commentClickHandler, FeedLikeAdapterOnClickHandler likeClickHandler, FeedEditAdapterOnClickHandler editeClickHandler, FeedRemoveAdapterOnClickHandler removeClickHandler, FeedAdapterLoadNews loadNewsHandler) {
         mContext = context;
         mClickHandler = clickHandler;
         mCommentClickHandler = commentClickHandler;
         mLikeClickHandler = likeClickHandler;
         mEditClickHandler = editeClickHandler;
         mRemoveClickHandler = removeClickHandler;
+        mLoadNewsHandler = loadNewsHandler;
         mEmptyView = emptyView;
         mICM = new ItemChoiceManager(this);
         mICM.setChoiceMode(choiceMode);
@@ -143,6 +143,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
                 if (view.getId() == R.id.item || view.getId() == R.id.item_my) {
                     mClickHandler.onClick(this, id);
                     mICM.onClick(this);
+
                 }
                 if (view.getId() == R.id.comment_button) {
                     mCommentClickHandler.onClick(this, id);
@@ -162,6 +163,11 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     }
 
+    public interface FeedAdapterLoadNews {
+
+        void load(PreviewAdapter.PreviewAdapterViewHolder vh,int count, int offset);
+
+    }
 
     public interface FeedAdapterOnClickHandler {
         void onClick(PreviewAdapterViewHolder vh, long id);
@@ -231,8 +237,14 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     @Override
     public void onBindViewHolder(PreviewAdapterViewHolder holder, int position) {
+
+        //check for last item
+        if ((position >= getItemCount() - 1)) {
+            Log.i(Utils.TAG_LOG_LOAD_NEW_DATA, "Load new items : count = 5  offset: " + getItemCount());
+            mLoadNewsHandler.load(holder,getItemCount(), 5);
+        }
+
         mCursor.moveToPosition(position);
-        boolean useLongToday;
 
         long mIdPreview = mCursor.getLong(FeedNewsFragment.COL_FEED_ID);
         Glide.with(mContext)
@@ -243,7 +255,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
         String fullName =
                 mCursor.getString(FeedNewsFragment.COL_AUTHOR);
-        holder.mFullNameView.setText(fullName+ String.valueOf(mIdPreview));
+        holder.mFullNameView.setText(fullName + String.valueOf(mIdPreview));
 
 
         String title =
@@ -253,13 +265,9 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         String date =
                 mCursor.getString(FeedNewsFragment.COL_CREATE_DATE);
         String day = null;
-        try {
 
-            day = Utils.getFriendlyDayString(mContext, Utils.getLongFromString(date), true);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.e(Utils.TAG_LOG, "Date Item Invalid");
-        }
+        day = Utils.getFriendlyDayString(mContext, Utils.getLongFromString(date), true);
+
         if (day == null) {
             holder.mDateView.setText(date);
         } else {
@@ -321,6 +329,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
 
     }
+
 
     @Override
     public int getItemCount() {

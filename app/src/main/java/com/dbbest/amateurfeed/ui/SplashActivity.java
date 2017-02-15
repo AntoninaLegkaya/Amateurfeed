@@ -59,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
         Intent intent;
 
         Log.i(Utils.TAG_LOG, authToken.toString());
-        authToken.purge();
+//        authToken.purge();
 
         if (authToken.isValid()) {
 

@@ -1,7 +1,9 @@
 package com.dbbest.amateurfeed.ui;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +42,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
 
     private int mLikeImage = R.drawable.ic_favorite_black_24dp;
     private int mDisLikeImage = R.drawable.ic_favorite_border_black_24dp;
+    private int isLikeFlag = 0;
+    private int mCountIsLikes = 0;
+    private Uri mUriId;
 
     private CoordinatorLayout coordinatorLayout;
     private HomePresenter mPresenter;
@@ -50,13 +55,16 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
 
+
         mPresenter = new HomePresenter();
-        mPresenter.getNews(0, 10);
+        mPresenter.getNews(0, 5);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.tabs_activity);
-        Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+        if (savedInstanceState == null) {
+            Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+        }
 
 
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
@@ -85,6 +93,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
         });
         // Use custom text appearance in tab titles.
         bottomBar.setTextAppearance(R.style.TabHome);
+
+
     }
 
 
@@ -111,38 +121,40 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
 
     @Override
     public void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-        Log.i(Utils.TAG_LOG, "Clik on Item......");
-        UIDialogNavigation.showWarningDialog(R.string.item).show(getSupportFragmentManager(), "info");
+//        UIDialogNavigation.showWarningDialog(R.string.item).show(getSupportFragmentManager(), "info");
     }
 
     @Override
     public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-        int count = 0;
+
+
         String mCountLikes = (vh.mLikesCountView.getText()).toString();
         if (mCountLikes != null) {
-            count = Integer.parseInt(mCountLikes);
-            Log.i(Utils.TAG_LOG, "Count Likes: " + count);
+            mCountIsLikes = Integer.parseInt(mCountLikes);
+            Log.i(Utils.TAG_LOG, "Count Likes: " + mCountIsLikes);
         }
+        mUriId = uri;
+
         if (vh.mLikeButton.getTag() == "1") {
 
-
+            isLikeFlag = 0;
             vh.mLikeButton.setTag("0");
             vh.mLikeButton.setImageResource(mDisLikeImage);
-            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
-            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), 0);
-            vh.mLikesCountView.setText(String.valueOf(count - 1));
+//            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
+            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
+            mCountIsLikes = mCountIsLikes - 1;
+            vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
 
 
         } else if (vh.mLikeButton.getTag() == "0") {
-
+            isLikeFlag = 1;
             vh.mLikeButton.setTag("1");
             vh.mLikeButton.setImageResource(mLikeImage);
-            vh.mLikesCountView.setText(String.valueOf(count + 1));
-            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
-            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), 1);
+            mCountIsLikes = mCountIsLikes + 1;
+            vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
+//            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
+            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
         }
-
-
 
     }
 
@@ -166,8 +178,29 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
     }
 
     @Override
+    public void upLoadNewsItems(int offset, int count) {
+        Log.i(Utils.TAG_LOG_LOAD_NEW_DATA, "New Request to upload news: offset: " + offset);
+        mPresenter.getNews(offset, count);
+    }
+
+
+    @Override
+    public void refreshFragmentFeedLoader() {
+
+        FeedNewsFragment newsFragment = (FeedNewsFragment) getSupportFragmentManager().findFragmentByTag(FEDD_NEWS_FRAGMENT_TAG);
+        if (newsFragment != null) {
+
+            newsFragment.refreshFragmentLoader();
+
+        }
+
+
+    }
+    @Override
     public void showSuccessDialog() {
-        UIDialogNavigation.showWarningDialog(R.string.get_news_succes).show(getSupportFragmentManager(), "warn");
+
+
+
     }
 
     @Override
@@ -202,12 +235,28 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
 
     @Override
     public void showSuccessLikeDialog() {
-        UIDialogNavigation.showWarningDialog(R.string.set_like_succes).show(getSupportFragmentManager(), "warn");
+//        UIDialogNavigation.showWarningDialog(R.string.set_like_succes).show(getSupportFragmentManager(), "warn");
 
     }
 
     @Override
     public void showErrorLikeDialog() {
         UIDialogNavigation.showWarningDialog(R.string.set_like_error).show(getSupportFragmentManager(), "warn");
+    }
+
+    @Override
+    public void updateColumnLikeInBd() {
+
+        ContentValues values = new ContentValues();
+        values.put(FeedContract.PreviewEntry.COLUMN_IS_LIKE, isLikeFlag);
+        values.put(FeedContract.PreviewEntry.COLUMN_LIKES, mCountIsLikes);
+        if (mUriId != null) {
+
+            long id = FeedContract.PreviewEntry.getIdFromUri(mUriId);
+            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetLikeInPreviewUriById(id);
+            App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+        }
+
+
     }
 }

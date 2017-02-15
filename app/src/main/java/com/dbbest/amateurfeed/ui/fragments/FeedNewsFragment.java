@@ -31,6 +31,7 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
+import com.dbbest.amateurfeed.data.adapter.PreviewAdapter.FeedAdapterLoadNews;
 import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
 import com.dbbest.amateurfeed.presenter.FeedListPresenter;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
@@ -39,14 +40,17 @@ import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.FeedView;
 import com.melnykov.fab.FloatingActionButton;
 
+import static android.support.v4.widget.SwipeRefreshLayout.*;
+
 /**
  * Created by antonina on 20.01.17.
  */
 
-public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView, SwipeRefreshLayout.OnRefreshListener {
+public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
 
     private static final String PARAM_KEY = "param_key";
     private RecyclerView mRecyclerView;
+    private int mPosition = RecyclerView.NO_POSITION;
 
     private FeedListPresenter mPresenter;
     private PreviewAdapter mPreviewAdapter;
@@ -58,6 +62,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean mHoldForTransition;
     private long mInitialSelectedDate = -1;
     private boolean mAutoSelectView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     private static final String[] PREVIEW_COLUMNS = {
@@ -106,18 +111,17 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     public static final int COL_TAG_PREVIEW_ID = 3;
 
 
-
-
-    public void setInitialSelectedDate(long initialSelectedDate) {
-        mInitialSelectedDate = initialSelectedDate;
-    }
-
     public static FeedNewsFragment newInstance(String key) {
         FeedNewsFragment fragment = new FeedNewsFragment();
         Bundle bundle = new Bundle();
         bundle.putString(PARAM_KEY, key);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     public interface Callback {
@@ -131,6 +135,8 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         public void onEditeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
 
         public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+        public void upLoadNewsItems(int count, int offset);
     }
 
     @Override
@@ -191,7 +197,14 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
         final View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
         View emptyView = rootView.findViewById(R.id.recycle_feed_empty);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.feed_list_view);
+
+        setInitialSelectedDate(Utils.getTodayLongDate());
 
 
         // Set the layout manager
@@ -238,6 +251,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
                         ((Callback) getActivity()).onItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
+                        mPosition = vh.getAdapterPosition();
                     }
                 },
                 new PreviewAdapter.FeedCommentAdapterOnClickHandler() {
@@ -251,7 +265,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
                         ((Callback) getActivity()).onLikeItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
-
+                        mPosition = vh.getAdapterPosition();
 
                     }
                 },
@@ -267,8 +281,17 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
                         Uri uri = null;
                         ((Callback) getActivity()).onDeleteItemSelected(uri, vh);
+
                     }
-                });
+                }, new FeedAdapterLoadNews() {
+
+            @Override
+            public void load(PreviewAdapter.PreviewAdapterViewHolder vh, int offset, int count) {
+                ((Callback) getActivity()).upLoadNewsItems(offset, count);
+                mPosition = vh.getAdapterPosition() - 1;
+            }
+        }
+        );
 
         mPreviewAdapter.swapCursor(null);
         mRecyclerView.setAdapter(mPreviewAdapter);
@@ -284,17 +307,24 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
 
         if (savedInstanceState != null) {
-
+            if (savedInstanceState.containsKey(SELECTED_KEY)) {
+                // The RecyclerView probably hasn't even been populated yet.  Actually perform the
+                // swapout in onLoadFinished.
+                mPosition = savedInstanceState.getInt(SELECTED_KEY);
+            }
             mPreviewAdapter.onRestoreInstanceState(savedInstanceState);
         }
         return rootView;
     }
 
 
-    @Override
-    public void onRefresh() {
+    public void refreshFragmentLoader() {
+        if (getLoaderManager().getLoader(NEWS_LOADER) != null) {
+            getLoaderManager().restartLoader(NEWS_LOADER, null, this);
+        }
 
     }
+
 
     @Override
     public void onClick(View view) {
@@ -323,6 +353,13 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to RecyclerView.NO_POSITION,
+        // so check for that before storing.
+        if (mPosition != RecyclerView.NO_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
         mPreviewAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
@@ -336,19 +373,25 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
+
+        // Sort order:  Ascending, by date.
+        String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
         Log.i(Utils.TAG_LOG, "Query to  DB get Preview Table All items");
         return new CursorLoader(getActivity(),
                 previewListUri,
                 PREVIEW_COLUMNS,
                 null,
                 null,
-                null
+                sortOrder
         );
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mPreviewAdapter.swapCursor(data);
+        mSwipeRefreshLayout.setRefreshing(false);
+
+
         updateEmptyView();
         if (data.getCount() == 0) {
 
@@ -364,7 +407,10 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                     // we see Children.
                     if (mRecyclerView.getChildCount() > 0) {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int position = mPreviewAdapter.getSelectedItemPosition();
+                        int position = mPosition;
+//                                mPreviewAdapter.getSelectedItemPosition();
+
+//                        Log.i(Utils.TAG_LOG, "Position Adapter: " + position);
                         if (position == RecyclerView.NO_POSITION &&
                                 -1 != mInitialSelectedDate) {
                             Cursor data = mPreviewAdapter.getCursor();
@@ -372,15 +418,15 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                             int dateColumn = data.getColumnIndex(FeedContract.PreviewEntry.COLUMN_CREATE_DATE);
                             for (int i = 0; i < count; i++) {
                                 data.moveToPosition(i);
-                                if (Utils.getLongData(data.getString(dateColumn)) == mInitialSelectedDate) {
+                                if (Utils.getLongFromString(data.getString(dateColumn)) == mInitialSelectedDate) {
                                     position = i;
+                                    Log.i(Utils.TAG_LOG, "Position Adapter: Get position current day " + position);
                                     break;
                                 }
                             }
                         }
                         if (position == RecyclerView.NO_POSITION) position = 0;
-                        // If we don't need to restart the loader, and there's a desired position to restore
-                        // to, do so now.
+//                        Log.i(Utils.TAG_LOG, "Position Adapter: Move to " + position);
                         mRecyclerView.smoothScrollToPosition(position);
                         RecyclerView.ViewHolder vh = mRecyclerView.findViewHolderForAdapterPosition(position);
                         if (null != vh && mAutoSelectView) {
@@ -400,5 +446,9 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mPreviewAdapter.swapCursor(null);
+    }
+
+    public void setInitialSelectedDate(long initialSelectedDate) {
+        mInitialSelectedDate = initialSelectedDate;
     }
 }
