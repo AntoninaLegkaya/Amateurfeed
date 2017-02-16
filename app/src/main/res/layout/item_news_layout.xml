@@ -28,7 +28,7 @@
         android:fontFamily="sans-serif"
         android:gravity="left"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/secondary_text"
+        android:textColor="@color/app_black"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
         tools:text="Name User"/>
@@ -87,14 +87,18 @@
             />
 
 
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/list_comment_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:layout_columnSpan="2"-->
-            <!--app:layout_columnWeight="1"-->
-            <!--app:layout_rowSpan="2"-->
-            <!--/>-->
+    <TextView
+
+        android:id="@+id/list_item_description"
+        android:layout_width="wrap_content"
+        android:padding="@dimen/abc_list_item_padding_horizontal_material"
+        android:textColor="@color/app_black"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1"
+        app:layout_gravity="fill_horizontal"
+        app:layout_rowSpan="2"
+        tools:text="This is description"
+        />
 
 
     <LinearLayout

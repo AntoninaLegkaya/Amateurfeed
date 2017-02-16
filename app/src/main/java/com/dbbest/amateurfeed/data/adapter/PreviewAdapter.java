@@ -76,6 +76,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         public final ImageView mImageView;
         public final TextView mLikesCountView;
         public final TextView mCommentCountView;
+        public final TextView mDescriptionView;
         public final ImageButton mLikeButton;
         public final ImageButton mCommentButton;
         public final ImageButton mEditButton;
@@ -93,6 +94,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             mTitleView = (TextView) itemView.findViewById(R.id.list_item_title);
             mLikesCountView = (TextView) itemView.findViewById(R.id.list_item_likes_count);
             mCommentCountView = (TextView) itemView.findViewById(R.id.list_item_comment_count);
+            mDescriptionView=(TextView) itemView.findViewById(R.id.list_item_description);
 
             mLikeButton = (ImageButton) itemView.findViewById(R.id.like_button);
             mLikeButton.setOnClickListener(this);
@@ -131,7 +133,6 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
 
                 int idx = mCursor.getColumnIndex(FeedContract.PreviewEntry._ID);
-                Log.i(Utils.TAG_LOG, "PreviewAdapter Index COLUMN ID: " + idx);
                 id = mCursor.getLong(idx);
                 Log.i(Utils.TAG_LOG, "PreviewAdapter You Get Item By ID: " + id);
 
@@ -322,7 +323,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         }
 
 
-// this enables better animations. even if we lose state due to a device rotation,
+         // this enables better animations. even if we lose state due to a device rotation,
         // the animator can use this to re-find the original view
         ViewCompat.setTransitionName(holder.mIconView, "iconView" + position);
         mICM.onBindViewHolder(holder, position);
