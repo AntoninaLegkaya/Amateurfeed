@@ -52,7 +52,7 @@ ext {
     multidex = '1.0.0'
     retrofit = '2.1.0'
     okhttp = '3.4.1'
-    googlePlaySevices = '9.6.1'
+    googlePlaySevices = '10.0.1'
     facebookSdk = '4.16.0'
     glide = '3.7.0'
     stetho = '1.4.1'
@@ -63,7 +63,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.1.1'
     testCompile 'junit:junit:4.12'
 
     compile "com.android.support:multidex:${multidex}"

@@ -1,8 +1,6 @@
 package com.dbbest.amateurfeed.utils;
 
-/**
- * Created by antonina on 07.02.17.
- */
+
 
 import android.os.Bundle;
 import android.os.Parcel;

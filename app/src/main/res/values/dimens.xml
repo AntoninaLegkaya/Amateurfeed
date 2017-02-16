@@ -35,6 +35,8 @@
 
     <!--Button-->
     <dimen name="button_corner_radius">7dp</dimen>
+    <!--Field-->
+    <dimen name="field_corner_radius">5dp</dimen>
 
 
     <!--Image User-->

@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.GridLayout
-    android:id="@+id/item_my_news"
+    android:id="@+id/item_my"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="8dp"
-    app:columnCount="2">
+    app:columnCount="3">
 
 
-    <include
-        layout="@layout/item_news_header"
-        app:layout_columnWeight="1"
-        app:layout_rowSpan="2"
-        app:layout_columnSpan="2"
-        />
-
-
-    <TextView
-
-        android:id="@+id/list_item_description"
-        android:layout_width="wrap_content"
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
-        android:textColor="@color/app_black"
-        app:layout_columnSpan="2"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/descriptionInputLayout"
+        style="@style/AppTheme.Widget.InputCommentField"
+        app:layout_columnSpan="3"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
-        app:layout_rowSpan="2"
-        tools:text="This is description"
-        />
-
-    <LinearLayout
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
-        app:layout_columnWeight="1"
-        app:layout_gravity="center"
+        android:layout_margin="@dimen/activity_link_margin"
 
         >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/list_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="fill_horizontal"
+            android:ems="4"
+            android:hint="@string/description_hint"
+            android:inputType="textMultiLine"
+            android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
+           style="@style/Widget.Design.DetailTextInputLayout"
+            android:textColor="@color/app_black"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <LinearLayout
+        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center"
+        app:layout_rowSpan="2">
 
         <ImageButton
             android:id="@+id/like_button"
@@ -56,46 +61,65 @@
             android:gravity="center_horizontal"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/secondary_text"
-            app:layout_columnWeight="1"
             app:layout_gravity="right"
             tools:text="0"/>
 
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
         app:layout_columnWeight="1"
-        app:layout_gravity="right"
-        >
+        app:layout_rowSpan="2">
 
+        <TextView
+            android:id="@+id/change_image_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contextClickable="true"
+            android:text="@string/item_image_change_link"
+            android:textColor="@drawable/tab_text_link"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:orientation="horizontal">
+            >
 
-            <ImageButton
-                android:id="@+id/comment_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_comment_black_24dp"
-                android:elevation="8dp"
-                />
             <TextView
                 android:id="@+id/list_item_comment_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
                 android:gravity="center_horizontal"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/secondary_text"
-                android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+                android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+                android:textColor="@drawable/tab_text_link"
+
                 tools:text="0"/>
+
+            <TextView
+                android:id="@+id/item_comment_label_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:contextClickable="true"
+                android:text="@string/item_comment_label"
+                android:textColor="@drawable/tab_text_link"
+                />
+
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+        app:layout_columnWeight="1"
+        app:layout_gravity="right"
+        app:layout_rowSpan="2"
+        >
 
 
         <ImageButton
@@ -122,5 +146,3 @@
 
 
 </android.support.v7.widget.GridLayout>
-
-

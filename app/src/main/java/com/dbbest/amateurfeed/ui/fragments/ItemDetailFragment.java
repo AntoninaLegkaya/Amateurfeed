@@ -20,6 +20,7 @@ import com.dbbest.amateurfeed.view.ProfileView;
 
 public class ItemDetailFragment extends Fragment implements DetailView {
     private static final String PARAM_KEY = "param_key";
+    public static final String DETAIL_URI = "URI";
     DetailPresenter mPresenter;
 
     public static ItemDetailFragment newInstance(String key) {

@@ -74,10 +74,10 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
     }
 
     @Override
-    public void onBindViewHolder(HorizontalViewHolder holder, final int position) {
+    public void onBindViewHolder(final HorizontalViewHolder holder, final int position) {
         Cursor cursor = mCursor;
 
-        if (cursor.moveToPosition(position)) {
+        if (cursor.moveToPosition(holder.getAdapterPosition())) {
             if (holder.mTagName != null) {
                 String tag = Utils.foramatTagName(mContext, cursor.getString(FeedNewsFragment.COL_TAG_NAME));
                 holder.mTagName.setText(tag);
@@ -89,7 +89,7 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Position clicked: " + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Position clicked: " + holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -22,6 +22,7 @@ import android.util.Log;
 
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
@@ -36,6 +37,7 @@ import com.roughike.bottombar.OnMenuTabSelectedListener;
 
 public class HomeActivity extends AppCompatActivity implements HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback {
     private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
+    private static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
     private static final String SEARCH_FRAGMENT_TAG = "STAG";
     public static final String PROFILE_FRAGMENT_TAG = "PTAG";
     public static final String EDITE_PROFILE_FRAGMENT_TAG = "PREFTAG";
@@ -46,6 +48,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
     private int isLikeFlag = 0;
     private int mCountIsLikes = 0;
     private Uri mUriId;
+    private FeedNewsFragment mFeedNewsFragment;
+    private ItemDetailFragment mDetailFragment;
 
     private CoordinatorLayout coordinatorLayout;
     private HomePresenter mPresenter;
@@ -61,10 +65,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         mPresenter.getNews(0, 5);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.tabs_activity);
+        mFeedNewsFragment = FeedNewsFragment.newInstance(FEDD_NEWS_FRAGMENT_TAG);
         if (savedInstanceState == null) {
             Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+                    mFeedNewsFragment, FEDD_NEWS_FRAGMENT_TAG).commit();
         }
 
 
@@ -75,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
                 switch (itemId) {
                     case R.id.home_tab:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                FeedNewsFragment.newInstance(""), FEDD_NEWS_FRAGMENT_TAG).commit();
+                                mFeedNewsFragment, FEDD_NEWS_FRAGMENT_TAG).commit();
                         Snackbar.make(coordinatorLayout, "Home Item Selected", Snackbar.LENGTH_LONG).show();
                         break;
                     case R.id.search_tab:
@@ -163,19 +168,34 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
     public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
 
 
-        UIDialogNavigation.showWarningDialog(R.string.comment).show(getSupportFragmentManager(), "info");
+        Bundle args = new Bundle();
+        args.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
+        mDetailFragment = ItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
+        mDetailFragment.setArguments(args);
+
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
+                .commit();
     }
 
     @Override
     public void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-        Log.i(Utils.TAG_LOG, "Add Edit......");
-        UIDialogNavigation.showWarningDialog(R.string.edit).show(getSupportFragmentManager(), "info");
+        Bundle args = new Bundle();
+        args.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
+        mDetailFragment = ItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
+        mDetailFragment.setArguments(args);
+
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
+                .commit();
     }
 
     @Override
     public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
         mUriId = uri;
-        UIDialogNavigation.warningDialog(R.string.abuse_dialog,  R.string.ok, R.string.cancel,true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
+        UIDialogNavigation.warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
 
 
     }

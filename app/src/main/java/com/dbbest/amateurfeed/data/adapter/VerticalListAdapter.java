@@ -1,6 +1,5 @@
 package com.dbbest.amateurfeed.data.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
@@ -25,13 +24,11 @@ public class VerticalListAdapter extends RecyclerView.Adapter<VerticalListAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final LinearLayout linearLayout;
         private final TextView mCommentText;
 
         public ViewHolder(final View view) {
             super(view);
-            linearLayout = (LinearLayout) view.findViewById(R.id.layout_comment);
-            mCommentText = (TextView) view.findViewById(R.id.comment_text);
+            mCommentText = (TextView) view.findViewById(R.id.item_list_text_comment);
         }
     }
 
@@ -43,7 +40,7 @@ public class VerticalListAdapter extends RecyclerView.Adapter<VerticalListAdapte
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewGroup instanceof RecyclerView) {
 
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_comment, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_comment, viewGroup, false);
 
             return new ViewHolder(view);
         }
@@ -63,12 +60,6 @@ public class VerticalListAdapter extends RecyclerView.Adapter<VerticalListAdapte
         }
 
 
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "Position clicked: " + adapterPosition, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override

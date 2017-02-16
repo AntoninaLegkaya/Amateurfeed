@@ -56,4 +56,9 @@
     <string name="get_news_error">Новости не доступны :(</string>
     <string name="get_news_succes">Новости получены :)</string>
     <string name="abuse_dialog">\" <h><b>Напишите  запрос</b></h>  Для удаления этой новости,  отправьте запрос администратору!\"</string>
+    <string name="item_image_change_link"><u>Изменить фото</u></string>
+    <string name="item_comment_label">Комментарии</string>
+    <string name="detail_toolbar_label">Новость</string>
+    <string name="comment_hint">Напишите свой Комментарий</string>
+    <string name="description_hint">Описание</string>
 </resources>
