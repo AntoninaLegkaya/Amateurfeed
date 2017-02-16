@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
+import com.dbbest.amateurfeed.app.net.command.DeleteNewsCommand;
 import com.dbbest.amateurfeed.app.net.command.GetNewsCommand;
 import com.dbbest.amateurfeed.app.net.command.SetLikeCommand;
+import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.view.HomeView;
 
 /**
@@ -19,6 +21,7 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
 
     private static final int CODE_GET_NEWS = 0;
     private static final int CODE_LIKE_NEWS = 1;
+    private static final int CODE_DELETE_NEWS = 2;
 
     private CommandResultReceiver mResultReceiver;
 
@@ -50,6 +53,18 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
 
     }
 
+    public void putDelete(long id, String comment) {
+        if (getView() != null) {
+            HomeView view = getView();
+
+            view.showProgressDialog();
+        }
+        Command command = new DeleteNewsCommand((int)id, comment);
+        command.send(CODE_DELETE_NEWS, mResultReceiver);
+
+
+    }
+
     @Override
     protected void onAttachView(@NonNull HomeView view) {
         if (mResultReceiver == null) {
@@ -75,6 +90,9 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
                 getView().dismissProgressDialog();
                 getView().showSuccessLikeDialog();
                 getView().updateColumnLikeInBd();
+            } else if (code == CODE_DELETE_NEWS) {
+                getView().dismissProgressDialog();
+                getView().showSuccessDeleteDialog();
             }
         }
     }
@@ -90,6 +108,9 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
                 getView().showErrorDialog();
                 if (code == CODE_LIKE_NEWS) {
                     getView().showErrorLikeDialog();
+                }
+                if (code == CODE_DELETE_NEWS) {
+                    getView().showErrorDeleteDialog();
                 }
             }
         }

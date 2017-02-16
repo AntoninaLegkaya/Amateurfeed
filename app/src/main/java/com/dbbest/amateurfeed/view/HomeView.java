@@ -21,6 +21,10 @@ public interface HomeView extends IView {
 
     void showErrorLikeDialog();
 
+    void showSuccessDeleteDialog();
+
+    void showErrorDeleteDialog();
+
     void updateColumnLikeInBd();
 
     void refreshFragmentFeedLoader();

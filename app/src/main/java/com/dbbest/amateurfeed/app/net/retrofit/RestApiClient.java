@@ -14,6 +14,7 @@ import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
 import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
+import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.utils.ActionUtils;
 import com.dbbest.amateurfeed.utils.Utils;
 
@@ -95,15 +96,14 @@ public class RestApiClient {
         return executeCall(mApiService.forgotPassword(request));
     }
 
-    public ResponseWrapper<ArrayList<NewsPreviewResponseModel>> getNews(String token, int offset, int count) {
-
-        return executeCall(mApiService.getSpecifiedNews(token, offset, count));
+    public ResponseWrapper<ArrayList<NewsPreviewResponseModel>> getNews(String token, int offset, int count) {return executeCall(mApiService.getSpecifiedNews(token, offset, count));
     }
 
-
-    public ResponseWrapper<Object> isLike(String token, long id, LikeModel model) {
-
-        return executeCall(mApiService.isLikeNews(token, model, id));
+    public ResponseWrapper<Object> isLike(String token, long id, LikeModel model) {return executeCall(mApiService.isLikeNews(token, model, id));
     }
 
+    public ResponseWrapper<Object> postAbuse(String token, AbuseModel model) {
+
+        return executeCall(mApiService.postAbuse(token, model));
+    }
 }

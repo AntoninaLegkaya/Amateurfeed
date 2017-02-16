@@ -20,6 +20,7 @@ import com.dbbest.amateurfeed.presenter.HomePresenter;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 
+import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
@@ -33,7 +34,7 @@ import com.roughike.bottombar.OnMenuTabSelectedListener;
  * Created by antonina on 19.01.17.
  */
 
-public class HomeActivity extends AppCompatActivity implements HomeView, FeedNewsFragment.Callback {
+public class HomeActivity extends AppCompatActivity implements HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback {
     private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
     private static final String SEARCH_FRAGMENT_TAG = "STAG";
     public static final String PROFILE_FRAGMENT_TAG = "PTAG";
@@ -166,15 +167,17 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
     }
 
     @Override
-    public void onEditeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+    public void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
         Log.i(Utils.TAG_LOG, "Add Edit......");
         UIDialogNavigation.showWarningDialog(R.string.edit).show(getSupportFragmentManager(), "info");
     }
 
     @Override
     public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-        Log.i(Utils.TAG_LOG, "Add Delete......");
-        UIDialogNavigation.showWarningDialog(R.string.remove).show(getSupportFragmentManager(), "info");
+        mUriId = uri;
+        UIDialogNavigation.warningDialog(R.string.abuse_dialog,  R.string.ok, R.string.cancel,true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
+
+
     }
 
     @Override
@@ -196,10 +199,9 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
 
 
     }
+
     @Override
     public void showSuccessDialog() {
-
-
 
     }
 
@@ -235,13 +237,23 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
 
     @Override
     public void showSuccessLikeDialog() {
-//        UIDialogNavigation.showWarningDialog(R.string.set_like_succes).show(getSupportFragmentManager(), "warn");
 
     }
 
     @Override
     public void showErrorLikeDialog() {
         UIDialogNavigation.showWarningDialog(R.string.set_like_error).show(getSupportFragmentManager(), "warn");
+    }
+
+    @Override
+    public void showSuccessDeleteDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.set_delete_succes).show(getSupportFragmentManager(), "warn");
+    }
+
+    @Override
+    public void showErrorDeleteDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.set_delete_error).show(getSupportFragmentManager(), "warn");
+
     }
 
     @Override
@@ -257,6 +269,23 @@ public class HomeActivity extends AppCompatActivity implements HomeView, FeedNew
             App.instance().getContentResolver().update(uriPreviewId, values, null, null);
         }
 
+
+    }
+
+    @Override
+    public void onWarningDialogCancelClicked(int dialogCode) {
+        UIDialogNavigation.showWarningDialog(R.string.set_good_by).show(getSupportFragmentManager(), "info");
+
+    }
+
+    @Override
+    public void onWarningDialogOkClicked(int dialogCode) {
+        if (mUriId != null) {
+
+            long id = FeedContract.PreviewEntry.getIdFromUri(mUriId);
+            Log.i(Utils.TAG_LOG, " Suggest Delete Item uri: " + id);
+            mPresenter.putDelete(id, "Comment");
+        }
 
     }
 }

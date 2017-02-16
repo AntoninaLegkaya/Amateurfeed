@@ -7,9 +7,6 @@ import android.support.v4.app.DialogFragment;
 import com.dbbest.amateurfeed.ui.dialog.ProgressDialog;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 
-/**
- * Created by antonina on 20.01.17.
- */
 
 public class UIDialogNavigation {
 
@@ -23,5 +20,18 @@ public class UIDialogNavigation {
     @NonNull
     public static DialogFragment showProgressDialog() {
         return ProgressDialog.instance();
+    }
+
+
+    public static DialogFragment warningDialog(@StringRes int message, @StringRes int okText, @StringRes int cancelText, boolean cancelable, int code,
+                                               WarningDialog.OnWarningDialogListener listener) {
+        return new WarningDialog.Builder()
+                .setMessageText(message)
+                .setOkText(okText)
+                .setCancelText(cancelText)
+                .setListener(listener)
+                .setCancelable(cancelable)
+                .setCode(code)
+                .build();
     }
 }

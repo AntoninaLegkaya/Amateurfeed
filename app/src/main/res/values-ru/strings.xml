@@ -55,4 +55,5 @@
     <string name="empty_feed_list">Нет доступных  новостей</string>
     <string name="get_news_error">Новости не доступны :(</string>
     <string name="get_news_succes">Новости получены :)</string>
+    <string name="abuse_dialog">\" <h><b>Напишите  запрос</b></h>  Для удаления этой новости,  отправьте запрос администратору!\"</string>
 </resources>

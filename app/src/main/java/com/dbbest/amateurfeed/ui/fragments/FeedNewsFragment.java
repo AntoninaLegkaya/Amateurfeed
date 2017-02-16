@@ -1,12 +1,10 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -29,18 +27,12 @@ import android.widget.Toast;
 
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter.FeedAdapterLoadNews;
-import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
 import com.dbbest.amateurfeed.presenter.FeedListPresenter;
-import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
-import com.dbbest.amateurfeed.utils.ItemChoiceManager;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.FeedView;
 import com.melnykov.fab.FloatingActionButton;
-
-import static android.support.v4.widget.SwipeRefreshLayout.*;
 
 /**
  * Created by antonina on 20.01.17.
@@ -132,7 +124,7 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
 
         public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
 
-        public void onEditeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+        public void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
 
         public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
 
@@ -273,14 +265,14 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
                         Uri uri = null;
-                        ((Callback) getActivity()).onEditeItemSelected(uri, vh);
+                        ((Callback) getActivity()).onEditItemSelected(uri, vh);
                     }
                 },
                 new PreviewAdapter.FeedRemoveAdapterOnClickHandler() {
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
                         Uri uri = null;
-                        ((Callback) getActivity()).onDeleteItemSelected(uri, vh);
+                        ((Callback) getActivity()).onDeleteItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
 
                     }
                 }, new FeedAdapterLoadNews() {

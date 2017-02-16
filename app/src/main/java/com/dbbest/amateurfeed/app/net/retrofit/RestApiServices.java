@@ -46,78 +46,78 @@ public interface RestApiServices {
 
     /* <---- Account----> */
 
-    @POST("/api/account/registration")
+    @POST("account/registration")
     Call<ResponseWrapper<LoginResponseModel>> register(@Body RegistrationRequestModel request);
 
-    @POST("/api/account/facebook")
+    @POST("account/facebook")
     Call<ResponseWrapper<LoginResponseModel>> registerFacebook(@Body RegistrationFaceBookRequestModel request);
 
-    @POST("/api/account/login")
+    @POST("account/login")
     Call<ResponseWrapper<LoginResponseModel>> login(@Body LoginRequestModel request);
 
-    @POST("/api/account/forgot")
+    @POST("account/forgot")
     Call<ResponseWrapper<Object>> forgotPassword(@Body ResetRequestPasswordModel request);
 
-    @POST("/api/account/changePassword")
+    @POST("account/changePassword")
     Call<ResponseWrapper<Object>> changePassword(@Header("Authorization") String token, @Body ChangePasswordRequestModel request);
 
-    @POST("/api/account/device-info")
+    @POST("account/device-info")
     Call<Object> deviceInfo(@Header("Authorization") String token, @Body DeviceInfoModel infoModel);
 
-    @GET("/api/account/logout")
+    @GET("account/logout")
     Call<ResponseWrapper<Object>> logout(@Header("Authorization") String token);
 
-    @PUT("/api/account/unread-messages/count")
+    @PUT("account/unread-messages/count")
     Call<Object> putUnreadMessagesCount(@Body UnreadMessageCounterModel counterModel);
 
 
     /*    <---- News----> */
 
-    @GET("/api/news")
+    @GET("news")
     Call<ResponseWrapper<ArrayList<NewsPreviewResponseModel>>> getSpecifiedNews(@Header("Authorization") String token, @Query("offset") int offset, @Query("count") int count);
 
-    @POST("/api/news")
+    @POST("news")
     Call<ResponseWrapper<NewsResponseModel>> addNewNews(@Body NewsCreateModel createModel);
 
-    @POST("/api/news/abuse")
-    Call<ResponseWrapper<Object>> postAbuse(@Body AbuseModel abuseModel);
+    @POST("news/abuse")
+    Call<ResponseWrapper<Object>> postAbuse(@Header("Authorization") String token, @Body AbuseModel abuseModel);
 
-    @PUT("/api/news/{id}")
+    @PUT("news/{id}")
     Call<ResponseWrapper<NewsResponseModel>> editeSpecifiedNews(@Body NewsUpdateModel updateModel, @Path("id") int id);
 
-    @GET("/api/news/my")
+    @GET("news/my")
     Call<ResponseWrapper<ArrayList<UserNewsModel>>> getSpecifiedNewsByUser();
 
-    @PUT("/api/news/{id}/like")
+    @PUT("news/{id}/like")
     Call<ResponseWrapper<Object>> isLikeNews(@Header("Authorization") String token, @Body LikeModel model, @Path("id") long id);
 
-    @POST("/api/news/add-comment")
+    @POST("news/add-comment")
     Call<ResponseWrapper<Object>> postComment(@Body FeedCommentModel commentModel);
 
-    @GET("/api/search")
+    @GET("search")
     Call<ResponseWrapper<Dictionary<String, List>>> getMapUsersNews(@Header("Authorization") String token, @Query("searchParam") String searchParam);
 
 
     /*    <---- Tag----> */
 
-    @GET("/api/tags")
+    @GET("tags")
     Call<ResponseWrapper<ArrayList<TagModel>>> getTags(@Header("Authorization") String token, @Query("keyword") String keyword);
 
 
     /*    <---- Upload----> */
 
-    @POST("/api/upload")
+    @POST("upload")
     Call<ResponseWrapper<ArrayList<String>>> upload(@Body Object o);
 
 
     /*    <---- User----> */
 
-    @GET("/api/user")
+    @GET("user")
     Call<ResponseWrapper<UserProfileModel>> getSpecifiedUserInfo(@Header("Authorization") String token);
 
-    @PUT("/api/user")
+    @PUT("user")
     Call<ResponseWrapper<Object>> putSpecifiedUserInfo(@Header("Authorization") String token, @Body UpdateProfileRequestModel updateProfileRequestModel);
 
-    @PUT("/api/user/update-settings")
+    @PUT("user/update-settings")
     Call<Object> updateSettings(@Header("Authorization") String token, @Body UserSettingsModel isSettingsUpdateModel);
 }

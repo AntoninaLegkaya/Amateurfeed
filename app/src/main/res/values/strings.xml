@@ -94,6 +94,9 @@
     <string name="error_registartion">Registration fail!</string>
     <string name="success_registartion">Registration Success!</string>
 
+    <string name="abuse_dialog"> <h><b>Write abuse</b></h> \n For removing this news, write abuse to admin!</string>
+
+
     <!--Dialog check button-->
     <string name="like" translatable="false">Like</string>
     <string name="dislike" translatable="false">Dislike</string>
@@ -106,10 +109,13 @@
     <string name="empty_feed_list">No News Information Available.</string>
 
     <!--News Feed-->
-<string name="get_news_succes">I get it! :)</string>
+    <string name="get_news_succes">I get it! :)</string>
     <string name="get_news_error">I can get it! :(</string>
     <string name="set_like_succes" translatable="false">I like/dislike it! :)</string>
     <string name="set_like_error" translatable="false">I can like/dislike it! :(</string>
+    <string name="set_delete_succes" translatable="false">You Post Abuse :)</string>
+    <string name="set_delete_error" translatable="false">You do not  Post Abuse :(</string>
+    <string name="set_good_by" translatable="false">By! :)</string>
 
     <!-- Date format [CHAR LIMIT=NONE] -->
     <string name="format_full_friendly_date" translatable="false"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
