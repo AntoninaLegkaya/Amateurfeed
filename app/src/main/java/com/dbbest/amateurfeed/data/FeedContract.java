@@ -201,7 +201,7 @@ public class FeedContract {
 
 
         public static final String[] DEFAULT_PROJECTION = new String[]{
-                PreviewEntry._ID,
+                FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID,
                 PreviewEntry.COLUMN_TITLE,
                 PreviewEntry.COLUMN_TEXT,
                 PreviewEntry.COLUMN_LIKES,
@@ -220,14 +220,9 @@ public class FeedContract {
             return Long.parseLong(uri.getPathSegments().get(1));
         }
 
-        public static Uri buildPreviewUriById(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
+        public static Uri buildPreviewUriById(long id) {return ContentUris.withAppendedId(CONTENT_URI, id);}
 
-        public static Uri buildSetLikeInPreviewUriById(long id) {
-
-            return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
-        }
+        public static Uri buildSetLikeInPreviewUriById(long id) {return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);}
 
         public static Uri buildPreviewUriByAuthor(String author) {
             return CONTENT_URI.buildUpon().appendPath(author).build();
@@ -239,10 +234,7 @@ public class FeedContract {
         }
 
 
-        public static String getAuthorFromUri(Uri uri) {
-
-            return uri.getPathSegments().get(1);
-        }
+        public static String getAuthorFromUri(Uri uri) {return uri.getPathSegments().get(1);}
     }
 
     /* Creator Entry*/

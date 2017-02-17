@@ -40,8 +40,6 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     private final View mEmptyView;
     private final ItemChoiceManager mICM;
     private RecyclerView mHorizontalList;
-    //    private RecyclerView mVerticalList;
-//    private VerticalListAdapter mVerticalListAdapter;
     private HorizontalListAdapter mHorizontalListAdapter;
 
 
@@ -94,7 +92,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             mTitleView = (TextView) itemView.findViewById(R.id.list_item_title);
             mLikesCountView = (TextView) itemView.findViewById(R.id.list_item_likes_count);
             mCommentCountView = (TextView) itemView.findViewById(R.id.list_item_comment_count);
-            mDescriptionView=(TextView) itemView.findViewById(R.id.list_item_description);
+            mDescriptionView = (TextView) itemView.findViewById(R.id.list_item_description);
 
             mLikeButton = (ImageButton) itemView.findViewById(R.id.like_button);
             mLikeButton.setOnClickListener(this);
@@ -114,12 +112,6 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             mHorizontalListAdapter = new HorizontalListAdapter(mContext);
             mHorizontalList.setAdapter(mHorizontalListAdapter);
 
-//            mVerticalList = (RecyclerView) itemView.findViewById(R.id.list_comment_view);
-//            mVerticalList.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-//            mVerticalListAdapter = new VerticalListAdapter(mContext);
-//            mVerticalList.setAdapter(mVerticalListAdapter);
-//            mVerticalList.setHasFixedSize(true);
-//            mHorizontalList.setHasFixedSize(true);
 
         }
 
@@ -166,7 +158,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     public interface FeedAdapterLoadNews {
 
-        void load(PreviewAdapter.PreviewAdapterViewHolder vh,int count, int offset);
+        void load(PreviewAdapter.PreviewAdapterViewHolder vh, int count, int offset);
 
     }
 
@@ -242,7 +234,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         //check for last item
         if ((position >= getItemCount() - 1)) {
             Log.i(Utils.TAG_LOG_LOAD_NEW_DATA, "Load new items : count = 5  offset: " + getItemCount());
-            mLoadNewsHandler.load(holder,getItemCount(), 5);
+            mLoadNewsHandler.load(holder, getItemCount(), 5);
         }
 
         mCursor.moveToPosition(position);
@@ -257,6 +249,11 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         String fullName =
                 mCursor.getString(FeedNewsFragment.COL_AUTHOR);
         holder.mFullNameView.setText(fullName + String.valueOf(mIdPreview));
+
+        String description = mCursor.getString(FeedNewsFragment.COL_TEXT);
+        if (description != null) {
+            holder.mDescriptionView.setText(description);
+        }
 
 
         String title =
@@ -323,7 +320,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         }
 
 
-         // this enables better animations. even if we lose state due to a device rotation,
+        // this enables better animations. even if we lose state due to a device rotation,
         // the animator can use this to re-find the original view
         ViewCompat.setTransitionName(holder.mIconView, "iconView" + position);
         mICM.onBindViewHolder(holder, position);

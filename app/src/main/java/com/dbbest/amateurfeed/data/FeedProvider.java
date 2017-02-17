@@ -158,7 +158,6 @@ public class FeedProvider extends ContentProvider {
                     "." + FeedContract.CommentEntry._ID + " = ? ";
 
     private Cursor getPreviewByIdSelection(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.i("TestProvider", "Get Cursor response from query: " + uri);
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(FeedContract.PreviewEntry.TABLE_NAME);
         qb.setProjectionMap(sPreviewProjectionMap);
@@ -328,10 +327,7 @@ public class FeedProvider extends ContentProvider {
 
     private int updateLikeColumnInPreview(Uri uri, ContentValues cv, String selection, String[] selectionArgs) {
 
-
-
         String id = uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION);
-        Log.i(Utils.TAG_LOG, "  updateLikeColumnInPreview: " + id );
 
         int rowsUpdated = mOpenHelper.getWritableDatabase().update(
                 FeedContract.PreviewEntry.TABLE_NAME, cv, sPreviewSelection, new String[]{id});
@@ -697,8 +693,9 @@ public class FeedProvider extends ContentProvider {
                         FeedContract.PreviewEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case PREVIEW_ID:
-                Log.i(Utils.TAG_LOG, " Call  updateLikeColumnInPreview: " + uri );
+
                 rowsUpdated = updateLikeColumnInPreview(uri, values, selection, selectionArgs);
+                Log.i(Utils.TAG_LOG, " Call  updateLikeColumnInPreview: Response updated:" + rowsUpdated);
                 break;
             case COMMENT:
                 rowsUpdated = db.update(FeedContract.CommentEntry.TABLE_NAME, values, selection, selectionArgs);

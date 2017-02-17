@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +26,9 @@ import com.dbbest.amateurfeed.presenter.HomePresenter;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
@@ -35,11 +41,13 @@ import com.dbbest.amateurfeed.view.HomeView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabSelectedListener;
 
+import java.io.File;
+
 /**
  * Created by antonina on 19.01.17.
  */
 
-public class HomeActivity extends AppCompatActivity implements HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback {
+public class HomeActivity extends AppCompatActivity implements HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, ItemDetailFragment.Callback {
     private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
     private static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
     private static final String SEARCH_FRAGMENT_TAG = "STAG";
@@ -144,16 +152,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
             Log.i(Utils.TAG_LOG, "Count Likes: " + mCountIsLikes);
         }
         mUriId = uri;
-
+        if (mCountIsLikes >= 0) {
         if (vh.mLikeButton.getTag() == "1") {
 
             isLikeFlag = 0;
             vh.mLikeButton.setTag("0");
             vh.mLikeButton.setImageResource(mDisLikeImage);
-//            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
-            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
             mCountIsLikes = mCountIsLikes - 1;
-            vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
 
 
         } else if (vh.mLikeButton.getTag() == "0") {
@@ -161,10 +166,18 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
             vh.mLikeButton.setTag("1");
             vh.mLikeButton.setImageResource(mLikeImage);
             mCountIsLikes = mCountIsLikes + 1;
-            vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
-//            Log.i(Utils.TAG_LOG, "Item ID: " + FeedContract.PreviewEntry.getIdFromUri(uri));
-            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
+
         }
+
+
+            vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
+            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
+        } else {
+            Log.i(Utils.TAG_LOG, "Error in like clear All!");
+            vh.mLikesCountView.setText(String.valueOf(0));
+            mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), 0);
+        }
+
 
     }
 
@@ -338,4 +351,29 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         }
 
     }
+
+    @Override
+    public void onLikeItemSelected(Uri uri, int isLikeFlag) {
+        mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
+    }
+
+    @Override
+    public void onCommentItemSelected(Uri uri) {
+
+    }
+
+    @Override
+    public void onEditItemSelected(Uri uri) {
+
+    }
+
+    @Override
+    public void onDeleteItemSelected(Uri uri) {
+        mUriId = uri;
+        UIDialogNavigation.warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
+
+
+    }
+
+
 }

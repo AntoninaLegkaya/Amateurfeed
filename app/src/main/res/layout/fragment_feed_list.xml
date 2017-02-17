@@ -38,27 +38,20 @@
                 android:layout_gravity="center"
                 android:text="@string/feed_toolbar_label"
                 android:textColor="@android:color/white"
-                app:layout_scrollFlags="scroll|enterAlways"
                 />
         </android.support.design.widget.AppBarLayout>
 
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            >
 
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/feed_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 />
 
 
-        </android.support.v4.widget.SwipeRefreshLayout>
 
 
         <!-- empty list -->
@@ -79,17 +72,17 @@
             app:layout_anchorGravity="fill"
             />
 
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_add_white_24dp"
-            fab:elevation="8dp"
-            fab:fab_colorNormal="@color/primary"
-            fab:fab_colorPressed="@color/primary_dark"
-            fab:fab_colorRipple="@color/primary_light"
-            fab:fab_shadow="false"/>
+        <!--<FloatingActionButton-->
+            <!--android:id="@+id/fab"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|right"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:src="@drawable/ic_add_white_24dp"-->
+            <!--fab:elevation="8dp"-->
+            <!--fab:fab_colorNormal="@color/primary"-->
+            <!--fab:fab_colorPressed="@color/primary_dark"-->
+            <!--fab:fab_colorRipple="@color/primary_light"-->
+            <!--fab:fab_shadow="false"/>-->
     </android.support.design.widget.CoordinatorLayout>
 </FrameLayout>

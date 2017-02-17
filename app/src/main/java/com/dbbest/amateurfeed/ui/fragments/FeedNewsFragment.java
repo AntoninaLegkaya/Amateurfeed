@@ -38,7 +38,7 @@ import com.melnykov.fab.FloatingActionButton;
  * Created by antonina on 20.01.17.
  */
 
-public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
+public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
 
     private static final String PARAM_KEY = "param_key";
     private RecyclerView mRecyclerView;
@@ -57,7 +57,7 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
-    private static final String[] PREVIEW_COLUMNS = {
+    public static final String[] PREVIEW_COLUMNS = {
 
 
             FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID,
@@ -75,7 +75,6 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
     };
 
     public static final int COL_FEED_ID = 0;
-    //    public static final int COL_POST_ID_KEY = 1;
     public static final int COL_TITLTE = 1;
     public static final int COL_TEXT = 2;
     public static final int COL_LIKES = 3;
@@ -86,7 +85,7 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
     public static final int COL_IMAGE = 8;
     public static final int COL_IS_MY = 9;
 
-    private static final String[] TAG_COLUMNS = {
+    public static final String[] TAG_COLUMNS = {
 
 
             FeedContract.TagEntry.TABLE_NAME + "." + FeedContract.TagEntry._ID,
@@ -111,10 +110,6 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
         return fragment;
     }
 
-    @Override
-    public void onRefresh() {
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
 
     public interface Callback {
 
@@ -190,8 +185,6 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
         final View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
         View emptyView = rootView.findViewById(R.id.recycle_feed_empty);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.feed_list_view);
@@ -249,8 +242,7 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
                 new PreviewAdapter.FeedCommentAdapterOnClickHandler() {
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
-                        Uri uri = null;
-                        ((Callback) getActivity()).onCommentItemSelected(uri, vh);
+                        ((Callback) getActivity()).onCommentItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
                     }
                 },
                 new PreviewAdapter.FeedLikeAdapterOnClickHandler() {
@@ -264,8 +256,7 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
                 new PreviewAdapter.FeedEditAdapterOnClickHandler() {
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
-                        Uri uri = null;
-                        ((Callback) getActivity()).onEditItemSelected(uri, vh);
+                        ((Callback) getActivity()).onEditItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
                     }
                 },
                 new PreviewAdapter.FeedRemoveAdapterOnClickHandler() {
@@ -288,14 +279,7 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
         mPreviewAdapter.swapCursor(null);
         mRecyclerView.setAdapter(mPreviewAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.attachToRecyclerView(mRecyclerView);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "AddItem", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
 
         if (savedInstanceState != null) {
@@ -381,7 +365,6 @@ public class FeedNewsFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mPreviewAdapter.swapCursor(data);
-        mSwipeRefreshLayout.setRefreshing(false);
 
 
         updateEmptyView();
