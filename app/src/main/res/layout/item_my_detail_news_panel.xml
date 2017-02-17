@@ -10,25 +10,38 @@
     app:columnCount="3">
 
 
-    <TextView
-
-        android:id="@+id/list_item_description"
-        android:layout_width="wrap_content"
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
-        android:textColor="@color/app_black"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/descriptionInputLayout"
+        style="@style/AppTheme.Widget.InputCommentField"
         app:layout_columnSpan="3"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
-        app:layout_rowSpan="3"
-        tools:text="This is description"
-        />
+        android:layout_margin="@dimen/activity_link_margin"
+
+        >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/list_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="fill_horizontal"
+            android:ems="4"
+            android:hint="@string/description_hint"
+            android:inputType="textMultiLine"
+            android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
+           style="@style/Widget.Design.DetailTextInputLayout"
+            android:textColor="@color/app_black"
+            />
+
+    </android.support.design.widget.TextInputLayout>
 
 
     <LinearLayout
+        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
         app:layout_columnWeight="1"
         app:layout_gravity="center"
-        app:layout_rowSpan="2"
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material">
+        app:layout_rowSpan="2">
 
         <ImageButton
             android:id="@+id/like_button"
@@ -49,17 +62,18 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/secondary_text"
             app:layout_gravity="right"
+            android:text="0"
             tools:text="0"/>
 
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        app:layout_columnWeight="1"
-        app:layout_rowSpan="2"
         android:gravity="center"
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+        app:layout_columnWeight="1"
+        app:layout_rowSpan="2">
 
         <TextView
             android:id="@+id/change_image_link"
@@ -102,14 +116,22 @@
     </LinearLayout>
 
     <LinearLayout
+        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
         app:layout_columnWeight="1"
         app:layout_gravity="right"
         app:layout_rowSpan="2"
-        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
         >
 
 
-
+        <ImageButton
+            android:id="@+id/edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:background="@drawable/ic_edit_black_24dp"
+            android:elevation="8dp"
+            />
 
         <ImageButton
             android:id="@+id/delete_button"

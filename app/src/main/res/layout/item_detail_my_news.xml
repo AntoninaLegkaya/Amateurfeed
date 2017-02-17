@@ -11,7 +11,7 @@
         />
 
     <include
-        layout="@layout/item_my_news_panel"
+        layout="@layout/item_my_detail_news_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

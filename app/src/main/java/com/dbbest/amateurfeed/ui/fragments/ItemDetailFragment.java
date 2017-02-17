@@ -1,6 +1,7 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,9 @@ import com.dbbest.amateurfeed.view.ProfileView;
 public class ItemDetailFragment extends Fragment implements DetailView {
     private static final String PARAM_KEY = "param_key";
     public static final String DETAIL_URI = "URI";
+    public static final String DETAIL_TYPE = "TYPE_ITEM";
+    private int mLayoutType;
+    private Uri mUriPreview;
     DetailPresenter mPresenter;
 
     public static ItemDetailFragment newInstance(String key) {
@@ -57,7 +61,13 @@ public class ItemDetailFragment extends Fragment implements DetailView {
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_item_detail, container, false);
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUriPreview = arguments.getParcelable(ItemDetailFragment.DETAIL_URI);
+            mLayoutType = arguments.getInt(ItemDetailFragment.DETAIL_TYPE);
+        }
+        return inflater.inflate(mLayoutType, container, false);
     }
 
 

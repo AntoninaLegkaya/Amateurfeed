@@ -8,7 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 
 import com.dbbest.amateurfeed.App;
@@ -19,6 +22,7 @@ import com.dbbest.amateurfeed.presenter.HomePresenter;
 
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
@@ -167,13 +171,39 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
     @Override
     public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
 
+        int layoutId = -1;
+        switch (vh.getItemViewType()) {
+
+            case PreviewAdapter.VIEW_TYPE_MY: {
+                layoutId = R.layout.fragment_item_my_detail;
+                break;
+
+            }
+            case PreviewAdapter.VIEW_TYPE_USER: {
+                layoutId = R.layout.fragment_item_detail;
+                break;
+            }
+            case PreviewAdapter.VIEW_TYPE_ITEM_EMPTY: {
+                layoutId = R.layout.item_empty_detail;
+                break;
+            }
+
+        }
+
 
         Bundle args = new Bundle();
         args.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
+        args.putInt(ItemDetailFragment.DETAIL_TYPE, layoutId);
         mDetailFragment = ItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
         mDetailFragment.setArguments(args);
 
 
+//        Intent intent = new Intent(this, DetailActivity.class)
+//                .setData(contentUri);
+//        ActivityOptionsCompat activityOptions =
+//                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+//                        new Pair<View, String>(vh.mIconView, getString(R.string.detail_icon_transition_name)));
+//        ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
                 .commit();

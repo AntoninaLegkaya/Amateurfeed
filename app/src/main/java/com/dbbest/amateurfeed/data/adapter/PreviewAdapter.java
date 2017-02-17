@@ -33,9 +33,9 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     private Cursor mCursor;
     final private Context mContext;
-    private static final int VIEW_TYPE_MY = 0;
-    private static final int VIEW_TYPE_USER = 1;
-    private static final int VIEW_TYPE_ITEM_EMPTY = 2;
+    public static final int VIEW_TYPE_MY = 0;
+    public static final int VIEW_TYPE_USER = 1;
+    public static final int VIEW_TYPE_ITEM_EMPTY = 2;
 
     private final View mEmptyView;
     private final ItemChoiceManager mICM;

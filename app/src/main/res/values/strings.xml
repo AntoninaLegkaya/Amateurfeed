@@ -136,5 +136,8 @@
     <!-- Tag format [CHAR LIMIT=NONE] -->
     <string name="format_tag" translatable="false"><xliff:g id="name"><u>#%1$s</u></xliff:g></string>
 
+    <!-- For Shared Element Transitions -->
+    <string name="detail_icon_transition_name" translatable="false">TN_DetailIcon</string>
+
 
 </resources>

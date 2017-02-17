@@ -7,34 +7,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="8dp"
-    app:columnCount="3">
+    app:columnCount="3"
+    android:layout_margin="@dimen/activity_link_margin">
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/descriptionInputLayout"
+    <TextView
+
+        android:id="@+id/list_item_description"
+        android:layout_width="wrap_content"
+        android:padding="@dimen/abc_list_item_padding_horizontal_material"
         style="@style/AppTheme.Widget.InputCommentField"
+        android:text="This is description"
+        android:textColor="@color/app_black"
         app:layout_columnSpan="3"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
-        android:layout_margin="@dimen/activity_link_margin"
-
-        >
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/list_item_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="fill_horizontal"
-            android:ems="4"
-            android:hint="@string/description_hint"
-            android:inputType="textMultiLine"
-            android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
-           style="@style/Widget.Design.DetailTextInputLayout"
-            android:textColor="@color/app_black"
-            />
-
-    </android.support.design.widget.TextInputLayout>
+        app:layout_rowSpan="3"
+        tools:text="This is description"
+        />
 
 
     <LinearLayout
@@ -62,57 +52,42 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/secondary_text"
             app:layout_gravity="right"
+            android:text="0"
             tools:text="0"/>
 
 
     </LinearLayout>
 
+
     <LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
         app:layout_columnWeight="1"
-        app:layout_rowSpan="2">
+        app:layout_gravity="center"
+        app:layout_rowSpan="2"
+       >
+
 
         <TextView
-            android:id="@+id/change_image_link"
+            android:id="@+id/list_item_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+            android:textColor="@drawable/tab_text_link"
+            tools:text="0"/>
+
+        <TextView
+            android:id="@+id/item_comment_label_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:contextClickable="true"
-            android:text="@string/item_image_change_link"
+            android:text="@string/item_comment_label"
             android:textColor="@drawable/tab_text_link"
             />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-
-            <TextView
-                android:id="@+id/list_item_comment_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:gravity="center_horizontal"
-                android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
-                android:textColor="@drawable/tab_text_link"
-
-                tools:text="0"/>
-
-            <TextView
-                android:id="@+id/item_comment_label_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:contextClickable="true"
-                android:text="@string/item_comment_label"
-                android:textColor="@drawable/tab_text_link"
-                />
-
-        </LinearLayout>
-
     </LinearLayout>
+
 
     <LinearLayout
         android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
@@ -121,16 +96,6 @@
         app:layout_rowSpan="2"
         >
 
-
-        <ImageButton
-            android:id="@+id/edit_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:background="@drawable/ic_edit_black_24dp"
-            android:elevation="8dp"
-            />
 
         <ImageButton
             android:id="@+id/delete_button"
