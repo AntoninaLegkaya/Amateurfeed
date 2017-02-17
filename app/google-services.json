@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "125261356830",
+    "firebase_url": "https://amateurfeed.firebaseio.com",
+    "project_id": "amateurfeed",
+    "storage_bucket": "amateurfeed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125261356830:android:ab5a7eee4859fc5d",
+        "android_client_info": {
+          "package_name": "com.dbbest.amateurfeed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "125261356830-ogkudekve1ilof621bscr1ee1sqc1ffu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUBiP_OPn4M7RYGbjO60H4ISNlvkMoGfQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
