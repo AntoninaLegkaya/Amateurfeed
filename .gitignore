@@ -4,6 +4,7 @@
 /local.properties
 /captures
 .idea/
+/.idea
 apk-output/
 .externalNativeBuild
 .DS_Store
