@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -20,10 +18,7 @@ import android.widget.Toast;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
 import com.dbbest.amateurfeed.presenter.ProfilePresenter;
-import com.dbbest.amateurfeed.ui.HomeActivity;
-import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.view.ProfileView;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -86,7 +81,7 @@ public class ProfileFragment extends Fragment implements ProfileView {
                 if (view.getId() == R.id.settings_button) {
                     Toast.makeText(getActivity(), "Go to Settings Screen--->", Toast.LENGTH_SHORT).show();
 
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
                             new PrefFragment(), PREFERENCE_FRAGMENT_TAG).commit();
 //                    startActivity(UiActivityNavigation.settingsActivity(getActivity()));
 
@@ -94,15 +89,16 @@ public class ProfileFragment extends Fragment implements ProfileView {
 
             }
         });
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+       /* FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.attachToRecyclerView(mRecyclerView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "AddItem", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
+/*
         FloatingActionButton fabEditeProfileBtn = (FloatingActionButton) rootView.findViewById(R.id.fab_edit);
         fabEditeProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +107,7 @@ public class ProfileFragment extends Fragment implements ProfileView {
                         EditProfileFragment.newInstance(""), HomeActivity.EDITE_PROFILE_FRAGMENT_TAG).commit();
             }
         });
+*/
 
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);

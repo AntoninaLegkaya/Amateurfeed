@@ -139,5 +139,10 @@
     <!-- For Shared Element Transitions -->
     <string name="detail_icon_transition_name" translatable="false">TN_DetailIcon</string>
 
+    <!--TabHost-->
+    <string name="tab_home">Home</string>
+    <string name="tab_profile">Profile</string>
+    <string name="tab_search">Search</string>
+
 
 </resources>

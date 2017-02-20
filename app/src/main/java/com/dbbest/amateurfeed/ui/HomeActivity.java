@@ -2,19 +2,11 @@ package com.dbbest.amateurfeed.ui;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 
 import com.dbbest.amateurfeed.App;
@@ -23,12 +15,8 @@ import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 
-import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
@@ -38,21 +26,28 @@ import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnMenuTabSelectedListener;
 
-import java.io.File;
+import android.support.v4.app.FragmentTabHost;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.TabHost;
 
 /**
  * Created by antonina on 19.01.17.
  */
 
 public class HomeActivity extends AppCompatActivity implements HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, ItemDetailFragment.Callback {
+    //    TabHost.OnTabChangeListener,
     private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
     private static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
     private static final String SEARCH_FRAGMENT_TAG = "STAG";
     public static final String PROFILE_FRAGMENT_TAG = "PTAG";
     public static final String EDITE_PROFILE_FRAGMENT_TAG = "PREFTAG";
+    public static final String TAB_HOME = "tab_home";
+    public static final String TAB_SEARCH = "search";
+    public static final String TAB_PROFILE = "profile";
     private DialogFragment mProgressDialog;
 
     private int mLikeImage = R.drawable.ic_favorite_black_24dp;
@@ -65,7 +60,22 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
 
     private CoordinatorLayout coordinatorLayout;
     private HomePresenter mPresenter;
+    private FragmentTabHost mTabHost;
 
+//    @Override
+//    public void onTabChanged(String tabId) {
+//
+//        if (tabId == TAB_HOME) {
+//            getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
+//                    mFeedNewsFragment, FEDD_NEWS_FRAGMENT_TAG).commit();
+//        } else if (tabId == TAB_SEARCH) {
+//            getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
+//                    SearchFragment.newInstance(""), SEARCH_FRAGMENT_TAG).commit();
+//        } else if (tabId == TAB_PROFILE) {
+//            getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
+//                    ProfileFragment.newInstance(""), PROFILE_FRAGMENT_TAG).commit();
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,48 +83,40 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         setContentView(R.layout.home_activity);
 
 
+
         mPresenter = new HomePresenter();
         mPresenter.getNews(0, 5);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.tabs_activity);
         mFeedNewsFragment = FeedNewsFragment.newInstance(FEDD_NEWS_FRAGMENT_TAG);
         if (savedInstanceState == null) {
-            Snackbar.make(coordinatorLayout, "Initial input", Snackbar.LENGTH_LONG).show();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    mFeedNewsFragment, FEDD_NEWS_FRAGMENT_TAG).commit();
+
         }
 
+        mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
-        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
-        bottomBar.setItemsFromMenu(R.menu.bottom_tab, new OnMenuTabSelectedListener() {
-            @Override
-            public void onMenuItemSelected(int itemId) {
-                switch (itemId) {
-                    case R.id.home_tab:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                mFeedNewsFragment, FEDD_NEWS_FRAGMENT_TAG).commit();
-                        Snackbar.make(coordinatorLayout, "Home Item Selected", Snackbar.LENGTH_LONG).show();
-                        break;
-                    case R.id.search_tab:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                SearchFragment.newInstance(""), SEARCH_FRAGMENT_TAG).commit();
-                        Snackbar.make(coordinatorLayout, "Search Item Selected", Snackbar.LENGTH_LONG).show();
-
-                        break;
-                    case R.id.profile_tab:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                ProfileFragment.newInstance(""), PROFILE_FRAGMENT_TAG).commit();
-                        Snackbar.make(coordinatorLayout, "Profile Item Selected", Snackbar.LENGTH_LONG).show();
-                        break;
-                }
-            }
-        });
-        // Use custom text appearance in tab titles.
-        bottomBar.setTextAppearance(R.style.TabHome);
+        mTabHost.addTab(
+                mTabHost.newTabSpec(TAB_HOME).setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_home, R.drawable.ic_home_black_18dp)),
+                FeedNewsFragment.class, null);
+        mTabHost.addTab(
+                mTabHost.newTabSpec(TAB_SEARCH
+                ).setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_search, R.drawable.ic_search_black_18dp)),
+                SearchFragment.class, null);
+        mTabHost.addTab(
+                mTabHost.newTabSpec(TAB_PROFILE).setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_profile, R.drawable.ic_perm_identity_black_18dp)),
+                ProfileFragment.class, null);
+//        mTabHost.setOnTabChangedListener(this);
 
 
     }
 
+
+    private View getTabIndicator(Context context, int title, int icon) {
+        View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
+        ImageView iv = (ImageView) view.findViewById(R.id.imageView);
+        iv.setImageResource(icon);
+        return view;
+    }
 
     @Override
     protected void onStart() {
@@ -138,11 +140,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
 
 
     @Override
-    public void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-//        UIDialogNavigation.showWarningDialog(R.string.item).show(getSupportFragmentManager(), "info");
-    }
-
-    @Override
     public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
 
 
@@ -153,21 +150,21 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         }
         mUriId = uri;
         if (mCountIsLikes >= 0) {
-        if (vh.mLikeButton.getTag() == "1") {
+            if (vh.mLikeButton.getTag() == "1") {
 
-            isLikeFlag = 0;
-            vh.mLikeButton.setTag("0");
-            vh.mLikeButton.setImageResource(mDisLikeImage);
-            mCountIsLikes = mCountIsLikes - 1;
+                isLikeFlag = 0;
+                vh.mLikeButton.setTag("0");
+                vh.mLikeButton.setImageResource(mDisLikeImage);
+                mCountIsLikes = mCountIsLikes - 1;
 
 
-        } else if (vh.mLikeButton.getTag() == "0") {
-            isLikeFlag = 1;
-            vh.mLikeButton.setTag("1");
-            vh.mLikeButton.setImageResource(mLikeImage);
-            mCountIsLikes = mCountIsLikes + 1;
+            } else if (vh.mLikeButton.getTag() == "0") {
+                isLikeFlag = 1;
+                vh.mLikeButton.setTag("1");
+                vh.mLikeButton.setImageResource(mLikeImage);
+                mCountIsLikes = mCountIsLikes + 1;
 
-        }
+            }
 
 
             vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
@@ -218,7 +215,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
 //                        new Pair<View, String>(vh.mIconView, getString(R.string.detail_icon_transition_name)));
 //        ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
+                .replace(android.R.id.tabcontent, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
                 .commit();
     }
 
@@ -231,7 +228,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
 
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
+                .replace(android.R.id.tabcontent, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
                 .commit();
     }
 
@@ -255,11 +252,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
 
         FeedNewsFragment newsFragment = (FeedNewsFragment) getSupportFragmentManager().findFragmentByTag(FEDD_NEWS_FRAGMENT_TAG);
         if (newsFragment != null) {
-
             newsFragment.refreshFragmentLoader();
-
         }
-
 
     }
 
@@ -371,7 +365,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
     public void onDeleteItemSelected(Uri uri) {
         mUriId = uri;
         UIDialogNavigation.warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
-
 
     }
 

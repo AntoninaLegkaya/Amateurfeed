@@ -32,7 +32,6 @@ import com.dbbest.amateurfeed.data.adapter.PreviewAdapter.FeedAdapterLoadNews;
 import com.dbbest.amateurfeed.presenter.FeedListPresenter;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.FeedView;
-import com.melnykov.fab.FloatingActionButton;
 
 /**
  * Created by antonina on 20.01.17.

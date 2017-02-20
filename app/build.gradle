@@ -59,35 +59,29 @@ ext {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.1'
     testCompile 'junit:junit:4.12'
-
     compile "com.android.support:multidex:${multidex}"
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
     compile 'com.takisoft.fix:preference-v7:25.0.1.0'
-
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
     compile "com.squareup.retrofit2:converter-gson:${retrofit}"
-
     compile "com.facebook.stetho:stetho:${stetho}"
     compile "com.facebook.stetho:stetho-okhttp3:${stetho}"
     compile "com.squareup.okhttp3:logging-interceptor:${okhttp}"
 
-
     compile "com.facebook.android:facebook-android-sdk:${facebookSdk}"
-    compile project(path: ':common-library')
 
+    compile project(path: ':common-library')
     compile "com.google.firebase:firebase-core:${googlePlaySevices}"
     compile "com.google.firebase:firebase-messaging:${googlePlaySevices}"
-
     compile "com.google.android.gms:play-services-location:${googlePlaySevices}"
     compile "com.google.android.gms:play-services-maps:${googlePlaySevices}"
     compile "com.google.android.gms:play-services-places:${googlePlaySevices}"
-
 
     compile 'com.android.support:cardview-v7:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'

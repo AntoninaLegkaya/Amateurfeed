@@ -4,20 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.EditProfilePresenter;
-import com.dbbest.amateurfeed.presenter.ProfilePresenter;
 import com.dbbest.amateurfeed.ui.HomeActivity;
 import com.dbbest.amateurfeed.view.EditeProfileView;
-import com.melnykov.fab.FloatingActionButton;
 
 /**
  * Created by antonina on 25.01.17.
@@ -69,7 +65,7 @@ public class EditProfileFragment extends Fragment implements EditeProfileView {
         mCancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getActivity().getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
                         ProfileFragment.newInstance(""), HomeActivity.PROFILE_FRAGMENT_TAG).commit();
             }
         });
@@ -78,7 +74,7 @@ public class EditProfileFragment extends Fragment implements EditeProfileView {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Profile Data Updated", Toast.LENGTH_SHORT).show();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getActivity().getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
                         ProfileFragment.newInstance(""), HomeActivity.PROFILE_FRAGMENT_TAG).commit();
             }
         });

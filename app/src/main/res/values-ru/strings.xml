@@ -61,4 +61,7 @@
     <string name="detail_toolbar_label">Новость</string>
     <string name="comment_hint">Напишите свой Комментарий</string>
     <string name="description_hint">Описание</string>
+    <string name="tab_profile">Профайл</string>
+    <string name="tab_home">Дом</string>
+    <string name="tab_search">Поиск</string>
 </resources>

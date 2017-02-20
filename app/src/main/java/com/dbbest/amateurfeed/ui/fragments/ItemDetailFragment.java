@@ -1,6 +1,7 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,16 +10,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.App;
@@ -27,12 +34,8 @@ import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
-import com.dbbest.amateurfeed.presenter.ProfilePresenter;
-import com.dbbest.amateurfeed.ui.SignUpActivity;
-import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
-import com.dbbest.amateurfeed.view.ProfileView;
 
 /**
  * Created by antonina on 24.01.17.
@@ -48,6 +51,7 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     private Uri mUriPreview;
     private TextView mChangeIconLink;
     DetailPresenter mPresenter;
+
 
 
     public ImageView mIconView;
@@ -72,10 +76,15 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
     public static ItemDetailFragment newInstance(String key) {
         ItemDetailFragment fragment = new ItemDetailFragment();
+
         Bundle bundle = new Bundle();
         bundle.putString(PARAM_KEY, key);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public ItemDetailFragment() {
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -88,7 +97,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-
 
         getLoaderManager().initLoader(DETAIL_NEWS_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
@@ -113,6 +121,34 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         mPresenter.detachView();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_back_menu, menu);
+    }
+
+    private void finishCreatingMenu(Menu menu) {
+        // Retrieve the share menu item
+        MenuItem menuItem = menu.findItem(R.id.action);
+        menuItem.setIntent(createSaveIntent());
+    }
+
+    private Intent createSaveIntent() {
+        Intent saveIntent = new Intent(Intent.ACTION_SEND);
+        return saveIntent;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+               Log.i(Utils.TAG_LOG, "You press back button");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
@@ -121,6 +157,11 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
             mLayoutType = arguments.getInt(ItemDetailFragment.DETAIL_TYPE);
         }
         View itemView = inflater.inflate(mLayoutType, container, false);
+
+        Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         mIconView = (ImageView) itemView.findViewById(R.id.list_item_icon);
