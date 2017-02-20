@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Amateurfeed.iml" filepath="$PROJECT_DIR$/Amateurfeed.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-library/android-common-library/common-library.iml" filepath="$PROJECT_DIR$/common-library/android-common-library/common-library.iml" />
     </modules>
   </component>
 </project>
