@@ -104,16 +104,16 @@ public class ProfileFragment extends Fragment implements ProfileView {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        EditProfileFragment.newInstance(""), HomeActivity.EDITE_PROFILE_FRAGMENT_TAG).commit();
+                        EditProfileFragment.newInstance(""), HomeActivity.EDIT_PROFILE_FRAGMENT_TAG).commit();
             }
         });
 */
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
+//        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
 
         mRecyclerView.setHasFixedSize(true);
 

@@ -7,113 +7,170 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTabHost;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TabHost;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
-
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
+import com.dbbest.amateurfeed.utils.BottomTab;
+import com.dbbest.amateurfeed.utils.TabManager;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
 
-import android.support.v4.app.FragmentTabHost;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.TabHost;
+import java.util.HashMap;
+import java.util.Stack;
+import java.util.UUID;
 
-/**
- * Created by antonina on 19.01.17.
- */
+import static com.dbbest.amateurfeed.R.id.imageView;
 
-public class HomeActivity extends AppCompatActivity implements HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, ItemDetailFragment.Callback {
-    //    TabHost.OnTabChangeListener,
-    private static final String FEDD_NEWS_FRAGMENT_TAG = "FNFTAG";
-    private static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
-    private static final String SEARCH_FRAGMENT_TAG = "STAG";
+
+public class HomeActivity extends FragmentActivity implements TabHost.OnTabChangeListener, HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, ItemDetailFragment.Callback {
+    public static final String FEED_NEWS_FRAGMENT_TAG = "FNFTAG";
+    public static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
+    public static final String SEARCH_FRAGMENT_TAG = "STAG";
     public static final String PROFILE_FRAGMENT_TAG = "PTAG";
-    public static final String EDITE_PROFILE_FRAGMENT_TAG = "PREFTAG";
-    public static final String TAB_HOME = "tab_home";
-    public static final String TAB_SEARCH = "search";
-    public static final String TAB_PROFILE = "profile";
+    public static final String EDIT_PROFILE_FRAGMENT_TAG = "PREFTAG";
     private DialogFragment mProgressDialog;
+    private TabManager mTabManager;
 
     private int mLikeImage = R.drawable.ic_favorite_black_24dp;
     private int mDisLikeImage = R.drawable.ic_favorite_border_black_24dp;
     private int isLikeFlag = 0;
     private int mCountIsLikes = 0;
     private Uri mUriId;
-    private FeedNewsFragment mFeedNewsFragment;
+    //    private FeedNewsFragment mFeedNewsFragment;
     private ItemDetailFragment mDetailFragment;
 
     private CoordinatorLayout coordinatorLayout;
     private HomePresenter mPresenter;
     private FragmentTabHost mTabHost;
 
-//    @Override
-//    public void onTabChanged(String tabId) {
-//
-//        if (tabId == TAB_HOME) {
-//            getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
-//                    mFeedNewsFragment, FEDD_NEWS_FRAGMENT_TAG).commit();
-//        } else if (tabId == TAB_SEARCH) {
-//            getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
-//                    SearchFragment.newInstance(""), SEARCH_FRAGMENT_TAG).commit();
-//        } else if (tabId == TAB_PROFILE) {
-//            getSupportFragmentManager().beginTransaction().replace(android.R.id.tabcontent,
-//                    ProfileFragment.newInstance(""), PROFILE_FRAGMENT_TAG).commit();
-//        }
-//    }
+
+    // Tab back stacks
+    private HashMap<BottomTab, Stack<String>> backStacks;
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            int saved = savedInstanceState.getInt("tab", 0);
+            Log.i(Utils.TAG_LOG, " Restore selected Tab index: " + saved);
+            if (saved != mTabHost.getCurrentTab())
+                mTabHost.setCurrentTab(saved);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState != null) {
+            outState.putInt("tab", mTabHost.getCurrentTab());
+            outState.putSerializable("stacks", backStacks);
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_activity);
 
+
+        setContentView(R.layout.home_activity);
 
 
         mPresenter = new HomePresenter();
         mPresenter.getNews(0, 5);
 
-        mFeedNewsFragment = FeedNewsFragment.newInstance(FEDD_NEWS_FRAGMENT_TAG);
-        if (savedInstanceState == null) {
-
-        }
 
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+        addTab(BottomTab.HOME);
+        addTab(BottomTab.SEARCH);
+        addTab(BottomTab.PROFILE);
+        mTabHost.setOnTabChangedListener(this);
 
-        mTabHost.addTab(
-                mTabHost.newTabSpec(TAB_HOME).setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_home, R.drawable.ic_home_black_18dp)),
-                FeedNewsFragment.class, null);
-        mTabHost.addTab(
-                mTabHost.newTabSpec(TAB_SEARCH
-                ).setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_search, R.drawable.ic_search_black_18dp)),
-                SearchFragment.class, null);
-        mTabHost.addTab(
-                mTabHost.newTabSpec(TAB_PROFILE).setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_profile, R.drawable.ic_perm_identity_black_18dp)),
-                ProfileFragment.class, null);
-//        mTabHost.setOnTabChangedListener(this);
+        if (savedInstanceState != null) {
+            int saved = savedInstanceState.getInt("tab", 0);
+            Log.i(Utils.TAG_LOG, " Restore selected Tab index onCreate(): " + saved);
+            if (saved != mTabHost.getCurrentTab()) mTabHost.setCurrentTab(saved);
+            Log.i(Utils.TAG_LOG, "Read back stacks after");
+            backStacks = (HashMap<BottomTab, Stack<String>>) savedInstanceState.getSerializable("stacks");
+        } else {
+            // Initialize back stacks on first run
+
+            Log.i(Utils.TAG_LOG, "Initialize back stacks on first run");
+            backStacks = new HashMap<BottomTab, Stack<String>>();
+            backStacks.put(BottomTab.HOME, new Stack<String>());
+            backStacks.put(BottomTab.SEARCH, new Stack<String>());
+            backStacks.put(BottomTab.PROFILE, new Stack<String>());
+        }
 
 
     }
 
 
-    private View getTabIndicator(Context context, int title, int icon) {
+    @Override
+    public void onTabChanged(String tabTag) {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // Select proper stack
+        if (backStacks != null) {
+            Stack<String> backStack = backStacks.get(BottomTab.getByTag(tabTag));
+            Fragment fragment = null;
+            if (backStack == null || backStack.isEmpty()) {
+
+                Log.i(Utils.TAG_LOG, " If it is empty instantiate and add initial tab fragment");
+                // If it is empty instantiate and add initial tab fragment
+
+                if (tabTag.equals(BottomTab.HOME.tag)) {
+
+                    fragment = Fragment.instantiate(this, FeedNewsFragment.class.getName());
+                } else if (tabTag.equals(BottomTab.SEARCH.tag)) {
+                    fragment = Fragment.instantiate(this, SearchFragment.class.getName());
+
+                } else if (tabTag.equals(BottomTab.PROFILE.tag)) {
+
+                    fragment = Fragment.instantiate(this, ProfileFragment.class.getName());
+                }
+                if (fragment != null) {
+
+                    addFragment(fragment, backStack, ft);
+                }
+            } else {
+                // Show topmost fragment
+                showFragment(backStack, ft);
+            }
+
+        }
+    }
+
+
+    private void addTab(BottomTab homeTab) {
+        TabHost.TabSpec spec = mTabHost.newTabSpec(homeTab.tag);
+        spec.setIndicator(getTabIndicator(this, homeTab.iconRes));
+        mTabHost.addTab(spec, homeTab.fragmentClass, null);
+    }
+
+    private View getTabIndicator(Context context, int icon) {
         View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        ImageView iv = (ImageView) view.findViewById(R.id.imageView);
+        ImageView iv = (ImageView) view.findViewById(imageView);
         iv.setImageResource(icon);
         return view;
     }
@@ -123,6 +180,48 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         super.onStart();
         mPresenter.attachView(this);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        if (backStacks != null) {
+//            // Select proper stack
+//            Stack<String> backStack = backStacks.get(BottomTab.getByTag(mTabHost.getCurrentTabTag()));
+//            if (!backStack.isEmpty()) {
+//                // Detach topmost fragment otherwise it will not be correctly displayed
+//                // after orientation change
+//                String tag = backStack.peek();
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+//                ft.detach(fragment);
+//                ft.commit();
+//            }
+//        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        if (mTabHost != null && backStacks != null) {
+//            Log.i(Utils.TAG_LOG, "Current Tag Tab is: " + mTabHost.getCurrentTabTag());
+//
+//            // Select proper stack
+//            Stack<String> backStack = backStacks.get(BottomTab.getByTag(mTabHost.getCurrentTabTag()));
+//            if (backStack != null) {
+//                if (!backStack.isEmpty()) {
+//                    // Restore topmost fragment (e.g. after application switch)
+//                    String tag = backStack.peek();
+//                    Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+//                    if (fragment.isDetached()) {
+//                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                        ft.attach(fragment);
+//                        ft.commit();
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -138,6 +237,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         return null;
     }
 
+
+    @Override
+    public void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+
+    }
 
     @Override
     public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
@@ -208,15 +312,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         mDetailFragment.setArguments(args);
 
 
-//        Intent intent = new Intent(this, DetailActivity.class)
-//                .setData(contentUri);
-//        ActivityOptionsCompat activityOptions =
-//                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-//                        new Pair<View, String>(vh.mIconView, getString(R.string.detail_icon_transition_name)));
-//        ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.tabcontent, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
                 .commit();
+
     }
 
     @Override
@@ -250,7 +349,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
     @Override
     public void refreshFragmentFeedLoader() {
 
-        FeedNewsFragment newsFragment = (FeedNewsFragment) getSupportFragmentManager().findFragmentByTag(FEDD_NEWS_FRAGMENT_TAG);
+        FeedNewsFragment newsFragment = (FeedNewsFragment) getSupportFragmentManager().findFragmentByTag(FEED_NEWS_FRAGMENT_TAG);
         if (newsFragment != null) {
             newsFragment.refreshFragmentLoader();
         }
@@ -366,6 +465,37 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Warning
         mUriId = uri;
         UIDialogNavigation.warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
 
+    }
+
+    private void addFragment(Fragment fragment) {
+        // Select proper stack
+        Stack<String> backStack = backStacks.get(mTabHost.getCurrentTabTag());
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // Animate transfer to new fragment
+//        ft.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right);
+        // Get topmost fragment
+        String tag = backStack.peek();
+        Fragment top = getSupportFragmentManager().findFragmentByTag(tag);
+        ft.detach(top);
+        // Add new fragment
+        addFragment(fragment, backStack, ft);
+        ft.commit();
+    }
+
+    private void addFragment(Fragment fragment, Stack<String> backStack, FragmentTransaction ft) {
+        // Add fragment to back stack with unique tag
+        String tag = UUID.randomUUID().toString();
+        ft.add(android.R.id.tabcontent, fragment, tag);
+        backStack.push(tag);
+    }
+
+    private void showFragment(Stack<String> backStack, FragmentTransaction ft) {
+        // Peek topmost fragment from the stack
+        String tag = backStack.peek();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        // and attach it
+        ft.attach(fragment);
     }
 
 

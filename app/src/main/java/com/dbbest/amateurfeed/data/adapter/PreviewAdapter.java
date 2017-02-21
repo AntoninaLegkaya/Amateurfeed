@@ -38,7 +38,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     public static final int VIEW_TYPE_ITEM_EMPTY = 2;
 
     private final View mEmptyView;
-    private final ItemChoiceManager mICM;
+//    private final ItemChoiceManager mICM;
     private RecyclerView mHorizontalList;
     private HorizontalListAdapter mHorizontalListAdapter;
 
@@ -60,8 +60,8 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         mRemoveClickHandler = removeClickHandler;
         mLoadNewsHandler = loadNewsHandler;
         mEmptyView = emptyView;
-        mICM = new ItemChoiceManager(this);
-        mICM.setChoiceMode(choiceMode);
+//        mICM = new ItemChoiceManager(this);
+//        mICM.setChoiceMode(choiceMode);
     }
 
 
@@ -131,24 +131,24 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
                 if (view.getId() == R.id.like_button) {
                     mLikeClickHandler.onClick(this, id);
-                    mICM.onClick(this);
+//                    mICM.onClick(this);
                 }
                 if (view.getId() == R.id.item || view.getId() == R.id.item_my) {
                     mClickHandler.onClick(this, id);
-                    mICM.onClick(this);
+//                    mICM.onClick(this);
 
                 }
                 if (view.getId() == R.id.comment_button) {
                     mCommentClickHandler.onClick(this, id);
-                    mICM.onClick(this);
+//                    mICM.onClick(this);
                 }
                 if (view.getId() == R.id.edit_button) {
                     mEditClickHandler.onClick(this, id);
-                    mICM.onClick(this);
+//                    mICM.onClick(this);
                 }
                 if (view.getId() == R.id.delete_button) {
                     mRemoveClickHandler.onClick(this, id);
-                    mICM.onClick(this);
+//                    mICM.onClick(this);
                 }
 
             }
@@ -323,7 +323,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         // this enables better animations. even if we lose state due to a device rotation,
         // the animator can use this to re-find the original view
         ViewCompat.setTransitionName(holder.mIconView, "iconView" + position);
-        mICM.onBindViewHolder(holder, position);
+//        mICM.onBindViewHolder(holder, position);
 
 
     }
@@ -340,9 +340,9 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     }
 
-    public int getSelectedItemPosition() {
-        return mICM.getSelectedItemPosition();
-    }
+//    public int getSelectedItemPosition() {
+//        return mICM.getSelectedItemPosition();
+//    }
 
     public Cursor getCursor() {
         return mCursor;
@@ -363,13 +363,13 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mICM.onRestoreInstanceState(savedInstanceState);
-    }
-
-    public void onSaveInstanceState(Bundle outState) {
-        mICM.onSaveInstanceState(outState);
-    }
+//    public void onRestoreInstanceState(Bundle savedInstanceState) {
+//        mICM.onRestoreInstanceState(savedInstanceState);
+//    }
+//
+//    public void onSaveInstanceState(Bundle outState) {
+//        mICM.onSaveInstanceState(outState);
+//    }
 
 
     private void deleteItem(RecyclerView.ViewHolder holder, int position) {

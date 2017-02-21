@@ -105,6 +105,7 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.i(Utils.TAG_LOG, "Attach Details fragment");
 
     }
 
@@ -113,12 +114,20 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         super.onStart();
         mPresenter.attachView(this);
 
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mPresenter.detachView();
+
     }
 
     @Override
@@ -159,9 +168,9 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         View itemView = inflater.inflate(mLayoutType, container, false);
 
         Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         mIconView = (ImageView) itemView.findViewById(R.id.list_item_icon);

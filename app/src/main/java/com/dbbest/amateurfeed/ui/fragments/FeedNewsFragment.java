@@ -287,7 +287,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                 // swapout in onLoadFinished.
                 mPosition = savedInstanceState.getInt(SELECTED_KEY);
             }
-            mPreviewAdapter.onRestoreInstanceState(savedInstanceState);
+//            mPreviewAdapter.onRestoreInstanceState(savedInstanceState);
         }
         return rootView;
     }
@@ -335,7 +335,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         if (mPosition != RecyclerView.NO_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
-        mPreviewAdapter.onSaveInstanceState(outState);
+//        mPreviewAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
