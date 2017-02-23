@@ -135,11 +135,10 @@ public class HomeActivity extends FragmentActivity implements TabHost.OnTabChang
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Select proper stack
         if (backStacks != null) {
+            refreshContent();
             Stack<String> backStack = backStacks.get(BottomTab.getByTag(tabTag));
             Fragment fragment = null;
             if (backStack == null || backStack.isEmpty()) {
-
-                refreshContent(ft);
 
 
                 Log.i(MANAGE_FRAGMENTS, " If BackStack is empty?... instantiate and add initial tab fragment");
@@ -160,22 +159,87 @@ public class HomeActivity extends FragmentActivity implements TabHost.OnTabChang
                     addFragment(fragment, backStack, ft);
                 }
             } else {
-
+                Log.i(MANAGE_FRAGMENTS, "Show Fragment " + tabTag + "by tag: " + backStack.peek());
                 showFragment(backStack, ft);
             }
 
         }
     }
 
-    private void refreshContent(FragmentTransaction ft) {
 
+    private void addFragment(Bundle args) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+
+        BottomTab bottomTabHome = BottomTab.getByTag(mTabHost.getCurrentTabTag());
+        Stack<String> feedStack = backStacks.get(bottomTabHome);
+
+        BottomTab bottomTabDetail = BottomTab.getByTag(DETAIL_NEWS_FRAGMENT_TAG);
+        Stack<String> detailStack = backStacks.get(bottomTabDetail);
+
+        Fragment feed = getSupportFragmentManager().findFragmentByTag(FEED_NEWS_FRAGMENT_TAG);
+        if (feed != null) {
+            transaction.detach(feed);
+            Log.i(MANAGE_FRAGMENTS, "Detach  fragment " + bottomTabHome.fragmentClass.getName() + " by tag: " + FEED_NEWS_FRAGMENT_TAG);
+
+        }
+
+        if (feedStack.isEmpty()) {
+
+            feedStack.push(UUID.randomUUID().toString());
+            Fragment instantiate = Fragment.instantiate(this, FeedNewsFragment.class.getName());
+
+//            transaction.add(android.R.id.tabcontent, instantiate, feedStack.peek());
+            Log.i(MANAGE_FRAGMENTS, " If BackStack is empty?... instantiate and add initial Feed Fragment [Tag]: " + feedStack.peek());
+        }
+        feedStack = backStacks.get(bottomTabHome);
+
+
+        if (!detailStack.isEmpty()) {
+
+            Fragment top = getSupportFragmentManager().findFragmentByTag(detailStack.peek());
+            transaction.detach(top);
+            Log.i(MANAGE_FRAGMENTS, "Detach  fragment" + bottomTabDetail.fragmentClass.getName() + " by tag: " + detailStack.peek());
+        }
+
+        refreshContent();
+
+        String tag = UUID.randomUUID().toString();
+        detailStack.push(tag);
+        Log.i(MANAGE_FRAGMENTS, " If BackStack is empty?... instantiate and add initial Item Detail Fragment [Tag]: " + detailStack.peek());
+        Fragment instantiateDetailFragment = Fragment.instantiate(this, ItemDetailFragment.class.getName());
+        instantiateDetailFragment.setArguments(args);
+        transaction.add(android.R.id.tabcontent, instantiateDetailFragment, detailStack.peek());
+        transaction.commit();
+        Log.i(MANAGE_FRAGMENTS, "Attach  fragment" + BottomTab.DETAIL.fragmentClass.getName() + " by tag: " + detailStack.peek());
+
+
+    }
+
+    private void addFragment(Fragment fragment, Stack<String> backStack, FragmentTransaction ft) {
+        String tag = UUID.randomUUID().toString();
+        ft.add(android.R.id.tabcontent, fragment, tag);
+        backStack.push(tag);
+//        Log.i(MANAGE_FRAGMENTS, "Check  Push UUID tag to backStack: " + backStack.peek());
+    }
+
+    private void showFragment(Stack<String> backStack, FragmentTransaction ft) {
+        String tag = backStack.peek();
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        ft.attach(fragment);
+    }
+
+    private void refreshContent() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Stack<String> detailStack = backStacks.get(BottomTab.DETAIL);
         if (!detailStack.isEmpty()) {
 
             Fragment top = getSupportFragmentManager().findFragmentByTag(detailStack.peek());
-            if (top!=null &&!top.isDetached()) {
+            if (top != null && !top.isDetached()) {
                 ft.detach(top);
-                Log.i(MANAGE_FRAGMENTS, "Detach Detail Fragment  by tag: " + detailStack.peek());
+
+                Log.i(MANAGE_FRAGMENTS, "Detach" + BottomTab.DETAIL.fragmentClass.getName() + " by tag: " + detailStack.peek());
             }
 
         }
@@ -184,9 +248,9 @@ public class HomeActivity extends FragmentActivity implements TabHost.OnTabChang
         if (!feedStack.isEmpty()) {
 
             Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
-            if (top!=null &&!top.isDetached()) {
+            if (top != null && !top.isDetached()) {
                 ft.detach(top);
-                Log.i(MANAGE_FRAGMENTS, "Detach Feed Fragment  by tag: " + detailStack.peek());
+                Log.i(MANAGE_FRAGMENTS, "Detach" + BottomTab.HOME.fragmentClass.getName() + " by tag: " + feedStack.peek());
             }
 
         }
@@ -194,9 +258,9 @@ public class HomeActivity extends FragmentActivity implements TabHost.OnTabChang
         if (!searchStack.isEmpty()) {
 
             Fragment top = getSupportFragmentManager().findFragmentByTag(searchStack.peek());
-            if (top!=null && !top.isDetached()) {
+            if (top != null && !top.isDetached()) {
                 ft.detach(top);
-                Log.i(MANAGE_FRAGMENTS, "Detach Search Fragment  by tag: " + searchStack.peek());
+                Log.i(MANAGE_FRAGMENTS, "Detach" + BottomTab.SEARCH.fragmentClass.getName() + " by tag: " + searchStack.peek());
             }
 
         }
@@ -204,12 +268,14 @@ public class HomeActivity extends FragmentActivity implements TabHost.OnTabChang
         if (!profileStack.isEmpty()) {
 
             Fragment top = getSupportFragmentManager().findFragmentByTag(profileStack.peek());
-            if (top!=null &&!top.isDetached()) {
+            if (top != null && !top.isDetached()) {
                 ft.detach(top);
-                Log.i(MANAGE_FRAGMENTS, "Detach Profile Fragment  by tag: " + profileStack.peek());
+                Log.i(MANAGE_FRAGMENTS, "Detach" + BottomTab.PROFILE.fragmentClass.getName() + " by tag: " + profileStack.peek());
             }
 
         }
+        ft.commit();
+
     }
 
 
@@ -483,62 +549,6 @@ public class HomeActivity extends FragmentActivity implements TabHost.OnTabChang
         mUriId = uri;
         UIDialogNavigation.warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
 
-    }
-
-    private void addFragment(Bundle args) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Stack<String> feedStack = backStacks.get(BottomTab.getByTag(mTabHost.getCurrentTabTag()));
-
-        Stack<String> detailStack = backStacks.get(BottomTab.getByTag(DETAIL_NEWS_FRAGMENT_TAG));
-
-        if (feedStack.isEmpty()) {
-
-            feedStack.push(UUID.randomUUID().toString());
-            Fragment instantiate = Fragment.instantiate(this, FeedNewsFragment.class.getName());
-
-            transaction.add(android.R.id.tabcontent, instantiate, feedStack.peek());
-            Log.i(MANAGE_FRAGMENTS, " If BackStack is empty?... instantiate and add initial Feed Fragment [Tag]: " + tag);
-        }
-
-
-        if (!detailStack.isEmpty()) {
-
-            Fragment top = getSupportFragmentManager().findFragmentByTag(detailStack.peek());
-            transaction.detach(top);
-            Log.i(MANAGE_FRAGMENTS, "Detach  fragment by tag: " + detailStack.peek());
-        }
-        String tag = UUID.randomUUID().toString();
-        detailStack.push(tag);
-        Fragment instantiateDetailFragment = Fragment.instantiate(this, ItemDetailFragment.class.getName());
-        instantiateDetailFragment.setArguments(args);
-        transaction.add(android.R.id.tabcontent, instantiateDetailFragment, detailStack.peek());
-//            transaction.commit();
-        Log.i(MANAGE_FRAGMENTS, " If BackStack is empty?... instantiate and add initial Item Detail Fragment [Tag]: " + tag);
-//        } else {
-//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(detailStack.peek());
-//
-//            transaction.attach(fragment);
-//        }
-
-
-        transaction.commit();
-        Log.i(MANAGE_FRAGMENTS, "Attach  fragment by tag: " + detailStack.peek());
-
-
-    }
-
-    private void addFragment(Fragment fragment, Stack<String> backStack, FragmentTransaction ft) {
-        String tag = UUID.randomUUID().toString();
-        ft.add(android.R.id.tabcontent, fragment, tag);
-        backStack.push(tag);
-        Log.i(MANAGE_FRAGMENTS, "Check  Push UUID tag to backStack: " + backStack.peek());
-    }
-
-    private void showFragment(Stack<String> backStack, FragmentTransaction ft) {
-        String tag = backStack.peek();
-        Log.i(MANAGE_FRAGMENTS, "Show Fragment by tag: " + tag);
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-        ft.attach(fragment);
     }
 
 
