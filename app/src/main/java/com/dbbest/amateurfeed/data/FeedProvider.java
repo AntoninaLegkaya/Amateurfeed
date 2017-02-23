@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 public class FeedProvider extends ContentProvider {
 
-  private static String PROVIDER="Feed Provider";
+  private static String PROVIDER="FeedProvider";
     public static long TEST_TAG_ID = 1;
     public static String TEST_TAG_AUTHOR = "Tony";
     public static long TEST_ID = 1;
@@ -417,7 +417,7 @@ public class FeedProvider extends ContentProvider {
 
 
             case PREVIEW: {
-                Log.i(PROVIDER, "FeedProvider query Get All Data from preview.table");
+                Log.i(PROVIDER, "Query Get All Data from preview.table");
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         FeedContract.PreviewEntry.TABLE_NAME,
                         projection,

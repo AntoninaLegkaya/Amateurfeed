@@ -34,6 +34,7 @@ import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
+import com.dbbest.amateurfeed.ui.HomeActivity;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
@@ -42,6 +43,7 @@ import com.dbbest.amateurfeed.view.DetailView;
  */
 
 public class ItemDetailFragment extends Fragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+    private static String DETAIL_FRAGMENT = "DetailFragment";
     private static final String PARAM_KEY = "param_key";
     public static final String DETAIL_URI = "URI";
     public static final String DETAIL_TYPE = "TYPE_ITEM";
@@ -51,7 +53,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     private Uri mUriPreview;
     private TextView mChangeIconLink;
     DetailPresenter mPresenter;
-
 
 
     public ImageView mIconView;
@@ -105,7 +106,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(Utils.TAG_LOG, "Attach Details fragment");
 
     }
 
@@ -151,7 +151,8 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-               Log.i(Utils.TAG_LOG, "You press back button");
+
+                ((Callback) getActivity()).moveToFeedFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -168,9 +169,9 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         View itemView = inflater.inflate(mLayoutType, container, false);
 
         Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
-//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         mIconView = (ImageView) itemView.findViewById(R.id.list_item_icon);
@@ -222,7 +223,7 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        Log.i(Utils.TAG_LOG, "Query to  preview table get item for Details Screen uri: " + mUriPreview);
+        Log.i(DETAIL_FRAGMENT, "Query to  preview table get item for Details fragment by  uri: " + mUriPreview);
         return new CursorLoader(getActivity(),
                 mUriPreview,
                 FeedNewsFragment.PREVIEW_COLUMNS,
@@ -354,19 +355,20 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
         if (view.getId() == R.id.delete_button) {
 
-            Log.i(Utils.TAG_LOG, "You click DeleteButton!");
             ((Callback) getActivity()).onDeleteItemSelected(mUriPreview);
 
         }
         if (view.getId() == R.id.like_button) {
 
-            Log.i(Utils.TAG_LOG, "You click LikeButton!");
+            Log.i(DETAIL_FRAGMENT, "You click LikeButton!");
             int mCountIsLikes = 0;
             int isLikeFlag = 0;
 
             String mCountLikes = mLikesCountView.getText().toString();
             if (mCountLikes != null) {
                 mCountIsLikes = Integer.parseInt(mCountLikes);
+
+
             }
             if (mCountIsLikes >= 0) {
                 if (mLikeButton.getTag() == "1") {
@@ -386,12 +388,13 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
                 }
 
+                Log.i(DETAIL_FRAGMENT, "Count likes: " + mCountLikes);
                 mLikesCountView.setText(String.valueOf(mCountIsLikes));
-                ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag);
+                ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag, mCountIsLikes);
             } else {
-                Log.i(Utils.TAG_LOG, "Error in like clear All!");
+                Log.i(DETAIL_FRAGMENT, "Error in like clear All!");
                 mLikesCountView.setText(String.valueOf(0));
-                ((Callback) getActivity()).onLikeItemSelected(mUriPreview, 0);
+                ((Callback) getActivity()).onLikeItemSelected(mUriPreview, 0, mCountIsLikes);
             }
 
 
@@ -403,13 +406,15 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     public interface Callback {
 
 
-        public void onLikeItemSelected(Uri uri, int isLike);
+        public void onLikeItemSelected(Uri uri, int isLike, int count);
 
         public void onCommentItemSelected(Uri uri);
 
         public void onEditItemSelected(Uri uri);
 
         public void onDeleteItemSelected(Uri uri);
+
+        public void moveToFeedFragment();
 
     }
 
