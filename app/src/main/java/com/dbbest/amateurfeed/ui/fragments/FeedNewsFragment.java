@@ -33,12 +33,11 @@ import com.dbbest.amateurfeed.presenter.FeedListPresenter;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.FeedView;
 
-/**
- * Created by antonina on 20.01.17.
- */
+
 
 public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
 
+    private static String FEED_FRAGMENT="Feed Fragment ";
     private static final String PARAM_KEY = "param_key";
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
@@ -351,7 +350,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
         // Sort order:  Ascending, by date.
         String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
-        Log.i(Utils.TAG_LOG, "Query to  DB get Preview Table All items");
+        Log.i(FEED_FRAGMENT, "Query to  DB get Preview Table All items");
         return new CursorLoader(getActivity(),
                 previewListUri,
                 PREVIEW_COLUMNS,
@@ -394,7 +393,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                                 data.moveToPosition(i);
                                 if (Utils.getLongFromString(data.getString(dateColumn)) == mInitialSelectedDate) {
                                     position = i;
-                                    Log.i(Utils.TAG_LOG, "Position Adapter: Get position current day " + position);
+                                    Log.i(FEED_FRAGMENT, "Position Adapter: Get position current day " + position);
                                     break;
                                 }
                             }

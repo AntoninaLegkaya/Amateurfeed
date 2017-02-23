@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 public class FeedProvider extends ContentProvider {
 
-
+  private static String PROVIDER="Feed Provider";
     public static long TEST_TAG_ID = 1;
     public static String TEST_TAG_AUTHOR = "Tony";
     public static long TEST_ID = 1;
@@ -171,7 +171,7 @@ public class FeedProvider extends ContentProvider {
     private Cursor getPreviewByAuthor(Uri uri, String[] projection, String sortOrder) {
 
         String author = FeedContract.PreviewEntry.getAuthorFromUri(uri);
-        Log.i("TestProvider", "Get Selector Preview Tablew: athor: " + author);
+        Log.i(PROVIDER, "Get Selector Preview Tablew: athor: " + author);
 
         String[] selectionArgs;
         String selection;
@@ -208,11 +208,11 @@ public class FeedProvider extends ContentProvider {
 
         if (c.moveToFirst()) {
 
-            Log.i("TestProvider", "Preview table: TITLE:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_TITLE)));
-            Log.i("TestProvider", "Preview table: Author:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_AUTHOR)));
-            Log.i("TestProvider", "Tag table: TAG_NAME:" + c.getString(c.getColumnIndex(FeedContract.TagEntry.COLUMN_NAME)));
+            Log.i(PROVIDER, "Preview table: TITLE:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_TITLE)));
+            Log.i(PROVIDER, "Preview table: Author:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_AUTHOR)));
+            Log.i(PROVIDER, "Tag table: TAG_NAME:" + c.getString(c.getColumnIndex(FeedContract.TagEntry.COLUMN_NAME)));
 
-            Log.i("TestProvider", DatabaseUtils.dumpCursorToString(c));
+            Log.i(PROVIDER, DatabaseUtils.dumpCursorToString(c));
 
         }
 
@@ -234,9 +234,9 @@ public class FeedProvider extends ContentProvider {
 
         if (c.moveToFirst()) {
 
-            Log.i("TestProvider", "Tag table: TAG_ID:" + c.getInt(c.getColumnIndex(FeedContract.TagEntry._ID)));
+            Log.i(PROVIDER, "Tag table: TAG_ID:" + c.getInt(c.getColumnIndex(FeedContract.TagEntry._ID)));
 
-            Log.i("TestProvider", "Tag table: TAG_NAME:" + c.getString(c.getColumnIndex(FeedContract.TagEntry.COLUMN_NAME)));
+            Log.i(PROVIDER, "Tag table: TAG_NAME:" + c.getString(c.getColumnIndex(FeedContract.TagEntry.COLUMN_NAME)));
 
 
         }
@@ -261,11 +261,9 @@ public class FeedProvider extends ContentProvider {
 
         if (c.moveToFirst()) {
 
-//            Log.i(Utils.TAG_LOG, " Items tags For preview_id: " + id + " FOUND in table tags!");
 
 
         } else {
-//            Log.i(Utils.TAG_LOG, " Items tags  For preview_id: " + id + " NOT FOUND in table tags.");
         }
 
         return c;
@@ -288,11 +286,9 @@ public class FeedProvider extends ContentProvider {
 
         if (c.moveToFirst()) {
 
-//            Log.i(Utils.TAG_LOG, " Items comments For post_id: " + id + " FOUND in table comment!");
 
 
         } else {
-//            Log.i(Utils.TAG_LOG, " Items comments  For post_id: " + id + " NOT FOUND in table comment.");
         }
 
         return c;
@@ -315,11 +311,9 @@ public class FeedProvider extends ContentProvider {
 
         if (c.moveToFirst()) {
 
-//            Log.i(Utils.TAG_LOG, " Item by _ID: " + id + " FOUND in table creator!");
 
 
         } else {
-//            Log.i(Utils.TAG_LOG, " Item by _ID: " + id + " NOT FOUND in table creator. You can add it!");
         }
 
         return c;
@@ -423,7 +417,7 @@ public class FeedProvider extends ContentProvider {
 
 
             case PREVIEW: {
-                Log.i(Utils.TAG_LOG, "FeedProvider query Get All Data from preview.table");
+                Log.i(PROVIDER, "FeedProvider query Get All Data from preview.table");
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         FeedContract.PreviewEntry.TABLE_NAME,
                         projection,
@@ -439,13 +433,13 @@ public class FeedProvider extends ContentProvider {
 
 
             case PREVIEW_ID: {
-//                Log.i("TestProvider", "Get Item from Preview Tablew by ID");
+//                Log.i(PROVIDER, "Get Item from Preview Tablew by ID");
                 retCursor = getPreviewByIdSelection(uri, projection, selection, selectionArgs, sortOrder);
                 break;
             }
 
             case PREVIEW_AUTHOR: {
-//                Log.i("TestProvider", "Get Item from Preview Tablew by Author");
+//                Log.i(PROVIDER, "Get Item from Preview Tablew by Author");
                 retCursor = getPreviewByAuthor(uri, projection, sortOrder);
                 break;
             }
@@ -464,9 +458,9 @@ public class FeedProvider extends ContentProvider {
             }
 
             case COMMENT_POST_ID: {
-//                Log.i(Utils.TAG_LOG, "Grab Comments  from DB by post_id:  " + uri);
+//                Log.i(PROVIDER, "Grab Comments  from DB by post_id:  " + uri);
                 retCursor = getCommentsListByPostId(uri, projection, selection, selectionArgs, sortOrder);
-//                Log.i(Utils.TAG_LOG, "Grab Comments  from DB count:  " + retCursor.getCount());
+//                Log.i(PROVIDER, "Grab Comments  from DB count:  " + retCursor.getCount());
                 break;
             }
             case PROFILE: {
@@ -527,9 +521,9 @@ public class FeedProvider extends ContentProvider {
                 break;
             }
             case TAG_PREVIEW_ID: {
-//                Log.i(Utils.TAG_LOG, "Grab Tags  from DB by preview_id:  " + uri);
+//                Log.i(PROVIDER, "Grab Tags  from DB by preview_id:  " + uri);
                 retCursor = getTagsListByIdPreview(uri, projection, selection, selectionArgs, sortOrder);
-//                Log.i(Utils.TAG_LOG, "Grab Tags  from DB count:  " + retCursor.getCount());
+//                Log.i(PROVIDER, "Grab Tags  from DB count:  " + retCursor.getCount());
                 break;
             }
             case PREVIEW_TAG: {
@@ -596,7 +590,7 @@ public class FeedProvider extends ContentProvider {
 
 
                     returnUri = FeedContract.CreatorEntry.buildCreatorUri(_id);
-                    Log.i(Utils.TAG_LOG, " Item by _ID: " + _id + "Created inserted into  creator BD");
+                    Log.i(PROVIDER, " Item by _ID: " + _id + "Created inserted into  creator BD");
                 } else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -695,7 +689,7 @@ public class FeedProvider extends ContentProvider {
             case PREVIEW_ID:
 
                 rowsUpdated = updateLikeColumnInPreview(uri, values, selection, selectionArgs);
-                Log.i(Utils.TAG_LOG, " Call  updateLikeColumnInPreview: Response updated:" + rowsUpdated);
+                Log.i(PROVIDER, " Call  updateLikeColumnInPreview: Response updated:" + rowsUpdated);
                 break;
             case COMMENT:
                 rowsUpdated = db.update(FeedContract.CommentEntry.TABLE_NAME, values, selection, selectionArgs);

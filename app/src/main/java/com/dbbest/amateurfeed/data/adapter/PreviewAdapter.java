@@ -31,6 +31,7 @@ import java.text.ParseException;
 
 public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewAdapterViewHolder> {
 
+    private static String ADAPTER="Preview Adapter";
     private Cursor mCursor;
     final private Context mContext;
     public static final int VIEW_TYPE_MY = 0;
@@ -126,7 +127,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
                 int idx = mCursor.getColumnIndex(FeedContract.PreviewEntry._ID);
                 id = mCursor.getLong(idx);
-                Log.i(Utils.TAG_LOG, "PreviewAdapter You Get Item By ID: " + id);
+                Log.i(ADAPTER, "You Get Item By ID: " + id);
 
 
                 if (view.getId() == R.id.like_button) {
@@ -233,7 +234,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
         //check for last item
         if ((position >= getItemCount() - 1)) {
-            Log.i(Utils.TAG_LOG_LOAD_NEW_DATA, "Load new items : count = 5  offset: " + getItemCount());
+            Log.i(ADAPTER, "Load new items : count = 5  offset: " + getItemCount());
             mLoadNewsHandler.load(holder, getItemCount(), 5);
         }
 

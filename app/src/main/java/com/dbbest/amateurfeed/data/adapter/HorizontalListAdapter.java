@@ -22,6 +22,7 @@ import com.dbbest.amateurfeed.utils.Utils;
 
 public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAdapter.HorizontalViewHolder> {
 
+    private static String TAG_ADAPTER="Tag Adapter ";
     private Context mContext;
     private Cursor mCursor;
 
@@ -37,13 +38,13 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
             mTagName = (TextView) view.findViewById(R.id.item_tag_name);
             if (mTagName == null) {
 
-                Log.i(Utils.TAG_LOG, "Could not get Text field");
+                Log.i(TAG_ADAPTER, "Could not get Text field");
 
             }
             linearLayout = (LinearLayout) view.findViewById(R.id.layout_tag);
             if (linearLayout == null) {
 
-                Log.i(Utils.TAG_LOG, " Could not get linearLayout");
+                Log.i(TAG_ADAPTER, " Could not get linearLayout");
 
 
             }
@@ -81,7 +82,7 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
             if (holder.mTagName != null) {
                 String tag = Utils.foramatTagName(mContext, cursor.getString(FeedNewsFragment.COL_TAG_NAME));
                 holder.mTagName.setText(tag);
-                Log.i(Utils.TAG_LOG, "Set Tag to List:   " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+                Log.i(TAG_ADAPTER, "Set Tag to List:   " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
             }
 
         }
