@@ -87,6 +87,13 @@
         <item name="android:background">@drawable/button_shape</item>
     </style>
 
+    <style name="ButtonComment" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/app_black</item>
+        <item name="android:background">@drawable/button_comment</item>
+        <item name="android:height">30dp</item>
+        <item name="android:width">50dp</item>
+    </style>
+
 
     <!--Style for  Detail Screen TextInputLayout-->
 
@@ -100,20 +107,21 @@
     <style name="AppTheme.DetailTextFloatLabelAppearance" parent="TextAppearance.Design.Hint">
         <!-- Floating label appearance here -->
         <item name="android:textColor">@color/app_black</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:hint">@color/app_black</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="AppTheme.DetailTextErrorAppearance" parent="TextAppearance.Design.Error">
         <!-- Error message appearance here -->
         <item name="android:textColor">@color/app_black</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="AppTheme.Widget.InputCommentField" parent="AppTheme">
 
         <item name="android:textColor">@color/app_black</item>
         <item name="android:background">@drawable/field_shape</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
 
 
     </style>

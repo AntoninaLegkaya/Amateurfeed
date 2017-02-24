@@ -101,7 +101,7 @@ public interface RestApiServices {
     /*    <---- Tag----> */
 
     @GET("tags")
-    Call<ResponseWrapper<ArrayList<TagModel>>> getTags(@Header("Authorization") String token, @Query("keyword") String keyword);
+    Call<ResponseWrapper<ArrayList<TagModel>>> checkTags(@Header("Authorization") String token, @Query("keyword") String keyword);
 
 
     /*    <---- Upload----> */

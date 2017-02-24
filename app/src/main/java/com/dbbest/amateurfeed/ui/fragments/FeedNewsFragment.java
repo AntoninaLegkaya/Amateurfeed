@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
@@ -34,10 +35,10 @@ import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.FeedView;
 
 
+public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,  SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
 
-public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
 
-    private static String FEED_FRAGMENT="Feed Fragment ";
+    private static String FEED_FRAGMENT = "Feed Fragment ";
     private static final String PARAM_KEY = "param_key";
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
@@ -53,7 +54,8 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     private long mInitialSelectedDate = -1;
     private boolean mAutoSelectView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
+    private boolean mIsViewInited;
+    private Context mContext;
 
     public static final String[] PREVIEW_COLUMNS = {
 
@@ -133,6 +135,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.mContext=context;
 
     }
 
@@ -160,6 +163,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         super.onActivityCreated(savedInstanceState);
     }
 
+
     @Override
     public void onStop() {
         super.onStop();
@@ -182,7 +186,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
         final View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
         View emptyView = rootView.findViewById(R.id.recycle_feed_empty);
-
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.feed_list_view);
@@ -228,7 +231,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView.setHasFixedSize(true);
 
 
-        mPreviewAdapter = new PreviewAdapter(getContext(), emptyView, mChoiceMode,
+        mPreviewAdapter = new PreviewAdapter(mContext, emptyView, mChoiceMode,
 
                 new PreviewAdapter.FeedAdapterOnClickHandler() {
                     @Override
@@ -276,8 +279,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
         mPreviewAdapter.swapCursor(null);
         mRecyclerView.setAdapter(mPreviewAdapter);
-
-
 
 
         if (savedInstanceState != null) {
@@ -367,9 +368,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
         updateEmptyView();
         if (data.getCount() == 0) {
-
             getActivity().supportStartPostponedEnterTransition();
-
 
         } else {
 
@@ -424,4 +423,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     public void setInitialSelectedDate(long initialSelectedDate) {
         mInitialSelectedDate = initialSelectedDate;
     }
+
+
 }

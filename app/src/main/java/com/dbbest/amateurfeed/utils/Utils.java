@@ -2,15 +2,19 @@ package com.dbbest.amateurfeed.utils;
 
 import android.content.Context;
 import android.text.format.Time;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.R.attr.tag;
 
 /**
  * Created by antonina on 19.01.17.
@@ -53,6 +57,33 @@ public class Utils {
                     "{7,10}" +
                     "$"
     );
+
+//            (\B#\w)\w+
+
+    private static final Pattern TAG_PATTERN = Pattern.compile("(\\B#\\w)\\w+");
+
+
+    public static final String[] getTagsPattern(String input) {
+
+        StringBuffer buffer = new StringBuffer();
+        String[] strLines = input.split("\n");
+
+
+        for (String line : strLines) {
+
+            Matcher matcher = TAG_PATTERN.matcher(line);
+
+            while (matcher.find()) {
+
+
+                buffer.append(matcher.group().substring(1) + " ");
+
+
+            }
+        }
+        return buffer.toString().split(" ");
+    }
+
 
     public static boolean isEmailValid(String email) {
 

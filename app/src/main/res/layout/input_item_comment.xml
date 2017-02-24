@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.GridLayout
     android:id="@+id/layout_item_comment"
-    style="@style/AppTheme.Widget.InputCommentField"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,15 +8,17 @@
     android:layout_margin="@dimen/activity_link_margin"
     app:columnCount="3">
 
-
+    <!--style="@style/Widget.Design.TextInputLayout"-->
     <android.support.design.widget.TextInputLayout
         android:id="@+id/commentInputLayout"
-        style="@style/Widget.Design.TextInputLayout"
+        style="@style/AppTheme.Widget.InputCommentField"
         android:layout_width="wrap_content"
-        android:layout_margin="@dimen/activity_link_margin"
+        android:layout_margin="4dp"
         app:layout_columnSpan="2"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
+        android:layout_height="wrap_content"
+
 
         >
 
@@ -25,27 +26,26 @@
             android:id="@+id/item_comment_text"
             style="@style/Widget.Design.DetailTextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:ems="4"
+            android:ems="2"
             android:gravity="fill_horizontal"
             android:hint="@string/comment_hint"
             android:inputType="textMultiLine"
             android:textColor="@color/app_black"
-
-            />
+            android:layout_height="40dp"
+            android:paddingTop="2dp"
+            android:layout_gravity="center_vertical"/>
 
     </android.support.design.widget.TextInputLayout>
 
 
     <Button
         android:id="@+id/add_comment_button"
-        style="@style/ButtonAppTheme"
-        android:layout_height="wrap_content"
+        style="@style/ButtonComment"
+        android:layout_height="40dp"
         android:text="@string/ok_button"
-        app:layout_columnWeight="1"
+        app:layout_columnWeight="0"
         app:layout_gravity="center"
+        android:layout_width="50dp"
         />
 
 </android.support.v7.widget.GridLayout>

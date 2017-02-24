@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="8dp"
+    android:layout_margin="4dp"
     app:columnCount="3">
 
 
@@ -16,20 +17,19 @@
         app:layout_columnSpan="3"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
-        android:layout_margin="@dimen/activity_link_margin"
 
         >
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/list_item_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:gravity="fill_horizontal"
             android:ems="4"
             android:hint="@string/description_hint"
             android:inputType="textMultiLine"
-            android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
+            android:paddingTop="2dp"
            style="@style/Widget.Design.DetailTextInputLayout"
             android:textColor="@color/app_black"
             />

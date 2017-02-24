@@ -2,6 +2,7 @@ package com.dbbest.amateurfeed.ui;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,9 +35,7 @@ import com.dbbest.amateurfeed.view.HomeView;
 
 import java.util.HashMap;
 import java.util.Stack;
-import java.util.UUID;
 
-import static android.R.attr.type;
 import static com.dbbest.amateurfeed.R.id.imageView;
 
 
@@ -76,6 +75,44 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        Log.i(MANAGE_FRAGMENTS, "********************************* On Create from Restore Data ******************************************** ");
+
+
+        backStacks = (HashMap<BottomTab, Stack<String>>) savedInstanceState.getSerializable("stacks");
+        refreshContent();
+
+//        int saved = savedInstanceState.getInt("tab", 0);
+//        String tag = savedInstanceState.getString("tag");
+//
+//        if (tag != null) {
+//            Log.i(MANAGE_FRAGMENTS, " Restore selected fragment [Tag]: " + tag);
+//            Uri uri = savedInstanceState.getParcelable(ItemDetailFragment.DETAIL_URI);
+//            int type = savedInstanceState.getInt(ItemDetailFragment.DETAIL_TYPE);
+//
+//            if (tag != DETAIL_NEWS_FRAGMENT_TAG) {
+//                if (saved != mTabHost.getCurrentTab())
+//                    Log.i(MANAGE_FRAGMENTS, " Show Fragment by  [Tag]: " + tag);
+//                mTabHost.setCurrentTab(saved);
+//            } else {
+//
+//                if (uri != null) {
+//                    Log.i(MANAGE_FRAGMENTS, " Restore Detail info : \n" + " Uri: " + uri.toString() + "\n Type: " + type);
+//                    Bundle args = new Bundle();
+//                    args.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
+//                    args.putInt(ItemDetailFragment.DETAIL_TYPE, type);
+//
+//                    addFragment(args);
+//                } else {
+//                    refreshContent();
+//                    mTabHost.setCurrentTab(saved);
+//
+//                    Log.i(MANAGE_FRAGMENTS, " Show Default Fragment by  [Tab]: " + saved);
+//
+//                }
+//
+//            }
+//        }
+        Log.i(MANAGE_FRAGMENTS, "****************************************************************************************");
 
 
     }
@@ -96,6 +133,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         }
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +144,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
         mPresenter = new HomePresenter();
         mPresenter.getNews(0, 5);
-
-
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
         addTab(BottomTab.HOME);
@@ -115,49 +151,13 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         addTab(BottomTab.PROFILE);
         mTabHost.setOnTabChangedListener(this);
 
+
         if (savedInstanceState != null) {
+            backStacks = (HashMap<BottomTab, Stack<String>>) savedInstanceState.getSerializable("stacks");
+            refreshContent();
 
 
-            Log.i(MANAGE_FRAGMENTS, "------------------------- On Create from Restore Data -------------------------------------- ");
-            if (savedInstanceState != null) {
-
-                backStacks = (HashMap<BottomTab, Stack<String>>) savedInstanceState.getSerializable("stacks");
-
-
-                int saved = savedInstanceState.getInt("tab", 0);
-                String tag = savedInstanceState.getString("tag");
-
-                if (tag != null) {
-                    Log.i(MANAGE_FRAGMENTS, " Restore selected fragment Tag: " + tag);
-                    Uri uri = savedInstanceState.getParcelable(ItemDetailFragment.DETAIL_URI);
-                    int type = savedInstanceState.getInt(ItemDetailFragment.DETAIL_TYPE);
-
-                    if (tag != DETAIL_NEWS_FRAGMENT_TAG) {
-                        if (saved != mTabHost.getCurrentTab())
-                            Log.i(MANAGE_FRAGMENTS, " Show Fragment by  Tag: " + tag);
-                        mTabHost.setCurrentTab(saved);
-                    } else {
-
-                        if (uri != null) {
-                            Log.i(MANAGE_FRAGMENTS, " Restore Detail info : \n" + " Uri: " + uri.toString() + "\n Type: " + type);
-                            Bundle args = new Bundle();
-                            args.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
-                            args.putInt(ItemDetailFragment.DETAIL_TYPE, type);
-
-                            addFragment(args);
-                        } else {
-
-                            mTabHost.setCurrentTab(saved);
-                            Log.i(MANAGE_FRAGMENTS, " Show Default Fragment by  Tag: " + tag);
-
-                        }
-
-                    }
-                }
-            }
-            Log.i(MANAGE_FRAGMENTS, "---------------------------------------------------------------------------- ");
         } else {
-            // Initialize back stacks on first run
 
             Log.i(MANAGE_FRAGMENTS, "Initialize back stacks on first run");
             backStacks = new HashMap<BottomTab, Stack<String>>();
@@ -201,7 +201,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                     addFragment(fragment, backStack, ft, tabTag);
                 }
             } else {
-                Log.i(MANAGE_FRAGMENTS, "Show Fragment " + tabTag + " by tag: " + backStack.peek());
+
                 showFragment(backStack, ft);
             }
 
@@ -233,9 +233,9 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
         {
             Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
-            if (top != null && !top.isDetached()) {
+            if (top != null || !top.isDetached()) {
                 transaction.detach(top);
-                Log.i(MANAGE_FRAGMENTS, "!!Detach  FNFTAG fragment" + " by tag: " + feedStack.peek());
+                Log.i(MANAGE_FRAGMENTS, "Detach   fragment" + " by [Tag]: " + feedStack.peek());
             }
 
         }
@@ -243,13 +243,13 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         refreshContent();
 
         detailStack.push(DETAIL_NEWS_FRAGMENT_TAG);
-        Log.i(MANAGE_FRAGMENTS, "Updated initial Item Detail Fragment [Tag]: " + detailStack.peek());
+        Log.i(MANAGE_FRAGMENTS, "Create Item Detail Fragment [Tag]: " + detailStack.peek());
         Fragment instantiateDetailFragment = Fragment.instantiate(this, ItemDetailFragment.class.getName());
         instantiateDetailFragment.setArguments(args);
         transaction.add(android.R.id.tabcontent, instantiateDetailFragment, detailStack.peek());
         transaction.commit();
         mCurrenTag = detailStack.peek();
-        Log.i(MANAGE_FRAGMENTS, "************Attach  fragment" + BottomTab.DETAIL.fragmentClass.getName() + " by tag: " + detailStack.peek() + "*************");
+        Log.i(MANAGE_FRAGMENTS, "Attach  " + BottomTab.DETAIL.fragmentClass.getName() + " by [Tag]: " + detailStack.peek());
 
     }
 
@@ -263,8 +263,10 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment != null) {
             ft.attach(fragment);
+            ft.commit();
+            Log.i(MANAGE_FRAGMENTS, "Show Fragment  by [Tag]: " + backStack.peek());
         } else {
-            Log.i(MANAGE_FRAGMENTS, "Could not Show Fragment  by tag: " + tag);
+            Log.i(MANAGE_FRAGMENTS, "Could not Show Fragment  by [Tag]: " + tag);
         }
     }
 
@@ -276,19 +278,24 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         BottomTab bottomTabHome = BottomTab.getByTag(BottomTab.HOME.tag);
         Stack<String> feedStack = backStacks.get(bottomTabHome);
-        feedStack.push(FEED_NEWS_FRAGMENT_TAG);
-        Log.i(MANAGE_FRAGMENTS, " Updated stack... instantiate and add initial Feed  Fragment [Tag]: " + feedStack.peek());
-        Fragment instantiateFeedFragment = Fragment.instantiate(this, FeedNewsFragment.class.getName());
-        ft.add(android.R.id.tabcontent, instantiateFeedFragment, feedStack.peek());
-        ft.commit();
+//        if (feedStack.isEmpty()) {
+//            feedStack.push(FEED_NEWS_FRAGMENT_TAG);
+//            Log.i(MANAGE_FRAGMENTS, " Updated stack... instantiate and add initial Feed  Fragment [Tag]: " + feedStack.peek());
+//            Fragment instantiateFeedFragment = Fragment.instantiate(this, FeedNewsFragment.class.getName());
+//            ft.add(android.R.id.tabcontent, instantiateFeedFragment, feedStack.peek());
+//            ft.commit();
+//        } else {
+        showFragment(feedStack, ft);
+//        }
+
+
         mCurrenTag = BottomTab.HOME.tag;
-        Log.i(MANAGE_FRAGMENTS, "Show Fragment " + BottomTab.HOME.tag + "by tag: " + feedStack.peek());
 
     }
 
     private void refreshContent() {
 
-        Log.i(MANAGE_FRAGMENTS, "-------------------------Refresh Content----------------------------------------------- ");
+        Log.i(MANAGE_FRAGMENTS, "Refresh Content");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (backStacks != null) {
@@ -296,10 +303,10 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
             if (!detailStack.isEmpty()) {
 
                 Fragment top = getSupportFragmentManager().findFragmentByTag(detailStack.peek());
-                if (top != null && !top.isDetached()) {
+                if (top != null || !top.isDetached()) {
                     ft.detach(top);
 
-                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.DETAIL.fragmentClass.getName() + " by tag: " + detailStack.peek() + "-----------");
+                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.DETAIL.fragmentClass.getName() + " by [Tag]: " + detailStack.peek() + "-----------");
                 }
 
             }
@@ -310,7 +317,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
                 if (top != null && !top.isDetached()) {
                     ft.detach(top);
-                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.HOME.fragmentClass.getName() + " by tag: " + feedStack.peek() + "-----------");
+                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.HOME.fragmentClass.getName() + " by [Tag]: " + feedStack.peek() + "-----------");
                 }
 
             }
@@ -318,9 +325,9 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
             if (!searchStack.isEmpty()) {
 
                 Fragment top = getSupportFragmentManager().findFragmentByTag(searchStack.peek());
-                if (top != null && !top.isDetached()) {
+                if (top != null || !top.isDetached()) {
                     ft.detach(top);
-                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.SEARCH.fragmentClass.getName() + " by tag: " + searchStack.peek() + "-----------");
+                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.SEARCH.fragmentClass.getName() + " by [Tag]: " + searchStack.peek() + "-----------");
                 }
 
             }
@@ -328,14 +335,16 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
             if (!profileStack.isEmpty()) {
 
                 Fragment top = getSupportFragmentManager().findFragmentByTag(profileStack.peek());
-                if (top != null && !top.isDetached()) {
-                    ft.detach(top);
-                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.PROFILE.fragmentClass.getName() + " by tag: " + profileStack.peek() + "-----------");
+                if (top != null) {
+                    if (!top.isDetached()) {
+                        ft.detach(top);
+                        Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.PROFILE.fragmentClass.getName() + " by [Tag]: " + profileStack.peek() + "-----------");
+                    }
                 }
-
             }
             ft.commit();
         }
+        Log.i(MANAGE_FRAGMENTS, "-------------------------Refresh Content----------------------------------------------- ");
     }
 
 

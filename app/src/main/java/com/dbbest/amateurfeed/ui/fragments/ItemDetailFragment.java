@@ -38,12 +38,17 @@ import com.dbbest.amateurfeed.ui.HomeActivity;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
+import static android.R.attr.tag;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+import static com.dbbest.amateurfeed.utils.Utils.TAG_LOG_LOAD_NEW_DATA;
+import static com.dbbest.amateurfeed.utils.Utils.getTagsPattern;
+
 /**
  * Created by antonina on 24.01.17.
  */
 
 public class ItemDetailFragment extends Fragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
-    private static String DETAIL_FRAGMENT = "DetailFragment";
+    public final static String DETAIL_FRAGMENT = "DetailFragment";
     private static final String PARAM_KEY = "param_key";
     public static final String DETAIL_URI = "URI";
     public static final String DETAIL_TYPE = "TYPE_ITEM";
@@ -256,6 +261,19 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                 String description = data.getString(FeedNewsFragment.COL_TEXT);
                 if (description != null) {
                     mDescriptionView.setText(description);
+
+                    String[] tags = Utils.getTagsPattern(description);
+                    if (tags != null) {
+                        for (String tag : tags) {
+
+                            Log.i(DETAIL_FRAGMENT, "[Tag]: " + tag);
+                            mPresenter.checkTag(tag);
+
+
+                        }
+                    } else {
+                        Log.i(DETAIL_FRAGMENT, "[Tags]: " + null);
+                    }
                 }
 
 
