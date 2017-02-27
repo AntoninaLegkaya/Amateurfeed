@@ -46,7 +46,6 @@ public class CheckTagCommand extends Command {
     public void execute() {
 
 
-        //TODO RestApiClient
         RestApiClient apiClient = App.getApiFactory().restClient();
         AuthToken authToken = new AuthToken();
 
@@ -63,12 +62,10 @@ public class CheckTagCommand extends Command {
                     if (mTagName.equals(tag.getName())) {
                         flag = true;
                         bundle.putParcelable("tagModel", new TagModel(tag.getId(), tag.getName()));
-                        Log.i(ItemDetailFragment.DETAIL_FRAGMENT, "I Get from Server [Tag]: " + tag.getName());
+//                        Log.i(ItemDetailFragment.DETAIL_FRAGMENT, "I Get from Server [Tag]: " + tag.getName());
                     }
 
-
                 }
-//                bundle.putParcelableArrayList("tags", data);
                 if (flag) {
                     notifySuccess(bundle);
                 } else {

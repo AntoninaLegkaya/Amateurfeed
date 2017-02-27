@@ -12,8 +12,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
-import com.dbbest.amateurfeed.utils.Utils;
-
 import java.util.HashMap;
 
 /**
@@ -208,9 +206,6 @@ public class FeedProvider extends ContentProvider {
 
         if (c.moveToFirst()) {
 
-            Log.i(PROVIDER, "Preview table: TITLE:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_TITLE)));
-            Log.i(PROVIDER, "Preview table: Author:" + c.getString(c.getColumnIndex(FeedContract.PreviewEntry.COLUMN_AUTHOR)));
-            Log.i(PROVIDER, "Tag table: TAG_NAME:" + c.getString(c.getColumnIndex(FeedContract.TagEntry.COLUMN_NAME)));
 
             Log.i(PROVIDER, DatabaseUtils.dumpCursorToString(c));
 
@@ -319,7 +314,7 @@ public class FeedProvider extends ContentProvider {
         return c;
     }
 
-    private int updateLikeColumnInPreview(Uri uri, ContentValues cv, String selection, String[] selectionArgs) {
+    private int updateColumnInPreview(Uri uri, ContentValues cv, String selection, String[] selectionArgs) {
 
         String id = uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION);
 
@@ -688,8 +683,8 @@ public class FeedProvider extends ContentProvider {
                 break;
             case PREVIEW_ID:
 
-                rowsUpdated = updateLikeColumnInPreview(uri, values, selection, selectionArgs);
-//                Log.i(PROVIDER, " Call  updateLikeColumnInPreview: Response updated:" + rowsUpdated);
+                rowsUpdated = updateColumnInPreview(uri, values, selection, selectionArgs);
+//                Log.i(PROVIDER, " Call  updateColumnInPreview: Response updated:" + rowsUpdated);
                 break;
             case COMMENT:
                 rowsUpdated = db.update(FeedContract.CommentEntry.TABLE_NAME, values, selection, selectionArgs);

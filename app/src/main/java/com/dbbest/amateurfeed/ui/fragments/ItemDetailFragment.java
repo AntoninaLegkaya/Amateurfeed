@@ -175,17 +175,18 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                     if (tags != null) {
                         for (String tag : tags) {
 
-                            Log.i(DETAIL_FRAGMENT, "[Tag]: " + tag);
+//                            Log.i(DETAIL_FRAGMENT, "[Tag]: " + tag);
                             mPresenter.checkTag(tag);
-
                         }
-                        return true;
                     }
+                    updateDescriptionColumnPreview(textDescription);
+                    return true;
                 }
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -357,7 +358,7 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
             if (cursor.moveToFirst()) {
                 do {
                     names.add(cursor.getString(FeedNewsFragment.COL_TAG_NAME));
-                    Log.i(DETAIL_FRAGMENT, "Compose array tags: " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+//                    Log.i(DETAIL_FRAGMENT, "Compose array tags: " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -375,6 +376,17 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                 null,
                 null
         );
+    }
+
+    private void updateDescriptionColumnPreview(String textDescription) {
+        ContentValues values = new ContentValues();
+        values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textDescription);
+        if (mUriPreview != null) {
+
+            long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetDescriptionInPreviewUriById(id);
+            App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+        }
     }
 
     @Override
@@ -408,7 +420,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         }
         if (view.getId() == R.id.like_button) {
 
-            Log.i(DETAIL_FRAGMENT, "You click LikeButton!");
             int mCountIsLikes = 0;
             int isLikeFlag = 0;
 
@@ -436,7 +447,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
                 }
 
-                Log.i(DETAIL_FRAGMENT, "Count likes: " + mCountLikes);
                 mLikesCountView.setText(String.valueOf(mCountIsLikes));
                 ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag, mCountIsLikes);
             } else {
