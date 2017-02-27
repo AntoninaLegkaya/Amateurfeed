@@ -123,6 +123,9 @@
     <string name="set_delete_error" translatable="false">You do not  Post Abuse :(</string>
     <string name="set_good_by" translatable="false">By! :)</string>
 
+    <!--Item Detail Dialod-->
+    <string name="change_image" translatable="false">You invoke change image option</string>
+
     <!-- Date format [CHAR LIMIT=NONE] -->
     <string name="format_full_friendly_date" translatable="false"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
 

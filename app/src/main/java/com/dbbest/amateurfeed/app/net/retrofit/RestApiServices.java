@@ -83,7 +83,7 @@ public interface RestApiServices {
     Call<ResponseWrapper<Object>> postAbuse(@Header("Authorization") String token, @Body AbuseModel abuseModel);
 
     @PUT("news/{id}")
-    Call<ResponseWrapper<NewsResponseModel>> editeSpecifiedNews(@Body NewsUpdateModel updateModel, @Path("id") int id);
+    Call<ResponseWrapper<NewsResponseModel>> editSpecifiedNews(@Body NewsUpdateModel updateModel, @Path("id") int id);
 
     @GET("news/my")
     Call<ResponseWrapper<ArrayList<UserNewsModel>>> getSpecifiedNewsByUser();

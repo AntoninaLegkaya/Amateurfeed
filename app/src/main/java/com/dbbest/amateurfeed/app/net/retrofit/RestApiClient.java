@@ -13,8 +13,10 @@ import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
 import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
 import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
+import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
+import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.utils.ActionUtils;
 import com.dbbest.amateurfeed.utils.Utils;
@@ -114,5 +116,9 @@ public class RestApiClient {
 
     public ResponseWrapper<ArrayList<TagModel>> checkTagName(String token, String tagName) {
         return executeCall(mApiService.checkTags(token, tagName));
+    }
+
+    public ResponseWrapper<NewsResponseModel> editNews(NewsUpdateModel updateModel, int id) {
+        return executeCall(mApiService.editSpecifiedNews(updateModel, id));
     }
 }

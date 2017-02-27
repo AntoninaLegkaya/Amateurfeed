@@ -1,16 +1,24 @@
 package com.dbbest.amateurfeed.ui;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,12 +39,19 @@ import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.BottomTab;
 import com.dbbest.amateurfeed.utils.TabManager;
+import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Stack;
 
 import static com.dbbest.amateurfeed.R.id.imageView;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, ItemDetailFragment.Callback {
@@ -49,6 +64,10 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     public static final String PROFILE_FRAGMENT_TAG = "PTAG";
     public static final String EDIT_PROFILE_FRAGMENT_TAG = "PREFTAG";
     public static final String MANAGE_FRAGMENTS = "ManageFragments";
+    public static int RESULT_LOAD_IMAGE = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private String userChosenTask;
     private DialogFragment mProgressDialog;
     private TabManager mTabManager;
 
@@ -293,6 +312,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     }
 
+
     private void refreshContent() {
 
         Log.i(MANAGE_FRAGMENTS, "Refresh Content");
@@ -373,13 +393,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     protected void onStop() {
         super.onStop();
         mPresenter.detachView();
-    }
-
-
-    @NonNull
-    @Override
-    public Context getContext() {
-        return null;
     }
 
 
@@ -561,7 +574,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     @Override
     public void showSuccessLikeDialog() {
-        UIDialogNavigation.showWarningDialog(R.string.set_like_succes).show(getSupportFragmentManager(), "warn");
+//        UIDialogNavigation.showWarningDialog(R.string.set_like_succes).show(getSupportFragmentManager(), "warn");
     }
 
     @Override
@@ -614,6 +627,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     @Override
     public void onEditItemSelected(Uri uri) {
 
+
     }
 
     @Override
@@ -624,4 +638,9 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     }
 
 
+    @NonNull
+    @Override
+    public Context getContext() {
+        return this;
+    }
 }

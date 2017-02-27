@@ -49,7 +49,6 @@ public class CheckTagCommand extends Command {
         RestApiClient apiClient = App.getApiFactory().restClient();
         AuthToken authToken = new AuthToken();
 
-
         ResponseWrapper<ArrayList<TagModel>> response = apiClient.checkTagName(authToken.bearer(), mTagName);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {

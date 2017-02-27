@@ -1,16 +1,23 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +33,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.App;
@@ -36,20 +42,21 @@ import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
-import com.dbbest.amateurfeed.ui.HomeActivity;
+import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import static android.R.attr.angle;
-import static android.R.attr.description;
-import static android.R.attr.name;
-import static android.R.attr.tag;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-import static com.dbbest.amateurfeed.utils.Utils.TAG_LOG_LOAD_NEW_DATA;
-import static com.dbbest.amateurfeed.utils.Utils.getTagsPattern;
+import static com.dbbest.amateurfeed.ui.HomeActivity.MANAGE_FRAGMENTS;
+import static com.dbbest.amateurfeed.ui.HomeActivity.RESULT_LOAD_IMAGE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by antonina on 24.01.17.
@@ -60,6 +67,11 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     private static final String PARAM_KEY = "param_key";
     public static final String DETAIL_URI = "URI";
     public static final String DETAIL_TYPE = "TYPE_ITEM";
+
+    public static int RESULT_LOAD_IMAGE = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private String userChosenTask;
 
     private static final int DETAIL_NEWS_LOADER = 1;
     private int mLayoutType;
@@ -174,7 +186,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                     String[] tags = Utils.getTagsPattern(textDescription);
                     if (tags != null) {
                         for (String tag : tags) {
-
 //                            Log.i(DETAIL_FRAGMENT, "[Tag]: " + tag);
                             mPresenter.checkTag(tag);
                         }
@@ -217,23 +228,31 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         mCommentButton = (Button) itemView.findViewById(R.id.add_comment_button);
         mCommentButton.setOnClickListener(this);
 
-
-        switch (mLayoutType) {
-
-            case PreviewAdapter.VIEW_TYPE_MY: {
-                mEditButton = (ImageButton) itemView.findViewById(R.id.edit_button);
-                if (mEditButton != null) {
-                    mEditButton.setOnClickListener(this);
-                }
-
-                mChangeIconLink = (TextView) itemView.findViewById(R.id.change_image_link);
-                if (mChangeIconLink != null) {
-                    mChangeIconLink.setOnClickListener(this);
-                }
-                break;
-            }
-
+        mChangeIconLink = (TextView) itemView.findViewById(R.id.change_image_link);
+        if (mChangeIconLink != null) {
+            mChangeIconLink.setOnClickListener(this);
         }
+
+        mEditButton = (ImageButton) itemView.findViewById(R.id.edit_button);
+        if (mEditButton != null) {
+            mEditButton.setOnClickListener(this);
+        }
+//        switch (mLayoutType) {
+//
+//            case PreviewAdapter.VIEW_TYPE_MY: {
+//                mEditButton = (ImageButton) itemView.findViewById(R.id.edit_button);
+//                if (mEditButton != null) {
+//                    mEditButton.setOnClickListener(this);
+//                }
+//
+//                mChangeIconLink = (TextView) itemView.findViewById(R.id.change_image_link);
+//                if (mChangeIconLink != null) {
+//                    mChangeIconLink.setOnClickListener(this);
+//                }
+//                break;
+//            }
+//
+//        }
 
         mRemoveButton = (ImageButton) itemView.findViewById(R.id.delete_button);
         mRemoveButton.setOnClickListener(this);
@@ -351,19 +370,20 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
     }
 
-    public ArrayList<String> getTags(long mIdPreview) {
+    public ArrayList<TagModel> getTags(long mIdPreview) {
         Cursor cursor = getTagCursor(mIdPreview);
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<TagModel> tagModels = new ArrayList<TagModel>();
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    names.add(cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+                    TagModel tagModel = new TagModel(cursor.getInt(FeedNewsFragment.COL_TAG_ID), cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+                    tagModels.add(tagModel);
 //                    Log.i(DETAIL_FRAGMENT, "Compose array tags: " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
                 } while (cursor.moveToNext());
             }
             cursor.close();
         }
-        return names;
+        return tagModels;
     }
 
     private Cursor getTagCursor(long mIdPreview) {
@@ -410,6 +430,9 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
         }
         if (view.getId() == R.id.change_image_link) {
+
+//            ((Callback) getActivity()).chooseNewImage();
+            selectImage();
 
         }
 
@@ -467,16 +490,16 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         // Insert the tags news information into the database
 
         TagModel tagModel = bundle.getParcelable("tagModel");
-        ArrayList<String> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+        ArrayList<TagModel> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
 
         if (tagModel != null) {
             Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
 
             boolean flag = true;
-            for (String nameTag : tags) {
+            for (TagModel model : tags) {
 
 
-                if (tagModel.getName().equals(nameTag)) {
+                if (tagModel.getName().equals(model.getName())) {
 
                     Log.i(DETAIL_FRAGMENT, "You have tag: " + tagModel.getName());
                     flag = false;
@@ -526,6 +549,110 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
         public void moveToFeedFragment();
 
+
     }
 
+    private void selectImage() {
+        final CharSequence[] items = {"Take Photo", "Choose from Library",
+                "Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result = Utils.checkPermission(getContext());
+                if (items[item].equals("Take Photo")) {
+                    userChosenTask = "Take Photo";
+                    if (result)
+                        cameraIntent();
+                } else if (items[item].equals("Choose from Library")) {
+                    userChosenTask = "Choose from Library";
+                    if (result)
+                        galleryIntent();
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+    }
+
+
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case Utils.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (userChosenTask.equals("Take Photo"))
+                        cameraIntent();
+                    else if (userChosenTask.equals("Choose from Library"))
+                        galleryIntent();
+                } else {
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mImageView.setImageBitmap(thumbnail);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm = null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        mImageView.setImageBitmap(bm);
+    }
 }
