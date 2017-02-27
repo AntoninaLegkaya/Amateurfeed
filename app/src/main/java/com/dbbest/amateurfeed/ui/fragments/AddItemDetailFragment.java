@@ -59,4 +59,8 @@ public class AddItemDetailFragment extends Fragment implements DetailView {
     }
 
 
+    @Override
+    public void addTagToItemDetail(Bundle data) {
+
+    }
 }

@@ -24,6 +24,11 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
 
     private static String TAG_ADAPTER="Tag Adapter ";
     private Context mContext;
+
+    public Cursor getCursor() {
+        return mCursor;
+    }
+
     private Cursor mCursor;
 
 

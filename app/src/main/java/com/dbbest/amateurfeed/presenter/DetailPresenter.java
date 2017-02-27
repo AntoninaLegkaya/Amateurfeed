@@ -3,12 +3,15 @@ package com.dbbest.amateurfeed.presenter;
 import android.common.framework.Presenter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.command.CheckTagCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.SetLikeCommand;
+import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
+import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 import com.dbbest.amateurfeed.view.HomeView;
 import com.dbbest.amateurfeed.view.SignUpView;
@@ -52,6 +55,11 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
     @Override
     public void onSuccess(int code, Bundle data) {
         if (getView() != null) {
+            if (code == CODE_CHECK_TAG) {
+
+                getView().addTagToItemDetail(data);
+            }
+
         }
     }
 

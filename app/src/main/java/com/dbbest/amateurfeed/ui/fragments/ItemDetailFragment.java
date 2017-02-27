@@ -1,5 +1,6 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -33,11 +34,18 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
+import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
 import com.dbbest.amateurfeed.ui.HomeActivity;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
+import static android.R.attr.angle;
+import static android.R.attr.description;
+import static android.R.attr.name;
 import static android.R.attr.tag;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static com.dbbest.amateurfeed.utils.Utils.TAG_LOG_LOAD_NEW_DATA;
@@ -159,6 +167,21 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
                 ((Callback) getActivity()).moveToFeedFragment();
                 return true;
+            case R.id.action:
+
+                String textDescription = mDescriptionView.getText().toString();
+                if (textDescription != null) {
+                    String[] tags = Utils.getTagsPattern(textDescription);
+                    if (tags != null) {
+                        for (String tag : tags) {
+
+                            Log.i(DETAIL_FRAGMENT, "[Tag]: " + tag);
+                            mPresenter.checkTag(tag);
+
+                        }
+                        return true;
+                    }
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -262,18 +285,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                 if (description != null) {
                     mDescriptionView.setText(description);
 
-                    String[] tags = Utils.getTagsPattern(description);
-                    if (tags != null) {
-                        for (String tag : tags) {
-
-                            Log.i(DETAIL_FRAGMENT, "[Tag]: " + tag);
-                            mPresenter.checkTag(tag);
-
-
-                        }
-                    } else {
-                        Log.i(DETAIL_FRAGMENT, "[Tags]: " + null);
-                    }
                 }
 
 
@@ -327,15 +338,7 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                 int count = mCursorComments.getCount();
                 mCommentCountView.setText(String.valueOf(count));
 
-                Uri uriTagsList = FeedContract.TagEntry.getTagsListById(mIdPreview);
-
-                Cursor mCursorTags = App.instance().getContentResolver().query(
-                        uriTagsList,
-                        null,
-                        null,
-                        null,
-                        null
-                );
+                Cursor mCursorTags = getTagCursor(mIdPreview);
 
                 if (mCursorTags.moveToFirst()) {
                     mHorizontalListAdapter.swapCursor(mCursorTags);
@@ -345,6 +348,33 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
             }
         }
 
+    }
+
+    public ArrayList<String> getTags(long mIdPreview) {
+        Cursor cursor = getTagCursor(mIdPreview);
+        ArrayList<String> names = new ArrayList<String>();
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    names.add(cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+                    Log.i(DETAIL_FRAGMENT, "Compose array tags: " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        return names;
+    }
+
+    private Cursor getTagCursor(long mIdPreview) {
+        Uri uriTagsList = FeedContract.TagEntry.getTagsListById(mIdPreview);
+
+        return App.instance().getContentResolver().query(
+                uriTagsList,
+                null,
+                null,
+                null,
+                null
+        );
     }
 
     @Override
@@ -419,6 +449,58 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         }
 
 
+    }
+
+    @Override
+    public void addTagToItemDetail(Bundle bundle) {
+
+        // Insert the tags news information into the database
+
+        TagModel tagModel = bundle.getParcelable("tagModel");
+        ArrayList<String> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+
+        if (tagModel != null) {
+            Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
+
+            boolean flag = true;
+            for (String nameTag : tags) {
+
+
+                if (tagModel.getName().equals(nameTag)) {
+
+                    Log.i(DETAIL_FRAGMENT, "You have tag: " + tagModel.getName());
+                    flag = false;
+
+                }
+
+
+            }
+            if (flag) {
+
+                Log.i(DETAIL_FRAGMENT, "You try add new tag: " + tagModel.getName());
+                ContentValues tagValues = new ContentValues();
+                tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
+                tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
+                tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+                cVTagsVector.add(tagValues);
+
+                Log.i(DETAIL_FRAGMENT, "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " " + "name: " + tagModel.getName() + " " +
+                        "preview_id: " + FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+
+                if (cVTagsVector.size() > 0) {
+                    ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
+                    cVTagsVector.toArray(cvArray);
+                    App.instance().getContentResolver().bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
+                    Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+                    mHorizontalListAdapter.swapCursor(newTagCursor);
+
+                }
+            } else {
+                Log.i(DETAIL_FRAGMENT, "Nothing to add");
+            }
+
+
+        }
     }
 
     public interface Callback {

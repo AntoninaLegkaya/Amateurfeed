@@ -590,7 +590,7 @@ public class FeedProvider extends ContentProvider {
 
 
                     returnUri = FeedContract.CreatorEntry.buildCreatorUri(_id);
-                    Log.i(PROVIDER, " Item by _ID: " + _id + "Created inserted into  creator BD");
+                    Log.i(PROVIDER, " Item by _ID: " + _id + " Created inserted into  creator.table");
                 } else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -689,7 +689,7 @@ public class FeedProvider extends ContentProvider {
             case PREVIEW_ID:
 
                 rowsUpdated = updateLikeColumnInPreview(uri, values, selection, selectionArgs);
-                Log.i(PROVIDER, " Call  updateLikeColumnInPreview: Response updated:" + rowsUpdated);
+//                Log.i(PROVIDER, " Call  updateLikeColumnInPreview: Response updated:" + rowsUpdated);
                 break;
             case COMMENT:
                 rowsUpdated = db.update(FeedContract.CommentEntry.TABLE_NAME, values, selection, selectionArgs);
@@ -768,6 +768,24 @@ public class FeedProvider extends ContentProvider {
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(FeedContract.UserNewsEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            }
+
+            case TAG: {
+                db.beginTransaction();
+                int returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(FeedContract.TagEntry.TABLE_NAME, null, value);
                         if (_id != -1) {
                             returnCount++;
                         }
