@@ -1,24 +1,15 @@
 package com.dbbest.amateurfeed.ui;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,28 +24,21 @@ import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
-import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
+import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.BottomTab;
 import com.dbbest.amateurfeed.utils.TabManager;
-import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Stack;
 
 import static com.dbbest.amateurfeed.R.id.imageView;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
-public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, ItemDetailFragment.Callback {
+public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, EditItemDetailFragment.Callback {
 
     private static String TAG_HOME = "HomeActivity";
 
@@ -145,8 +129,8 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
             outState.putString("tag", mCurrenTag);
             outState.putSerializable("stacks", backStacks);
             if (mArgsDetail != null) {
-                outState.putParcelable(ItemDetailFragment.DETAIL_URI, mArgsDetail.getParcelable(ItemDetailFragment.DETAIL_URI));
-                outState.putInt(ItemDetailFragment.DETAIL_TYPE, mArgsDetail.getInt(ItemDetailFragment.DETAIL_TYPE));
+                outState.putParcelable(EditItemDetailFragment.DETAIL_URI, mArgsDetail.getParcelable(EditItemDetailFragment.DETAIL_URI));
+                outState.putInt(EditItemDetailFragment.DETAIL_TYPE, mArgsDetail.getInt(EditItemDetailFragment.DETAIL_TYPE));
             }
 
         }
@@ -263,7 +247,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
         detailStack.push(DETAIL_NEWS_FRAGMENT_TAG);
         Log.i(MANAGE_FRAGMENTS, "Create Item Detail Fragment [Tag]: " + detailStack.peek());
-        Fragment instantiateDetailFragment = Fragment.instantiate(this, ItemDetailFragment.class.getName());
+        Fragment instantiateDetailFragment = Fragment.instantiate(this, EditItemDetailFragment.class.getName());
         instantiateDetailFragment.setArguments(args);
         transaction.add(android.R.id.tabcontent, instantiateDetailFragment, detailStack.peek());
         transaction.commit();
@@ -442,7 +426,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     @Override
     public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-
         int layoutId = -1;
         switch (vh.getItemViewType()) {
 
@@ -462,39 +445,35 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
         }
 
-
         mArgsDetail = new Bundle();
-        mArgsDetail.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
-        mArgsDetail.putInt(ItemDetailFragment.DETAIL_TYPE, layoutId);
-//        Fragment fragment = Fragment.instantiate(this, ItemDetailFragment.class.getName());
-//        fragment.setArguments(args);
-        Fragment fragment = ItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
+        mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
+        mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);
+
+        Fragment fragment = EditItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
         fragment.setArguments(mArgsDetail);
 
 
         addFragment(mArgsDetail);
 
-//        Stack<String> backStack = backStacks.get(BottomTab.getByTag(DETAIL_NEWS_FRAGMENT_TAG));
-//        if (backStack != null) {
-//            showFragment(backStack, getSupportFragmentManager().beginTransaction());
-//        }
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(android.R.id.tabcontent, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
-//                .commit();
 
     }
 
     @Override
     public void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
-//        Bundle args = new Bundle();
-//        args.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
-//        mDetailFragment = ItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
-//        mDetailFragment.setArguments(args);
-//
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(android.R.id.tabcontent, mDetailFragment, DETAIL_NEWS_FRAGMENT_TAG)
-//                .commit();
+
+
+        int layoutId = R.layout.fragment_item_edit_my_detail;
+        mArgsDetail = new Bundle();
+        mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
+        mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);
+
+        Fragment fragment = EditItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
+        fragment.setArguments(mArgsDetail);
+
+
+        addFragment(mArgsDetail);
+
+
     }
 
     @Override

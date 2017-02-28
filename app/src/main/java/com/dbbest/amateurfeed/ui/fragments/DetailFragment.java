@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.presenter.DetailPresenter;
 import com.dbbest.amateurfeed.presenter.EditeItemDetailPresenter;
 import com.dbbest.amateurfeed.view.DetailView;
 
@@ -17,12 +16,12 @@ import com.dbbest.amateurfeed.view.DetailView;
  * Created by antonina on 24.01.17.
  */
 
-public class EditeItemDetailFragment  extends Fragment implements DetailView {
+public class DetailFragment extends Fragment implements DetailView {
     private static final String PARAM_KEY = "param_key";
     EditeItemDetailPresenter mPresenter;
 
-    public static EditeItemDetailFragment newInstance(String key) {
-        EditeItemDetailFragment fragment = new EditeItemDetailFragment();
+    public static DetailFragment newInstance(String key) {
+        DetailFragment fragment = new DetailFragment();
         Bundle bundle = new Bundle();
         bundle.putString(PARAM_KEY, key);
         fragment.setArguments(bundle);

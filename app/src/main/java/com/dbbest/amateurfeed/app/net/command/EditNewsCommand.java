@@ -12,15 +12,13 @@ import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
-import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
+import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 
 import java.util.ArrayList;
 
-import static android.R.attr.tag;
-
 public class EditNewsCommand extends Command {
 
-    private TagModel mTagModel;
+//    private TagModel mTagModel;
     private ArrayList<TagModel> mTagModels;
     private String mTitle;
     private String mText;
@@ -28,8 +26,8 @@ public class EditNewsCommand extends Command {
     private NewsUpdateModel mNewsUpdateModel;
     private int mId;
 
-    public EditNewsCommand(TagModel tagModel, ArrayList<TagModel> tagModels, String title, String text, String image, int id) {
-        mTagModel = tagModel;
+    public EditNewsCommand( ArrayList<TagModel> tagModels, String title, String text, String image, int id) {
+//        mTagModel = tagModel;
         mTagModels = tagModels;
         mTitle = title;
         mText = text;
@@ -68,7 +66,7 @@ public class EditNewsCommand extends Command {
             if (response.isSuccessful() && response.data() != null) {
                 NewsResponseModel data = response.data();
 
-                Log.i(ItemDetailFragment.DETAIL_FRAGMENT, "Response edit News Command: " + data.getId());
+                Log.i(EditItemDetailFragment.DETAIL_FRAGMENT, "Response edit News Command: " + data.getId());
 
                 notifySuccess(Bundle.EMPTY);
 

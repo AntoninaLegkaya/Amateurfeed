@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,12 +18,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,34 +41,35 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.App;
+import com.dbbest.amateurfeed.BuildConfig;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
-import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
-import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
-import static com.dbbest.amateurfeed.ui.HomeActivity.MANAGE_FRAGMENTS;
-import static com.dbbest.amateurfeed.ui.HomeActivity.RESULT_LOAD_IMAGE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by antonina on 24.01.17.
  */
 
-public class ItemDetailFragment extends Fragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class EditItemDetailFragment extends Fragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
     public final static String DETAIL_FRAGMENT = "DetailFragment";
+    public final static String DETAIL_FRAGMENT_IMAGE = "DetailFragmentI_image";
     private static final String PARAM_KEY = "param_key";
     public static final String DETAIL_URI = "URI";
     public static final String DETAIL_TYPE = "TYPE_ITEM";
@@ -77,7 +83,9 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     private int mLayoutType;
     private Uri mUriPreview;
     private TextView mChangeIconLink;
-    DetailPresenter mPresenter;
+    private DetailPresenter mPresenter;
+    private String encImage;
+    private String mCurrentPhotoPath;
 
 
     public ImageView mIconView;
@@ -100,8 +108,8 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     private int mDisLikeImage = R.drawable.ic_favorite_border_black_24dp;
 
 
-    public static ItemDetailFragment newInstance(String key) {
-        ItemDetailFragment fragment = new ItemDetailFragment();
+    public static EditItemDetailFragment newInstance(String key) {
+        EditItemDetailFragment fragment = new EditItemDetailFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(PARAM_KEY, key);
@@ -109,7 +117,7 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         return fragment;
     }
 
-    public ItemDetailFragment() {
+    public EditItemDetailFragment() {
         setHasOptionsMenu(true);
     }
 
@@ -190,6 +198,8 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                             mPresenter.checkTag(tag);
                         }
                     }
+
+
                     updateDescriptionColumnPreview(textDescription);
                     return true;
                 }
@@ -203,8 +213,8 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mUriPreview = arguments.getParcelable(ItemDetailFragment.DETAIL_URI);
-            mLayoutType = arguments.getInt(ItemDetailFragment.DETAIL_TYPE);
+            mUriPreview = arguments.getParcelable(EditItemDetailFragment.DETAIL_URI);
+            mLayoutType = arguments.getInt(EditItemDetailFragment.DETAIL_TYPE);
         }
         View itemView = inflater.inflate(mLayoutType, container, false);
 
@@ -431,7 +441,6 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         }
         if (view.getId() == R.id.change_image_link) {
 
-//            ((Callback) getActivity()).chooseNewImage();
             selectImage();
 
         }
@@ -553,20 +562,20 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     }
 
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
+        final CharSequence[] items = {"Take Photo from Camera", "Choose from Gallery",
                 "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Add Photo!");
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
+//        builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 boolean result = Utils.checkPermission(getContext());
-                if (items[item].equals("Take Photo")) {
-                    userChosenTask = "Take Photo";
+                if (items[item].equals("Take Photo from Camera")) {
+                    userChosenTask = "Take Photo from Camera";
                     if (result)
-                        cameraIntent();
-                } else if (items[item].equals("Choose from Library")) {
-                    userChosenTask = "Choose from Library";
+                        startCamera();
+                } else if (items[item].equals("Choose from Gallery")) {
+                    userChosenTask = "Choose from Gallery";
                     if (result)
                         galleryIntent();
                 } else if (items[item].equals("Cancel")) {
@@ -574,7 +583,68 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
                 }
             }
         });
+
         builder.show();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Log.i(DETAIL_FRAGMENT_IMAGE, " onRequestPermissionsResult: requestCode: " + requestCode);
+        if (requestCode == Utils.MY_PERMISSIONS_REQUEST_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (userChosenTask.equals("Take Photo from Camera")) {
+                    Log.i(DETAIL_FRAGMENT_IMAGE, " onRequestPermissionsResult: Start camera ");
+                    startCamera();
+                } else if (userChosenTask.equals("Choose from Gallery"))
+                    galleryIntent();
+            } else {
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CAMERA) {
+                Log.i(DETAIL_FRAGMENT_IMAGE, "  onActivityResult: Show image ");
+                Uri imageUri = Uri.parse(mCurrentPhotoPath);
+                File file = new File(imageUri.getPath());
+                try {
+                    InputStream ims = new FileInputStream(file);
+
+                    Bitmap bm = BitmapFactory.decodeStream(ims);
+                    mImageView.setImageBitmap(bm);
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                    byte[] b = bytes.toByteArray();
+                    encImage = Base64.encodeToString(b, Base64.DEFAULT);
+                    Log.i(DETAIL_FRAGMENT_IMAGE, "Image Base64:  " + encImage);
+                } catch (FileNotFoundException e) {
+                    return;
+                }
+
+                // ScanFile so it will be appeared on Gallery
+                MediaScannerConnection.scanFile(getContext(),
+                        new String[]{imageUri.getPath()}, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                            }
+                        });
+            } else if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+
+        }
+
+    }
+
+
+    void startCamera() {
+        try {
+            dispatchTakePictureIntent();
+        } catch (IOException e) {
+        }
     }
 
     private void galleryIntent() {
@@ -585,61 +655,49 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
     }
 
 
-    private void cameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);
-    }
+    private void dispatchTakePictureIntent() throws IOException {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Log.i(DETAIL_FRAGMENT_IMAGE, "Ensure that there's a camera activity to handle the intent ");
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            Log.i(DETAIL_FRAGMENT_IMAGE, "Create the File where the photo should go ");
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.i(DETAIL_FRAGMENT_IMAGE, "Error occurred while creating the File ");
+                return;
+            }
 
+            if (photoFile != null) {
+                Log.i(DETAIL_FRAGMENT_IMAGE, "Continue... The File was successfully created ");
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        createImageFile());
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case Utils.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChosenTask.equals("Take Photo"))
-                        cameraIntent();
-                    else if (userChosenTask.equals("Choose from Library"))
-                        galleryIntent();
-                } else {
-                }
-                break;
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_CAMERA);
+            }
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
 
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_FILE)
-                onSelectFromGalleryResult(data);
-            else if (requestCode == REQUEST_CAMERA)
-                onCaptureImageResult(data);
-        }
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        Log.i(DETAIL_FRAGMENT_IMAGE, "Save a file: path for use with ACTION_VIEW intents: " + mCurrentPhotoPath);
+        return image;
     }
 
-    private void onCaptureImageResult(Intent data) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mImageView.setImageBitmap(thumbnail);
-    }
 
     @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
@@ -654,5 +712,12 @@ public class ItemDetailFragment extends Fragment implements DetailView, LoaderMa
         }
 
         mImageView.setImageBitmap(bm);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        byte[] b = bytes.toByteArray();
+        encImage = Base64.encodeToString(b, Base64.DEFAULT);
+        Log.i(DETAIL_FRAGMENT_IMAGE, "Image Base64:  " + encImage);
+
     }
 }

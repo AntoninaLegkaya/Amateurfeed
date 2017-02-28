@@ -3,25 +3,20 @@ package com.dbbest.amateurfeed.presenter;
 import android.common.framework.Presenter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.command.CheckTagCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
-import com.dbbest.amateurfeed.app.net.command.SetLikeCommand;
-import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
-import com.dbbest.amateurfeed.utils.Utils;
+import com.dbbest.amateurfeed.app.net.command.EditNewsCommand;
+import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.view.DetailView;
-import com.dbbest.amateurfeed.view.HomeView;
-import com.dbbest.amateurfeed.view.SignUpView;
 
-import static android.R.attr.id;
-import static com.dbbest.amateurfeed.R.string.like;
+import java.util.ArrayList;
 
 public class DetailPresenter extends Presenter<DetailView> implements CommandResultReceiver.CommandListener {
 
     private static final int CODE_CHECK_TAG = 0;
+    private static final int CODE_EDIT_NEWS = 1;
     private CommandResultReceiver mResultReceiver;
 
 
@@ -32,6 +27,17 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
         }
         Command command = new CheckTagCommand(tag);
         command.send(CODE_CHECK_TAG, mResultReceiver);
+
+
+    }
+
+    public void updateNews(TagModel tagModel, ArrayList<TagModel> tagModels, String title, String text, String image, int id) {
+        if (getView() != null) {
+            DetailView view = getView();
+
+        }
+        Command command = new EditNewsCommand(tagModels, title, text, image, id);
+        command.send(CODE_EDIT_NEWS, mResultReceiver);
 
 
     }
@@ -58,6 +64,10 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
             if (code == CODE_CHECK_TAG) {
 
                 getView().addTagToItemDetail(data);
+            }
+            if (code == CODE_EDIT_NEWS) {
+
+
             }
 
         }

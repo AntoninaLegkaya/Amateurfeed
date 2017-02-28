@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
@@ -151,6 +151,12 @@
         <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
         <item name="colorAccent">@color/primary</item>
     </style>
-
+    <!--Alert Dialog-->
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColor">@color/app_black</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>

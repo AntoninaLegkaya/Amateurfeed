@@ -3,26 +3,14 @@ package com.dbbest.amateurfeed.app.net.command;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
-import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
-import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
-import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
-import com.dbbest.amateurfeed.model.CurrentUser;
 import com.dbbest.amateurfeed.model.TagModel;
-import com.dbbest.amateurfeed.ui.fragments.ItemDetailFragment;
-import com.dbbest.amateurfeed.utils.Utils;
 
 import java.util.ArrayList;
-
-import static android.R.attr.data;
-import static android.R.attr.tag;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 public class CheckTagCommand extends Command {
     private String mTagName;

@@ -4,6 +4,9 @@
     <string name="content_authority" translatable="false">com.dbbest.amateurfeed.app</string>
     <string name="app_name">Amateurfeed</string>
 
+    <!--File Provider-->
+    <string name="file_provider_authority" translatable="false">com.dbbest.amateurfeed.provider</string>
+
     <!-- SyncAdapter related -->
     <string name="sync_account_type" translatable="false">amateurfeed.dbbest.com</string>
 
