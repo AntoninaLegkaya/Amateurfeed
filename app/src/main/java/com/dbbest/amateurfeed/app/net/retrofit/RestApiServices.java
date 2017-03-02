@@ -12,6 +12,7 @@ import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
+import com.dbbest.amateurfeed.model.AzureServiceSettings;
 import com.dbbest.amateurfeed.model.DeviceInfoModel;
 import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
@@ -27,13 +28,11 @@ import java.util.Dictionary;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Retrofit;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -83,7 +82,7 @@ public interface RestApiServices {
     Call<ResponseWrapper<Object>> postAbuse(@Header("Authorization") String token, @Body AbuseModel abuseModel);
 
     @PUT("news/{id}")
-    Call<ResponseWrapper<NewsResponseModel>> editSpecifiedNews(@Body NewsUpdateModel updateModel, @Path("id") int id);
+    Call<ResponseWrapper<NewsResponseModel>> editSpecifiedNews(@Header("Authorization") String token, @Body NewsUpdateModel updateModel, @Path("id") int id);
 
     @GET("news/my")
     Call<ResponseWrapper<ArrayList<UserNewsModel>>> getSpecifiedNewsByUser();
@@ -120,4 +119,11 @@ public interface RestApiServices {
 
     @PUT("user/update-settings")
     Call<Object> updateSettings(@Header("Authorization") String token, @Body UserSettingsModel isSettingsUpdateModel);
+
+
+    /*    <---- Settings----> */
+    @GET("settings/azure")
+    Call<ResponseWrapper<AzureServiceSettings>> getAzureInfo(@Header("Authorization") String token);
+
+
 }

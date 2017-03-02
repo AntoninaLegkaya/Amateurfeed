@@ -10,47 +10,40 @@ import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
+import com.dbbest.amateurfeed.model.NewsRequestModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EditNewsCommand extends Command {
 
-//    private TagModel mTagModel;
-    private ArrayList<TagModel> mTagModels;
+    private List<TagModel> mTagModels = new ArrayList<>();
     private String mTitle;
     private String mText;
     private String mImage;
     private NewsUpdateModel mNewsUpdateModel;
     private int mId;
 
-    public EditNewsCommand( ArrayList<TagModel> tagModels, String title, String text, String image, int id) {
-//        mTagModel = tagModel;
-        mTagModels = tagModels;
-        mTitle = title;
-        mText = text;
-        mImage = image;
+    public EditNewsCommand(List<TagModel> tagModels, String title, String text, String image, int id) {
         mId = id;
-        mNewsUpdateModel = new NewsUpdateModel(mTitle, mText, mImage, mTagModels);
+        mNewsUpdateModel = new NewsUpdateModel(tagModels, title, text, image);
 
 
     }
 
     public EditNewsCommand(Parcel in) {
-        mTitle = in.readString();
-        mText = in.readString();
-        this.mTagModels = new ArrayList<TagModel>();
-        in.readList(this.mTagModels, TagModel.class.getClassLoader());
+        super(in);
+        mId = in.readInt();
+        mNewsUpdateModel = in.readParcelable(NewsUpdateModel.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(int flags, Parcel dest) {
-        dest.writeString(mTitle);
-        dest.writeString(mText);
-        dest.writeString(mImage);
-        dest.writeList(mTagModels);
+        dest.writeInt(mId);
+        dest.writeParcelable(mNewsUpdateModel, flags);
 
     }
 
@@ -60,8 +53,16 @@ public class EditNewsCommand extends Command {
         RestApiClient apiClient = App.getApiFactory().restClient();
         AuthToken authToken = new AuthToken();
 
+        Log.i(EditItemDetailFragment.DETAIL_FRAGMENT, "Edit News [_ID]: " + mId + "\n" +
+                "Title: " + mNewsUpdateModel.getTitle() + '\n' +
+                "Description: " + mNewsUpdateModel.getText() + '\n' +
+                "Image: " + mNewsUpdateModel.getImage());
+        for (TagModel model : mNewsUpdateModel.getTags()) {
+            Log.i(EditItemDetailFragment.DETAIL_FRAGMENT, "Tag: " + model.getName() + '\n');
+        }
 
-        ResponseWrapper<NewsResponseModel> response = apiClient.editNews(mNewsUpdateModel, mId);
+
+        ResponseWrapper<NewsResponseModel> response = apiClient.editNews(authToken.bearer(), mNewsUpdateModel, mId);
         if (response != null) {
             if (response.isSuccessful() && response.data() != null) {
                 NewsResponseModel data = response.data();

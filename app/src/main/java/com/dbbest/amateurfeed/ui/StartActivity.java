@@ -42,7 +42,6 @@ public class StartActivity extends AppCompatActivity implements StartView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mPresenter = new StartPresenter();
-
         mLoginEdit = (AppCompatEditText) findViewById(R.id.login);
         mPasswordEdit = (AppCompatEditText) findViewById(R.id.password);
         mLoginBtn = (Button) findViewById(R.id.login_button);

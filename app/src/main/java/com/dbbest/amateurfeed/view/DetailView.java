@@ -10,4 +10,5 @@ import android.os.Bundle;
 public interface DetailView extends IView {
 
     public void addTagToItemDetail(Bundle data);
+    void showSuccessEditNewsDialog();
 }

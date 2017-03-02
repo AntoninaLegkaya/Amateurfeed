@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by antonina on 26.01.17.
@@ -22,7 +23,7 @@ public class NewsUpdateModel implements Parcelable {
     private String mImage;
 
     @SerializedName("tags")
-    private ArrayList<TagModel> mTags;
+    private List<TagModel> mTags= new ArrayList<>();;
 
     public String getTitle() {
         return mTitle;
@@ -36,11 +37,11 @@ public class NewsUpdateModel implements Parcelable {
         return mImage;
     }
 
-    public ArrayList<TagModel> getTags() {
+    public List<TagModel> getTags() {
         return mTags;
     }
 
-    public NewsUpdateModel(String title, String text, String image, ArrayList<TagModel> tags) {
+    public NewsUpdateModel(List<TagModel> tags, String title, String text, String image ) {
 
         mTitle = title;
         mText = text;
@@ -53,22 +54,23 @@ public class NewsUpdateModel implements Parcelable {
         return 0;
     }
 
+
+    private  NewsUpdateModel(Parcel in) {
+        mTitle=in.readString();
+        mText=in.readString();
+        mImage=in.readString();
+        mTags = new ArrayList<TagModel>();
+        in.readTypedList(mTags, TagModel.CREATOR);
+    }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
-
         dest.writeString(mTitle);
         dest.writeString(mText);
         dest.writeString(mImage);
-        dest.writeList(mTags);
+        dest.writeTypedList(mTags);
     }
 
-    public NewsUpdateModel(Parcel in) {
-        mTitle = in.readString();
-        mText = in.readString();
-        this.mTags = new ArrayList<TagModel>();
-        in.readList(this.mTags, TagModel.class.getClassLoader());
-    }
+
 
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<NewsUpdateModel> CREATOR = new Parcelable.Creator<NewsUpdateModel>() {

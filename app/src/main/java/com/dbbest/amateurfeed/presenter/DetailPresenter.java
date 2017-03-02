@@ -11,7 +11,7 @@ import com.dbbest.amateurfeed.app.net.command.EditNewsCommand;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.view.DetailView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DetailPresenter extends Presenter<DetailView> implements CommandResultReceiver.CommandListener {
 
@@ -31,7 +31,7 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
 
     }
 
-    public void updateNews(TagModel tagModel, ArrayList<TagModel> tagModels, String title, String text, String image, int id) {
+    public void updateNews(List<TagModel> tagModels, String title, String text, String image, int id) {
         if (getView() != null) {
             DetailView view = getView();
 

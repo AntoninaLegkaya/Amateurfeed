@@ -47,7 +47,6 @@ public class ResetPasswordCommand extends Command {
                 notifyError(Bundle.EMPTY);
             }
         } else {
-            //TODO Reset response is null!");
         }
 
     }

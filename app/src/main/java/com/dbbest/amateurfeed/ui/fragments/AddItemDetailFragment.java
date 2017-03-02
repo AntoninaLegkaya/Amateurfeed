@@ -63,4 +63,9 @@ public class AddItemDetailFragment extends Fragment implements DetailView {
     public void addTagToItemDetail(Bundle data) {
 
     }
+
+    @Override
+    public void showSuccessEditNewsDialog() {
+
+    }
 }

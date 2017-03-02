@@ -40,6 +40,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.BuildConfig;
 import com.dbbest.amateurfeed.R;
@@ -47,6 +49,7 @@ import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
+import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
@@ -59,6 +62,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -182,25 +186,47 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String upTitle = null;
+        String upDescription = null;
+
         switch (item.getItemId()) {
             case android.R.id.home:
 
                 ((Callback) getActivity()).moveToFeedFragment();
                 return true;
             case R.id.action:
+                if (mLayoutType == R.layout.fragment_item_edit_my_detail) {
+                    String textDescription = mDescriptionView.getText().toString();
+                    if (textDescription != null) {
+                        String[] tags = Utils.getTagsPattern(textDescription);
+                        if (tags != null) {
+                            for (String tag : tags) {
+                                mPresenter.checkTag(tag);
+                            }
+                        }
 
-                String textDescription = mDescriptionView.getText().toString();
-                if (textDescription != null) {
-                    String[] tags = Utils.getTagsPattern(textDescription);
-                    if (tags != null) {
-                        for (String tag : tags) {
-//                            Log.i(DETAIL_FRAGMENT, "[Tag]: " + tag);
-                            mPresenter.checkTag(tag);
+                        long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+                        List<TagModel> newTagsArray = getTags(idPreview);
+                        if (mTitleView != null) {
+
+                            upTitle = mTitleView.getText().toString();
+                            updateTitleColumnPreview(upTitle);
+                        }
+
+                        if (mDescriptionView != null) {
+
+                            upDescription = mDescriptionView.getText().toString();
+                            updateDescriptionColumnPreview(upDescription);
+
+                        }
+
+
+                        if (upTitle != null && encImage != null && upDescription != null && newTagsArray != null) {
+                            encImage = "https://webdefaulttemplate.blob.core.windows.net/images/0F6F50DA-8362-46DA-81F4-9E5B354C2718.jpeg";
+                            mPresenter.updateNews(newTagsArray, upTitle, upDescription, encImage, (int) idPreview);
                         }
                     }
 
-
-                    updateDescriptionColumnPreview(textDescription);
                     return true;
                 }
             default:
@@ -247,22 +273,7 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         if (mEditButton != null) {
             mEditButton.setOnClickListener(this);
         }
-//        switch (mLayoutType) {
-//
-//            case PreviewAdapter.VIEW_TYPE_MY: {
-//                mEditButton = (ImageButton) itemView.findViewById(R.id.edit_button);
-//                if (mEditButton != null) {
-//                    mEditButton.setOnClickListener(this);
-//                }
-//
-//                mChangeIconLink = (TextView) itemView.findViewById(R.id.change_image_link);
-//                if (mChangeIconLink != null) {
-//                    mChangeIconLink.setOnClickListener(this);
-//                }
-//                break;
-//            }
-//
-//        }
+
 
         mRemoveButton = (ImageButton) itemView.findViewById(R.id.delete_button);
         mRemoveButton.setOnClickListener(this);
@@ -301,11 +312,13 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
 
                 long mIdPreview = data.getLong(FeedNewsFragment.COL_FEED_ID);
+
                 Glide.with(this)
                         .load(data.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
                         .error(R.drawable.art_snow)
                         .crossFade()
                         .into(mIconView);
+
 
                 String fullName =
                         data.getString(FeedNewsFragment.COL_AUTHOR);
@@ -339,11 +352,25 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
                 mLikesCountView.setText(String.valueOf(countLikes));
 
 
+                SimpleTarget target = new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                        byte[] b = bytes.toByteArray();
+                        encImage = Base64.encodeToString(b, Base64.DEFAULT);
+                        Log.i(DETAIL_FRAGMENT_IMAGE, "Image Base64:  " + encImage);
+                        mImageView.setImageBitmap(bitmap);
+                    }
+                };
+
                 Glide.with(this)
                         .load(data.getString(FeedNewsFragment.COL_IMAGE))
+                        .asBitmap()
                         .error(R.drawable.art_snow)
-                        .crossFade()
-                        .into(mImageView);
+                        .into(target);
+
+
                 int mIsLike = data.getInt(FeedNewsFragment.COL_IS_LIKE);
                 if (mIsLike == 1) {
                     mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
@@ -415,6 +442,17 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
             long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
             Uri uriPreviewId = FeedContract.PreviewEntry.buildSetDescriptionInPreviewUriById(id);
+            App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+        }
+    }
+
+    private void updateTitleColumnPreview(String textTitle) {
+        ContentValues values = new ContentValues();
+        values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textTitle);
+        if (mUriPreview != null) {
+
+            long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetTitleInPreviewUriById(id);
             App.instance().getContentResolver().update(uriPreviewId, values, null, null);
         }
     }
@@ -543,6 +581,13 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
 
         }
+    }
+
+    @Override
+    public void showSuccessEditNewsDialog() {
+
+        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
+
     }
 
     public interface Callback {

@@ -226,6 +226,8 @@ public class FeedContract {
 
         public static Uri buildSetDescriptionInPreviewUriById(long id) {return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);}
 
+        public static Uri buildSetTitleInPreviewUriById(long id) {return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);}
+
         public static Uri buildPreviewUriByAuthor(String author) {
             return CONTENT_URI.buildUpon().appendPath(author).build();
         }

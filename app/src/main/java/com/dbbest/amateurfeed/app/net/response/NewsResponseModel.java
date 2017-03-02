@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class NewsResponseModel {
 
-    @SerializedName("id")
+    @SerializedName("newsId")
     private int mId;
 
     public int getId() {

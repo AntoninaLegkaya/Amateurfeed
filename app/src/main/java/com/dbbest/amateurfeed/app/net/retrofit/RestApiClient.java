@@ -16,6 +16,7 @@ import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
+import com.dbbest.amateurfeed.model.AzureServiceSettings;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.utils.ActionUtils;
@@ -26,8 +27,9 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.http.Header;
 
-import static android.R.attr.offset;
+import static android.R.attr.id;
 
 /**
  * Created by antonina on 20.01.17.
@@ -114,11 +116,12 @@ public class RestApiClient {
         return executeCall(mApiService.postAbuse(token, model));
     }
 
-    public ResponseWrapper<ArrayList<TagModel>> checkTagName(String token, String tagName) {
-        return executeCall(mApiService.checkTags(token, tagName));
+    public ResponseWrapper<ArrayList<TagModel>> checkTagName(String token, String tagName) {return executeCall(mApiService.checkTags(token, tagName));
     }
 
-    public ResponseWrapper<NewsResponseModel> editNews(NewsUpdateModel updateModel, int id) {
-        return executeCall(mApiService.editSpecifiedNews(updateModel, id));
+    public ResponseWrapper<NewsResponseModel> editNews(String token, NewsUpdateModel updateModel, int id) {return executeCall(mApiService.editSpecifiedNews(token, updateModel, id));
+    }
+
+    public ResponseWrapper<AzureServiceSettings> getAzureInfo(String token) {return executeCall(mApiService.getAzureInfo(token));
     }
 }

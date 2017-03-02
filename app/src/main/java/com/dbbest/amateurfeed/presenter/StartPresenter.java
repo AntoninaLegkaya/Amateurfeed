@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.dbbest.amateurfeed.app.azur.Storage;
+import com.dbbest.amateurfeed.app.azur.StorageFactory;
+import com.dbbest.amateurfeed.app.azur.preferences.CloudPreferences;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
+import com.dbbest.amateurfeed.app.net.command.AzureCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.LoginCommand;
@@ -30,6 +34,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
     private static final int CODE_LOGIN = 0;
     private static final int CODE_REGISTRATION_FB = 1;
+    private static final int CODE_CLOUD_PREF = 2;
 
     private CommandResultReceiver mResultReceiver;
     private UserLocationProvider mLocationProvider;
@@ -77,13 +82,22 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
         command.send(CODE_REGISTRATION_FB, mResultReceiver);
     }
 
+    public void getCloudPreference() {
+        AzureCommand azureCommand= new AzureCommand();
 
+        azureCommand.send(CODE_CLOUD_PREF, mResultReceiver);
+    }
     @Override
     public void onSuccess(int code, Bundle data) {
         getView().dismissProgressDialog();
         if (getView() != null) {
             if (code == CODE_LOGIN) {
+               getCloudPreference();
                 getView().navigateToHomeScreen();
+            }
+            if (code == CODE_CLOUD_PREF) {
+
+                Log.i(Utils.TAG_LOG, "The Cloud Preferences obtain! Cloud Name: "+ new CloudPreferences().getAccountName());
             }
         }
 

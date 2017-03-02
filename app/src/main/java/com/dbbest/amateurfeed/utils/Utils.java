@@ -273,4 +273,45 @@ public class Utils {
             return true;
         }
     }
+
+    /**
+     * Get file name out of file path string
+     */
+    public static String getNameFromPath(String path) {
+
+        if (path == null || path.length() == 0) {
+            return "";
+        }
+        int mid = path.lastIndexOf("/");
+        if (mid == -1) {
+            return path;
+        }
+        return path.substring(mid + 1);
+    }
+
+    /***/
+    public static String getImageMimeType(String path) {
+
+        String ext = getPathExtension(path);
+        if ("jpg".equals(ext) || "jpe".equals(ext)) {
+            ext = "jpeg";
+        }
+        return "image/" + ext;
+
+    }
+
+    public static String getPathExtension(String path) {
+
+        if (path == null)
+            return null;
+
+        int mid = path.lastIndexOf(".");
+        if (mid == -1) {
+            return null;
+        }
+        //String nam = path.substring( 0, mid );
+        String ext = path.substring(mid + 1, path.length());
+
+        return ext.toLowerCase();
+    }
 }

@@ -128,6 +128,7 @@
 
     <!--Item Detail Dialod-->
     <string name="change_image" translatable="false">You invoke change image option</string>
+    <string name="set_edit_success" translatable="false">You Updated News :)</string>
 
     <!-- Date format [CHAR LIMIT=NONE] -->
     <string name="format_full_friendly_date" translatable="false"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
@@ -149,6 +150,14 @@
     <string name="tab_home">Home</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_search">Search</string>
+
+
+    <!-- AZURE configuration direct -->
+    <string name="azure_direct_access_key">insert-access-key-here</string>
+    <string name="azure_container">pictures</string>
+    <string name="txt_acct_name">Account name</string>
+    <string name="txt_access_key">Access Key</string>
+    <string name="txt_container">Container</string>
 
 
 </resources>
