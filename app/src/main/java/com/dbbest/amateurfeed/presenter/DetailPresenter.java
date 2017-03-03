@@ -67,6 +67,7 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
             }
             if (code == CODE_EDIT_NEWS) {
 
+                getView().updateDetailsFields(data);
 
             }
 

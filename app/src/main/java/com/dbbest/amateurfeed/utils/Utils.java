@@ -5,16 +5,26 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -315,4 +325,35 @@ public class Utils {
 
         return ext.toLowerCase();
     }
+    public static boolean externalMemoryAvailable() {
+        if (Environment.isExternalStorageRemovable()) {
+            //device support sd card. We need to check sd card availability.
+            String state = Environment.getExternalStorageState();
+            return state.equals(Environment.MEDIA_MOUNTED) || state.equals(
+                    Environment.MEDIA_MOUNTED_READ_ONLY);
+        } else {
+            //device not support sd card.
+            return false;
+        }
+    }
+
+    //copy sourceFile to destFile
+    public static  void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!sourceFile.exists()) {
+            return;
+        }
+        FileChannel source = new FileInputStream(sourceFile).getChannel();
+        FileChannel destination = new FileOutputStream(destFile).getChannel();
+        if (destination != null && source != null) {
+            destination.transferFrom(source, 0, source.size());
+        }
+        if (source != null) {
+            source.close();
+        }
+        if (destination != null) {
+            destination.close();
+        }
+    }
+
+
 }

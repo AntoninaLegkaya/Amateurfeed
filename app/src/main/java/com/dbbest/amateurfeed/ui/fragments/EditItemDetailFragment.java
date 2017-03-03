@@ -1,15 +1,12 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,9 +44,11 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.app.azur.task.BlobUploadTask;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
+import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
+import com.dbbest.amateurfeed.utils.UtilImagePreferences;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
@@ -58,13 +57,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by antonina on 24.01.17.
@@ -78,8 +74,13 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     public static final String DETAIL_TYPE = "TYPE_ITEM";
 
     public static int RESULT_LOAD_IMAGE = 1;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    //    static final int REQUEST_IMAGE_CAPTURE = 1;
+//    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private static final int PHOTO_REQUEST_CAMERA = 0;//camera
+    private static final int PHOTO_REQUEST_GALLERY = 1;//gallery
+    private static final int PHOTO_REQUEST_CUT = 2;//image crop
+
+
     private String userChosenTask;
 
     private static final int DETAIL_NEWS_LOADER = 1;
@@ -427,7 +428,7 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         if (mUriPreview != null) {
 
             long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetDescriptionInPreviewUriById(id);
+            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetDescriptionInPreviewById(id);
             App.instance().getContentResolver().update(uriPreviewId, values, null, null);
         }
     }
@@ -436,9 +437,18 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         ContentValues values = new ContentValues();
         values.put(FeedContract.PreviewEntry.COLUMN_TITLE, textTitle);
         if (mUriPreview != null) {
-
             long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetTitleInPreviewUriById(id);
+            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetTitleInPreviewById(id);
+            App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+        }
+    }
+
+    private void updateImageUrlColumnPreview(String url) {
+        ContentValues values = new ContentValues();
+        values.put(FeedContract.PreviewEntry.COLUMN_IMAGE, url);
+        if (mUriPreview != null) {
+            long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetImageUrlInPreviewById(id);
             App.instance().getContentResolver().update(uriPreviewId, values, null, null);
         }
     }
@@ -570,6 +580,14 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     }
 
     @Override
+    public void updateDetailsFields(Bundle data) {
+        NewsUpdateModel mNewsUpdateModel = data.getParcelable("model");
+        updateImageUrlColumnPreview(mNewsUpdateModel.getImage());
+        updateTitleColumnPreview(mNewsUpdateModel.getTitle());
+        updateDescriptionColumnPreview(mNewsUpdateModel.getText());
+    }
+
+    @Override
     public void showSuccessEditNewsDialog() {
 
         UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
@@ -590,13 +608,13 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         List<TagModel> newTagsArray = getTags(idPreview);
         if (mTitleView != null) {
             upTitle = mTitleView.getText().toString();
-            updateTitleColumnPreview(upTitle);
+//            updateTitleColumnPreview(upTitle);
         }
 
         if (mDescriptionView != null) {
 
             upDescription = mDescriptionView.getText().toString();
-            updateDescriptionColumnPreview(upDescription);
+//            updateDescriptionColumnPreview(upDescription);
 
         }
 
@@ -624,11 +642,11 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
                 if (items[item].equals("Take Photo from Camera")) {
                     userChosenTask = "Take Photo from Camera";
                     if (result)
-                        startCamera();
+                        camera();
                 } else if (items[item].equals("Choose from Gallery")) {
                     userChosenTask = "Choose from Gallery";
                     if (result)
-                        galleryIntent();
+                        gallery();
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
@@ -638,128 +656,152 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         builder.show();
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        Log.i(DETAIL_FRAGMENT_IMAGE, " onRequestPermissionsResult: requestCode: " + requestCode);
-        if (requestCode == Utils.MY_PERMISSIONS_REQUEST_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (userChosenTask.equals("Take Photo from Camera")) {
-                    startCamera();
-                } else if (userChosenTask.equals("Choose from Gallery"))
-                    galleryIntent();
-            } else {
-            }
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CAMERA) {
-                Uri imageUri = Uri.parse(mCurrentPhotoPath);
-                Log.i(DETAIL_FRAGMENT_IMAGE, "Get image from Camera by Url from  intents: " + imageUri);
-                File file = new File(imageUri.getPath());
-                try {
-                    mUriImage = imageUri;
-                    InputStream ims = new FileInputStream(file);
-                    Bitmap bm = BitmapFactory.decodeStream(ims);
-                    mImageView.setImageBitmap(bm);
-                } catch (FileNotFoundException e) {
-                    return;
+        String PHOTO_FILE_NAME = UtilImagePreferences.getValue();
+        File path;
+        if (Utils.externalMemoryAvailable()) {
+            path = Environment.getExternalStorageDirectory();
+        } else {
+            path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/Image");
+            Log.i(DETAIL_FRAGMENT_IMAGE, "no storage device ");
+        }
+        File dir = new File(path, "/Image");
+        if (!dir.exists())
+            dir.mkdirs();
+        switch (requestCode) {
+            case PHOTO_REQUEST_GALLERY:
+                if (data != null) {
+                    File sourceFile = new File(getRealPathFromURI(data.getData()));
+                    File destFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
+                    Log.i(DETAIL_FRAGMENT_IMAGE, "File path: " + data.getData().getPath());
+                    try {
+                        Utils.copyFile(sourceFile, destFile);
+                        if (destFile != null) {
+                            Uri photoURI = FileProvider.getUriForFile(getContext(),
+                                    BuildConfig.APPLICATION_ID + ".provider",
+                                    destFile);
+                            Log.i(DETAIL_FRAGMENT_IMAGE, "Crop image from Gallery by Url : " + photoURI);
+                            crop(photoURI);
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case PHOTO_REQUEST_CAMERA:
+
+                File photoFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
+
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(getContext(),
+                            BuildConfig.APPLICATION_ID + ".provider",
+                            photoFile);
+
+                    crop(photoURI);
+
                 }
 
-                // ScanFile so it will be appeared on Gallery
-                MediaScannerConnection.scanFile(getContext(),
-                        new String[]{imageUri.getPath()}, null,
-                        new MediaScannerConnection.OnScanCompletedListener() {
-                            public void onScanCompleted(String path, Uri uri) {
-                            }
-                        });
-            } else if (requestCode == SELECT_FILE)
-                onSelectFromGalleryResult(data);
 
+                break;
+            case PHOTO_REQUEST_CUT:
+
+
+                File file = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
+                Log.i(DETAIL_FRAGMENT_IMAGE, "Cut image  by Path : " + file.getPath());
+                mUriImage = Uri.fromFile(file);
+                Log.i(DETAIL_FRAGMENT_IMAGE, "Cut image  by Uri : " + mUriImage);
+                InputStream ims = null;
+                try {
+                    ims = new FileInputStream(file);
+                } catch (FileNotFoundException e) {
+                    Log.e(DETAIL_FRAGMENT_IMAGE, "a error happened when cut picture data: " + e.getMessage());
+                }
+                Bitmap bm = BitmapFactory.decodeStream(ims);
+                mImageView.setImageBitmap(bm);
+                break;
+
+            default:
+                break;
         }
-
     }
 
-
-    void startCamera() {
-        try {
-            dispatchTakePictureIntent();
-        } catch (IOException e) {
-        }
-    }
-
-    private void galleryIntent() {
-        Intent intent = new Intent();
+    public void gallery() {
+        //set UUID to filename
+        String PHOTO_FILE_NAME = UUID.randomUUID().toString() + ".jpg";
+        UtilImagePreferences.putValue(PHOTO_FILE_NAME);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
-        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+        startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
     }
 
+    public void camera() {
+        File path;
+        if (Utils.externalMemoryAvailable()) {
+            path = Environment.getExternalStorageDirectory();
+        } else {
+            path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/Image");
+            Log.i(DETAIL_FRAGMENT_IMAGE, "no storage device ");
+        }
+        //set UUID to filename
+        String PHOTO_FILE_NAME = UUID.randomUUID().toString() + ".jpg";
+        UtilImagePreferences.putValue(PHOTO_FILE_NAME);
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        File dir = new File(path, "/Image");
+        if (!dir.exists())
+            dir.mkdirs();
+        Log.i(DETAIL_FRAGMENT_IMAGE, "Get directory absolute Path: " + dir.getAbsolutePath());
+        File photoFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
 
-    private void dispatchTakePictureIntent() throws IOException {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Log.i(DETAIL_FRAGMENT_IMAGE, "Ensure that there's a camera activity to handle the intent ");
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            Log.i(DETAIL_FRAGMENT_IMAGE, "Create the File where the photo should go ");
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                Log.i(DETAIL_FRAGMENT_IMAGE, "Error occurred while creating the File ");
-                return;
-            }
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(getContext(),
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    photoFile);
 
-            if (photoFile != null) {
-
-                Uri photoURI = FileProvider.getUriForFile(getContext(),
-                        BuildConfig.APPLICATION_ID + ".provider",
-                        photoFile);
-
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_CAMERA);
-            }
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM), "Camera");
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        Log.i(DETAIL_FRAGMENT_IMAGE, "Save a file: path for use with ACTION_VIEW intents: " + mCurrentPhotoPath);
-        return image;
+    //Android N crop image
+    public void crop(Uri uri) {
+        getContext().grantUriPermission("com.android.camera", uri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        //Android N need set permission to uri otherwise system camera don't has permission to access file wait crop
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.putExtra("crop", "true");
+        //The proportion of the crop box is 1:1
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        //Crop the output image size
+        intent.putExtra("outputX", 100);
+        intent.putExtra("outputY", 100);
+        //image type
+        intent.putExtra("outputFormat", "JPEG");
+        intent.putExtra("noFaceDetection", true);
+        //true - don't return uri |  false - return uri
+        intent.putExtra("return-data", true);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(intent, PHOTO_REQUEST_CUT);
     }
 
 
-    @SuppressWarnings("deprecation")
-    private void onSelectFromGalleryResult(Intent data) {
-
-        Bitmap bm = null;
-        if (data != null) {
-            try {
-                Log.i(DETAIL_FRAGMENT_IMAGE, "Get image from Gallery by Url from  intents: " + data.getData());
-                mUriImage = data.getData();
-                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    //file uri to real location in filesystem
+    public String getRealPathFromURI(Uri contentURI) {
+        Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            return contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            return cursor.getString(idx);
         }
-
-        mImageView.setImageBitmap(bm);
     }
+
 
     public interface Callback {
 
