@@ -44,8 +44,11 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.app.azur.task.BlobUploadTask;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
+import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
+import com.dbbest.amateurfeed.model.CommentModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
+import com.dbbest.amateurfeed.model.UserFeedCommentModel;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.UtilImagePreferences;
@@ -107,6 +110,8 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     public ImageButton mRemoveButton;
 
     private RecyclerView mHorizontalList;
+    private RecyclerView mCommentList;
+    private VerticalListAdapter mVerticalListAdapter;
     private HorizontalListAdapter mHorizontalListAdapter;
 
     private int mLikeImage = R.drawable.ic_favorite_black_24dp;
@@ -276,6 +281,12 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         mHorizontalList.setAdapter(mHorizontalListAdapter);
 
 
+        mCommentList = (RecyclerView) itemView.findViewById(R.id.comment_recycler_view);
+        mCommentList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mVerticalListAdapter = new VerticalListAdapter(getActivity());
+        mCommentList.setAdapter(mVerticalListAdapter);
+
+
         return itemView;
     }
 
@@ -369,16 +380,11 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
                     mLikeButton.setTag("0");
                 }
 
-                Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
+                Cursor mCursorComments = getCommentCursor(mIdPreview);
+                if (mCursorComments.moveToFirst()) {
+                    mVerticalListAdapter.swapCursor(mCursorComments);
+                }
 
-
-                Cursor mCursorComments = App.instance().getContentResolver().query(
-                        uriCommentList,
-                        null,
-                        null,
-                        null,
-                        null
-                );
                 int count = mCursorComments.getCount();
                 mCommentCountView.setText(String.valueOf(count));
 
@@ -392,6 +398,44 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
             }
         }
 
+    }
+
+
+
+    private Cursor getCommentCursor(long mIdPreview) {
+        Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
+// Sort order:  Ascending, by date.
+        String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
+
+        return App.instance().getContentResolver().query(
+                uriCommentList,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    public ArrayList<CommentModel> getComments(long mIdPreview) {
+        Cursor cursor = getCommentCursor(mIdPreview);
+        ArrayList<CommentModel> commentModels = new ArrayList<CommentModel>();
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    CommentModel commentModel = new CommentModel(
+                            cursor.getInt(FeedNewsFragment.COL_COMMENT_UNIC_ID),
+                            cursor.getInt(FeedNewsFragment.COL_COMMENT_POST_ID),
+                            cursor.getInt(FeedNewsFragment.COL_COMMENT_CREATOR_KEY),
+                            cursor.getString(FeedNewsFragment.COL_COMMENT_BODY),
+                            cursor.getInt(FeedNewsFragment.COL_COMMENT_PARENT_COMMENT_ID),
+                            cursor.getString(FeedNewsFragment.COL_COMMENT_CREATE_DATE));
+                    commentModels.add(commentModel);
+//                    Log.i(DETAIL_FRAGMENT, "Compose array tags: " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        return commentModels;
     }
 
     public ArrayList<TagModel> getTags(long mIdPreview) {

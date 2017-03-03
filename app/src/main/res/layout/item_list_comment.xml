@@ -7,28 +7,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:columnCount="2"
-    style="@style/AppTheme.Widget.InputCommentField">
+    style="@style/AppTheme.Widget.InputCommentField"
+    android:layout_margin="4dp">
 
     <TextView
         android:id="@+id/item_list_author_comment"
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
         android:fontFamily="sans-serif"
         android:gravity="left"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/secondary_text"
-        android:textSize="16sp"
+        android:textColor="@color/primary"
+        android:textSize="12sp"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
-        tools:text="Author"/>
+        tools:text="Author"
+        android:padding="@dimen/activity_link_margin"/>
 
     <TextView
         android:id="@+id/item_list_date_comment"
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
+        android:padding="@dimen/activity_link_margin"
         android:fontFamily="sans-serif"
         android:gravity="center_horizontal"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/secondary_text"
-        android:textSize="16sp"
+        android:textSize="12sp"
         app:layout_columnWeight="1"
         app:layout_gravity="center"
         tools:text="Today, April 03"/>
@@ -43,7 +42,8 @@
         app:layout_columnSpan="2"
         app:layout_rowSpan="2"
         app:layout_gravity="fill_horizontal"
-        android:textSize="16sp"
+        android:textSize="14sp"
+        android:padding="@dimen/activity_link_margin"
         tools:text="Comment text"/>
 
 

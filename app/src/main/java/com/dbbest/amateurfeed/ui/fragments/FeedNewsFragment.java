@@ -35,7 +35,7 @@ import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.FeedView;
 
 
-public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,  SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
+public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
 
 
     private static String FEED_FRAGMENT = "Feed Fragment ";
@@ -102,6 +102,41 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     public static final int COL_TAG_PREVIEW_ID = 3;
 
 
+    public static final String[] COMMENT_COLUMNS = {
+
+
+            FeedContract.CommentEntry.TABLE_NAME + "." + FeedContract.CommentEntry._ID,
+            FeedContract.CommentEntry.COLUMN_POST_ID,
+            FeedContract.CommentEntry.COLUMN_CREATOR_KEY,
+            FeedContract.CommentEntry.COLUMN_BODY,
+            FeedContract.CommentEntry.COLUMN_PARENT_COMMENT_ID,
+            FeedContract.CommentEntry.COLUMN_CREATE_DATE,
+
+
+    };
+    public static final int COL_COMMENT_UNIC_ID = 0;
+    public static final int COL_COMMENT_POST_ID = 1;
+    public static final int COL_COMMENT_CREATOR_KEY = 2;
+    public static final int COL_COMMENT_BODY = 3;
+    public static final int COL_COMMENT_PARENT_COMMENT_ID = 4;
+    public static final int COL_COMMENT_CREATE_DATE = 5;
+
+
+    public static final String[] CREATOR_COLUMNS = {
+
+
+            FeedContract.CreatorEntry.TABLE_NAME + "." + FeedContract.CreatorEntry._ID,
+            FeedContract.CreatorEntry.COLUMN_NAME,
+            FeedContract.CreatorEntry.COLUMN_IS_ADMIN,
+            FeedContract.CreatorEntry.COLUMN_IMAGE
+
+
+    };
+    public static final int COL_CREATOR_UNIC_ID = 0;
+    public static final int COL_CREATOR_NAME = 1;
+    public static final int COL_CREATOR_IS_ADMIN = 2;
+    public static final int COL_CREATOR_IMAGE = 3;
+
     public static FeedNewsFragment newInstance(String key) {
         FeedNewsFragment fragment = new FeedNewsFragment();
         Bundle bundle = new Bundle();
@@ -135,7 +170,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mContext=context;
+        this.mContext = context;
 
     }
 
