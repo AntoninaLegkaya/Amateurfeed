@@ -64,4 +64,5 @@
     <string name="tab_profile">Профайл</string>
     <string name="tab_home">Дом</string>
     <string name="tab_search">Поиск</string>
+    <string name="set_edit_error">Пожалуйста перелогинтесь!</string>
 </resources>

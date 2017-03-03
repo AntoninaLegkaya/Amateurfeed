@@ -26,7 +26,6 @@ import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,6 +44,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.BuildConfig;
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.app.azur.task.BlobUploadTask;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.model.TagModel;
@@ -53,7 +53,6 @@ import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.DetailView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -71,7 +70,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by antonina on 24.01.17.
  */
 
-public class EditItemDetailFragment extends Fragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class EditItemDetailFragment extends Fragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, BlobUploadTask.UploadCallback {
     public final static String DETAIL_FRAGMENT = "DetailFragment";
     public final static String DETAIL_FRAGMENT_IMAGE = "DetailFragmentI_image";
     private static final String PARAM_KEY = "param_key";
@@ -88,7 +87,8 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     private Uri mUriPreview;
     private TextView mChangeIconLink;
     private DetailPresenter mPresenter;
-    private String encImage;
+    private Uri mUriImage;
+    private String mUploadUrl;
     private String mCurrentPhotoPath;
 
 
@@ -194,7 +194,7 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
                 ((Callback) getActivity()).moveToFeedFragment();
                 return true;
-            case R.id.action:
+            case R.id.action: {
                 if (mLayoutType == R.layout.fragment_item_edit_my_detail) {
                     String textDescription = mDescriptionView.getText().toString();
                     if (textDescription != null) {
@@ -205,30 +205,20 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
                             }
                         }
 
-                        long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-                        List<TagModel> newTagsArray = getTags(idPreview);
-                        if (mTitleView != null) {
+                        if (mUriImage != null) {
+                            BlobUploadTask uploadTask = new BlobUploadTask(getContext(), mUriImage, this);
+                            uploadTask.execute();
 
-                            upTitle = mTitleView.getText().toString();
-                            updateTitleColumnPreview(upTitle);
-                        }
-
-                        if (mDescriptionView != null) {
-
-                            upDescription = mDescriptionView.getText().toString();
-                            updateDescriptionColumnPreview(upDescription);
-
+                        } else {
+                            invokeEditNewsCommand();
                         }
 
 
-                        if (upTitle != null && encImage != null && upDescription != null && newTagsArray != null) {
-                            encImage = "https://webdefaulttemplate.blob.core.windows.net/images/0F6F50DA-8362-46DA-81F4-9E5B354C2718.jpeg";
-                            mPresenter.updateNews(newTagsArray, upTitle, upDescription, encImage, (int) idPreview);
-                        }
                     }
-
-                    return true;
                 }
+
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -355,17 +345,13 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
                 SimpleTarget target = new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
-                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-                        byte[] b = bytes.toByteArray();
-                        encImage = Base64.encodeToString(b, Base64.DEFAULT);
-                        Log.i(DETAIL_FRAGMENT_IMAGE, "Image Base64:  " + encImage);
                         mImageView.setImageBitmap(bitmap);
                     }
                 };
 
+                mUploadUrl = data.getString(FeedNewsFragment.COL_IMAGE);
                 Glide.with(this)
-                        .load(data.getString(FeedNewsFragment.COL_IMAGE))
+                        .load(mUploadUrl)
                         .asBitmap()
                         .error(R.drawable.art_snow)
                         .into(target);
@@ -448,7 +434,7 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
     private void updateTitleColumnPreview(String textTitle) {
         ContentValues values = new ContentValues();
-        values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textTitle);
+        values.put(FeedContract.PreviewEntry.COLUMN_TITLE, textTitle);
         if (mUriPreview != null) {
 
             long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
@@ -590,27 +576,47 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
     }
 
-    public interface Callback {
-
-
-        public void onLikeItemSelected(Uri uri, int isLike, int count);
-
-        public void onCommentItemSelected(Uri uri);
-
-        public void onEditItemSelected(Uri uri);
-
-        public void onDeleteItemSelected(Uri uri);
-
-        public void moveToFeedFragment();
-
+    @Override
+    public void showErrorEditNewsDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
 
     }
+
+    private void invokeEditNewsCommand() {
+
+        String upTitle = null;
+        String upDescription = null;
+        long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+        List<TagModel> newTagsArray = getTags(idPreview);
+        if (mTitleView != null) {
+            upTitle = mTitleView.getText().toString();
+            updateTitleColumnPreview(upTitle);
+        }
+
+        if (mDescriptionView != null) {
+
+            upDescription = mDescriptionView.getText().toString();
+            updateDescriptionColumnPreview(upDescription);
+
+        }
+
+
+        if (upTitle != null && upDescription != null && newTagsArray != null) {
+            mPresenter.updateNews(newTagsArray, upTitle, upDescription, mUploadUrl, (int) idPreview);
+        }
+    }
+
+    @Override
+    public void getUploadUrl(String url) {
+        mUploadUrl = url;
+        invokeEditNewsCommand();
+    }
+
 
     private void selectImage() {
         final CharSequence[] items = {"Take Photo from Camera", "Choose from Gallery",
                 "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-//        builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -639,7 +645,6 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         if (requestCode == Utils.MY_PERMISSIONS_REQUEST_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (userChosenTask.equals("Take Photo from Camera")) {
-                    Log.i(DETAIL_FRAGMENT_IMAGE, " onRequestPermissionsResult: Start camera ");
                     startCamera();
                 } else if (userChosenTask.equals("Choose from Gallery"))
                     galleryIntent();
@@ -653,19 +658,14 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
-                Log.i(DETAIL_FRAGMENT_IMAGE, "  onActivityResult: Show image ");
                 Uri imageUri = Uri.parse(mCurrentPhotoPath);
+                Log.i(DETAIL_FRAGMENT_IMAGE, "Get image from Camera by Url from  intents: " + imageUri);
                 File file = new File(imageUri.getPath());
                 try {
+                    mUriImage = imageUri;
                     InputStream ims = new FileInputStream(file);
-
                     Bitmap bm = BitmapFactory.decodeStream(ims);
                     mImageView.setImageBitmap(bm);
-                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-                    byte[] b = bytes.toByteArray();
-                    encImage = Base64.encodeToString(b, Base64.DEFAULT);
-                    Log.i(DETAIL_FRAGMENT_IMAGE, "Image Base64:  " + encImage);
                 } catch (FileNotFoundException e) {
                     return;
                 }
@@ -715,10 +715,10 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
             }
 
             if (photoFile != null) {
-                Log.i(DETAIL_FRAGMENT_IMAGE, "Continue... The File was successfully created ");
+
                 Uri photoURI = FileProvider.getUriForFile(getContext(),
                         BuildConfig.APPLICATION_ID + ".provider",
-                        createImageFile());
+                        photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_CAMERA);
@@ -750,6 +750,8 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         Bitmap bm = null;
         if (data != null) {
             try {
+                Log.i(DETAIL_FRAGMENT_IMAGE, "Get image from Gallery by Url from  intents: " + data.getData());
+                mUriImage = data.getData();
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -757,12 +759,21 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         }
 
         mImageView.setImageBitmap(bm);
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    }
 
-        bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        byte[] b = bytes.toByteArray();
-        encImage = Base64.encodeToString(b, Base64.DEFAULT);
-        Log.i(DETAIL_FRAGMENT_IMAGE, "Image Base64:  " + encImage);
+    public interface Callback {
+
+
+        public void onLikeItemSelected(Uri uri, int isLike, int count);
+
+        public void onCommentItemSelected(Uri uri);
+
+        public void onEditItemSelected(Uri uri);
+
+        public void onDeleteItemSelected(Uri uri);
+
+        public void moveToFeedFragment();
+
 
     }
 }

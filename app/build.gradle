@@ -20,7 +20,7 @@ android {
 
 
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion "${rootProject.ext.buildToolsVersion}"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         def versionMajor = 0

@@ -68,4 +68,9 @@ public class AddItemDetailFragment extends Fragment implements DetailView {
     public void showSuccessEditNewsDialog() {
 
     }
+
+    @Override
+    public void showErrorEditNewsDialog() {
+
+    }
 }

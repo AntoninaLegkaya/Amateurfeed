@@ -24,6 +24,7 @@ public class CloudPreferences {
     private static final String ACCT_NAME_KEY = "acctName";
     private static final String ACCESS_KEY = "acctKey";
     private static final String CONTAINER_KEY = "container";
+    private static final String STORAGE_URL = "url";
 
     /**
      * Control access : if all fields above are filled
@@ -69,14 +70,25 @@ public class CloudPreferences {
         preferences().edit().putString(CONTAINER_KEY, value).apply();
     }
 
+    private String readStorageUrl() {
+        if (preferences() != null) {
+            return preferences().getString(STORAGE_URL, null);
+        }
+        return null;
+    }
+
+
+    public void writeStorageUrl(String value) {
+        preferences().edit().putString(STORAGE_URL, value).apply();
+    }
 
     private SharedPreferences preferences() {
-        if (App.instance() != null) {
+        if (settings == null) {
             settings = App.instance().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             editor = settings.edit();
             return settings;
         }
-        return null;
+        return settings;
 
 
     }
@@ -92,25 +104,32 @@ public class CloudPreferences {
 
     /***/
     public String getAccountName() {
-        return settings.getString(ACCT_NAME_KEY, "");
+        return preferences().getString(ACCT_NAME_KEY, "");
     }
 
     /***/
     public String getAccessKey() {
-        return settings.getString(ACCESS_KEY, "");
+        return preferences().getString(ACCESS_KEY, "");
     }
 
     /***/
     public String getContainer() {
-        return settings.getString(CONTAINER_KEY, "");
+        return preferences().getString(CONTAINER_KEY, "");
+    }
+
+    /***/
+    public String getStorageUrl() {
+        return preferences().getString(STORAGE_URL, "");
     }
 
 
-    public void setCredentials(String acctName, String acctKey, String container) {
+    public void setCredentials(String acctName, String acctKey, String container, String url) {
 
+        preferences();
         editor.putString(ACCT_NAME_KEY, acctName);
         editor.putString(ACCESS_KEY, acctKey);
         editor.putString(CONTAINER_KEY, container);
+        editor.putString(STORAGE_URL, url);
 
         // not allowed functionality unless all fields are filled
         boolean notFilled = isEmpty(acctName) ||
@@ -134,6 +153,7 @@ public class CloudPreferences {
         return "Cloud preferences: " +
                 "\nAccount Name: " + getAccountName() +
                 "\nAccesskey: " + getAccessKey() +
-                "\nContainer: " + getContainer();
+                "\nContainer: " + getContainer() +
+                "\nUrl: " + getStorageUrl();
     }
 }

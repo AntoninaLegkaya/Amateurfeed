@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -277,8 +278,8 @@ public class Utils {
     /**
      * Get file name out of file path string
      */
-    public static String getNameFromPath(String path) {
-
+    public static String getNameFromPath(Uri uri) {
+        String path = uri.getPath();
         if (path == null || path.length() == 0) {
             return "";
         }

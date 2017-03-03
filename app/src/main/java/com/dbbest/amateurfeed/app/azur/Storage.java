@@ -1,6 +1,7 @@
 package com.dbbest.amateurfeed.app.azur;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.dbbest.amateurfeed.app.azur.exception.OperationException;
 import com.dbbest.amateurfeed.app.azur.preferences.CloudPreferences;
@@ -27,14 +28,14 @@ public abstract class Storage {
      */
     public Storage(Context ctx) throws OperationException {
         context = ctx;
-//        prefs = new CloudPreferences(ctx);
+        prefs = new CloudPreferences();
         //DOWNLOAD_PATH = ctx.getFilesDir() + File.separator;
     }
 
     /**
      * @throws OperationException
      */
-    public abstract void uploadToStorage(String file_path) throws OperationException;
+    public abstract String uploadToStorage(Uri file_path) throws OperationException;
 
 
 }

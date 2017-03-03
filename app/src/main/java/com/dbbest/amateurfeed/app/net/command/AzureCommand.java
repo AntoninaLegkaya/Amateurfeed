@@ -40,9 +40,7 @@ public class AzureCommand extends Command {
                 AzureServiceSettings settings = response.data();
 
                 CloudPreferences cloudPreferences = new CloudPreferences();
-                cloudPreferences.writeNameKey(settings.getAccountName());
-                cloudPreferences.writeAccessKey(settings.getAccountKey());
-                cloudPreferences.writeContainerName(settings.getContainerName());
+                cloudPreferences.setCredentials(settings.getAccountName(), settings.getAccountKey(), settings.getContainerName(), settings.getStorageUrl());
                 notifySuccess(Bundle.EMPTY);
 
 

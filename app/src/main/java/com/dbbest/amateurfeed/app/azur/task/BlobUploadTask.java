@@ -1,36 +1,55 @@
 package com.dbbest.amateurfeed.app.azur.task;
 
-import android.app.Activity;
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.azur.AzureStorage;
 import com.dbbest.amateurfeed.app.azur.StorageFactory;
 import com.dbbest.amateurfeed.app.azur.exception.OperationException;
+import com.dbbest.amateurfeed.app.azur.preferences.CloudPreferences;
 
-import static com.dbbest.amateurfeed.app.azur.StorageFactory.getStorageInstance;
-
-public class BlobUploadTask extends AsyncTask<String, Void, Void> {
+public class BlobUploadTask extends AsyncTask<Uri, Void, String> {
     private AzureStorage mAzureStorage;
-    private String mFilePath;
+    private Uri mFilePath;
+    private Context mContext;
+    private UploadCallback mUploadCallback;
 
-    public BlobUploadTask(Activity activity, String filePath) {
-        try {
-            mAzureStorage = (AzureStorage) StorageFactory.getStorageInstance(activity);
-            mFilePath = filePath;
-        } catch (OperationException e) {
-            e.printStackTrace();
-        }
+    public BlobUploadTask(Context context, Uri filePath, UploadCallback callback) {
+
+        mFilePath = filePath;
+        mContext = context;
+        mUploadCallback = callback;
     }
 
 
     @Override
-    protected Void doInBackground(String... arg0) {
+    protected String doInBackground(Uri... arg0) {
+        String path = null;
 
         try {
-            mAzureStorage.uploadToStorage(mFilePath);
+            mAzureStorage = (AzureStorage) StorageFactory.getStorageInstance(mContext);
+            String nameFile = mAzureStorage.uploadToStorage(mFilePath);
+            CloudPreferences preferences = new CloudPreferences();
+            path = preferences.getStorageUrl() + preferences.getContainer() + "/" + nameFile;
+
         } catch (OperationException e) {
             e.printStackTrace();
         }
-        return null;
+        return path;
+    }
+
+    @Override
+    protected void onPostExecute(String path) {
+        super.onPostExecute(path);
+        mUploadCallback.getUploadUrl(path);
+
+    }
+
+    public interface UploadCallback {
+
+        public void getUploadUrl(String url);
+
     }
 }

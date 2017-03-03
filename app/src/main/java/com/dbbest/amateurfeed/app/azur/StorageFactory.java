@@ -13,17 +13,18 @@ public class StorageFactory {
     private static CloudPreferences prefs;
 
 
-    public static Storage getStorageInstance(final Activity act)
+    public static Storage getStorageInstance(final Context ctx)
             throws OperationException {
 
         Storage instance = null;
-        Context ctx = act.getApplicationContext();
+        instance = new AzureStorage(ctx);
+        return instance;
+//        Context ctx = act.getApplicationContext();
 
 //        if (prefs == null) {
 //            prefs = new CloudPreferences(ctx);
 //        }
 
-        instance = new AzureStorage(ctx);
-        return instance;
+
     }
 }
