@@ -49,4 +49,6 @@
     <dimen name="toolbar_icon">40dp</dimen>
     <!--Grid  Recycle Layout Image-->
     <dimen name="grid__recycle_icon">100dp</dimen>
+
+    <dimen name="abc_dialog_list_padding_vertical_material">8dp</dimen>
 </resources>

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -53,9 +54,9 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean mHoldForTransition;
     private long mInitialSelectedDate = -1;
     private boolean mAutoSelectView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private boolean mIsViewInited;
+    //    private boolean mIsViewInited;
     private Context mContext;
+    private FloatingActionButton mFloatingActionButton;
 
     public static final String[] PREVIEW_COLUMNS = {
 
@@ -159,6 +160,8 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
 
         public void upLoadNewsItems(int count, int offset);
+
+        public void addNewItemDetail();
     }
 
     @Override
@@ -222,47 +225,21 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         final View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
         View emptyView = rootView.findViewById(R.id.recycle_feed_empty);
 
+        mFloatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((Callback) getActivity()).addNewItemDetail();
+            }
+        });
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.feed_list_view);
 
         setInitialSelectedDate(Utils.getTodayLongDate());
 
 
-        // Set the layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        final View parallaxView = rootView.findViewById(R.id.parallax_bar);
-//        if (null != parallaxView) {
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//
-//
-//                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-//                    @Override
-//                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                        super.onScrolled(recyclerView, dx, dy);
-//                        int max = parallaxView.getHeight();
-//                        if (dy > 0) {
-//
-//                            parallaxView.setTranslationY(Math.max(-max, parallaxView.getTranslationY() - dy / 2));
-//
-//
-//                        } else {
-//                            parallaxView.setTranslationY(Math.min(0, parallaxView.getTranslationY() - dy / 2));
-//                        }
-//
-//
-//                    }
-//                });
-//
-//            }
-//
-//
-//        }
 
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
 
@@ -349,7 +326,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
             TextView tv = (TextView) getView().findViewById(R.id.recycle_feed_empty);
             if (null != tv) {
 
-                //if cursor is empty, why? do we have an invalid location
 
                 int message = R.string.empty_feed_list;
 
@@ -363,14 +339,9 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
-        // When tablets rotate, the currently selected list item needs to be saved.
-        // When no item is selected, mPosition will be set to RecyclerView.NO_POSITION,
-        // so check for that before storing.
         if (mPosition != RecyclerView.NO_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
-//        mPreviewAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 

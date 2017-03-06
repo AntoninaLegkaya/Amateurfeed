@@ -23,7 +23,7 @@ public class NewsUpdateModel implements Parcelable {
     private String mImage;
 
     @SerializedName("tags")
-    private List<TagModel> mTags= new ArrayList<>();;
+    private List<TagModel> mTags= new ArrayList<>();
 
     public String getTitle() {
         return mTitle;

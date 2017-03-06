@@ -20,6 +20,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -48,7 +49,6 @@ import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
 import com.dbbest.amateurfeed.model.CommentModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
-import com.dbbest.amateurfeed.model.UserFeedCommentModel;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.UtilImagePreferences;
@@ -69,9 +69,10 @@ import java.util.Vector;
  * Created by antonina on 24.01.17.
  */
 
-public class EditItemDetailFragment extends Fragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, BlobUploadTask.UploadCallback {
+public class EditItemDetailFragment extends BaseChangeDetailFragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, BlobUploadTask.UploadCallback {
     public final static String DETAIL_FRAGMENT = "DetailFragment";
     public final static String DETAIL_FRAGMENT_IMAGE = "DetailFragmentI_image";
+    public final static String DETAIL_FRAGMENT_COMMENT = "DetailFragmentI_comment";
     private static final String PARAM_KEY = "param_key";
     public static final String DETAIL_URI = "URI";
     public static final String DETAIL_TYPE = "TYPE_ITEM";
@@ -104,6 +105,7 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     public TextView mLikesCountView;
     public TextView mCommentCountView;
     public TextView mDescriptionView;
+    public TextView mCommentView;
     public ImageButton mLikeButton;
     public Button mCommentButton;
     public ImageButton mEditButton;
@@ -178,16 +180,16 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         inflater.inflate(R.menu.action_back_menu, menu);
     }
 
-    private void finishCreatingMenu(Menu menu) {
-        // Retrieve the share menu item
-        MenuItem menuItem = menu.findItem(R.id.action);
-        menuItem.setIntent(createSaveIntent());
-    }
-
-    private Intent createSaveIntent() {
-        Intent saveIntent = new Intent(Intent.ACTION_SEND);
-        return saveIntent;
-    }
+//    private void finishCreatingMenu(Menu menu) {
+//        // Retrieve the share menu item
+//        MenuItem menuItem = menu.findItem(R.id.action);
+//        menuItem.setIntent(createSaveIntent());
+//    }
+//
+//    private Intent createSaveIntent() {
+//        Intent saveIntent = new Intent(Intent.ACTION_SEND);
+//        return saveIntent;
+//    }
 
 
     @Override
@@ -254,6 +256,7 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         mLikesCountView = (TextView) itemView.findViewById(R.id.list_item_likes_count);
         mCommentCountView = (TextView) itemView.findViewById(R.id.list_item_comment_count);
         mDescriptionView = (TextView) itemView.findViewById(R.id.list_item_description);
+        mCommentView = (TextView) itemView.findViewById(R.id.item_comment_text);
 
         mLikeButton = (ImageButton) itemView.findViewById(R.id.like_button);
         mLikeButton.setOnClickListener(this);
@@ -401,10 +404,9 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     }
 
 
-
     private Cursor getCommentCursor(long mIdPreview) {
         Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
-// Sort order:  Ascending, by date.
+        // Sort order:  Ascending, by date.
         String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
 
         return App.instance().getContentResolver().query(
@@ -513,8 +515,16 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     @Override
     public void onClick(View view) {
 
-
+        if (view.getId() == R.id.add_comment_button) {
+            if (mUriPreview != null && mCommentView != null && mCommentView.getText() != null) {
+                Log.i(DETAIL_FRAGMENT_COMMENT, "Start invoke Add Comment Command: new body: " + mCommentView.getText());
+                int postId = (int) FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+                mPresenter.postComment(postId, mCommentView.getText().toString(), 0);
+            }
+        }
         if (view.getId() == R.id.edit_button) {
+
+            ((Callback) getActivity()).onEditItemSelected(mUriPreview);
 
         }
         if (view.getId() == R.id.change_image_link) {
@@ -644,6 +654,16 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
 
     }
 
+    @Override
+    public void showSuccessAddCommentDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.set_add_comment_success).show(getActivity().getSupportFragmentManager(), "info");
+    }
+
+    @Override
+    public void showErrorAddCommentDialog() {
+
+    }
+
     private void invokeEditNewsCommand() {
 
         String upTitle = null;
@@ -652,13 +672,11 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
         List<TagModel> newTagsArray = getTags(idPreview);
         if (mTitleView != null) {
             upTitle = mTitleView.getText().toString();
-//            updateTitleColumnPreview(upTitle);
         }
 
         if (mDescriptionView != null) {
 
             upDescription = mDescriptionView.getText().toString();
-//            updateDescriptionColumnPreview(upDescription);
 
         }
 
@@ -847,19 +865,19 @@ public class EditItemDetailFragment extends Fragment implements DetailView, Load
     }
 
 
-    public interface Callback {
-
-
-        public void onLikeItemSelected(Uri uri, int isLike, int count);
-
-        public void onCommentItemSelected(Uri uri);
-
-        public void onEditItemSelected(Uri uri);
-
-        public void onDeleteItemSelected(Uri uri);
-
-        public void moveToFeedFragment();
-
-
-    }
+//    public interface Callback {
+//
+//
+//        public void onLikeItemSelected(Uri uri, int isLike, int count);
+//
+//        public void onCommentItemSelected(Uri uri);
+//
+//        public void onEditItemSelected(Uri uri);
+//
+//        public void onDeleteItemSelected(Uri uri);
+//
+//        public void moveToFeedFragment();
+//
+//
+//    }
 }

@@ -17,6 +17,8 @@ import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.model.AzureServiceSettings;
+import com.dbbest.amateurfeed.model.FeedCommentModel;
+import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.utils.ActionUtils;
@@ -116,12 +118,23 @@ public class RestApiClient {
         return executeCall(mApiService.postAbuse(token, model));
     }
 
-    public ResponseWrapper<ArrayList<TagModel>> checkTagName(String token, String tagName) {return executeCall(mApiService.checkTags(token, tagName));
+    public ResponseWrapper<ArrayList<TagModel>> checkTagName(String token, String tagName) {
+        return executeCall(mApiService.checkTags(token, tagName));
     }
 
-    public ResponseWrapper<NewsResponseModel> editNews(String token, NewsUpdateModel updateModel, int id) {return executeCall(mApiService.editSpecifiedNews(token, updateModel, id));
+    public ResponseWrapper<NewsResponseModel> editNews(String token, NewsUpdateModel updateModel, int id) {
+        return executeCall(mApiService.editSpecifiedNews(token, updateModel, id));
     }
 
-    public ResponseWrapper<AzureServiceSettings> getAzureInfo(String token) {return executeCall(mApiService.getAzureInfo(token));
+    public ResponseWrapper<AzureServiceSettings> getAzureInfo(String token) {
+        return executeCall(mApiService.getAzureInfo(token));
+    }
+
+    public ResponseWrapper<Object> postComment(String token, FeedCommentModel commentModel) {
+        return executeCall(mApiService.postComment(token, commentModel));
+    }
+
+    public ResponseWrapper<NewsResponseModel> addNewNews(String token, NewsCreateModel createModel) {
+        return executeCall(mApiService.addNewNews(token, createModel));
     }
 }

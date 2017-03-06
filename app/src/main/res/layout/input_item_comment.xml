@@ -46,6 +46,7 @@
         app:layout_columnWeight="0"
         app:layout_gravity="center"
         android:layout_width="50dp"
+        android:clickable="true"
         />
 
 </android.support.v7.widget.GridLayout>

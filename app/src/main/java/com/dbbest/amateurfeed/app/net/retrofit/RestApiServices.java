@@ -14,7 +14,7 @@ import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.model.AzureServiceSettings;
 import com.dbbest.amateurfeed.model.DeviceInfoModel;
-import com.dbbest.amateurfeed.model.CommentModel;
+import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
@@ -76,7 +76,7 @@ public interface RestApiServices {
     Call<ResponseWrapper<ArrayList<NewsPreviewResponseModel>>> getSpecifiedNews(@Header("Authorization") String token, @Query("offset") int offset, @Query("count") int count);
 
     @POST("news")
-    Call<ResponseWrapper<NewsResponseModel>> addNewNews(@Body NewsCreateModel createModel);
+    Call<ResponseWrapper<NewsResponseModel>> addNewNews(@Header("Authorization") String token, @Body NewsCreateModel createModel);
 
     @POST("news/abuse")
     Call<ResponseWrapper<Object>> postAbuse(@Header("Authorization") String token, @Body AbuseModel abuseModel);
@@ -91,7 +91,7 @@ public interface RestApiServices {
     Call<ResponseWrapper<Object>> isLikeNews(@Header("Authorization") String token, @Body LikeModel model, @Path("id") long id);
 
     @POST("news/add-comment")
-    Call<ResponseWrapper<Object>> postComment(@Body CommentModel commentModel);
+    Call<ResponseWrapper<Object>> postComment(@Header("Authorization") String token, @Body FeedCommentModel commentModel);
 
     @GET("search")
     Call<ResponseWrapper<Dictionary<String, List>>> getMapUsersNews(@Header("Authorization") String token, @Query("searchParam") String searchParam);

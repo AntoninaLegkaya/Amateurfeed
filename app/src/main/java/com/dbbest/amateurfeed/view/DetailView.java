@@ -16,4 +16,8 @@ public interface DetailView extends IView {
     void showSuccessEditNewsDialog();
 
     void showErrorEditNewsDialog();
+
+    void showSuccessAddCommentDialog();
+
+    void showErrorAddCommentDialog();
 }

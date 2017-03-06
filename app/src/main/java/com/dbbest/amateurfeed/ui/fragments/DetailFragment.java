@@ -54,7 +54,7 @@ public class DetailFragment extends Fragment implements DetailView {
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_edit_item_detail, container, false);
+        return inflater.inflate(R.layout.fragment_item_detail, container, false);
     }
 
 
@@ -75,6 +75,16 @@ public class DetailFragment extends Fragment implements DetailView {
 
     @Override
     public void showErrorEditNewsDialog() {
+
+    }
+
+    @Override
+    public void showSuccessAddCommentDialog() {
+
+    }
+
+    @Override
+    public void showErrorAddCommentDialog() {
 
     }
 }
