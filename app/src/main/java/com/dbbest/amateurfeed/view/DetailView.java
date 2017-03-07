@@ -20,4 +20,6 @@ public interface DetailView extends IView {
     void showSuccessAddCommentDialog();
 
     void showErrorAddCommentDialog();
+
+    void refreshFeedNews(Bundle data);
 }

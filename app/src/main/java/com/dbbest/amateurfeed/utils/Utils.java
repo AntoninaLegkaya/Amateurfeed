@@ -5,19 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 
 import java.io.File;
@@ -165,7 +161,7 @@ public class Utils {
         if (displayLongToday && julianDay == currentJulianDay) {
             String today = context.getString(R.string.today);
             int formatId = R.string.format_full_friendly_date;
-            return String.format(context.getString(formatId), today, getFormattedMonthDay(context, dateInMillis));
+            return String.format(context.getString(formatId), today, getFormattedMonthDay(dateInMillis));
         }
 //        else if (julianDay < currentJulianDay - 7) {
 //            // If the input date is less than a week in the pass, just return the day name.
@@ -178,7 +174,7 @@ public class Utils {
         }
     }
 
-    public static String getFormattedMonthDay(Context context, long dateInMillis) {
+    public static String getFormattedMonthDay(long dateInMillis) {
         Time time = new Time();
         time.setToNow();
         SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utils.DATE_FORMAT);
@@ -325,6 +321,7 @@ public class Utils {
 
         return ext.toLowerCase();
     }
+
     public static boolean externalMemoryAvailable() {
         if (Environment.isExternalStorageRemovable()) {
             //device support sd card. We need to check sd card availability.
@@ -338,7 +335,7 @@ public class Utils {
     }
 
     //copy sourceFile to destFile
-    public static  void copyFile(File sourceFile, File destFile) throws IOException {
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!sourceFile.exists()) {
             return;
         }
@@ -353,6 +350,15 @@ public class Utils {
         if (destination != null) {
             destination.close();
         }
+    }
+
+
+    public static String  getCurrentTime() {
+
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        return format.format(c.getTime());
     }
 
 

@@ -21,6 +21,7 @@ import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
+import com.dbbest.amateurfeed.model.UserProfileModel;
 import com.dbbest.amateurfeed.utils.ActionUtils;
 import com.dbbest.amateurfeed.utils.Utils;
 
@@ -136,5 +137,9 @@ public class RestApiClient {
 
     public ResponseWrapper<NewsResponseModel> addNewNews(String token, NewsCreateModel createModel) {
         return executeCall(mApiService.addNewNews(token, createModel));
+    }
+
+    public ResponseWrapper<UserProfileModel> getUserInfo(String token) {
+        return executeCall(mApiService.getSpecifiedUserInfo(token));
     }
 }

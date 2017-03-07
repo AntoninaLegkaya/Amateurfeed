@@ -15,6 +15,8 @@ import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.LoginCommand;
 import com.dbbest.amateurfeed.app.net.command.RegistrationFacebookCommand;
+import com.dbbest.amateurfeed.app.net.command.UserProfileCommand;
+import com.dbbest.amateurfeed.app.storage.processor.UserPreferences;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.utils.location.LatLng;
 import com.dbbest.amateurfeed.utils.location.UserLocationProvider;
@@ -35,6 +37,7 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
     private static final int CODE_LOGIN = 0;
     private static final int CODE_REGISTRATION_FB = 1;
     private static final int CODE_CLOUD_PREF = 2;
+    private static final int CODE_USER_PREF = 3;
 
     private CommandResultReceiver mResultReceiver;
     private UserLocationProvider mLocationProvider;
@@ -83,21 +86,30 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
     }
 
     public void getCloudPreference() {
-        AzureCommand azureCommand= new AzureCommand();
+        AzureCommand azureCommand = new AzureCommand();
 
         azureCommand.send(CODE_CLOUD_PREF, mResultReceiver);
     }
+
+    public void getUserPreference() {
+        UserProfileCommand userProfileCommand = new UserProfileCommand();
+        userProfileCommand.send(CODE_USER_PREF, mResultReceiver);
+
+    }
+
     @Override
     public void onSuccess(int code, Bundle data) {
         getView().dismissProgressDialog();
         if (getView() != null) {
             if (code == CODE_LOGIN) {
-               getCloudPreference();
+                getCloudPreference();
+                getUserPreference();
                 getView().navigateToHomeScreen();
             }
             if (code == CODE_CLOUD_PREF) {
+            }
+            if (code == CODE_USER_PREF) {
 
-                Log.i(Utils.TAG_LOG, "The Cloud Preferences obtain! Cloud Name: "+ new CloudPreferences().getAccountName());
             }
         }
 

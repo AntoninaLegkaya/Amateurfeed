@@ -16,7 +16,6 @@ public class NewsResponseModel {
     }
 
     public NewsResponseModel(int id) {
-
         mId = id;
     }
 }

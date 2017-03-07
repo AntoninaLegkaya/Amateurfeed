@@ -40,7 +40,7 @@ import java.util.Stack;
 import static com.dbbest.amateurfeed.R.id.imageView;
 
 
-public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback,  BaseChangeDetailFragment.Callback{
+public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, BaseChangeDetailFragment.Callback {
 
     private static String TAG_HOME = "HomeActivity";
 
@@ -493,6 +493,11 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     }
 
+    @Override
+    public void refreshFeed() {
+    //        TODO: add refresh feedList? to get new item
+        refreshFragmentFeedLoader();
+    }
 
     @Override
     public void refreshFragmentFeedLoader() {

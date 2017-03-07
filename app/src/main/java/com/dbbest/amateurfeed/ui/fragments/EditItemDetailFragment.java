@@ -69,10 +69,8 @@ import java.util.Vector;
  * Created by antonina on 24.01.17.
  */
 
-public class EditItemDetailFragment extends BaseChangeDetailFragment implements DetailView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, BlobUploadTask.UploadCallback {
-    public final static String DETAIL_FRAGMENT = "DetailFragment";
-    public final static String DETAIL_FRAGMENT_IMAGE = "DetailFragmentI_image";
-    public final static String DETAIL_FRAGMENT_COMMENT = "DetailFragmentI_comment";
+public class EditItemDetailFragment extends BaseChangeDetailFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, BlobUploadTask.UploadCallback {
+
     private static final String PARAM_KEY = "param_key";
     public static final String DETAIL_URI = "URI";
     public static final String DETAIL_TYPE = "TYPE_ITEM";
@@ -80,31 +78,25 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
     public static int RESULT_LOAD_IMAGE = 1;
     //    static final int REQUEST_IMAGE_CAPTURE = 1;
 //    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
-    private static final int PHOTO_REQUEST_CAMERA = 0;//camera
-    private static final int PHOTO_REQUEST_GALLERY = 1;//gallery
-    private static final int PHOTO_REQUEST_CUT = 2;//image crop
-
-
-    private String userChosenTask;
 
     private static final int DETAIL_NEWS_LOADER = 1;
     private int mLayoutType;
-    private Uri mUriPreview;
+
     private TextView mChangeIconLink;
-    private DetailPresenter mPresenter;
-    private Uri mUriImage;
-    private String mUploadUrl;
+//    private DetailPresenter mPresenter;
+
+
     private String mCurrentPhotoPath;
 
 
     public ImageView mIconView;
     public TextView mFullNameView;
-    public TextView mTitleView;
+
     public TextView mDateView;
-    public ImageView mImageView;
+
     public TextView mLikesCountView;
     public TextView mCommentCountView;
-    public TextView mDescriptionView;
+
     public TextView mCommentView;
     public ImageButton mLikeButton;
     public Button mCommentButton;
@@ -115,6 +107,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
     private RecyclerView mCommentList;
     private VerticalListAdapter mVerticalListAdapter;
     private HorizontalListAdapter mHorizontalListAdapter;
+
 
     private int mLikeImage = R.drawable.ic_favorite_black_24dp;
     private int mDisLikeImage = R.drawable.ic_favorite_border_black_24dp;
@@ -133,13 +126,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPresenter = new DetailPresenter();
-
-    }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -151,45 +137,13 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.attachView(this);
-
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mPresenter.detachView();
-
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_back_menu, menu);
     }
-
-//    private void finishCreatingMenu(Menu menu) {
-//        // Retrieve the share menu item
-//        MenuItem menuItem = menu.findItem(R.id.action);
-//        menuItem.setIntent(createSaveIntent());
-//    }
-//
-//    private Intent createSaveIntent() {
-//        Intent saveIntent = new Intent(Intent.ACTION_SEND);
-//        return saveIntent;
-//    }
 
 
     @Override
@@ -404,6 +358,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
     }
 
 
+    // Get Comments from BD
     private Cursor getCommentCursor(long mIdPreview) {
         Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
         // Sort order:  Ascending, by date.
@@ -440,6 +395,8 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
         return commentModels;
     }
 
+
+    // Get Tags from BD
     public ArrayList<TagModel> getTags(long mIdPreview) {
         Cursor cursor = getTagCursor(mIdPreview);
         ArrayList<TagModel> tagModels = new ArrayList<TagModel>();
@@ -448,7 +405,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
                 do {
                     TagModel tagModel = new TagModel(cursor.getInt(FeedNewsFragment.COL_TAG_ID), cursor.getString(FeedNewsFragment.COL_TAG_NAME));
                     tagModels.add(tagModel);
-//                    Log.i(DETAIL_FRAGMENT, "Compose array tags: " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -456,7 +412,59 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
         return tagModels;
     }
 
-    private Cursor getTagCursor(long mIdPreview) {
+    @Override
+    public void addTagToItemDetail(Bundle bundle) {
+
+        // Insert the tags news information into the database
+
+        TagModel tagModel = bundle.getParcelable("tagModel");
+        ArrayList<TagModel> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+
+        if (tagModel != null) {
+            Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
+
+            boolean flag = true;
+            for (TagModel model : tags) {
+
+
+                if (tagModel.getName().equals(model.getName())) {
+
+                    Log.i(DETAIL_FRAGMENT, "You have tag: " + tagModel.getName());
+                    flag = false;
+
+                }
+
+
+            }
+            if (flag) {
+
+                Log.i(DETAIL_FRAGMENT, "You try add new tag: " + tagModel.getName());
+                ContentValues tagValues = new ContentValues();
+                tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
+                tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
+                tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+                cVTagsVector.add(tagValues);
+
+                Log.i(DETAIL_FRAGMENT, "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " " + "name: " + tagModel.getName() + " " +
+                        "preview_id: " + FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+
+                if (cVTagsVector.size() > 0) {
+                    ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
+                    cVTagsVector.toArray(cvArray);
+                    App.instance().getContentResolver().bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
+                    Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+                    mHorizontalListAdapter.swapCursor(newTagCursor);
+
+                }
+            } else {
+                Log.i(DETAIL_FRAGMENT, "Nothing to add");
+            }
+
+
+        }
+    }
+
+    protected Cursor getTagCursor(long mIdPreview) {
         Uri uriTagsList = FeedContract.TagEntry.getTagsListById(mIdPreview);
 
         return App.instance().getContentResolver().query(
@@ -468,6 +476,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
         );
     }
 
+    //Update DB
     private void updateDescriptionColumnPreview(String textDescription) {
         ContentValues values = new ContentValues();
         values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textDescription);
@@ -582,58 +591,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
     }
 
     @Override
-    public void addTagToItemDetail(Bundle bundle) {
-
-        // Insert the tags news information into the database
-
-        TagModel tagModel = bundle.getParcelable("tagModel");
-        ArrayList<TagModel> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-
-        if (tagModel != null) {
-            Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
-
-            boolean flag = true;
-            for (TagModel model : tags) {
-
-
-                if (tagModel.getName().equals(model.getName())) {
-
-                    Log.i(DETAIL_FRAGMENT, "You have tag: " + tagModel.getName());
-                    flag = false;
-
-                }
-
-
-            }
-            if (flag) {
-
-                Log.i(DETAIL_FRAGMENT, "You try add new tag: " + tagModel.getName());
-                ContentValues tagValues = new ContentValues();
-                tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
-                tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
-                tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-                cVTagsVector.add(tagValues);
-
-                Log.i(DETAIL_FRAGMENT, "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " " + "name: " + tagModel.getName() + " " +
-                        "preview_id: " + FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-
-                if (cVTagsVector.size() > 0) {
-                    ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
-                    cVTagsVector.toArray(cvArray);
-                    App.instance().getContentResolver().bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
-                    Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-                    mHorizontalListAdapter.swapCursor(newTagCursor);
-
-                }
-            } else {
-                Log.i(DETAIL_FRAGMENT, "Nothing to add");
-            }
-
-
-        }
-    }
-
-    @Override
     public void updateDetailsFields(Bundle data) {
         NewsUpdateModel mNewsUpdateModel = data.getParcelable("model");
         updateImageUrlColumnPreview(mNewsUpdateModel.getImage());
@@ -641,28 +598,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
         updateDescriptionColumnPreview(mNewsUpdateModel.getText());
     }
 
-    @Override
-    public void showSuccessEditNewsDialog() {
-
-        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
-
-    }
-
-    @Override
-    public void showErrorEditNewsDialog() {
-        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
-
-    }
-
-    @Override
-    public void showSuccessAddCommentDialog() {
-        UIDialogNavigation.showWarningDialog(R.string.set_add_comment_success).show(getActivity().getSupportFragmentManager(), "info");
-    }
-
-    @Override
-    public void showErrorAddCommentDialog() {
-
-    }
 
     private void invokeEditNewsCommand() {
 
@@ -692,192 +627,29 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
         invokeEditNewsCommand();
     }
 
+    @Override
+    public void showSuccessEditNewsDialog() {
 
-    private void selectImage() {
-        final CharSequence[] items = {"Take Photo from Camera", "Choose from Gallery",
-                "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utils.checkPermission(getContext());
-                if (items[item].equals("Take Photo from Camera")) {
-                    userChosenTask = "Take Photo from Camera";
-                    if (result)
-                        camera();
-                } else if (items[item].equals("Choose from Gallery")) {
-                    userChosenTask = "Choose from Gallery";
-                    if (result)
-                        gallery();
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
+        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
 
-        builder.show();
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String PHOTO_FILE_NAME = UtilImagePreferences.getValue();
-        File path;
-        if (Utils.externalMemoryAvailable()) {
-            path = Environment.getExternalStorageDirectory();
-        } else {
-            path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/Image");
-            Log.i(DETAIL_FRAGMENT_IMAGE, "no storage device ");
-        }
-        File dir = new File(path, "/Image");
-        if (!dir.exists())
-            dir.mkdirs();
-        switch (requestCode) {
-            case PHOTO_REQUEST_GALLERY:
-                if (data != null) {
-                    File sourceFile = new File(getRealPathFromURI(data.getData()));
-                    File destFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
-                    Log.i(DETAIL_FRAGMENT_IMAGE, "File path: " + data.getData().getPath());
-                    try {
-                        Utils.copyFile(sourceFile, destFile);
-                        if (destFile != null) {
-                            Uri photoURI = FileProvider.getUriForFile(getContext(),
-                                    BuildConfig.APPLICATION_ID + ".provider",
-                                    destFile);
-                            Log.i(DETAIL_FRAGMENT_IMAGE, "Crop image from Gallery by Url : " + photoURI);
-                            crop(photoURI);
+    public void showErrorEditNewsDialog() {
 
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case PHOTO_REQUEST_CAMERA:
+        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
 
-                File photoFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
-
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(getContext(),
-                            BuildConfig.APPLICATION_ID + ".provider",
-                            photoFile);
-
-                    crop(photoURI);
-
-                }
-
-
-                break;
-            case PHOTO_REQUEST_CUT:
-
-
-                File file = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
-                Log.i(DETAIL_FRAGMENT_IMAGE, "Cut image  by Path : " + file.getPath());
-                mUriImage = Uri.fromFile(file);
-                Log.i(DETAIL_FRAGMENT_IMAGE, "Cut image  by Uri : " + mUriImage);
-                InputStream ims = null;
-                try {
-                    ims = new FileInputStream(file);
-                } catch (FileNotFoundException e) {
-                    Log.e(DETAIL_FRAGMENT_IMAGE, "a error happened when cut picture data: " + e.getMessage());
-                }
-                Bitmap bm = BitmapFactory.decodeStream(ims);
-                mImageView.setImageBitmap(bm);
-                break;
-
-            default:
-                break;
-        }
     }
 
-    public void gallery() {
-        //set UUID to filename
-        String PHOTO_FILE_NAME = UUID.randomUUID().toString() + ".jpg";
-        UtilImagePreferences.putValue(PHOTO_FILE_NAME);
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
+    @Override
+    public void showSuccessAddCommentDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.set_add_comment_success).show(getActivity().getSupportFragmentManager(), "info");
     }
 
-    public void camera() {
-        File path;
-        if (Utils.externalMemoryAvailable()) {
-            path = Environment.getExternalStorageDirectory();
-        } else {
-            path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/Image");
-            Log.i(DETAIL_FRAGMENT_IMAGE, "no storage device ");
-        }
-        //set UUID to filename
-        String PHOTO_FILE_NAME = UUID.randomUUID().toString() + ".jpg";
-        UtilImagePreferences.putValue(PHOTO_FILE_NAME);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        File dir = new File(path, "/Image");
-        if (!dir.exists())
-            dir.mkdirs();
-        Log.i(DETAIL_FRAGMENT_IMAGE, "Get directory absolute Path: " + dir.getAbsolutePath());
-        File photoFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
+    @Override
+    public void showErrorAddCommentDialog() {
 
-        if (photoFile != null) {
-            Uri photoURI = FileProvider.getUriForFile(getContext(),
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    photoFile);
-
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
-        }
-    }
-
-    //Android N crop image
-    public void crop(Uri uri) {
-        getContext().grantUriPermission("com.android.camera", uri,
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        //Android N need set permission to uri otherwise system camera don't has permission to access file wait crop
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        intent.putExtra("crop", "true");
-        //The proportion of the crop box is 1:1
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        //Crop the output image size
-        intent.putExtra("outputX", 100);
-        intent.putExtra("outputY", 100);
-        //image type
-        intent.putExtra("outputFormat", "JPEG");
-        intent.putExtra("noFaceDetection", true);
-        //true - don't return uri |  false - return uri
-        intent.putExtra("return-data", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        startActivityForResult(intent, PHOTO_REQUEST_CUT);
     }
 
 
-    //file uri to real location in filesystem
-    public String getRealPathFromURI(Uri contentURI) {
-        Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) {
-            return contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            return cursor.getString(idx);
-        }
-    }
-
-
-//    public interface Callback {
-//
-//
-//        public void onLikeItemSelected(Uri uri, int isLike, int count);
-//
-//        public void onCommentItemSelected(Uri uri);
-//
-//        public void onEditItemSelected(Uri uri);
-//
-//        public void onDeleteItemSelected(Uri uri);
-//
-//        public void moveToFeedFragment();
-//
-//
-//    }
 }

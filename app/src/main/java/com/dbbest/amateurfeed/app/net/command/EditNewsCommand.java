@@ -67,7 +67,7 @@ public class EditNewsCommand extends Command {
             if (response.isSuccessful() && response.data() != null) {
                 NewsResponseModel data = response.data();
 
-                Log.i(EditItemDetailFragment.DETAIL_FRAGMENT, "Response edit News Command: " + data.getId());
+                Log.i(EditItemDetailFragment.DETAIL_FRAGMENT, "Updated  Item By ID:  " + data.getId());
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("model", mNewsUpdateModel);
                 notifySuccess(bundle);

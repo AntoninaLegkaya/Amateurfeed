@@ -316,7 +316,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
                 null
         );
 
-        if (mCursorTags.moveToFirst()) {
+        if (mCursorTags!=null) {
             mHorizontalListAdapter.swapCursor(mCursorTags);
         }
 

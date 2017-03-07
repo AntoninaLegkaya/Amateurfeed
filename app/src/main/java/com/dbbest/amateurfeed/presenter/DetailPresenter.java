@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.dbbest.amateurfeed.app.net.command.AddCommentCommand;
+import com.dbbest.amateurfeed.app.net.command.AddNewItemNewsCommand;
 import com.dbbest.amateurfeed.app.net.command.CheckTagCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
@@ -15,6 +16,7 @@ import com.dbbest.amateurfeed.view.DetailView;
 
 import java.util.List;
 
+import static android.R.attr.id;
 import static android.R.attr.tag;
 
 public class DetailPresenter extends Presenter<DetailView> implements CommandResultReceiver.CommandListener {
@@ -22,6 +24,7 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
     private static final int CODE_CHECK_TAG = 0;
     private static final int CODE_EDIT_NEWS = 1;
     private static final int CODE_ADD_COMMENT = 2;
+    private static final int CODE_ADD_NEW_ITEM = 3;
     private CommandResultReceiver mResultReceiver;
 
 
@@ -52,8 +55,19 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
             DetailView view = getView();
 
         }
-        AddCommentCommand command = new AddCommentCommand(postId,body, parentCommentId);
+        AddCommentCommand command = new AddCommentCommand(postId, body, parentCommentId);
         command.send(CODE_ADD_COMMENT, mResultReceiver);
+
+
+    }
+
+    public void addNewNews(String title, String text, String image,List<TagModel> tagModels) {
+        if (getView() != null) {
+            DetailView view = getView();
+
+        }
+        Command command = new AddNewItemNewsCommand(title, text, image, tagModels);
+        command.send(CODE_ADD_NEW_ITEM, mResultReceiver);
 
 
     }
@@ -89,6 +103,11 @@ public class DetailPresenter extends Presenter<DetailView> implements CommandRes
             if (code == CODE_ADD_COMMENT) {
 
                 getView().showSuccessAddCommentDialog();
+
+            }
+            if (code == CODE_ADD_NEW_ITEM) {
+
+                getView().refreshFeedNews(data);
 
             }
 

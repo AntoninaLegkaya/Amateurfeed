@@ -36,7 +36,7 @@
         >
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/list_item_title"
+            android:id="@+id/item_title"
             style="@style/Widget.Design.DetailTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -62,7 +62,7 @@
         >
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/list_item_description"
+            android:id="@+id/item_description"
             style="@style/Widget.Design.DetailTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -78,7 +78,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/add_item_button"
+        android:id="@+id/publish_item_button"
         android:layout_marginTop="@dimen/abc_dialog_list_padding_vertical_material"
         style="@style/AddItemButton"
         android:layout_height="40dp"

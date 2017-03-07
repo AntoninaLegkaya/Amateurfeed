@@ -86,21 +86,21 @@ public class NewsCreateModel implements Parcelable {
     };
 
 
-    @Override
-    public String toString() {
-        String tagsNames = new String();
-        if (mTags != null) {
-            for (TagModel model : mTags) {
-                tagsNames = tagsNames + model.getName() + " ";
-
-            }
-        }
-
-        return "NewsCreateModel{"
-                + "mTitle=" + mTitle + '\n'
-                + "mText=" + mText + '\n'
-                + "mImage=" + mImage + '\n'
-                + "mTags=" + tagsNames + '\n'
-                + '}';
-    }
+//    @Override
+//    public String toString() {
+//        String tagsNames = new String();
+//        if (mTags != null) {
+//            for (TagModel model : mTags) {
+//                tagsNames = tagsNames + model.getName() + " ";
+//
+//            }
+//        }
+//
+//        return "NewsCreateModel{"
+//                + "mTitle=" + mTitle + '\n'
+//                + "mText=" + mText + '\n'
+//                + "mImage=" + mImage + '\n'
+//                + "mTags=" + tagsNames + '\n'
+//                + '}';
+//    }
 }

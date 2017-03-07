@@ -256,6 +256,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
                         ((Callback) getActivity()).onCommentItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
+                        mPosition = vh.getAdapterPosition();
                     }
                 },
                 new PreviewAdapter.FeedLikeAdapterOnClickHandler() {
@@ -270,6 +271,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                     @Override
                     public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
                         ((Callback) getActivity()).onEditItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
+                        mPosition = vh.getAdapterPosition();
                     }
                 },
                 new PreviewAdapter.FeedRemoveAdapterOnClickHandler() {
@@ -355,7 +357,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
         Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
 
-        // Sort order:  Ascending, by date.
+        // Sort order:  Ascending, by .
         String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
         Log.i(FEED_FRAGMENT, "Query to  DB get Preview Table All items");
         return new CursorLoader(getActivity(),
@@ -386,9 +388,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                     if (mRecyclerView.getChildCount() > 0) {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
                         int position = mPosition;
-//                                mPreviewAdapter.getSelectedItemPosition();
 
-//                        Log.i(Utils.TAG_LOG, "Position Adapter: " + position);
                         if (position == RecyclerView.NO_POSITION &&
                                 -1 != mInitialSelectedDate) {
                             Cursor data = mPreviewAdapter.getCursor();
@@ -404,7 +404,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                             }
                         }
                         if (position == RecyclerView.NO_POSITION) position = 0;
-//                        Log.i(Utils.TAG_LOG, "Position Adapter: Move to " + position);
                         mRecyclerView.smoothScrollToPosition(position);
                         RecyclerView.ViewHolder vh = mRecyclerView.findViewHolderForAdapterPosition(position);
                         if (null != vh && mAutoSelectView) {

@@ -7,14 +7,10 @@ import com.dbbest.amateurfeed.App;
 
 public class CloudPreferences {
 
-    /**
-     * This application's preferences label
-     */
+
     private static final String PREFS_NAME = "BlobberPrefs";
 
-    /**
-     * This application's preferences
-     */
+
     private static SharedPreferences settings;
     private static SharedPreferences.Editor editor;
 

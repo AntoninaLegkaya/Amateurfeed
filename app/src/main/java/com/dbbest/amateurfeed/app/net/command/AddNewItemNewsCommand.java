@@ -10,19 +10,19 @@ import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
-import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import static com.dbbest.amateurfeed.ui.fragments.AddItemDetailFragment.ADD_DETAIL_FRAGMENT;
 import static com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment.DETAIL_FRAGMENT_COMMENT;
 
 public class AddNewItemNewsCommand extends Command {
 
     private NewsCreateModel mNewsCreateModel;
 
-    public AddNewItemNewsCommand(String title, String text, String image, ArrayList<TagModel> tags) {
+    public AddNewItemNewsCommand(String title, String text, String image, List<TagModel> tags) {
         mNewsCreateModel = new NewsCreateModel(title, text, image, tags);
     }
 
@@ -38,14 +38,17 @@ public class AddNewItemNewsCommand extends Command {
 
     @Override
     public void execute() {
-        Log.i(DETAIL_FRAGMENT_COMMENT, "Start execute Add News Item Command: \n" + mNewsCreateModel.toString());
+        Log.i(ADD_DETAIL_FRAGMENT, "Start execute Add News Item Command: \n" + mNewsCreateModel.toString());
         RestApiClient apiClient = App.getApiFactory().restClient();
         AuthToken authToken = new AuthToken();
         ResponseWrapper<NewsResponseModel> response = apiClient.addNewNews(authToken.bearer(), mNewsCreateModel);
         if (response != null) {
-            if (response.isSuccessful()) {
-
-                notifySuccess(Bundle.EMPTY);
+            if (response.isSuccessful() && response.data() != null) {
+                NewsResponseModel data = response.data();
+                Log.i(ADD_DETAIL_FRAGMENT, "Created New Item By ID: " + data.getId());
+                Bundle bundle = new Bundle();
+                bundle.putInt("newsId", data.getId());
+                notifySuccess(bundle);
 
             } else {
 
