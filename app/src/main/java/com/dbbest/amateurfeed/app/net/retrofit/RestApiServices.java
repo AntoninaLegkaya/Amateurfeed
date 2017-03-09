@@ -14,6 +14,7 @@ import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.model.AzureServiceSettings;
 import com.dbbest.amateurfeed.model.DeviceInfoModel;
+import com.dbbest.amateurfeed.model.Dictionary;
 import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
@@ -24,8 +25,6 @@ import com.dbbest.amateurfeed.model.UserProfileModel;
 import com.dbbest.amateurfeed.model.UserSettingsModel;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -94,7 +93,7 @@ public interface RestApiServices {
     Call<ResponseWrapper<Object>> postComment(@Header("Authorization") String token, @Body FeedCommentModel commentModel);
 
     @GET("search")
-    Call<ResponseWrapper<Dictionary<String, List>>> getMapUsersNews(@Header("Authorization") String token, @Query("searchParam") String searchParam);
+    Call<ResponseWrapper<Dictionary>> getMapUsersNews(@Query("searchParam") String searchParam);
 
 
     /*    <---- Tag----> */

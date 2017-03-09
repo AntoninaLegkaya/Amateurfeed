@@ -141,7 +141,7 @@ public class FeedProvider extends ContentProvider {
             FeedContract.CommentEntry.COLUMN_POST_ID + " = ? ";
 
     //preview._id = ?
-    private static final String sPreviewSelection =
+    public static final String sPreviewSelection =
             FeedContract.PreviewEntry.TABLE_NAME +
                     "." + FeedContract.PreviewEntry._ID + " = ? ";
 
@@ -188,6 +188,30 @@ public class FeedProvider extends ContentProvider {
         );
 
     }
+
+//    private Cursor getPreviewByIdList(Uri uri, String[] projection, String sortOrder) {
+//
+//        String author = FeedContract.PreviewEntry.getAuthorFromUri(uri);
+//        Log.i(PROVIDER, "Get Selector Preview Tablew: athor: " + author);
+//
+//        String[] selectionArgs;
+//        String selection;
+//
+//
+//        selectionArgs = new String[]{author};
+//        selection = sPreviewSelectionAuthor;
+//
+//        return  sPreviewByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//
+//    }
+
 
     private Cursor getPreviewByIdPreviewTagSelection(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 //        sPreviewByTagQueryBuilder.setProjectionMap(sPreviewProjectionMap);

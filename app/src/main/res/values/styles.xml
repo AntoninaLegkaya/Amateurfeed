@@ -31,7 +31,7 @@
     </style>
 
 
-    <!-- Custom Preference Theme inherits from the v14 support library Material Theme -->
+     <!--Custom Preference Theme inherits from the v14 support library Material Theme -->
     <style name="AppPreferenceTheme" parent="@style/PreferenceFixTheme">
         <item name="preferenceFragmentCompatStyle">@style/PreferenceFixTheme</item>
     </style>
@@ -93,6 +93,7 @@
         <item name="android:height">30dp</item>
         <item name="android:width">50dp</item>
     </style>
+
     <style name="AddItemButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/app_black</item>
         <item name="android:background">@drawable/button_comment</item>
@@ -124,6 +125,14 @@
     </style>
 
     <style name="AppTheme.Widget.InputCommentField" parent="AppTheme">
+
+        <item name="android:textColor">@color/app_black</item>
+        <item name="android:background">@drawable/field_shape</item>
+        <item name="android:textSize">12sp</item>
+
+    </style>
+
+    <style name="AppTheme.Widget.InputSearchParamField" parent="AppTheme">
 
         <item name="android:textColor">@color/app_black</item>
         <item name="android:background">@drawable/field_shape</item>

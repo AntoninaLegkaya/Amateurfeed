@@ -2,15 +2,21 @@ package com.dbbest.amateurfeed.data.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
+import com.dbbest.amateurfeed.utils.Utils;
 
 /**
  * Created by antonina on 06.02.17.
@@ -19,6 +25,14 @@ import com.dbbest.amateurfeed.R;
 public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHolder> {
 
     private Activity activity;
+    private static String TAG_ADAPTER = "Grid Adapter ";
+    private Context mContext;
+
+    public Cursor getCursor() {
+        return mCursor;
+    }
+
+    private Cursor mCursor;
 
     public GridViewAdapter(Activity activity) {
         this.activity = activity;
@@ -34,42 +48,51 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(final GridViewAdapter.ViewHolder viewHolder, final int position) {
-        final int adapterPosition = viewHolder.getAdapterPosition();
-        if (adapterPosition % 3 == 0) {
-            viewHolder.imageView.setImageResource(R.mipmap.splash);
-        } else if (adapterPosition % 3 == 1) {
-            viewHolder.imageView.setImageResource(R.mipmap.splash);
-        } else {
-            viewHolder.imageView.setImageResource(R.mipmap.splash);
-        }
-        viewHolder.textView.setText("Position: " + (adapterPosition + 1));
-        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    public void onBindViewHolder(final GridViewAdapter.ViewHolder holder, final int position) {
+        Cursor cursor = mCursor;
 
-                Toast.makeText(activity, "You clicked at position: " + adapterPosition, Toast.LENGTH_SHORT).show();
+        if (cursor.moveToPosition(holder.getAdapterPosition())) {
+            if (holder.mTextView != null) {
+                (holder.mTextView).setText(cursor.getString(FeedNewsFragment.COL_TITLTE));
+                Log.i(SearchFragment.SEARCH_FRAGMENT, "Set title to news:   " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
             }
-        });
+            if (holder.mImageView != null) {
+
+                Glide.with(mContext)
+                        .load(mCursor.getString(FeedNewsFragment.COL_IMAGE))
+                        .error(R.drawable.art_snow)
+                        .crossFade()
+                        .into(holder.mImageView);
+
+
+            }
+
+        }
+    }
+
+
+    protected class ViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mTextView;
+        private ImageView mImageView;
+
+        public ViewHolder(View view) {
+            super(view);
+            mImageView = (ImageView) view.findViewById(R.id.image);
+            mTextView = (TextView) view.findViewById(R.id.text);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+
+        if (null == mCursor) return 0;
+        return mCursor.getCount();
+
     }
 
-    /**
-     * View holder to display each RecylerView item
-     */
-    protected class ViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView textView;
-        private ImageView imageView;
-
-        public ViewHolder(View view) {
-            super(view);
-            imageView = (ImageView) view.findViewById(R.id.image);
-            textView = (TextView) view.findViewById(R.id.text);
-        }
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
     }
 }

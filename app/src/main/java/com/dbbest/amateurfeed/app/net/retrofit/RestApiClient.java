@@ -17,6 +17,7 @@ import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.model.AzureServiceSettings;
+import com.dbbest.amateurfeed.model.Dictionary;
 import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
@@ -30,9 +31,6 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.http.Header;
-
-import static android.R.attr.id;
 
 /**
  * Created by antonina on 20.01.17.
@@ -141,5 +139,9 @@ public class RestApiClient {
 
     public ResponseWrapper<UserProfileModel> getUserInfo(String token) {
         return executeCall(mApiService.getSpecifiedUserInfo(token));
+    }
+
+    public ResponseWrapper<Dictionary> searchNews(String searchParam) {
+        return executeCall(mApiService.getMapUsersNews(searchParam));
     }
 }

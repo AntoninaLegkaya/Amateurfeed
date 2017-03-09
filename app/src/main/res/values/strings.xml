@@ -128,7 +128,7 @@
     <string name="set_delete_error" translatable="false">You do not  Post Abuse :(</string>
     <string name="set_good_by" translatable="false">By! :)</string>
 
-    <!--Item Detail Dialod-->
+    <!--Item Detail Dialog-->
     <string name="change_image" translatable="false">You invoke change image option</string>
     <string name="set_edit_success" translatable="false">You Updated News :)</string>
     <string name="set_edit_error" >Please logout and authenticate again</string>
@@ -164,5 +164,7 @@
     <string name="txt_access_key" translatable="false">Access Key</string>
     <string name="txt_container" translatable="false">Container</string>
 
+    <!--Search Scree-->
+    <string name="search_hint">search parameter</string>
 
 </resources>

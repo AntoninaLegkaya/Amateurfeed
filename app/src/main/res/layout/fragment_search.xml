@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <android.support.design.widget.CoordinatorLayout
     android:id="@+id/search_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -33,24 +31,36 @@
                 />
         </android.support.v7.widget.Toolbar>
 
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"/>
+
+        <include
+            layout="@layout/input_item_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/abc_dialog_list_padding_vertical_material"
+            android:gravity="center"
+            />
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"/>
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/abc_dialog_list_padding_vertical_material"
             >
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="In this Place will be search results"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/search_feed_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="feed news items"/>
-
+                tools:text="feed news items"
+                />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

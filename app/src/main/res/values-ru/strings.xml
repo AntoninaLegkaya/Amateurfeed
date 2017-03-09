@@ -67,4 +67,5 @@
     <string name="set_edit_error">Пожалуйста перелогинтесь!</string>
     <string name="title_hint">Заголовок</string>
     <string name="publish_button">Опубликовать</string>
+    <string name="search_hint">параметр поиска</string>
 </resources>

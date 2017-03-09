@@ -197,8 +197,6 @@ public class FeedContract {
         public static final String COLUMN_IMAGE = "image";
         public static final String COLUMN_IS_MY = "is_my";
 
-//        public static final String DEFAULT_SORT_ORDER = "author ASC";
-
 
         public static final String[] DEFAULT_PROJECTION = new String[]{
                 FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID,
