@@ -7,10 +7,4 @@
 /.idea
 apk-output/
 .externalNativeBuild
-<<<<<<< HEAD
 .DS_Store
-
-=======
-.idea/
-/.idea
->>>>>>> master
