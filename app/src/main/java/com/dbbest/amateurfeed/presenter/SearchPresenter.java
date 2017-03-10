@@ -59,15 +59,12 @@ public class SearchPresenter extends Presenter<SearchView> implements CommandRes
             if (code == CODE_SEARCH_NEWS) {
                 Dictionary dictionary = (Dictionary) data.get("dictionary");
                 for (News news : dictionary.getNews()) {
-
-
                     ids.add(String.valueOf(news.getId()));
-                    Log.i(SearchFragment.SEARCH_FRAGMENT, "item : " + String.valueOf(news.getId()));
-
+                    Log.i(SearchFragment.SEARCH_FRAGMENT, "news : " + String.valueOf(news.getId()));
                 }
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("ids", ids);
-                getView().initLoader(data);
+                getView().initLoader(bundle);
             }
 
 

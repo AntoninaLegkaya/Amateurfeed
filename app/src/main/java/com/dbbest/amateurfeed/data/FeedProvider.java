@@ -145,6 +145,10 @@ public class FeedProvider extends ContentProvider {
             FeedContract.PreviewEntry.TABLE_NAME +
                     "." + FeedContract.PreviewEntry._ID + " = ? ";
 
+    //preview._id
+    public static final String sPreviewSelectionId =
+            FeedContract.PreviewEntry.TABLE_NAME +
+                    "." + FeedContract.PreviewEntry._ID ;
     //preview._author = ?
     private static final String sPreviewSelectionAuthor =
             FeedContract.PreviewEntry.TABLE_NAME +

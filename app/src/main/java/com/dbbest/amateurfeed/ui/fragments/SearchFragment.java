@@ -25,6 +25,8 @@ import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
 import com.dbbest.amateurfeed.presenter.SearchPresenter;
 import com.dbbest.amateurfeed.view.SearchView;
 
+import java.util.ArrayList;
+
 import static com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment.PREVIEW_COLUMNS;
 
 
@@ -119,15 +121,19 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
 
         Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
         String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
-        String selection = FeedProvider.sPreviewSelection;
-        String[] selectionArg = args.getStringArray("ids");
-        if (selectionArg != null) {
-            int count = args.getStringArray("ids").length;
-            Log.i(SEARCH_FRAGMENT, "Items: count= " + count);
-            for (int i = 0; i < count - 1; i++) {
+        String selection;
+        ArrayList<String> selectionArgList = args.getStringArrayList("ids");
+        String[] selectionArg;
 
-                selection = selection + " OR " + selection;
+        if (selectionArgList != null) {
+
+            selectionArg = selectionArgList.toArray(new String[selectionArgList.size()]);
+            selection = FeedProvider.sPreviewSelectionId + " in (";
+            for (int i = 0; i < selectionArg.length; i++) {
+                selection += "?, ";
             }
+            selection = selection.substring(0, selection.length() - 2) + ")";
+
             Log.i(SEARCH_FRAGMENT, "Query to  DB:  get Preview info items: Selection: " + selection);
             return new CursorLoader(getActivity(),
                     previewListUri,
@@ -142,8 +148,10 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-
-        mGridViewAdapter.swapCursor(data);
+        Log.i(SEARCH_FRAGMENT, "Load Finish data " + data.moveToFirst());
+        if(data != null) {
+            mGridViewAdapter.swapCursor(data);
+        }
     }
 
     @Override
