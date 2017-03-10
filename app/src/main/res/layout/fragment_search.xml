@@ -48,21 +48,15 @@
             android:layout_width="wrap_content"
             android:layout_height="?attr/actionBarSize"/>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/abc_dialog_list_padding_vertical_material"
-            >
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/search_feed_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="feed news items"
+                android:layout_margin="@dimen/abc_dialog_list_padding_vertical_material"
                 />
 
-        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

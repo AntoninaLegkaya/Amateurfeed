@@ -3,9 +3,6 @@ package com.dbbest.amateurfeed.utils;
 import com.dbbest.amateurfeed.app.storage.processor.DataProcessor;
 import com.dbbest.amateurfeed.utils.intarface.IFactory;
 
-/**
- * Created by antonina on 20.01.17.
- */
 
 public class FactoryImpl implements IFactory {
 

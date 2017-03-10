@@ -76,41 +76,25 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
     public static final String DETAIL_TYPE = "TYPE_ITEM";
 
     public static int RESULT_LOAD_IMAGE = 1;
-    //    static final int REQUEST_IMAGE_CAPTURE = 1;
-//    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
 
     private static final int DETAIL_NEWS_LOADER = 1;
     private int mLayoutType;
-
     private TextView mChangeIconLink;
-//    private DetailPresenter mPresenter;
-
-
     private String mCurrentPhotoPath;
-
-
     public ImageView mIconView;
     public TextView mFullNameView;
-
     public TextView mDateView;
-
     public TextView mLikesCountView;
     public TextView mCommentCountView;
-
     public TextView mCommentView;
     public ImageButton mLikeButton;
     public Button mCommentButton;
     public ImageButton mEditButton;
     public ImageButton mRemoveButton;
-
     private RecyclerView mHorizontalList;
     private RecyclerView mCommentList;
     private VerticalListAdapter mVerticalListAdapter;
     private HorizontalListAdapter mHorizontalListAdapter;
-
-
-    private int mLikeImage = R.drawable.ic_favorite_black_24dp;
-    private int mDisLikeImage = R.drawable.ic_favorite_border_black_24dp;
 
 
     public static EditItemDetailFragment newInstance(String key) {
@@ -250,8 +234,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        Log.i(DETAIL_FRAGMENT, "Query to  preview table get item for Details fragment by  uri: " + mUriPreview);
         return new CursorLoader(getActivity(),
                 mUriPreview,
                 FeedNewsFragment.PREVIEW_COLUMNS,
@@ -387,7 +369,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
                             cursor.getInt(FeedNewsFragment.COL_COMMENT_PARENT_COMMENT_ID),
                             cursor.getString(FeedNewsFragment.COL_COMMENT_CREATE_DATE));
                     commentModels.add(commentModel);
-//                    Log.i(DETAIL_FRAGMENT, "Compose array tags: " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -426,10 +407,8 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
             boolean flag = true;
             for (TagModel model : tags) {
 
-
                 if (tagModel.getName().equals(model.getName())) {
 
-                    Log.i(DETAIL_FRAGMENT, "You have tag: " + tagModel.getName());
                     flag = false;
 
                 }
@@ -438,15 +417,12 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
             }
             if (flag) {
 
-                Log.i(DETAIL_FRAGMENT, "You try add new tag: " + tagModel.getName());
                 ContentValues tagValues = new ContentValues();
                 tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
                 tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
                 tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
                 cVTagsVector.add(tagValues);
 
-                Log.i(DETAIL_FRAGMENT, "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " " + "name: " + tagModel.getName() + " " +
-                        "preview_id: " + FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
 
                 if (cVTagsVector.size() > 0) {
                     ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
@@ -563,14 +539,14 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
 
                     isLikeFlag = 0;
                     mLikeButton.setTag("0");
-                    mLikeButton.setImageResource(mDisLikeImage);
+                    mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     mCountIsLikes = mCountIsLikes - 1;
 
 
                 } else if (mLikeButton.getTag() == "0") {
                     isLikeFlag = 1;
                     mLikeButton.setTag("1");
-                    mLikeButton.setImageResource(mLikeImage);
+                    mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
                     mCountIsLikes = mCountIsLikes + 1;
 
 
@@ -579,7 +555,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements 
                 mLikesCountView.setText(String.valueOf(mCountIsLikes));
                 ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag, mCountIsLikes);
             } else {
-                Log.i(DETAIL_FRAGMENT, "Error in like clear All!");
                 mLikesCountView.setText(String.valueOf(0));
                 ((Callback) getActivity()).onLikeItemSelected(mUriPreview, 0, mCountIsLikes);
             }

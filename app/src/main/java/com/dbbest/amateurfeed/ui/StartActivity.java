@@ -27,7 +27,6 @@ import com.facebook.login.widget.LoginButton;
 public class StartActivity extends AppCompatActivity implements StartView {
 
     private StartPresenter mPresenter;
-
     private LoginButton mFacebookLoginButton;
     private CallbackManager mCallbackManager;
     private AppCompatEditText mLoginEdit;
@@ -59,18 +58,14 @@ public class StartActivity extends AppCompatActivity implements StartView {
         mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-
             }
 
             @Override
             public void onCancel() {
-
             }
 
             @Override
             public void onError(FacebookException error) {
-
             }
         });
         mSignUpLink = (TextView) findViewById(R.id.sign_up_link);
@@ -78,10 +73,7 @@ public class StartActivity extends AppCompatActivity implements StartView {
             @Override
             public void onClick(View view) {
                 if (view.getId() == R.id.sign_up_link) {
-
                     startActivity(UiActivityNavigation.registerActivity(StartActivity.this));
-
-
                 }
             }
         });

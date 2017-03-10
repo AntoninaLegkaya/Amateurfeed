@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -83,16 +84,23 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(SEARCH_FRAGMENT, "Click in search button");
+                mGridViewAdapter.swapCursor(null);
                 mPresenter.searchNews(mSearchField.getText().toString());
             }
         });
         mRecyclerView = (RecyclerView) view.findViewById(R.id.search_feed_list_view);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mGridViewAdapter = new GridViewAdapter(getActivity());
-        mGridViewAdapter.swapCursor(null);
+        mGridViewAdapter = new GridViewAdapter(null, 0, getContext(),
 
+                new GridViewAdapter.SearchAdapterShowItemDetails() {
+            @Override
+            public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int typeItem) {
+                ((Callback) getActivity()).showItemDetailsFragment(vh, uri,typeItem);
+            }
+        });
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mGridViewAdapter);
 
         return view;
@@ -107,11 +115,8 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
 
                 if (mSearchField != null) {
                     mSearchField.setText("");
+                    mGridViewAdapter.swapCursor(null);
                 }
-            }
-            if (view.getId() == R.id.search_button) {
-
-
             }
         }
     }
@@ -125,22 +130,23 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
         ArrayList<String> selectionArgList = args.getStringArrayList("ids");
         String[] selectionArg;
 
-        if (selectionArgList != null) {
-
+        if (selectionArgList != null && !selectionArgList.isEmpty()) {
             selectionArg = selectionArgList.toArray(new String[selectionArgList.size()]);
-            selection = FeedProvider.sPreviewSelectionId + " in (";
+
+
+            selection = FeedProvider.sPreviewSelectionId + " IN (";
             for (int i = 0; i < selectionArg.length; i++) {
-                selection += "?, ";
+                selection += selectionArg[i] + ", ";
             }
             selection = selection.substring(0, selection.length() - 2) + ")";
 
-            Log.i(SEARCH_FRAGMENT, "Query to  DB:  get Preview info items: Selection: " + selection);
+            Log.i(SEARCH_FRAGMENT, "Query to  DB:  get Preview info : selection: " + selection + " Count selection arguments: " + selectionArg.length);
             return new CursorLoader(getActivity(),
                     previewListUri,
                     PREVIEW_COLUMNS,
                     selection,
-                    selectionArg,
-                    sortOrder
+                    null,
+                    null
             );
         } else return null;
     }
@@ -148,8 +154,7 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        Log.i(SEARCH_FRAGMENT, "Load Finish data " + data.moveToFirst());
-        if(data != null) {
+        if (data != null) {
             mGridViewAdapter.swapCursor(data);
         }
     }
@@ -161,6 +166,11 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
 
     @Override
     public void initLoader(Bundle data) {
+        Log.i(SearchFragment.SEARCH_FRAGMENT, "Start initiate Loader");
         getLoaderManager().initLoader(SEARCH_NEWS_LOADER, data, this);
+    }
+
+    public interface Callback {
+        public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int typeItem);
     }
 }

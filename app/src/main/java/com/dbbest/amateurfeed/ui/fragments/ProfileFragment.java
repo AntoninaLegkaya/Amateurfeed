@@ -94,7 +94,7 @@ public class ProfileFragment extends Fragment implements ProfileView {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "AddItem", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "AddItem", Toast.LENGTH_SHORT).showItemDetailsFragment();
             }
         });*/
 
@@ -120,8 +120,8 @@ public class ProfileFragment extends Fragment implements ProfileView {
         //set GridLayoutManager
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         mRecyclerView.setLayoutManager(layoutManager);
-        adapter = new GridViewAdapter(getActivity());
-        mRecyclerView.setAdapter(adapter);
+//        adapter = new GridViewAdapter(getActivity());
+//        mRecyclerView.setAdapter(adapter);
 
         return rootView;
     }

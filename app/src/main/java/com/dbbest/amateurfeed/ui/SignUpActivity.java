@@ -8,19 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.presenter.SignUpPresenter;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.view.SignUpView;
 
-/**
- * Created by antonina on 19.01.17.
- */
 
 public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
@@ -29,10 +24,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
     private TextView mResetPswLink;
     private DialogFragment mProgressDialog;
     private Button mSignUpButton;
-    private AppCompatEditText mEmailEditeText;
-    private AppCompatEditText mNameEditeText;
-    private AppCompatEditText mPhoneEditeText;
-    private AppCompatEditText mPasswordEditeText;
+    private AppCompatEditText mEmailEditText;
+    private AppCompatEditText mNameEditText;
+    private AppCompatEditText mPhoneEditText;
+    private AppCompatEditText mPasswordEditText;
 
 
     @Override
@@ -40,10 +35,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
         mPresenter = new SignUpPresenter();
-        mEmailEditeText=(AppCompatEditText) findViewById(R.id.email);
-        mNameEditeText=(AppCompatEditText) findViewById(R.id.fullname);
-        mPhoneEditeText=(AppCompatEditText) findViewById(R.id.phone);
-        mPasswordEditeText=(AppCompatEditText) findViewById(R.id.password);
+        mEmailEditText = (AppCompatEditText) findViewById(R.id.email);
+        mNameEditText = (AppCompatEditText) findViewById(R.id.fullname);
+        mPhoneEditText = (AppCompatEditText) findViewById(R.id.phone);
+        mPasswordEditText = (AppCompatEditText) findViewById(R.id.password);
         mLoginScreenLink = (TextView) findViewById(R.id.login_link);
         mLoginScreenLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,11 +56,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
                 }
             }
         });
-        mSignUpButton= (Button) findViewById(R.id.sign_up_button);
+        mSignUpButton = (Button) findViewById(R.id.sign_up_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.registration(mEmailEditeText.getText().toString(),mNameEditeText.getText().toString(), mPhoneEditeText.getText().toString(),null,mPasswordEditeText.getText().toString(),null,"Android", null);
+                mPresenter.registration(mEmailEditText.getText().toString(), mNameEditText.getText().toString(), mPhoneEditText.getText().toString(), null, mPasswordEditText.getText().toString(), null, "Android", null);
 
             }
         });

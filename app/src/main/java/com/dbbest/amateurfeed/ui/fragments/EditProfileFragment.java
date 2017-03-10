@@ -15,10 +15,6 @@ import com.dbbest.amateurfeed.presenter.EditProfilePresenter;
 import com.dbbest.amateurfeed.ui.HomeActivity;
 import com.dbbest.amateurfeed.view.EditeProfileView;
 
-/**
- * Created by antonina on 25.01.17.
- */
-
 public class EditProfileFragment extends Fragment implements EditeProfileView {
     private EditProfilePresenter mPresenter;
     private static final String PARAM_KEY = "param_key";

@@ -52,7 +52,6 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
     protected Uri mUriImage;
     public ImageView mImageView;
     protected DetailPresenter mPresenter;
-//
     protected Uri mUriPreview;
     protected TextView mDescriptionView;
     protected TextView mTitleView;

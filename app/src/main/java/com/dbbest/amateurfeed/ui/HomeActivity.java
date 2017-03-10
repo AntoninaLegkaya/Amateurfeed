@@ -20,17 +20,19 @@ import android.widget.TabHost;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.AddItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.BaseChangeDetailFragment;
-import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
+import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.BottomTab;
+import com.dbbest.amateurfeed.utils.Constants;
 import com.dbbest.amateurfeed.utils.TabManager;
 import com.dbbest.amateurfeed.view.HomeView;
 
@@ -40,7 +42,9 @@ import java.util.Stack;
 import static com.dbbest.amateurfeed.R.id.imageView;
 
 
-public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, HomeView, WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback, BaseChangeDetailFragment.Callback {
+public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener, HomeView,
+        WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback,
+        BaseChangeDetailFragment.Callback, SearchFragment.Callback {
 
     private static String TAG_HOME = "HomeActivity";
 
@@ -86,39 +90,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         backStacks = (HashMap<BottomTab, Stack<String>>) savedInstanceState.getSerializable("stacks");
         refreshContent();
 
-//        int saved = savedInstanceState.getInt("tab", 0);
-//        String tag = savedInstanceState.getString("tag");
-//
-//        if (tag != null) {
-//            Log.i(MANAGE_FRAGMENTS, " Restore selected fragment [Tag]: " + tag);
-//            Uri uri = savedInstanceState.getParcelable(ItemDetailFragment.DETAIL_URI);
-//            int type = savedInstanceState.getInt(ItemDetailFragment.DETAIL_TYPE);
-//
-//            if (tag != DETAIL_NEWS_FRAGMENT_TAG) {
-//                if (saved != mTabHost.getCurrentTab())
-//                    Log.i(MANAGE_FRAGMENTS, " Show Fragment by  [Tag]: " + tag);
-//                mTabHost.setCurrentTab(saved);
-//            } else {
-//
-//                if (uri != null) {
-//                    Log.i(MANAGE_FRAGMENTS, " Restore Detail info : \n" + " Uri: " + uri.toString() + "\n Type: " + type);
-//                    Bundle args = new Bundle();
-//                    args.putParcelable(ItemDetailFragment.DETAIL_URI, uri);
-//                    args.putInt(ItemDetailFragment.DETAIL_TYPE, type);
-//
-//                    addFragment(args);
-//                } else {
-//                    refreshContent();
-//                    mTabHost.setCurrentTab(saved);
-//
-//                    Log.i(MANAGE_FRAGMENTS, " Show Default Fragment by  [Tab]: " + saved);
-//
-//                }
-//
-//            }
-//        }
-
-
     }
 
 
@@ -163,7 +134,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
         } else {
 
-            Log.i(MANAGE_FRAGMENTS, "Initialize back stacks on first run");
             backStacks = new HashMap<BottomTab, Stack<String>>();
             backStacks.put(BottomTab.HOME, new Stack<String>());
             backStacks.put(BottomTab.SEARCH, new Stack<String>());
@@ -186,7 +156,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
             Fragment fragment = null;
             if (backStack == null || backStack.isEmpty()) {
 
-                Log.i(MANAGE_FRAGMENTS, " If BackStack is empty?... instantiate and add initial tab fragment : " + tabTag);
 
                 if (tabTag.equals(BottomTab.HOME.tag)) {
 
@@ -215,7 +184,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     private void addFragment(Bundle args) {
 
-        Log.i(MANAGE_FRAGMENTS, "------------------------- Attach Detail -------------------------------------- ");
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -231,7 +199,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         if (feedStack.isEmpty()) {
             feedStack.push(FEED_NEWS_FRAGMENT_TAG);
             Fragment instantiate = Fragment.instantiate(this, FeedNewsFragment.class.getName());
-            Log.i(MANAGE_FRAGMENTS, " If feedStack is empty?... instantiate and add initial Feed Fragment [Tag]: " + feedStack.peek());
 
         } else
 
@@ -239,7 +206,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
             Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
             if (top != null || !top.isDetached()) {
                 transaction.detach(top);
-                Log.i(MANAGE_FRAGMENTS, "Detach   fragment" + " by [Tag]: " + feedStack.peek());
             }
 
         }
@@ -247,7 +213,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         refreshContent();
 
         detailStack.push(DETAIL_NEWS_FRAGMENT_TAG);
-        Log.i(MANAGE_FRAGMENTS, "Create Item Detail Fragment [Tag]: " + detailStack.peek());
         Fragment instantiateDetailFragment;
         if (!args.isEmpty()) {
             instantiateDetailFragment = Fragment.instantiate(this, EditItemDetailFragment.class.getName());
@@ -260,7 +225,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         transaction.add(android.R.id.tabcontent, instantiateDetailFragment, detailStack.peek());
         transaction.commit();
         mCurrentTag = detailStack.peek();
-        Log.i(MANAGE_FRAGMENTS, "Attach  " + BottomTab.DETAIL.fragmentClass.getName() + " by [Tag]: " + detailStack.peek());
 
     }
 
@@ -275,9 +239,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         if (fragment != null) {
             ft.attach(fragment);
             ft.commit();
-            Log.i(MANAGE_FRAGMENTS, "Show Fragment  by [Tag]: " + backStack.peek());
         } else {
-            Log.i(MANAGE_FRAGMENTS, "Could not Show Fragment  by [Tag]: " + tag);
         }
     }
 
@@ -297,7 +259,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     private void refreshContent() {
 
-        Log.i(MANAGE_FRAGMENTS, "Refresh Content");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (backStacks != null) {
@@ -308,7 +269,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 if (top != null || !top.isDetached()) {
                     ft.detach(top);
 
-                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.DETAIL.fragmentClass.getName() + " by [Tag]: " + detailStack.peek() + "-----------");
                 }
 
             }
@@ -319,7 +279,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
                 if (top != null && !top.isDetached()) {
                     ft.detach(top);
-                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.HOME.fragmentClass.getName() + " by [Tag]: " + feedStack.peek() + "-----------");
                 }
 
             }
@@ -329,7 +288,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 Fragment top = getSupportFragmentManager().findFragmentByTag(searchStack.peek());
                 if (top != null || !top.isDetached()) {
                     ft.detach(top);
-                    Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.SEARCH.fragmentClass.getName() + " by [Tag]: " + searchStack.peek() + "-----------");
                 }
 
             }
@@ -340,13 +298,11 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 if (top != null) {
                     if (!top.isDetached()) {
                         ft.detach(top);
-                        Log.i(MANAGE_FRAGMENTS, "--------------Detach " + BottomTab.PROFILE.fragmentClass.getName() + " by [Tag]: " + profileStack.peek() + "-----------");
                     }
                 }
             }
             ft.commit();
         }
-        Log.i(MANAGE_FRAGMENTS, "-------------------------Refresh Content----------------------------------------------- ");
     }
 
 
@@ -424,36 +380,37 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     @Override
     public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
+
+        int layoutId = getLayoutId(vh);
+
+        mArgsDetail = new Bundle();
+        mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
+        mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);
+        Fragment fragment = EditItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
+        fragment.setArguments(mArgsDetail);
+        addFragment(mArgsDetail);
+    }
+
+    private int getLayoutId(PreviewAdapter.PreviewAdapterViewHolder vh ) {
         int layoutId = -1;
         switch (vh.getItemViewType()) {
 
-            case PreviewAdapter.VIEW_TYPE_MY: {
+            case Constants.VIEW_TYPE_MY: {
                 layoutId = R.layout.fragment_item_my_detail;
                 break;
 
             }
-            case PreviewAdapter.VIEW_TYPE_USER: {
+            case Constants.VIEW_TYPE_USER: {
                 layoutId = R.layout.fragment_item_detail;
                 break;
             }
-            case PreviewAdapter.VIEW_TYPE_ITEM_EMPTY: {
+            case Constants.VIEW_TYPE_ITEM_EMPTY: {
                 layoutId = R.layout.item_empty_detail;
                 break;
             }
 
         }
-
-        mArgsDetail = new Bundle();
-        mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
-        mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);
-
-        Fragment fragment = EditItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
-        fragment.setArguments(mArgsDetail);
-
-
-        addFragment(mArgsDetail);
-
-
+        return layoutId;
     }
 
     @Override
@@ -475,13 +432,10 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
         mUriId = uri;
         UIDialogNavigation.warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, true, 100, this).show(getSupportFragmentManager(), "abuse_dialog");
-
-
     }
 
     @Override
     public void upLoadNewsItems(int offset, int count) {
-        Log.i(TAG_HOME, "New Request to upload news: offset: " + offset);
         mPresenter.getNews(offset, count);
     }
 
@@ -495,7 +449,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     @Override
     public void refreshFeed() {
-    //        TODO: add refresh feedList? to get new item
         refreshFragmentFeedLoader();
     }
 
@@ -561,7 +514,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     @Override
     public void showSuccessLikeDialog() {
-//        UIDialogNavigation.showWarningDialog(R.string.set_like_succes).show(getSupportFragmentManager(), "warn");
     }
 
     @Override
@@ -590,9 +542,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     @Override
     public void onWarningDialogOkClicked(int dialogCode) {
         if (mUriId != null) {
-
             long id = FeedContract.PreviewEntry.getIdFromUri(mUriId);
-            Log.i(TAG_HOME, " Suggest Delete Item uri: " + id);
             mPresenter.putDelete(id, "Comment");
         }
 
@@ -631,10 +581,23 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
     }
 
-
     @NonNull
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int layoutId) {
+
+
+        mArgsDetail = new Bundle();
+        mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
+        mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);
+        Fragment fragment = EditItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
+        fragment.setArguments(mArgsDetail);
+
+
+        addFragment(mArgsDetail);
     }
 }

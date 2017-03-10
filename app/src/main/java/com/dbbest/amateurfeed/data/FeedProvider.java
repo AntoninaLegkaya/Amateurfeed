@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class FeedProvider extends ContentProvider {
 
-  private static String PROVIDER="FeedProvider";
+    private static String PROVIDER = "FeedProvider";
     public static long TEST_TAG_ID = 1;
     public static String TEST_TAG_AUTHOR = "Tony";
     public static long TEST_ID = 1;
@@ -148,7 +148,7 @@ public class FeedProvider extends ContentProvider {
     //preview._id
     public static final String sPreviewSelectionId =
             FeedContract.PreviewEntry.TABLE_NAME +
-                    "." + FeedContract.PreviewEntry._ID ;
+                    "." + FeedContract.PreviewEntry._ID;
     //preview._author = ?
     private static final String sPreviewSelectionAuthor =
             FeedContract.PreviewEntry.TABLE_NAME +
@@ -170,10 +170,10 @@ public class FeedProvider extends ContentProvider {
         return qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
     }
 
+
     private Cursor getPreviewByAuthor(Uri uri, String[] projection, String sortOrder) {
 
         String author = FeedContract.PreviewEntry.getAuthorFromUri(uri);
-        Log.i(PROVIDER, "Get Selector Preview Tablew: athor: " + author);
 
         String[] selectionArgs;
         String selection;
@@ -193,33 +193,8 @@ public class FeedProvider extends ContentProvider {
 
     }
 
-//    private Cursor getPreviewByIdList(Uri uri, String[] projection, String sortOrder) {
-//
-//        String author = FeedContract.PreviewEntry.getAuthorFromUri(uri);
-//        Log.i(PROVIDER, "Get Selector Preview Tablew: athor: " + author);
-//
-//        String[] selectionArgs;
-//        String selection;
-//
-//
-//        selectionArgs = new String[]{author};
-//        selection = sPreviewSelectionAuthor;
-//
-//        return  sPreviewByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-//                projection,
-//                selection,
-//                selectionArgs,
-//                null,
-//                null,
-//                sortOrder
-//        );
-//
-//    }
-
 
     private Cursor getPreviewByIdPreviewTagSelection(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-//        sPreviewByTagQueryBuilder.setProjectionMap(sPreviewProjectionMap);
-        //  sPreviewByTagQueryBuilder.appendWhere(FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID + "=" + uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION));
 
         sPreviewByTagQueryBuilder.appendWhere(FeedContract.PreviewTagEntry.TABLE_NAME + "." + FeedContract.PreviewTagEntry.COLUMN_PREVIEW_ID + "=" + uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION));
 
@@ -285,7 +260,6 @@ public class FeedProvider extends ContentProvider {
         if (c.moveToFirst()) {
 
 
-
         } else {
         }
 
@@ -310,7 +284,6 @@ public class FeedProvider extends ContentProvider {
         if (c.moveToFirst()) {
 
 
-
         } else {
         }
 
@@ -333,7 +306,6 @@ public class FeedProvider extends ContentProvider {
         );
 
         if (c.moveToFirst()) {
-
 
 
         } else {
@@ -440,7 +412,7 @@ public class FeedProvider extends ContentProvider {
 
 
             case PREVIEW: {
-                Log.i(PROVIDER, "Query Get All Data from preview.table");
+                Log.i(PROVIDER, "Query Get All Data from preview.table selection = " + selection);
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         FeedContract.PreviewEntry.TABLE_NAME,
                         projection,
@@ -451,12 +423,12 @@ public class FeedProvider extends ContentProvider {
                         sortOrder
 
                 );
+                Log.i(PROVIDER, "Query Get All Data from preview.table retCursor= " + retCursor.moveToFirst());
                 break;
             }
 
 
             case PREVIEW_ID: {
-//                Log.i(PROVIDER, "Get Item from Preview Tablew by ID");
                 retCursor = getPreviewByIdSelection(uri, projection, selection, selectionArgs, sortOrder);
                 break;
             }

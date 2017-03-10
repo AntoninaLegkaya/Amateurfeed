@@ -17,9 +17,7 @@ import com.dbbest.amateurfeed.presenter.PreferencePresenter;
 import com.dbbest.amateurfeed.ui.fragments.PrefFragment;
 import com.dbbest.amateurfeed.view.PreferenceView;
 
-/**
- * Created by antonina on 25.01.17.
- */
+
 
 public class SettingsActivity extends PreferenceActivity
         implements PreferenceView, SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
@@ -31,10 +29,6 @@ public class SettingsActivity extends PreferenceActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSettingsPresenter = new PreferencePresenter();
-
-
-
-
     }
 
     @Override
@@ -43,7 +37,6 @@ public class SettingsActivity extends PreferenceActivity
         mSettingsPresenter.detachView();
     }
 
-    // Registers a shared preference change listener that gets notified when preferences change
     @Override
     protected void onResume() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());

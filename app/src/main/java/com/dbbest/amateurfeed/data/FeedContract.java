@@ -237,6 +237,8 @@ public class FeedContract {
             return CONTENT_URI.buildUpon().appendPath(isMyFlag).build();
         }
 
+        public static Uri buildGetPreviewById(long id) {return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);}
+
 
         public static String getAuthorFromUri(Uri uri) {return uri.getPathSegments().get(1);}
     }

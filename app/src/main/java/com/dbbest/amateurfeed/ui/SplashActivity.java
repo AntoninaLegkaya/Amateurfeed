@@ -15,9 +15,6 @@ import com.dbbest.amateurfeed.model.CurrentUser;
 import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 
-/**
- * Created by antonina on 19.01.17.
- */
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -57,10 +54,6 @@ public class SplashActivity extends AppCompatActivity {
     private void nextScreen() {
         AuthToken authToken = App.getFactory().data().authToken();
         Intent intent;
-
-        Log.i(Utils.TAG_LOG, authToken.toString());
-//        authToken.purge();
-
         if (authToken.isValid()) {
 
             intent = UiActivityNavigation.homeActivity(SplashActivity.this);

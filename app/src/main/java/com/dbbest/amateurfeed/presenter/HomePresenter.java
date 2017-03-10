@@ -26,15 +26,8 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
     private CommandResultReceiver mResultReceiver;
 
     public void getNews(int offset, int count) {
-        if (getView() != null) {
-            HomeView view = getView();
-
-//            view.showProgressDialog();
-        }
         Command command = new GetNewsCommand(offset, count);
         command.send(CODE_GET_NEWS, mResultReceiver);
-
-
     }
 
     public void putLike(long id, int isLike) {
@@ -59,7 +52,7 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
 
             view.showProgressDialog();
         }
-        Command command = new DeleteNewsCommand((int)id, comment);
+        Command command = new DeleteNewsCommand((int) id, comment);
         command.send(CODE_DELETE_NEWS, mResultReceiver);
 
 
@@ -87,11 +80,9 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
             if (code == CODE_GET_NEWS) {
                 getView().refreshFragmentFeedLoader();
             } else if (code == CODE_LIKE_NEWS) {
-                getView().dismissProgressDialog();
                 getView().showSuccessLikeDialog();
                 getView().updateColumnLikeInBd();
             } else if (code == CODE_DELETE_NEWS) {
-                getView().dismissProgressDialog();
                 getView().showSuccessDeleteDialog();
             }
         }

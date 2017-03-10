@@ -18,9 +18,6 @@ import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.ResetPasswordView;
 
-/**
- * Created by antonina on 19.01.17.
- */
 
 public class ResetPasswordActivity extends AppCompatActivity implements ResetPasswordView {
     private PasswordResetPresenter mPresenter;
@@ -43,7 +40,6 @@ public class ResetPasswordActivity extends AppCompatActivity implements ResetPas
         mResetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(Utils.TAG_LOG, "Reset button pressed");
                 mPresenter.resetPassword(mEmailEdit.getText().toString());
             }
         });
@@ -63,7 +59,6 @@ public class ResetPasswordActivity extends AppCompatActivity implements ResetPas
                 if (view.getId() == R.id.sign_up_link) {
 
                     startActivity(UiActivityNavigation.registerActivity(ResetPasswordActivity.this));
-
 
                 }
             }

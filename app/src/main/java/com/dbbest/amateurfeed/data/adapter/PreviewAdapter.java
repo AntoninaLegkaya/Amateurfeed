@@ -3,8 +3,6 @@ package com.dbbest.amateurfeed.data.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,26 +18,16 @@ import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
-import com.dbbest.amateurfeed.utils.ItemChoiceManager;
+import com.dbbest.amateurfeed.utils.Constants;
 import com.dbbest.amateurfeed.utils.Utils;
-
-import java.text.ParseException;
-
-/**
- * Created by antonina on 06.02.17.
- */
 
 public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewAdapterViewHolder> {
 
-    private static String ADAPTER="Preview Adapter";
+    private static String ADAPTER = "Preview Adapter";
     private Cursor mCursor;
     final private Context mContext;
-    public static final int VIEW_TYPE_MY = 0;
-    public static final int VIEW_TYPE_USER = 1;
-    public static final int VIEW_TYPE_ITEM_EMPTY = 2;
 
     private final View mEmptyView;
-//    private final ItemChoiceManager mICM;
     private RecyclerView mHorizontalList;
     private HorizontalListAdapter mHorizontalListAdapter;
 
@@ -52,17 +40,21 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     private final FeedAdapterLoadNews mLoadNewsHandler;
 
 
-    public PreviewAdapter(Context context, View emptyView, int choiceMode, FeedAdapterOnClickHandler clickHandler, FeedCommentAdapterOnClickHandler commentClickHandler, FeedLikeAdapterOnClickHandler likeClickHandler, FeedEditAdapterOnClickHandler editeClickHandler, FeedRemoveAdapterOnClickHandler removeClickHandler, FeedAdapterLoadNews loadNewsHandler) {
+    public PreviewAdapter(Context context, View emptyView, int choiceMode, FeedAdapterOnClickHandler clickHandler,
+                          FeedCommentAdapterOnClickHandler commentClickHandler,
+                          FeedLikeAdapterOnClickHandler likeClickHandler,
+                          FeedEditAdapterOnClickHandler editClickHandler,
+                          FeedRemoveAdapterOnClickHandler removeClickHandler,
+                          FeedAdapterLoadNews loadNewsHandler) {
+
         mContext = context;
         mClickHandler = clickHandler;
         mCommentClickHandler = commentClickHandler;
         mLikeClickHandler = likeClickHandler;
-        mEditClickHandler = editeClickHandler;
+        mEditClickHandler = editClickHandler;
         mRemoveClickHandler = removeClickHandler;
         mLoadNewsHandler = loadNewsHandler;
         mEmptyView = emptyView;
-//        mICM = new ItemChoiceManager(this);
-//        mICM.setChoiceMode(choiceMode);
     }
 
 
@@ -123,33 +115,22 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             long id;
             if (mCursor != null) {
                 mCursor.moveToPosition(adapterPosition);
-
-
                 int idx = mCursor.getColumnIndex(FeedContract.PreviewEntry._ID);
                 id = mCursor.getLong(idx);
-                Log.i(ADAPTER, "You Get Item By ID: " + id);
-
-
                 if (view.getId() == R.id.like_button) {
                     mLikeClickHandler.onClick(this, id);
-//                    mICM.onClick(this);
                 }
                 if (view.getId() == R.id.item || view.getId() == R.id.item_my) {
                     mClickHandler.onClick(this, id);
-//                    mICM.onClick(this);
-
                 }
                 if (view.getId() == R.id.comment_button) {
                     mCommentClickHandler.onClick(this, id);
-//                    mICM.onClick(this);
                 }
                 if (view.getId() == R.id.edit_button) {
                     mEditClickHandler.onClick(this, id);
-//                    mICM.onClick(this);
                 }
                 if (view.getId() == R.id.delete_button) {
                     mRemoveClickHandler.onClick(this, id);
-//                    mICM.onClick(this);
                 }
 
             }
@@ -157,40 +138,14 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     }
 
-    public interface FeedAdapterLoadNews {
-
-        void load(PreviewAdapter.PreviewAdapterViewHolder vh, int count, int offset);
-
-    }
-
-    public interface FeedAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, long id);
-    }
-
-    public interface FeedCommentAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, long id);
-    }
-
-    public interface FeedLikeAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, long id);
-    }
-
-    public interface FeedEditAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, long id);
-    }
-
-    public interface FeedRemoveAdapterOnClickHandler {
-        void onClick(PreviewAdapterViewHolder vh, long id);
-    }
-
 
     @Override
     public int getItemViewType(int position) {
         if (mCursor != null) {
             mCursor.moveToPosition(position);
-            return (mCursor.getInt(FeedNewsFragment.COL_IS_MY) == 1) ? VIEW_TYPE_MY : VIEW_TYPE_USER;
+            return (mCursor.getInt(FeedNewsFragment.COL_IS_MY) == 1) ? Constants.VIEW_TYPE_MY : Constants.VIEW_TYPE_USER;
         }
-        return VIEW_TYPE_ITEM_EMPTY;
+        return Constants.VIEW_TYPE_ITEM_EMPTY;
     }
 
     @Override
@@ -200,16 +155,16 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
             int layoutId = -1;
             switch (viewType) {
 
-                case VIEW_TYPE_MY: {
+                case Constants.VIEW_TYPE_MY: {
                     layoutId = R.layout.item_my_news_layout;
                     break;
 
                 }
-                case VIEW_TYPE_USER: {
+                case Constants.VIEW_TYPE_USER: {
                     layoutId = R.layout.item_news_layout;
                     break;
                 }
-                case VIEW_TYPE_ITEM_EMPTY: {
+                case Constants.VIEW_TYPE_ITEM_EMPTY: {
                     layoutId = R.layout.item_empty_news;
                     break;
                 }
@@ -316,17 +271,9 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
                 null
         );
 
-        if (mCursorTags!=null) {
+        if (mCursorTags != null) {
             mHorizontalListAdapter.swapCursor(mCursorTags);
         }
-
-
-        // this enables better animations. even if we lose state due to a device rotation,
-        // the animator can use this to re-find the original view
-        ViewCompat.setTransitionName(holder.mIconView, "iconView" + position);
-//        mICM.onBindViewHolder(holder, position);
-
-
     }
 
 
@@ -341,9 +288,6 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
     }
 
-//    public int getSelectedItemPosition() {
-//        return mICM.getSelectedItemPosition();
-//    }
 
     public Cursor getCursor() {
         return mCursor;
@@ -364,19 +308,37 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        mICM.onRestoreInstanceState(savedInstanceState);
-//    }
-//
-//    public void onSaveInstanceState(Bundle outState) {
-//        mICM.onSaveInstanceState(outState);
-//    }
-
 
     private void deleteItem(RecyclerView.ViewHolder holder, int position) {
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mCursor.getCount());
         holder.itemView.setVisibility(View.GONE);
+    }
+
+    public interface FeedAdapterLoadNews {
+
+        void load(PreviewAdapter.PreviewAdapterViewHolder vh, int count, int offset);
+
+    }
+
+    public interface FeedAdapterOnClickHandler {
+        void onClick(PreviewAdapterViewHolder vh, long id);
+    }
+
+    public interface FeedCommentAdapterOnClickHandler {
+        void onClick(PreviewAdapterViewHolder vh, long id);
+    }
+
+    public interface FeedLikeAdapterOnClickHandler {
+        void onClick(PreviewAdapterViewHolder vh, long id);
+    }
+
+    public interface FeedEditAdapterOnClickHandler {
+        void onClick(PreviewAdapterViewHolder vh, long id);
+    }
+
+    public interface FeedRemoveAdapterOnClickHandler {
+        void onClick(PreviewAdapterViewHolder vh, long id);
     }
 
 

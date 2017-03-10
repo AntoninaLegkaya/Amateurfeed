@@ -1,19 +1,18 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -24,9 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
@@ -36,7 +33,9 @@ import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.FeedView;
 
 
-public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
+public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        View.OnClickListener, FeedView {
 
 
     private static String FEED_FRAGMENT = "Feed Fragment ";
@@ -47,14 +46,11 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     private FeedListPresenter mPresenter;
     private PreviewAdapter mPreviewAdapter;
     private static final int NEWS_LOADER = 0;
-
     private int mChoiceMode;
-
     private static final String SELECTED_KEY = "selected_position";
     private boolean mHoldForTransition;
     private long mInitialSelectedDate = -1;
     private boolean mAutoSelectView;
-    //    private boolean mIsViewInited;
     private Context mContext;
     private FloatingActionButton mFloatingActionButton;
 
@@ -147,23 +143,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
-    public interface Callback {
-
-        public void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void upLoadNewsItems(int count, int offset);
-
-        public void addNewItemDetail();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,10 +169,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-
-        // We hold for transition here just in-case the activity
-        // needs to be re-created. In a standard return transition,
-        // this doesn't actually make a difference.
         if (mHoldForTransition) {
             getActivity().supportPostponeEnterTransition();
         }
@@ -297,11 +272,8 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(SELECTED_KEY)) {
-                // The RecyclerView probably hasn't even been populated yet.  Actually perform the
-                // swapout in onLoadFinished.
                 mPosition = savedInstanceState.getInt(SELECTED_KEY);
             }
-//            mPreviewAdapter.onRestoreInstanceState(savedInstanceState);
         }
         return rootView;
     }
@@ -322,17 +294,11 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void updateEmptyView() {
 
-
         if (mPreviewAdapter.getItemCount() == 0) {
-
             TextView tv = (TextView) getView().findViewById(R.id.recycle_feed_empty);
             if (null != tv) {
-
-
                 int message = R.string.empty_feed_list;
-
                 tv.setText(message);
-
             }
 
         }
@@ -429,5 +395,20 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         mInitialSelectedDate = initialSelectedDate;
     }
 
+    public interface Callback {
 
+        public void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+        public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+        public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+        public void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+        public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+        public void upLoadNewsItems(int count, int offset);
+
+        public void addNewItemDetail();
+    }
 }

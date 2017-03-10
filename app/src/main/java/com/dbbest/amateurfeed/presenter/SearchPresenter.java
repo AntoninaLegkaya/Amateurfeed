@@ -1,14 +1,18 @@
 package com.dbbest.amateurfeed.presenter;
 
 import android.common.framework.Presenter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.command.CheckTagCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.SearchCommand;
+import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.model.Dictionary;
 import com.dbbest.amateurfeed.model.News;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
@@ -57,19 +61,38 @@ public class SearchPresenter extends Presenter<SearchView> implements CommandRes
         ArrayList<String> ids = new ArrayList<>();
         if (getView() != null) {
             if (code == CODE_SEARCH_NEWS) {
-                Dictionary dictionary = (Dictionary) data.get("dictionary");
-                for (News news : dictionary.getNews()) {
-                    ids.add(String.valueOf(news.getId()));
-                    Log.i(SearchFragment.SEARCH_FRAGMENT, "news : " + String.valueOf(news.getId()));
+                if (data != null) {
+                    Dictionary dictionary = (Dictionary) data.get("dictionary");
+                    Bundle bundle = new Bundle();
+                    for (News news : dictionary.getNews()) {
+
+                        Cursor cursor = getPreviewByIdCursor(news.getId());
+                        if (cursor.moveToFirst()) {
+                            ids.add(String.valueOf(news.getId()));
+                            Log.i(SearchFragment.SEARCH_FRAGMENT, "news : " + String.valueOf(news.getId()) + " Found in BD: " + cursor.moveToFirst());
+                        }
+                    }
+                    Log.i(SearchFragment.SEARCH_FRAGMENT, "Compose Bundle with ids");
+                    bundle.putStringArrayList("ids", ids);
+                    getView().initLoader(bundle);
                 }
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("ids", ids);
-                getView().initLoader(bundle);
             }
 
 
         }
 
+    }
+
+    protected Cursor getPreviewByIdCursor(long mIdPreview) {
+        Uri uriPreview = FeedContract.PreviewEntry.buildGetPreviewById(mIdPreview);
+
+        return App.instance().getContentResolver().query(
+                uriPreview,
+                null,
+                null,
+                null,
+                null
+        );
     }
 
     @Override
