@@ -72,7 +72,6 @@ public class SearchPresenter extends Presenter<SearchView> implements CommandRes
                             Log.i(SearchFragment.SEARCH_FRAGMENT, "news : " + String.valueOf(news.getId()) + " Found in BD: " + cursor.moveToFirst());
                         }
                     }
-                    Log.i(SearchFragment.SEARCH_FRAGMENT, "Compose Bundle with ids");
                     bundle.putStringArrayList("ids", ids);
                     getView().initLoader(bundle);
                 }

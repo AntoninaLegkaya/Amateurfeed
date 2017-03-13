@@ -135,6 +135,9 @@
     <string name="set_add_comment_success" translatable="false">You Added Comment :)</string>
     <string name="add_news_success" translatable="false">You Add News :)</string>
 
+    <!--Search Screen Dialog-->
+    <string name="search_error" >News not found</string>
+
     <!-- Date format [CHAR LIMIT=NONE] -->
     <string name="format_full_friendly_date" translatable="false"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
 

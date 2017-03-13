@@ -19,11 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.FeedProvider;
 import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
 import com.dbbest.amateurfeed.presenter.SearchPresenter;
+import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
 import com.dbbest.amateurfeed.view.SearchView;
 
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import static com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment.PREVIEW_COLUM
 
 public class SearchFragment extends Fragment implements SearchView, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
     private static final String PARAM_KEY = "param_key";
-    private static final int SEARCH_NEWS_LOADER = 1;
+    private static final int SEARCH_NEWS_LOADER = 3;
     public static String SEARCH_FRAGMENT = "SearchFragment";
     private AppCompatEditText mSearchField;
     private ImageButton mDeleteSearchParam;
@@ -84,7 +86,7 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGridViewAdapter.swapCursor(null);
+                mGridViewAdapter.changeCursor(null);
                 mPresenter.searchNews(mSearchField.getText().toString());
             }
         });
@@ -94,11 +96,11 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
         mGridViewAdapter = new GridViewAdapter(null, 0, getContext(),
 
                 new GridViewAdapter.SearchAdapterShowItemDetails() {
-            @Override
-            public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int typeItem) {
-                ((Callback) getActivity()).showItemDetailsFragment(vh, uri,typeItem);
-            }
-        });
+                    @Override
+                    public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int typeItem) {
+                        ((Callback) getActivity()).showItemDetailsFragment(vh, uri, typeItem);
+                    }
+                });
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mGridViewAdapter);
@@ -115,7 +117,6 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
 
                 if (mSearchField != null) {
                     mSearchField.setText("");
-                    mGridViewAdapter.swapCursor(null);
                 }
             }
         }
@@ -153,21 +154,46 @@ public class SearchFragment extends Fragment implements SearchView, LoaderManage
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        if (data != null) {
+        Log.i(SearchFragment.SEARCH_FRAGMENT, " Loading finished");
+        if (loader.getId() == SEARCH_NEWS_LOADER && data != null) {
+            Log.i(SearchFragment.SEARCH_FRAGMENT, " Loading finished, data not Null");
             mGridViewAdapter.swapCursor(data);
+        } else {
+
+            showEmptySearchDialog();
+
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        Log.i(SearchFragment.SEARCH_FRAGMENT, "Reset Loader");
+        mGridViewAdapter.swapCursor(null);
     }
 
     @Override
     public void initLoader(Bundle data) {
-        Log.i(SearchFragment.SEARCH_FRAGMENT, "Start initiate Loader");
-        getLoaderManager().initLoader(SEARCH_NEWS_LOADER, data, this);
+        ArrayList<String> list = data.getStringArrayList("ids");
+        if (!list.isEmpty()) {
+            if (getLoaderManager().getLoader(SEARCH_NEWS_LOADER) != null) {
+
+                getLoaderManager().restartLoader(SEARCH_NEWS_LOADER, data, this);
+
+            } else if (getLoaderManager().getLoader(SEARCH_NEWS_LOADER) == null) {
+
+                getLoaderManager().initLoader(SEARCH_NEWS_LOADER, data, this);
+
+            }
+        } else {
+
+            showEmptySearchDialog();
+
+        }
+    }
+
+    @Override
+    public void showEmptySearchDialog() {
+        UIDialogNavigation.showWarningDialog(R.string.search_error).show(getActivity().getSupportFragmentManager(), "warn");
     }
 
     public interface Callback {

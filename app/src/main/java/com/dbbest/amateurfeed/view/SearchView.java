@@ -10,4 +10,5 @@ import android.os.Bundle;
 public interface SearchView extends IView {
 
     public void initLoader(Bundle bundle);
+    public void showEmptySearchDialog();
 }

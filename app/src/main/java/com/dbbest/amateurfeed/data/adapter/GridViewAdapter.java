@@ -32,11 +32,11 @@ public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridV
     private static String TAG_ADAPTER = "Grid Adapter ";
     private Context mContext;
     private final SearchAdapterShowItemDetails mSearchAdapterShowItemDetails;
-    private Cursor mCursor;
+    protected Cursor mCursor;
 
 
     public GridViewAdapter(Cursor c, int flags, Context context, SearchAdapterShowItemDetails detailsHandler) {
-        super(c, flags);
+        super( c,false);
         this.mContext = context;
         mSearchAdapterShowItemDetails = detailsHandler;
     }
@@ -48,7 +48,6 @@ public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridV
         return new GridViewHolder(view);
     }
 
-
     @Override
     public int getItemViewType(int position, @Nullable Cursor cursor) {
         return ITEM_TYPE;
@@ -57,15 +56,14 @@ public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridV
     @Override
     public void onBindViewHolder(GridViewHolder holder, @Nullable Cursor cursor, int position) {
 
-        mCursor = cursor;
-        if (mCursor.moveToPosition(position)) {
+        if (cursor.moveToPosition(position)) {
             if (holder.mTextView != null) {
-                (holder.mTextView).setText(mCursor.getString(FeedNewsFragment.COL_TITLTE));
+                (holder.mTextView).setText(cursor.getString(FeedNewsFragment.COL_TITLTE));
             }
             if (holder.mImageView != null) {
 
                 Glide.with(mContext)
-                        .load(mCursor.getString(FeedNewsFragment.COL_IMAGE))
+                        .load(cursor.getString(FeedNewsFragment.COL_IMAGE))
                         .error(R.drawable.art_snow)
                         .crossFade()
                         .into(holder.mImageView);
@@ -92,6 +90,7 @@ public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridV
         public void onClick(View v) {
             if (v != null) {
                 int id;
+                mCursor=getCursor();
                 if (mCursor != null) {
                     mCursor.moveToPosition(getAdapterPosition());
                     int idx = mCursor.getColumnIndex(FeedContract.PreviewEntry._ID);
@@ -129,20 +128,24 @@ public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridV
     }
 
 
-    @Override
-    public int getItemCount() {
+//    @Override
+//    public void onBindViewHolder(GridViewHolder holder, Cursor cursor) {
+//
+//        if (holder.mTextView != null) {
+//            (holder.mTextView).setText(cursor.getString(FeedNewsFragment.COL_TITLTE));
+//        }
+//        if (holder.mImageView != null) {
+//
+//            Glide.with(mContext)
+//                    .load(cursor.getString(FeedNewsFragment.COL_IMAGE))
+//                    .error(R.drawable.art_snow)
+//                    .crossFade()
+//                    .into(holder.mImageView);
+//        }
+//
+//
+//    }
 
-        if (mCursor == null) return 0;
-        return mCursor.getCount();
-
-    }
-
-    @Override
-    public Cursor swapCursor(Cursor newCursor) {
-        mCursor = newCursor;
-        notifyDataSetChanged();
-        return super.swapCursor(newCursor);
-    }
 
     public interface SearchAdapterShowItemDetails {
         void showItemDetailsFragment(GridViewHolder vh, Uri uri, int typeItem);
