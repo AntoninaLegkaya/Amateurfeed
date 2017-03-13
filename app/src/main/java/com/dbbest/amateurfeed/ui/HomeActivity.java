@@ -196,19 +196,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         Stack<String> feedStack = backStacks.get(bottomTabHome);
 
 
-        if (feedStack.isEmpty()) {
-            feedStack.push(FEED_NEWS_FRAGMENT_TAG);
-            Fragment instantiate = Fragment.instantiate(this, FeedNewsFragment.class.getName());
-
-        } else
-
-        {
-            Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
-            if (top != null || !top.isDetached()) {
-                transaction.detach(top);
-            }
-
-        }
+        initiateTabFeedFragment(transaction, feedStack);
 
         refreshContent();
 
@@ -226,6 +214,22 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         transaction.commit();
         mCurrentTag = detailStack.peek();
 
+    }
+
+    private void initiateTabFeedFragment(FragmentTransaction transaction, Stack<String> feedStack) {
+        if (feedStack.isEmpty()) {
+            feedStack.push(FEED_NEWS_FRAGMENT_TAG);
+            Fragment instantiate = Fragment.instantiate(this, FeedNewsFragment.class.getName());
+
+        } else
+
+        {
+            Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
+            if (top != null || !top.isDetached()) {
+                transaction.detach(top);
+            }
+
+        }
     }
 
     private void addFragment(Fragment fragment, Stack<String> backStack, FragmentTransaction ft, String tag) {
@@ -253,6 +257,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         Stack<String> feedStack = backStacks.get(bottomTabHome);
         showFragment(feedStack, ft);
         mCurrentTag = BottomTab.HOME.tag;
+        mTabHost.setCurrentTab(0);
 
     }
 
@@ -268,7 +273,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 Fragment top = getSupportFragmentManager().findFragmentByTag(detailStack.peek());
                 if (top != null || !top.isDetached()) {
                     ft.detach(top);
-
+                    Log.i(MANAGE_FRAGMENTS, "Detach : " + detailStack.peek());
                 }
 
             }
@@ -279,6 +284,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 Fragment top = getSupportFragmentManager().findFragmentByTag(feedStack.peek());
                 if (top != null && !top.isDetached()) {
                     ft.detach(top);
+                    Log.i(MANAGE_FRAGMENTS, "Detach : " + feedStack.peek());
                 }
 
             }
@@ -288,6 +294,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 Fragment top = getSupportFragmentManager().findFragmentByTag(searchStack.peek());
                 if (top != null || !top.isDetached()) {
                     ft.detach(top);
+                    Log.i(MANAGE_FRAGMENTS, "Detach : " + searchStack.peek());
                 }
 
             }
@@ -298,6 +305,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
                 if (top != null) {
                     if (!top.isDetached()) {
                         ft.detach(top);
+                        Log.i(MANAGE_FRAGMENTS, "Detach : " + profileStack.peek());
                     }
                 }
             }
@@ -391,7 +399,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         addFragment(mArgsDetail);
     }
 
-    private int getLayoutId(PreviewAdapter.PreviewAdapterViewHolder vh ) {
+    private int getLayoutId(PreviewAdapter.PreviewAdapterViewHolder vh) {
         int layoutId = -1;
         switch (vh.getItemViewType()) {
 
@@ -590,14 +598,11 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     @Override
     public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int layoutId) {
 
-
         mArgsDetail = new Bundle();
         mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
         mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);
         Fragment fragment = EditItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
         fragment.setArguments(mArgsDetail);
-
-
         addFragment(mArgsDetail);
     }
 }
