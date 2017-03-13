@@ -20,7 +20,6 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver.Receiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadService;
-import com.dbbest.amateurfeed.app.azur.service.BlobUploadTask;
 import com.dbbest.amateurfeed.app.storage.processor.UserPreferences;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.model.TagModel;
@@ -31,16 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * Created by antonina on 24.01.17.
- */
 
 public class AddItemDetailFragment extends BaseChangeDetailFragment implements DetailView,
-    BlobUploadTask.UploadCallback, View.OnClickListener,
+    View.OnClickListener,
     Receiver {
 
-  public final static String ADD_DETAIL_FRAGMENT = "AddDetailFragment";
   private static final String PARAM_KEY = "param_key";
+  public final String TAG = AddItemDetailFragment.class.getName();
   private Button mPublishButton;
   private List<TagModel> tags = new ArrayList<>();
   private String upTitle = null;
@@ -53,7 +49,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
 
   public static AddItemDetailFragment newInstance(String key) {
     AddItemDetailFragment fragment = new AddItemDetailFragment();
-
     Bundle bundle = new Bundle();
     bundle.putString(PARAM_KEY, key);
     fragment.setArguments(bundle);
@@ -98,13 +93,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
     mTitleView = (AppCompatEditText) view.findViewById(R.id.item_title);
 
     return view;
-  }
-
-
-  @Override
-  public void getUploadUrl(String url) {
-    mUploadUrl = url;
-    invokeAddNewsCommand();
   }
 
   private void invokeAddNewsCommand() {
@@ -168,7 +156,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
 
       for (TagModel tagModel : tags) {
         Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
-        Log.i(ADD_DETAIL_FRAGMENT, "You try add new tag: " + tagModel.getName());
         ContentValues tagValues = new ContentValues();
         tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
         tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
@@ -176,7 +163,7 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
             FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
         cVTagsVector.add(tagValues);
 
-        Log.i(ADD_DETAIL_FRAGMENT,
+        Log.i(TAG,
             "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " "
                 + "name: " + tagModel.getName() + " " +
                 "preview_id: " + FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
@@ -202,7 +189,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
     int newsId = data.getInt("newsId");
     mUriPreview = FeedContract.PreviewEntry.buildPreviewUriById(newsId);
     Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
-    Log.i(ADD_DETAIL_FRAGMENT, "You try add new preview by ID: " + newsId);
     ContentValues previewValues = new ContentValues();
     previewValues.put(FeedContract.PreviewEntry._ID, newsId);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_TITLE, upTitle);
@@ -212,7 +198,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
     previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR, UserPreferences.getFullName());
     previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE, UserPreferences.getImage());
     String createDate = Utils.getCurrentTime();
-    Log.i(ADD_DETAIL_FRAGMENT, "New created : " + createDate);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_CREATE_DATE, createDate);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_IMAGE, mUploadUrl);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_IS_MY, 1);
@@ -262,13 +247,12 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
         break;
       case BlobUploadService.STATUS_FINISHED:
         String result = resultData.getString("result");
-        Log.i(DETAIL_FRAGMENT_IMAGE, "I Get Upload url: " + result);
         mUploadUrl = result;
         invokeAddNewsCommand();
         break;
       case BlobUploadService.STATUS_ERROR:
         String error = resultData.getString(Intent.EXTRA_TEXT);
-        Log.i(DETAIL_FRAGMENT_IMAGE, "I Could not get Upload url: " + error);
+        Log.e(TAG, error);
         break;
     }
   }

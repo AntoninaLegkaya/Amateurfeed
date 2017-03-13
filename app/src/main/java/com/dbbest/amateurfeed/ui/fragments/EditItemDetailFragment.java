@@ -68,6 +68,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
   public Button mCommentButton;
   public ImageButton mEditButton;
   public ImageButton mRemoveButton;
+  private String TAG = EditItemDetailFragment.class.getName();
   private int mLayoutType;
   private TextView mChangeIconLink;
   private String mCurrentPhotoPath;
@@ -392,9 +393,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
         if (tagModel.getName().equals(model.getName())) {
 
           flag = false;
-
         }
-
 
       }
       if (flag) {
@@ -415,11 +414,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
           mHorizontalListAdapter.swapCursor(newTagCursor);
 
         }
-      } else {
-        Log.i(DETAIL_FRAGMENT, "Nothing to add");
       }
-
-
     }
   }
 
@@ -440,7 +435,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     ContentValues values = new ContentValues();
     values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textDescription);
     if (mUriPreview != null) {
-
       long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
       Uri uriPreviewId = FeedContract.PreviewEntry.buildSetDescriptionInPreviewById(id);
       App.instance().getContentResolver().update(uriPreviewId, values, null, null);
@@ -485,7 +479,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
 
     if (view.getId() == R.id.add_comment_button) {
       if (mUriPreview != null && mCommentView != null && mCommentView.getText() != null) {
-        Log.i(DETAIL_FRAGMENT_COMMENT,
+        Log.i(TAG,
             "Start invoke Add Comment Command: new body: " + mCommentView.getText());
         int postId = (int) FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
         mPresenter.postComment(postId, mCommentView.getText().toString(), 0);
@@ -579,11 +573,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     }
   }
 
-//  @Override
-//  public void getUploadUrl(String url) {
-//    mUploadUrl = url;
-//    invokeEditNewsCommand();
-//  }
 
   @Override
   public void showSuccessEditNewsDialog() {
@@ -620,13 +609,11 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
         break;
       case BlobUploadService.STATUS_FINISHED:
         String result = resultData.getString("result");
-        Log.i(DETAIL_FRAGMENT_IMAGE, "I Get Upload url: " + result);
         mUploadUrl = result;
         invokeEditNewsCommand();
         break;
       case BlobUploadService.STATUS_ERROR:
         String error = resultData.getString(Intent.EXTRA_TEXT);
-        Log.i(DETAIL_FRAGMENT_IMAGE, "I Could not get Upload url: " + error);
         break;
     }
   }

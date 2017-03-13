@@ -113,7 +113,6 @@ public class StartPresenter extends Presenter<StartView> implements CommandResul
 
     @Override
     public void onFail(int code, Bundle data) {
-        Log.e(Utils.TAG_LOG, "StartPresenter: onFail");
         if (getView() != null) {
             getView().dismissProgressDialog();
             int errCode = Command.grabErrorCode(data);
