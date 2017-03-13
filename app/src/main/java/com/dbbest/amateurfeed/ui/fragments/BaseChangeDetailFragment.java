@@ -303,4 +303,7 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
         }
     }
 
+
+
+
 }

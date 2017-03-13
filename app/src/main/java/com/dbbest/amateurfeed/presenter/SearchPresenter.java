@@ -23,85 +23,76 @@ import java.util.ArrayList;
 
 import static android.R.attr.tag;
 
-/**
- * Created by antonina on 23.01.17.
- */
 
-public class SearchPresenter extends Presenter<SearchView> implements CommandResultReceiver.CommandListener {
+public class SearchPresenter extends Presenter<SearchView>
+    implements CommandResultReceiver.CommandListener {
 
-    private static final int CODE_SEARCH_NEWS = 0;
-    private CommandResultReceiver mResultReceiver;
+  private static final int CODE_SEARCH_NEWS = 0;
+  private CommandResultReceiver mResultReceiver;
 
-    public void searchNews(String searchParam) {
-        if (getView() != null) {
-            SearchView view = getView();
-
-        }
-        Command command = new SearchCommand(searchParam);
-        command.send(CODE_SEARCH_NEWS, mResultReceiver);
+  public void searchNews(String searchParam) {
+    if (getView() != null) {
+      SearchView view = getView();
     }
+    Command command = new SearchCommand(searchParam);
+    command.send(CODE_SEARCH_NEWS, mResultReceiver);
+  }
 
-    @Override
-    protected void onAttachView(@NonNull SearchView view) {
-        if (mResultReceiver == null) {
-            mResultReceiver = new CommandResultReceiver();
-        }
-        mResultReceiver.setListener(this);
+  @Override
+  protected void onAttachView(@NonNull SearchView view) {
+    if (mResultReceiver == null) {
+      mResultReceiver = new CommandResultReceiver();
     }
+    mResultReceiver.setListener(this);
+  }
 
-    @Override
-    protected void onDetachView(@NonNull SearchView view) {
-        if (mResultReceiver != null) {
-            mResultReceiver.setListener(null);
-        }
+  @Override
+  protected void onDetachView(@NonNull SearchView view) {
+    if (mResultReceiver != null) {
+      mResultReceiver.setListener(null);
     }
+  }
 
-    @Override
-    public void onSuccess(int code, Bundle data) {
-        ArrayList<String> ids = new ArrayList<>();
-        if (getView() != null) {
-            if (code == CODE_SEARCH_NEWS) {
-                if (data != null) {
-                    Dictionary dictionary = (Dictionary) data.get("dictionary");
-                    Bundle bundle = new Bundle();
-                    for (News news : dictionary.getNews()) {
+  @Override
+  public void onSuccess(int code, Bundle data) {
+    ArrayList<String> ids = new ArrayList<>();
+    if (getView() != null) {
+      if (code == CODE_SEARCH_NEWS) {
+        if (data != null) {
+          Dictionary dictionary = (Dictionary) data.get("dictionary");
+          Bundle bundle = new Bundle();
+          for (News news : dictionary.getNews()) {
 
-                        Cursor cursor = getPreviewByIdCursor(news.getId());
-                        if (cursor.moveToFirst()) {
-                            ids.add(String.valueOf(news.getId()));
-                            Log.i(SearchFragment.SEARCH_FRAGMENT, "news : " + String.valueOf(news.getId()) + " Found in BD: " + cursor.moveToFirst());
-                        }
-                    }
-                    bundle.putStringArrayList("ids", ids);
-                    getView().initLoader(bundle);
-                }
+            Cursor cursor = getPreviewByIdCursor(news.getId());
+            if (cursor.moveToFirst()) {
+              ids.add(String.valueOf(news.getId()));
+              Log.i(SearchFragment.SEARCH_FRAGMENT, "news : "
+                  + String.valueOf(news.getId())
+                  + " Found in BD: "
+                  + cursor.moveToFirst());
             }
-
-
+          }
+          bundle.putStringArrayList("ids", ids);
+          getView().initLoader(bundle);
         }
-
+      }
     }
+  }
 
-    protected Cursor getPreviewByIdCursor(long mIdPreview) {
-        Uri uriPreview = FeedContract.PreviewEntry.buildGetPreviewById(mIdPreview);
+  protected Cursor getPreviewByIdCursor(long mIdPreview) {
+    Uri uriPreview = FeedContract.PreviewEntry.buildGetPreviewById(mIdPreview);
 
-        return App.instance().getContentResolver().query(
-                uriPreview,
-                null,
-                null,
-                null,
-                null
-        );
+    return App.instance().getContentResolver().query(uriPreview, null, null, null, null);
+  }
+
+  @Override
+  public void onFail(int code, Bundle data) {
+    if (getView() != null) {
     }
+  }
 
-    @Override
-    public void onFail(int code, Bundle data) {
-        if (getView() != null) {
-        }
-    }
+  @Override
+  public void onProgress(int code, Bundle data, int progress) {
 
-    @Override
-    public void onProgress(int code, Bundle data, int progress) {
-
-    }
+  }
 }

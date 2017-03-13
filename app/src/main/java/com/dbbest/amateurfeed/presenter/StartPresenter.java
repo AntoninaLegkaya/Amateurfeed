@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.dbbest.amateurfeed.app.azur.Storage;
-import com.dbbest.amateurfeed.app.azur.StorageFactory;
-import com.dbbest.amateurfeed.app.azur.preferences.CloudPreferences;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.command.AzureCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
@@ -16,7 +13,6 @@ import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.LoginCommand;
 import com.dbbest.amateurfeed.app.net.command.RegistrationFacebookCommand;
 import com.dbbest.amateurfeed.app.net.command.UserProfileCommand;
-import com.dbbest.amateurfeed.app.storage.processor.UserPreferences;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.utils.location.LatLng;
 import com.dbbest.amateurfeed.utils.location.UserLocationProvider;

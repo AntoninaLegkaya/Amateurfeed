@@ -32,11 +32,6 @@ public class HomePresenter extends Presenter<HomeView> implements CommandResultR
 
     public void putLike(long id, int isLike) {
         boolean like = true;
-        if (getView() != null) {
-            HomeView view = getView();
-
-            view.showProgressDialog();
-        }
         if (isLike == 0) {
             like = false;
         }

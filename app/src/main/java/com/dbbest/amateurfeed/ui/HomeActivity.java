@@ -605,4 +605,8 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         fragment.setArguments(mArgsDetail);
         addFragment(mArgsDetail);
     }
+
+
+
+
 }

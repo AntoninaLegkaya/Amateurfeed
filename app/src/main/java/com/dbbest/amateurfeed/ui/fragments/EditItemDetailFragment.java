@@ -2,25 +2,17 @@ package com.dbbest.amateurfeed.ui.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,601 +22,612 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.BuildConfig;
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.app.azur.task.BlobUploadTask;
+import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver;
+import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver.Receiver;
+import com.dbbest.amateurfeed.app.azur.service.BlobUploadService;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
 import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
 import com.dbbest.amateurfeed.model.CommentModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
-import com.dbbest.amateurfeed.presenter.DetailPresenter;
 import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
-import com.dbbest.amateurfeed.utils.UtilImagePreferences;
 import com.dbbest.amateurfeed.utils.Utils;
-import com.dbbest.amateurfeed.view.DetailView;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.Vector;
 
-/**
- * Created by antonina on 24.01.17.
- */
 
-public class EditItemDetailFragment extends BaseChangeDetailFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, BlobUploadTask.UploadCallback {
+public class EditItemDetailFragment extends BaseChangeDetailFragment implements
+    LoaderCallbacks<Cursor>, OnClickListener,
+    Receiver {
 
-    private static final String PARAM_KEY = "param_key";
-    public static final String DETAIL_URI = "URI";
-    public static final String DETAIL_TYPE = "TYPE_ITEM";
-
-    public static int RESULT_LOAD_IMAGE = 1;
-
-    private static final int DETAIL_NEWS_LOADER = 1;
-    private int mLayoutType;
-    private TextView mChangeIconLink;
-    private String mCurrentPhotoPath;
-    public ImageView mIconView;
-    public TextView mFullNameView;
-    public TextView mDateView;
-    public TextView mLikesCountView;
-    public TextView mCommentCountView;
-    public TextView mCommentView;
-    public ImageButton mLikeButton;
-    public Button mCommentButton;
-    public ImageButton mEditButton;
-    public ImageButton mRemoveButton;
-    private RecyclerView mHorizontalList;
-    private RecyclerView mCommentList;
-    private VerticalListAdapter mVerticalListAdapter;
-    private HorizontalListAdapter mHorizontalListAdapter;
+  public static final String DETAIL_URI = "URI";
+  public static final String DETAIL_TYPE = "TYPE_ITEM";
+  private static final String PARAM_KEY = "param_key";
+  private static final int DETAIL_NEWS_LOADER = 1;
+  public static int RESULT_LOAD_IMAGE = 1;
+  public ImageView mIconView;
+  public TextView mFullNameView;
+  public TextView mDateView;
+  public TextView mLikesCountView;
+  public TextView mCommentCountView;
+  public TextView mCommentView;
+  public ImageButton mLikeButton;
+  public Button mCommentButton;
+  public ImageButton mEditButton;
+  public ImageButton mRemoveButton;
+  private int mLayoutType;
+  private TextView mChangeIconLink;
+  private String mCurrentPhotoPath;
+  private RecyclerView mHorizontalList;
+  private RecyclerView mCommentList;
+  private VerticalListAdapter mVerticalListAdapter;
+  private HorizontalListAdapter mHorizontalListAdapter;
+  private BlobUploadResultReceiver mReceiver;
 
 
-    public static EditItemDetailFragment newInstance(String key) {
-        EditItemDetailFragment fragment = new EditItemDetailFragment();
+  public EditItemDetailFragment() {
+    setHasOptionsMenu(true);
+  }
 
-        Bundle bundle = new Bundle();
-        bundle.putString(PARAM_KEY, key);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+  public static EditItemDetailFragment newInstance(String key) {
+    EditItemDetailFragment fragment = new EditItemDetailFragment();
 
-    public EditItemDetailFragment() {
-        setHasOptionsMenu(true);
-    }
+    Bundle bundle = new Bundle();
+    bundle.putString(PARAM_KEY, key);
+    fragment.setArguments(bundle);
+    return fragment;
+  }
 
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    getLoaderManager().initLoader(DETAIL_NEWS_LOADER, null, this);
+    super.onActivityCreated(savedInstanceState);
+  }
 
-        getLoaderManager().initLoader(DETAIL_NEWS_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.action_back_menu, menu);
-    }
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+  }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        String upTitle = null;
-        String upDescription = null;
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-
-                ((Callback) getActivity()).moveToFeedFragment();
-                return true;
-            case R.id.action: {
-                if (mLayoutType == R.layout.fragment_item_edit_my_detail) {
-                    String textDescription = mDescriptionView.getText().toString();
-                    if (textDescription != null) {
-                        String[] tags = Utils.getTagsPattern(textDescription);
-                        if (tags != null) {
-                            for (String tag : tags) {
-                                mPresenter.checkTag(tag);
-                            }
-                        }
-
-                        if (mUriImage != null) {
-                            BlobUploadTask uploadTask = new BlobUploadTask(getContext(), mUriImage, this);
-                            uploadTask.execute();
-
-                        } else {
-                            invokeEditNewsCommand();
-                        }
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.action_back_menu, menu);
+  }
 
 
-                    }
-                }
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    String upTitle = null;
+    String upDescription = null;
 
-                return true;
+    switch (item.getItemId()) {
+      case android.R.id.home:
+
+        ((Callback) getActivity()).moveToFeedFragment();
+        return true;
+      case R.id.action: {
+        if (mLayoutType == R.layout.fragment_item_edit_my_detail) {
+          String textDescription = mDescriptionView.getText().toString();
+          if (textDescription != null) {
+            String[] tags = Utils.getTagsPattern(textDescription);
+            if (tags != null) {
+              for (String tag : tags) {
+                mPresenter.checkTag(tag);
+              }
             }
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
+            if (mUriImage != null) {
+              mReceiver = new BlobUploadResultReceiver(new Handler());
+              mReceiver.setReceiver(this);
+              Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
+                  BlobUploadService.class);
 
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+              intent.putExtra("receiver", mReceiver);
+              intent.putExtra("uri", mUriImage);
 
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mUriPreview = arguments.getParcelable(EditItemDetailFragment.DETAIL_URI);
-            mLayoutType = arguments.getInt(EditItemDetailFragment.DETAIL_TYPE);
-        }
-        View itemView = inflater.inflate(mLayoutType, container, false);
+              getActivity().startService(intent);
 
-        Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
-        mIconView = (ImageView) itemView.findViewById(R.id.list_item_icon);
-        mImageView = (ImageView) itemView.findViewById(R.id.list_item_image);
-        mDateView = (TextView) itemView.findViewById(R.id.list_item_date_textview);
-        mFullNameView = (TextView) itemView.findViewById(R.id.list_item_name_textview);
-        mTitleView = (TextView) itemView.findViewById(R.id.list_item_title);
-        mLikesCountView = (TextView) itemView.findViewById(R.id.list_item_likes_count);
-        mCommentCountView = (TextView) itemView.findViewById(R.id.list_item_comment_count);
-        mDescriptionView = (TextView) itemView.findViewById(R.id.list_item_description);
-        mCommentView = (TextView) itemView.findViewById(R.id.item_comment_text);
-
-        mLikeButton = (ImageButton) itemView.findViewById(R.id.like_button);
-        mLikeButton.setOnClickListener(this);
-        mCommentButton = (Button) itemView.findViewById(R.id.add_comment_button);
-        mCommentButton.setOnClickListener(this);
-
-        mChangeIconLink = (TextView) itemView.findViewById(R.id.change_image_link);
-        if (mChangeIconLink != null) {
-            mChangeIconLink.setOnClickListener(this);
-        }
-
-        mEditButton = (ImageButton) itemView.findViewById(R.id.edit_button);
-        if (mEditButton != null) {
-            mEditButton.setOnClickListener(this);
-        }
-
-
-        mRemoveButton = (ImageButton) itemView.findViewById(R.id.delete_button);
-        mRemoveButton.setOnClickListener(this);
-
-
-        mHorizontalList = (RecyclerView) itemView.findViewById(R.id.list_tags_view);
-        mHorizontalList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        mHorizontalListAdapter = new HorizontalListAdapter(getActivity());
-        mHorizontalList.setAdapter(mHorizontalListAdapter);
-
-
-        mCommentList = (RecyclerView) itemView.findViewById(R.id.comment_recycler_view);
-        mCommentList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mVerticalListAdapter = new VerticalListAdapter(getActivity());
-        mCommentList.setAdapter(mVerticalListAdapter);
-
-
-        return itemView;
-    }
-
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(),
-                mUriPreview,
-                FeedNewsFragment.PREVIEW_COLUMNS,
-                null,
-                null,
-                null
-        );
-
-
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (loader.getId() == DETAIL_NEWS_LOADER) {
-
-            if (data.moveToFirst()) {
-
-
-                long mIdPreview = data.getLong(FeedNewsFragment.COL_FEED_ID);
-
-                Glide.with(this)
-                        .load(data.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
-                        .error(R.drawable.art_snow)
-                        .crossFade()
-                        .into(mIconView);
-
-
-                String fullName =
-                        data.getString(FeedNewsFragment.COL_AUTHOR);
-                mFullNameView.setText(fullName + String.valueOf(mIdPreview));
-
-                String description = data.getString(FeedNewsFragment.COL_TEXT);
-                if (description != null) {
-                    mDescriptionView.setText(description);
-
-                }
-
-
-                String title =
-                        data.getString(FeedNewsFragment.COL_TITLTE);
-                mTitleView.setText(title);
-
-                String date =
-                        data.getString(FeedNewsFragment.COL_CREATE_DATE);
-                String day = null;
-
-                day = Utils.getFriendlyDayString(getActivity(), Utils.getLongFromString(date), true);
-
-                if (day == null) {
-                    mDateView.setText(date);
-                } else {
-                    mDateView.setText(day);
-                }
-
-                int countLikes =
-                        data.getInt(FeedNewsFragment.COL_LIKES);
-                mLikesCountView.setText(String.valueOf(countLikes));
-
-
-                SimpleTarget target = new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
-                        mImageView.setImageBitmap(bitmap);
-                    }
-                };
-
-                mUploadUrl = data.getString(FeedNewsFragment.COL_IMAGE);
-                Glide.with(this)
-                        .load(mUploadUrl)
-                        .asBitmap()
-                        .error(R.drawable.art_snow)
-                        .into(target);
-
-
-                int mIsLike = data.getInt(FeedNewsFragment.COL_IS_LIKE);
-                if (mIsLike == 1) {
-                    mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
-                    mLikeButton.setTag("1");
-
-                } else if (mIsLike == 0) {
-
-                    mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                    mLikeButton.setTag("0");
-                }
-
-                Cursor mCursorComments = getCommentCursor(mIdPreview);
-                if (mCursorComments.moveToFirst()) {
-                    mVerticalListAdapter.swapCursor(mCursorComments);
-                }
-
-                int count = mCursorComments.getCount();
-                mCommentCountView.setText(String.valueOf(count));
-
-                Cursor mCursorTags = getTagCursor(mIdPreview);
-
-                if (mCursorTags.moveToFirst()) {
-                    mHorizontalListAdapter.swapCursor(mCursorTags);
-                }
-
-
-            }
-        }
-
-    }
-
-
-    // Get Comments from BD
-    private Cursor getCommentCursor(long mIdPreview) {
-        Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
-        // Sort order:  Ascending, by date.
-        String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
-
-        return App.instance().getContentResolver().query(
-                uriCommentList,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-    }
-
-    public ArrayList<CommentModel> getComments(long mIdPreview) {
-        Cursor cursor = getCommentCursor(mIdPreview);
-        ArrayList<CommentModel> commentModels = new ArrayList<CommentModel>();
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    CommentModel commentModel = new CommentModel(
-                            cursor.getInt(FeedNewsFragment.COL_COMMENT_UNIC_ID),
-                            cursor.getInt(FeedNewsFragment.COL_COMMENT_POST_ID),
-                            cursor.getInt(FeedNewsFragment.COL_COMMENT_CREATOR_KEY),
-                            cursor.getString(FeedNewsFragment.COL_COMMENT_BODY),
-                            cursor.getInt(FeedNewsFragment.COL_COMMENT_PARENT_COMMENT_ID),
-                            cursor.getString(FeedNewsFragment.COL_COMMENT_CREATE_DATE));
-                    commentModels.add(commentModel);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }
-        return commentModels;
-    }
-
-
-    // Get Tags from BD
-    public ArrayList<TagModel> getTags(long mIdPreview) {
-        Cursor cursor = getTagCursor(mIdPreview);
-        ArrayList<TagModel> tagModels = new ArrayList<TagModel>();
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    TagModel tagModel = new TagModel(cursor.getInt(FeedNewsFragment.COL_TAG_ID), cursor.getString(FeedNewsFragment.COL_TAG_NAME));
-                    tagModels.add(tagModel);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }
-        return tagModels;
-    }
-
-    @Override
-    public void addTagToItemDetail(Bundle bundle) {
-
-        // Insert the tags news information into the database
-
-        TagModel tagModel = bundle.getParcelable("tagModel");
-        ArrayList<TagModel> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-
-        if (tagModel != null) {
-            Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
-
-            boolean flag = true;
-            for (TagModel model : tags) {
-
-                if (tagModel.getName().equals(model.getName())) {
-
-                    flag = false;
-
-                }
-
-
-            }
-            if (flag) {
-
-                ContentValues tagValues = new ContentValues();
-                tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
-                tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
-                tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-                cVTagsVector.add(tagValues);
-
-
-                if (cVTagsVector.size() > 0) {
-                    ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
-                    cVTagsVector.toArray(cvArray);
-                    App.instance().getContentResolver().bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
-                    Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-                    mHorizontalListAdapter.swapCursor(newTagCursor);
-
-                }
             } else {
-                Log.i(DETAIL_FRAGMENT, "Nothing to add");
+              invokeEditNewsCommand();
             }
 
 
+          }
         }
+
+        return true;
+      }
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+
+
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+
+    Bundle arguments = getArguments();
+    if (arguments != null) {
+      mUriPreview = arguments.getParcelable(EditItemDetailFragment.DETAIL_URI);
+      mLayoutType = arguments.getInt(EditItemDetailFragment.DETAIL_TYPE);
+    }
+    View itemView = inflater.inflate(mLayoutType, container, false);
+
+    Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    mIconView = (ImageView) itemView.findViewById(R.id.list_item_icon);
+    mImageView = (ImageView) itemView.findViewById(R.id.list_item_image);
+    mDateView = (TextView) itemView.findViewById(R.id.list_item_date_textview);
+    mFullNameView = (TextView) itemView.findViewById(R.id.list_item_name_textview);
+    mTitleView = (TextView) itemView.findViewById(R.id.list_item_title);
+    mLikesCountView = (TextView) itemView.findViewById(R.id.list_item_likes_count);
+    mCommentCountView = (TextView) itemView.findViewById(R.id.list_item_comment_count);
+    mDescriptionView = (TextView) itemView.findViewById(R.id.list_item_description);
+    mCommentView = (TextView) itemView.findViewById(R.id.item_comment_text);
+
+    mLikeButton = (ImageButton) itemView.findViewById(R.id.like_button);
+    mLikeButton.setOnClickListener(this);
+    mCommentButton = (Button) itemView.findViewById(R.id.add_comment_button);
+    mCommentButton.setOnClickListener(this);
+
+    mChangeIconLink = (TextView) itemView.findViewById(R.id.change_image_link);
+    if (mChangeIconLink != null) {
+      mChangeIconLink.setOnClickListener(this);
     }
 
-    protected Cursor getTagCursor(long mIdPreview) {
-        Uri uriTagsList = FeedContract.TagEntry.getTagsListById(mIdPreview);
-
-        return App.instance().getContentResolver().query(
-                uriTagsList,
-                null,
-                null,
-                null,
-                null
-        );
+    mEditButton = (ImageButton) itemView.findViewById(R.id.edit_button);
+    if (mEditButton != null) {
+      mEditButton.setOnClickListener(this);
     }
 
-    //Update DB
-    private void updateDescriptionColumnPreview(String textDescription) {
-        ContentValues values = new ContentValues();
-        values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textDescription);
-        if (mUriPreview != null) {
+    mRemoveButton = (ImageButton) itemView.findViewById(R.id.delete_button);
+    mRemoveButton.setOnClickListener(this);
 
-            long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetDescriptionInPreviewById(id);
-            App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+    mHorizontalList = (RecyclerView) itemView.findViewById(R.id.list_tags_view);
+    mHorizontalList.setLayoutManager(
+        new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+    mHorizontalListAdapter = new HorizontalListAdapter(getActivity());
+    mHorizontalList.setAdapter(mHorizontalListAdapter);
+
+    mCommentList = (RecyclerView) itemView.findViewById(R.id.comment_recycler_view);
+    mCommentList.setLayoutManager(
+        new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+    mVerticalListAdapter = new VerticalListAdapter(getActivity());
+    mCommentList.setAdapter(mVerticalListAdapter);
+
+    return itemView;
+  }
+
+
+  @Override
+  public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    return new CursorLoader(getActivity(),
+        mUriPreview,
+        FeedNewsFragment.PREVIEW_COLUMNS,
+        null,
+        null,
+        null
+    );
+
+
+  }
+
+  @Override
+  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    if (loader.getId() == DETAIL_NEWS_LOADER) {
+
+      if (data.moveToFirst()) {
+
+        long mIdPreview = data.getLong(FeedNewsFragment.COL_FEED_ID);
+
+        Glide.with(this)
+            .load(data.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
+            .error(R.drawable.art_snow)
+            .crossFade()
+            .into(mIconView);
+
+        String fullName =
+            data.getString(FeedNewsFragment.COL_AUTHOR);
+        mFullNameView.setText(fullName + String.valueOf(mIdPreview));
+
+        String description = data.getString(FeedNewsFragment.COL_TEXT);
+        if (description != null) {
+          mDescriptionView.setText(description);
+
         }
+
+        String title =
+            data.getString(FeedNewsFragment.COL_TITLTE);
+        mTitleView.setText(title);
+
+        String date =
+            data.getString(FeedNewsFragment.COL_CREATE_DATE);
+        String day = null;
+
+        day = Utils.getFriendlyDayString(getActivity(), Utils.getLongFromString(date), true);
+
+        if (day == null) {
+          mDateView.setText(date);
+        } else {
+          mDateView.setText(day);
+        }
+
+        int countLikes =
+            data.getInt(FeedNewsFragment.COL_LIKES);
+        mLikesCountView.setText(String.valueOf(countLikes));
+
+        SimpleTarget target = new SimpleTarget<Bitmap>() {
+          @Override
+          public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+            mImageView.setImageBitmap(bitmap);
+          }
+        };
+
+        mUploadUrl = data.getString(FeedNewsFragment.COL_IMAGE);
+        Glide.with(this)
+            .load(mUploadUrl)
+            .asBitmap()
+            .error(R.drawable.art_snow)
+            .into(target);
+
+        int mIsLike = data.getInt(FeedNewsFragment.COL_IS_LIKE);
+        if (mIsLike == 1) {
+          mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
+          mLikeButton.setTag("1");
+
+        } else if (mIsLike == 0) {
+
+          mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+          mLikeButton.setTag("0");
+        }
+
+        Cursor mCursorComments = getCommentCursor(mIdPreview);
+        if (mCursorComments.moveToFirst()) {
+          mVerticalListAdapter.swapCursor(mCursorComments);
+        }
+
+        int count = mCursorComments.getCount();
+        mCommentCountView.setText(String.valueOf(count));
+
+        Cursor mCursorTags = getTagCursor(mIdPreview);
+
+        if (mCursorTags.moveToFirst()) {
+          mHorizontalListAdapter.swapCursor(mCursorTags);
+        }
+
+
+      }
     }
 
-    private void updateTitleColumnPreview(String textTitle) {
-        ContentValues values = new ContentValues();
-        values.put(FeedContract.PreviewEntry.COLUMN_TITLE, textTitle);
-        if (mUriPreview != null) {
-            long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetTitleInPreviewById(id);
-            App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+  }
+
+
+  // Get Comments from BD
+  private Cursor getCommentCursor(long mIdPreview) {
+    Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
+    // Sort order:  Ascending, by date.
+    String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
+
+    return App.instance().getContentResolver().query(
+        uriCommentList,
+        null,
+        null,
+        null,
+        sortOrder
+    );
+  }
+
+  public ArrayList<CommentModel> getComments(long mIdPreview) {
+    Cursor cursor = getCommentCursor(mIdPreview);
+    ArrayList<CommentModel> commentModels = new ArrayList<CommentModel>();
+    if (cursor != null) {
+      if (cursor.moveToFirst()) {
+        do {
+          CommentModel commentModel = new CommentModel(
+              cursor.getInt(FeedNewsFragment.COL_COMMENT_UNIC_ID),
+              cursor.getInt(FeedNewsFragment.COL_COMMENT_POST_ID),
+              cursor.getInt(FeedNewsFragment.COL_COMMENT_CREATOR_KEY),
+              cursor.getString(FeedNewsFragment.COL_COMMENT_BODY),
+              cursor.getInt(FeedNewsFragment.COL_COMMENT_PARENT_COMMENT_ID),
+              cursor.getString(FeedNewsFragment.COL_COMMENT_CREATE_DATE));
+          commentModels.add(commentModel);
+        } while (cursor.moveToNext());
+      }
+      cursor.close();
+    }
+    return commentModels;
+  }
+
+
+  // Get Tags from BD
+  public ArrayList<TagModel> getTags(long mIdPreview) {
+    Cursor cursor = getTagCursor(mIdPreview);
+    ArrayList<TagModel> tagModels = new ArrayList<TagModel>();
+    if (cursor != null) {
+      if (cursor.moveToFirst()) {
+        do {
+          TagModel tagModel = new TagModel(cursor.getInt(FeedNewsFragment.COL_TAG_ID),
+              cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+          tagModels.add(tagModel);
+        } while (cursor.moveToNext());
+      }
+      cursor.close();
+    }
+    return tagModels;
+  }
+
+  @Override
+  public void addTagToItemDetail(Bundle bundle) {
+
+    // Insert the tags news information into the database
+
+    TagModel tagModel = bundle.getParcelable("tagModel");
+    ArrayList<TagModel> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+
+    if (tagModel != null) {
+      Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
+
+      boolean flag = true;
+      for (TagModel model : tags) {
+
+        if (tagModel.getName().equals(model.getName())) {
+
+          flag = false;
+
         }
+
+
+      }
+      if (flag) {
+
+        ContentValues tagValues = new ContentValues();
+        tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
+        tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
+        tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID,
+            FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+        cVTagsVector.add(tagValues);
+
+        if (cVTagsVector.size() > 0) {
+          ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
+          cVTagsVector.toArray(cvArray);
+          App.instance().getContentResolver()
+              .bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
+          Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+          mHorizontalListAdapter.swapCursor(newTagCursor);
+
+        }
+      } else {
+        Log.i(DETAIL_FRAGMENT, "Nothing to add");
+      }
+
+
+    }
+  }
+
+  protected Cursor getTagCursor(long mIdPreview) {
+    Uri uriTagsList = FeedContract.TagEntry.getTagsListById(mIdPreview);
+
+    return App.instance().getContentResolver().query(
+        uriTagsList,
+        null,
+        null,
+        null,
+        null
+    );
+  }
+
+  //Update DB
+  private void updateDescriptionColumnPreview(String textDescription) {
+    ContentValues values = new ContentValues();
+    values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textDescription);
+    if (mUriPreview != null) {
+
+      long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+      Uri uriPreviewId = FeedContract.PreviewEntry.buildSetDescriptionInPreviewById(id);
+      App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+    }
+  }
+
+  private void updateTitleColumnPreview(String textTitle) {
+    ContentValues values = new ContentValues();
+    values.put(FeedContract.PreviewEntry.COLUMN_TITLE, textTitle);
+    if (mUriPreview != null) {
+      long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+      Uri uriPreviewId = FeedContract.PreviewEntry.buildSetTitleInPreviewById(id);
+      App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+    }
+  }
+
+  private void updateImageUrlColumnPreview(String url) {
+    ContentValues values = new ContentValues();
+    values.put(FeedContract.PreviewEntry.COLUMN_IMAGE, url);
+    if (mUriPreview != null) {
+      long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+      Uri uriPreviewId = FeedContract.PreviewEntry.buildSetImageUrlInPreviewById(id);
+      App.instance().getContentResolver().update(uriPreviewId, values, null, null);
+    }
+  }
+
+  @Override
+  public void onLoaderReset(Loader<Cursor> loader) {
+
+  }
+
+
+  public void refreshItemDetailsFragmentLoader() {
+    if (getLoaderManager().getLoader(DETAIL_NEWS_LOADER) != null) {
+      getLoaderManager().restartLoader(DETAIL_NEWS_LOADER, null, this);
     }
 
-    private void updateImageUrlColumnPreview(String url) {
-        ContentValues values = new ContentValues();
-        values.put(FeedContract.PreviewEntry.COLUMN_IMAGE, url);
-        if (mUriPreview != null) {
-            long id = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-            Uri uriPreviewId = FeedContract.PreviewEntry.buildSetImageUrlInPreviewById(id);
-            App.instance().getContentResolver().update(uriPreviewId, values, null, null);
-        }
+  }
+
+  @Override
+  public void onClick(View view) {
+
+    if (view.getId() == R.id.add_comment_button) {
+      if (mUriPreview != null && mCommentView != null && mCommentView.getText() != null) {
+        Log.i(DETAIL_FRAGMENT_COMMENT,
+            "Start invoke Add Comment Command: new body: " + mCommentView.getText());
+        int postId = (int) FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+        mPresenter.postComment(postId, mCommentView.getText().toString(), 0);
+      }
     }
+    if (view.getId() == R.id.edit_button) {
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
-
-    public void refreshItemDetailsFragmentLoader() {
-        if (getLoaderManager().getLoader(DETAIL_NEWS_LOADER) != null) {
-            getLoaderManager().restartLoader(DETAIL_NEWS_LOADER, null, this);
-        }
+      ((Callback) getActivity()).onEditItemSelected(mUriPreview);
 
     }
+    if (view.getId() == R.id.change_image_link) {
 
-    @Override
-    public void onClick(View view) {
+      selectImage();
 
-        if (view.getId() == R.id.add_comment_button) {
-            if (mUriPreview != null && mCommentView != null && mCommentView.getText() != null) {
-                Log.i(DETAIL_FRAGMENT_COMMENT, "Start invoke Add Comment Command: new body: " + mCommentView.getText());
-                int postId = (int) FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-                mPresenter.postComment(postId, mCommentView.getText().toString(), 0);
-            }
-        }
-        if (view.getId() == R.id.edit_button) {
+    }
 
-            ((Callback) getActivity()).onEditItemSelected(mUriPreview);
+    if (view.getId() == R.id.delete_button) {
 
-        }
-        if (view.getId() == R.id.change_image_link) {
+      ((Callback) getActivity()).onDeleteItemSelected(mUriPreview);
 
-            selectImage();
+    }
+    if (view.getId() == R.id.like_button) {
 
-        }
+      int mCountIsLikes = 0;
+      int isLikeFlag = 0;
 
-        if (view.getId() == R.id.delete_button) {
-
-            ((Callback) getActivity()).onDeleteItemSelected(mUriPreview);
-
-        }
-        if (view.getId() == R.id.like_button) {
-
-            int mCountIsLikes = 0;
-            int isLikeFlag = 0;
-
-            String mCountLikes = mLikesCountView.getText().toString();
-            if (mCountLikes != null) {
-                mCountIsLikes = Integer.parseInt(mCountLikes);
+      String mCountLikes = mLikesCountView.getText().toString();
+      if (mCountLikes != null) {
+        mCountIsLikes = Integer.parseInt(mCountLikes);
 
 
-            }
-            if (mCountIsLikes >= 0) {
-                if (mLikeButton.getTag() == "1") {
+      }
+      if (mCountIsLikes >= 0) {
+        if (mLikeButton.getTag() == "1") {
 
-                    isLikeFlag = 0;
-                    mLikeButton.setTag("0");
-                    mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                    mCountIsLikes = mCountIsLikes - 1;
-
-
-                } else if (mLikeButton.getTag() == "0") {
-                    isLikeFlag = 1;
-                    mLikeButton.setTag("1");
-                    mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
-                    mCountIsLikes = mCountIsLikes + 1;
+          isLikeFlag = 0;
+          mLikeButton.setTag("0");
+          mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+          mCountIsLikes = mCountIsLikes - 1;
 
 
-                }
-
-                mLikesCountView.setText(String.valueOf(mCountIsLikes));
-                ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag, mCountIsLikes);
-            } else {
-                mLikesCountView.setText(String.valueOf(0));
-                ((Callback) getActivity()).onLikeItemSelected(mUriPreview, 0, mCountIsLikes);
-            }
+        } else if (mLikeButton.getTag() == "0") {
+          isLikeFlag = 1;
+          mLikeButton.setTag("1");
+          mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
+          mCountIsLikes = mCountIsLikes + 1;
 
 
         }
+
+        mLikesCountView.setText(String.valueOf(mCountIsLikes));
+        ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag, mCountIsLikes);
+      } else {
+        mLikesCountView.setText(String.valueOf(0));
+        ((Callback) getActivity()).onLikeItemSelected(mUriPreview, 0, mCountIsLikes);
+      }
 
 
     }
 
-    @Override
-    public void updateDetailsFields(Bundle data) {
-        NewsUpdateModel mNewsUpdateModel = data.getParcelable("model");
-        updateImageUrlColumnPreview(mNewsUpdateModel.getImage());
-        updateTitleColumnPreview(mNewsUpdateModel.getTitle());
-        updateDescriptionColumnPreview(mNewsUpdateModel.getText());
+
+  }
+
+  @Override
+  public void updateDetailsFields(Bundle data) {
+    NewsUpdateModel mNewsUpdateModel = data.getParcelable("model");
+    updateImageUrlColumnPreview(mNewsUpdateModel.getImage());
+    updateTitleColumnPreview(mNewsUpdateModel.getTitle());
+    updateDescriptionColumnPreview(mNewsUpdateModel.getText());
+  }
+
+
+  private void invokeEditNewsCommand() {
+
+    String upTitle = null;
+    String upDescription = null;
+    long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+    List<TagModel> newTagsArray = getTags(idPreview);
+    if (mTitleView != null) {
+      upTitle = mTitleView.getText().toString();
     }
 
+    if (mDescriptionView != null) {
 
-    private void invokeEditNewsCommand() {
+      upDescription = mDescriptionView.getText().toString();
 
-        String upTitle = null;
-        String upDescription = null;
-        long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-        List<TagModel> newTagsArray = getTags(idPreview);
-        if (mTitleView != null) {
-            upTitle = mTitleView.getText().toString();
-        }
-
-        if (mDescriptionView != null) {
-
-            upDescription = mDescriptionView.getText().toString();
-
-        }
-
-
-        if (upTitle != null && upDescription != null && newTagsArray != null) {
-            mPresenter.updateNews(newTagsArray, upTitle, upDescription, mUploadUrl, (int) idPreview);
-        }
     }
 
-    @Override
-    public void getUploadUrl(String url) {
-        mUploadUrl = url;
+    if (upTitle != null && upDescription != null && newTagsArray != null) {
+      mPresenter.updateNews(newTagsArray, upTitle, upDescription, mUploadUrl, (int) idPreview);
+    }
+  }
+
+//  @Override
+//  public void getUploadUrl(String url) {
+//    mUploadUrl = url;
+//    invokeEditNewsCommand();
+//  }
+
+  @Override
+  public void showSuccessEditNewsDialog() {
+
+    UIDialogNavigation.showWarningDialog(R.string.set_edit_success)
+        .show(getActivity().getSupportFragmentManager(), "info");
+
+  }
+
+  @Override
+  public void showErrorEditNewsDialog() {
+
+    UIDialogNavigation.showWarningDialog(R.string.set_edit_success)
+        .show(getActivity().getSupportFragmentManager(), "info");
+
+  }
+
+  @Override
+  public void showSuccessAddCommentDialog() {
+    UIDialogNavigation.showWarningDialog(R.string.set_add_comment_success)
+        .show(getActivity().getSupportFragmentManager(), "info");
+  }
+
+  @Override
+  public void showErrorAddCommentDialog() {
+
+  }
+
+
+  @Override
+  public void onReceiveResult(int resultCode, Bundle resultData) {
+    switch (resultCode) {
+      case BlobUploadService.STATUS_RUNNING:
+        break;
+      case BlobUploadService.STATUS_FINISHED:
+        String result = resultData.getString("result");
+        Log.i(DETAIL_FRAGMENT_IMAGE, "I Get Upload url: " + result);
+        mUploadUrl = result;
         invokeEditNewsCommand();
+        break;
+      case BlobUploadService.STATUS_ERROR:
+        String error = resultData.getString(Intent.EXTRA_TEXT);
+        Log.i(DETAIL_FRAGMENT_IMAGE, "I Could not get Upload url: " + error);
+        break;
     }
-
-    @Override
-    public void showSuccessEditNewsDialog() {
-
-        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
-
-    }
-
-    @Override
-    public void showErrorEditNewsDialog() {
-
-        UIDialogNavigation.showWarningDialog(R.string.set_edit_success).show(getActivity().getSupportFragmentManager(), "info");
-
-    }
-
-    @Override
-    public void showSuccessAddCommentDialog() {
-        UIDialogNavigation.showWarningDialog(R.string.set_add_comment_success).show(getActivity().getSupportFragmentManager(), "info");
-    }
-
-    @Override
-    public void showErrorAddCommentDialog() {
-
-    }
-
-
+  }
 }
