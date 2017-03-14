@@ -8,5 +8,5 @@ import android.common.framework.IView;
 
 public interface EditeProfileView extends IView {
 
-    public void  showEditeProfileFragment();
+    public void showEditProfileFragment();
 }

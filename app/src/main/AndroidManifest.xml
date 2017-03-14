@@ -28,12 +28,12 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
     <activity
-      android:name=".ui.StartActivity"
+      android:name=".ui.activity.StartActivity"
       android:theme="@style/AppTheme.Main">
 
     </activity>
     <activity
-      android:name=".ui.HomeActivity"
+      android:name=".ui.activity.HomeActivity"
       android:theme="@style/AppTheme.Main">
 
       <intent-filter>
@@ -48,19 +48,19 @@
 
     </activity>
     <activity
-      android:name=".ui.SignUpActivity"
+      android:name=".ui.activity.SignUpActivity"
       android:theme="@style/AppTheme.Main" />
     <activity
-      android:name=".ui.ResetPasswordActivity"
+      android:name=".ui.activity.ResetPasswordActivity"
       android:theme="@style/AppTheme.Main">
 
     </activity>
     <activity
       android:label="@string/label_activity_settings"
-      android:name=".ui.SettingsActivity"
+      android:name=".ui.activity.SettingsActivity"
       android:theme="@style/AppTheme.Settings" />
     <activity
-      android:name=".ui.SplashActivity"
+      android:name=".ui.activity.SplashActivity"
       android:theme="@style/SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

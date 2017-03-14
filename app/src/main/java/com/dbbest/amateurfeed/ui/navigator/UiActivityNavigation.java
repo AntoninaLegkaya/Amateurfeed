@@ -1,13 +1,13 @@
-package com.dbbest.amateurfeed.ui.util;
+package com.dbbest.amateurfeed.ui.navigator;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.dbbest.amateurfeed.ui.HomeActivity;
-import com.dbbest.amateurfeed.ui.ResetPasswordActivity;
-import com.dbbest.amateurfeed.ui.SettingsActivity;
-import com.dbbest.amateurfeed.ui.SignUpActivity;
-import com.dbbest.amateurfeed.ui.StartActivity;
+import com.dbbest.amateurfeed.ui.activity.HomeActivity;
+import com.dbbest.amateurfeed.ui.activity.ResetPasswordActivity;
+import com.dbbest.amateurfeed.ui.activity.SettingsActivity;
+import com.dbbest.amateurfeed.ui.activity.SignUpActivity;
+import com.dbbest.amateurfeed.ui.activity.StartActivity;
 
 public class UiActivityNavigation {
 

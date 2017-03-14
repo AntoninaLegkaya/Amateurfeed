@@ -3,111 +3,108 @@ package com.dbbest.amateurfeed.app.net.response;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.model.UserFeedCommentModel;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.internal.bind.ArrayTypeAdapter;
-
 import java.util.ArrayList;
 
-/**
- * Created by antonina on 26.01.17.
- */
-
 public class NewsPreviewResponseModel {
-    @SerializedName("id")
-    private int mId;
 
-    @SerializedName("title")
-    private String mTitle;
+  @SerializedName("id")
+  private int mId;
 
-    @SerializedName("text")
-    private String mText;
+  @SerializedName("title")
+  private String mTitle;
 
-    @SerializedName("tags")
-    private ArrayList<TagModel> mTags;
+  @SerializedName("text")
+  private String mText;
 
-    @SerializedName("likes")
-    private int mLikes;
+  @SerializedName("tags")
+  private ArrayList<TagModel> mTags;
 
-    @SerializedName("isLike")
-    private boolean mIsLike;
+  @SerializedName("likes")
+  private int mLikes;
 
-    @SerializedName("author")
-    private String mAuthor;
+  @SerializedName("isLike")
+  private boolean mIsLike;
 
-    @SerializedName("authorImage")
-    private String mAuthorImage;
+  @SerializedName("author")
+  private String mAuthor;
 
-    @SerializedName("createDate")
-    private String mCreateDate;
+  @SerializedName("authorImage")
+  private String mAuthorImage;
 
-    @SerializedName("image")
-    private String mImage;
+  @SerializedName("createDate")
+  private String mCreateDate;
 
-    @SerializedName("isMy")
-    private boolean mIsMy;
+  @SerializedName("image")
+  private String mImage;
 
-    @SerializedName("comments")
-    private ArrayList<UserFeedCommentModel> mComments;
+  @SerializedName("isMy")
+  private boolean mIsMy;
 
-    public NewsPreviewResponseModel(int id, String title, String text, ArrayList<TagModel> tags, int likes, boolean isLike, String author, String authorImage, String createDate, String image, boolean isMy, ArrayList<UserFeedCommentModel> comments) {
-        mId = id;
-        mTitle = title;
-        mText = text;
-        mTags = tags;
-        mLikes = likes;
-        mIsLike = isLike;
-        mAuthor = author;
-        mAuthorImage = authorImage;
-        mCreateDate = createDate;
-        mImage = image;
-        mIsMy = isMy;
-        mComments = comments;
-    }
+  @SerializedName("comments")
+  private ArrayList<UserFeedCommentModel> mComments;
 
-    public int getId() {
-        return mId;
-    }
+  public NewsPreviewResponseModel(int id, String title, String text, ArrayList<TagModel> tags,
+      int likes, boolean isLike, String author, String authorImage, String createDate, String image,
+      boolean isMy, ArrayList<UserFeedCommentModel> comments) {
+    mId = id;
+    mTitle = title;
+    mText = text;
+    mTags = tags;
+    mLikes = likes;
+    mIsLike = isLike;
+    mAuthor = author;
+    mAuthorImage = authorImage;
+    mCreateDate = createDate;
+    mImage = image;
+    mIsMy = isMy;
+    mComments = comments;
+  }
 
-    public String getTitle() {
-        return mTitle;
-    }
+  public int getId() {
+    return mId;
+  }
 
-    public String getText() {
-        return mText;
-    }
+  public String getTitle() {
+    return mTitle;
+  }
 
-    public ArrayList<TagModel> getTags() {
-        return mTags;
-    }
+  public String getText() {
+    return mText;
+  }
 
-    public int getLikes() {
-        return mLikes;
-    }
+  public ArrayList<TagModel> getTags() {
+    return mTags;
+  }
 
-    public boolean isLike() {
-        return mIsLike;
-    }
+  public int getLikes() {
+    return mLikes;
+  }
 
-    public String getAuthor() {
-        return mAuthor;
-    }
+  public boolean isLike() {
+    return mIsLike;
+  }
 
-    public String getAuthorImage() {
-        return mAuthorImage;
-    }
+  public String getAuthor() {
+    return mAuthor;
+  }
 
-    public String getCreateDate() {
-        return mCreateDate;
-    }
+  public String getAuthorImage() {
+    return mAuthorImage;
+  }
 
-    public String getImage() {
-        return mImage;
-    }
+  public String getCreateDate() {
+    return mCreateDate;
+  }
 
-    public boolean isMy() {
-        return mIsMy;
-    }
+  public String getImage() {
+    return mImage;
+  }
 
-    public ArrayList<UserFeedCommentModel> getComments() {
-        return mComments;
-    }
+  public boolean isMy() {
+    return mIsMy;
+  }
+
+  public ArrayList<UserFeedCommentModel> getComments() {
+    return mComments;
+  }
 }

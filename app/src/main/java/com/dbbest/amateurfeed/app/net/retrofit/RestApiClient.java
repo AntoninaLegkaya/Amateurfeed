@@ -21,7 +21,6 @@ import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.model.UserProfileModel;
-import com.dbbest.amateurfeed.utils.ActionUtils;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import retrofit2.Call;
@@ -30,6 +29,8 @@ import retrofit2.Response;
 
 public class RestApiClient {
 
+  public static final String ACTION_UNAUTHORIZED = "ACTION_UNAUTHORIZED";
+  public static final String ACTION_USER_BLOCKED = "ACTION_USER_BLOCKED";
   private static final String USER_BLOCKED_MSG_RESPONSE = "User is blocked";
   private RestApiServices mApiService;
 
@@ -47,10 +48,10 @@ public class RestApiClient {
       }
       if (response.body() != null && !response.body().isSuccessful()) {
         if (response.body().code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-          String action = ActionUtils.ACTION_UNAUTHORIZED;
+          String action = ACTION_UNAUTHORIZED;
           if (response.body().message() != null && response.body().message()
               .equals(USER_BLOCKED_MSG_RESPONSE)) {
-            action = ActionUtils.ACTION_USER_BLOCKED;
+            action = ACTION_USER_BLOCKED;
           }
           Intent intent = new Intent(action);
           LocalBroadcastManager.getInstance(App.instance())

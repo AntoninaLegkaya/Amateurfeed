@@ -7,8 +7,8 @@ import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
-import com.dbbest.amateurfeed.app.storage.processor.DataProcessor;
-import com.dbbest.amateurfeed.app.storage.processor.UserPreferences;
+import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
+import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.UserProfileModel;
 
 public class UserProfileCommand extends Command {
@@ -42,13 +42,13 @@ public class UserProfileCommand extends Command {
   public void execute() {
 
     RestApiClient apiClient = App.getApiFactory().restClient();
-    DataProcessor dataProcessor = new DataProcessor();
+    AuthToken authToken= new AuthToken();
     ResponseWrapper<UserProfileModel> response = apiClient
-        .getUserInfo(dataProcessor.authToken().bearer());
+        .getUserInfo(authToken.bearer());
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         UserProfileModel profileModel = response.data();
-        UserPreferences.setCredentials(profileModel.getFullName(), profileModel.getEmail(),
+        new UserPreferences().setCredentials(profileModel.getFullName(), profileModel.getEmail(),
             profileModel.getImage(),
             profileModel.getSkype(), profileModel.getAddress(), profileModel.getJob(),
             profileModel.getPhone());

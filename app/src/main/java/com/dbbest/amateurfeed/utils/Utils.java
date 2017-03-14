@@ -67,53 +67,39 @@ public class Utils {
   private static final Pattern TAG_PATTERN = Pattern.compile("(\\B#\\w)\\w+");
 
   public static final String[] getTagsPattern(String input) {
-
     StringBuffer buffer = new StringBuffer();
     String[] strLines = input.split("\n");
-
     for (String line : strLines) {
-
       Matcher matcher = TAG_PATTERN.matcher(line);
-
       while (matcher.find()) {
-
         buffer.append(matcher.group().substring(1) + " ");
-
-
       }
     }
     return buffer.toString().split(" ");
   }
 
   public static boolean isEmailValid(String email) {
-
     return EMAIL_PATTERN.matcher(email).matches();
-
   }
 
   public static boolean isPasswordLengthValid(String password) {
-
     return (password.length() > 6);
   }
 
   public static boolean isPasswordValid(String password) {
-
 //        return PASSWORD_PATTERN.matcher(password).matches();
     return true;
   }
 
   public static boolean isFullNameValid(String firstName) {
-
     return NAME_PATTERN.matcher(firstName).matches();
   }
 
   public static boolean isPhoneValid(String phone) {
-
     return PHONE_PATTERN.matcher(phone).matches();
   }
 
   public static long getLongFromString(String currentDate) {
-
 //    "2010-10-15T09:27:37";
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     Date parseDate = null;
@@ -123,8 +109,6 @@ public class Utils {
       e.printStackTrace();
     }
     return parseDate.getTime();
-
-
   }
 
   public static String getFriendlyDayString(Context context, long dateInMillis,
@@ -190,13 +174,10 @@ public class Utils {
   }
 
   public static long getTodayLongDate() {
-
     Calendar currDate = Calendar.getInstance();
     currDate.set(Calendar.HOUR_OF_DAY, 0);
     currDate.set(Calendar.MINUTE, 0);
-
     return currDate.getTimeInMillis();
-
   }
 
   public static boolean isAddressValid(String address) {
@@ -216,16 +197,13 @@ public class Utils {
   }
 
   public static long getLongData(String string) {
-
     return -1;
   }
 
   public static String foramatTagName(Context context, String tag) {
-
     int formatId = R.string.format_tag;
     return String.format(context.getString(formatId), tag);
   }
-
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public static boolean checkPermission(final Context context) {
@@ -264,7 +242,6 @@ public class Utils {
       } else {
         return true;
       }
-
     } else {
       return true;
     }
@@ -289,7 +266,6 @@ public class Utils {
       ext = "jpeg";
     }
     return "image/" + ext;
-
   }
 
   public static String getPathExtension(String path) {
@@ -297,13 +273,11 @@ public class Utils {
     if (path == null) {
       return null;
     }
-
     int mid = path.lastIndexOf(".");
     if (mid == -1) {
       return null;
     }
     String ext = path.substring(mid + 1, path.length());
-
     return ext.toLowerCase();
   }
 
@@ -338,11 +312,9 @@ public class Utils {
 
 
   public static String getCurrentTime() {
-
     Calendar c = Calendar.getInstance();
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     return format.format(c.getTime());
   }
-
 
 }

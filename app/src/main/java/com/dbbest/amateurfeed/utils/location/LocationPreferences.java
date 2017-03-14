@@ -4,11 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
-import com.dbbest.amateurfeed.utils.SharedPreferenceUtils;
-
-/**
- * Created by antonina on 19.01.17.
- */
+import com.dbbest.amateurfeed.utils.preferences.SharedPreferenceUtils;
 
 public final class LocationPreferences {
 

@@ -4,7 +4,7 @@ import android.common.util.TextUtils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.ui.util.exception.NotImplementedException;
+import com.dbbest.amateurfeed.ui.navigator.NotImplementedException;
 
 public class AuthToken implements ActiveRecord<AuthToken> {
 
@@ -75,13 +75,11 @@ public class AuthToken implements ActiveRecord<AuthToken> {
     preferences().edit().putString(KEY_AUTH_TOKEN, value).apply();
   }
 
-
   private SharedPreferences preferences() {
     if (App.instance() != null) {
       return App.instance().getSharedPreferences(AUTH_FILE_NAME, Context.MODE_PRIVATE);
     }
     return null;
-
 
   }
 }

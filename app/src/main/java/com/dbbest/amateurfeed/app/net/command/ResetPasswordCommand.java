@@ -6,7 +6,6 @@ import android.os.Parcelable;
 
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
-import com.dbbest.amateurfeed.app.net.response.ResetResponse;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 

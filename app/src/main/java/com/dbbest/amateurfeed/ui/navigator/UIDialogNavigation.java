@@ -1,4 +1,4 @@
-package com.dbbest.amateurfeed.ui.util;
+package com.dbbest.amateurfeed.ui.navigator;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;

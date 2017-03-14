@@ -42,7 +42,7 @@ import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
 import com.dbbest.amateurfeed.model.CommentModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
-import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
+import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,27 +131,19 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
                 mPresenter.checkTag(tag);
               }
             }
-
             if (mUriImage != null) {
               mReceiver = new BlobUploadResultReceiver(new Handler());
               mReceiver.setReceiver(this);
               Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
                   BlobUploadService.class);
-
               intent.putExtra("receiver", mReceiver);
               intent.putExtra("uri", mUriImage);
-
               getActivity().startService(intent);
-
-
             } else {
               invokeEditNewsCommand();
             }
-
-
           }
         }
-
         return true;
       }
       default:
@@ -228,8 +220,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
         null,
         null
     );
-
-
   }
 
   @Override
@@ -237,97 +227,73 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     if (loader.getId() == DETAIL_NEWS_LOADER) {
 
       if (data.moveToFirst()) {
-
         long mIdPreview = data.getLong(FeedNewsFragment.COL_FEED_ID);
-
         Glide.with(this)
             .load(data.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
             .error(R.drawable.art_snow)
             .crossFade()
             .into(mIconView);
-
         String fullName =
             data.getString(FeedNewsFragment.COL_AUTHOR);
         mFullNameView.setText(fullName + String.valueOf(mIdPreview));
-
         String description = data.getString(FeedNewsFragment.COL_TEXT);
         if (description != null) {
           mDescriptionView.setText(description);
-
         }
-
         String title =
             data.getString(FeedNewsFragment.COL_TITLTE);
         mTitleView.setText(title);
-
         String date =
             data.getString(FeedNewsFragment.COL_CREATE_DATE);
         String day = null;
-
         day = Utils.getFriendlyDayString(getActivity(), Utils.getLongFromString(date), true);
-
         if (day == null) {
           mDateView.setText(date);
         } else {
           mDateView.setText(day);
         }
-
         int countLikes =
             data.getInt(FeedNewsFragment.COL_LIKES);
         mLikesCountView.setText(String.valueOf(countLikes));
-
         SimpleTarget target = new SimpleTarget<Bitmap>() {
           @Override
           public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
             mImageView.setImageBitmap(bitmap);
           }
         };
-
         mUploadUrl = data.getString(FeedNewsFragment.COL_IMAGE);
         Glide.with(this)
             .load(mUploadUrl)
             .asBitmap()
             .error(R.drawable.art_snow)
             .into(target);
-
         int mIsLike = data.getInt(FeedNewsFragment.COL_IS_LIKE);
         if (mIsLike == 1) {
           mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
           mLikeButton.setTag("1");
-
         } else if (mIsLike == 0) {
-
           mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
           mLikeButton.setTag("0");
         }
-
         Cursor mCursorComments = getCommentCursor(mIdPreview);
         if (mCursorComments.moveToFirst()) {
           mVerticalListAdapter.swapCursor(mCursorComments);
         }
-
         int count = mCursorComments.getCount();
         mCommentCountView.setText(String.valueOf(count));
-
         Cursor mCursorTags = getTagCursor(mIdPreview);
-
         if (mCursorTags.moveToFirst()) {
           mHorizontalListAdapter.swapCursor(mCursorTags);
         }
-
-
       }
     }
 
   }
 
 
-  // Get Comments from BD
   private Cursor getCommentCursor(long mIdPreview) {
     Uri uriCommentList = FeedContract.CommentEntry.getCommentsListById(mIdPreview);
-    // Sort order:  Ascending, by date.
     String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
-
     return App.instance().getContentResolver().query(
         uriCommentList,
         null,
@@ -358,8 +324,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     return commentModels;
   }
 
-
-  // Get Tags from BD
   public ArrayList<TagModel> getTags(long mIdPreview) {
     Cursor cursor = getTagCursor(mIdPreview);
     ArrayList<TagModel> tagModels = new ArrayList<TagModel>();
@@ -378,33 +342,23 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
 
   @Override
   public void addTagToItemDetail(Bundle bundle) {
-
-    // Insert the tags news information into the database
-
     TagModel tagModel = bundle.getParcelable("tagModel");
     ArrayList<TagModel> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-
     if (tagModel != null) {
       Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
-
       boolean flag = true;
       for (TagModel model : tags) {
-
         if (tagModel.getName().equals(model.getName())) {
-
           flag = false;
         }
-
       }
       if (flag) {
-
         ContentValues tagValues = new ContentValues();
         tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
         tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
         tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID,
             FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
         cVTagsVector.add(tagValues);
-
         if (cVTagsVector.size() > 0) {
           ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
           cVTagsVector.toArray(cvArray);
@@ -412,7 +366,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
               .bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
           Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
           mHorizontalListAdapter.swapCursor(newTagCursor);
-
         }
       }
     }
@@ -420,7 +373,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
 
   protected Cursor getTagCursor(long mIdPreview) {
     Uri uriTagsList = FeedContract.TagEntry.getTagsListById(mIdPreview);
-
     return App.instance().getContentResolver().query(
         uriTagsList,
         null,
@@ -430,7 +382,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     );
   }
 
-  //Update DB
   private void updateDescriptionColumnPreview(String textDescription) {
     ContentValues values = new ContentValues();
     values.put(FeedContract.PreviewEntry.COLUMN_TEXT, textDescription);
@@ -463,84 +414,58 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
 
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
-
   }
-
 
   public void refreshItemDetailsFragmentLoader() {
     if (getLoaderManager().getLoader(DETAIL_NEWS_LOADER) != null) {
       getLoaderManager().restartLoader(DETAIL_NEWS_LOADER, null, this);
     }
-
   }
 
   @Override
   public void onClick(View view) {
-
     if (view.getId() == R.id.add_comment_button) {
       if (mUriPreview != null && mCommentView != null && mCommentView.getText() != null) {
-        Log.i(TAG,
-            "Start invoke Add Comment Command: new body: " + mCommentView.getText());
+        Log.i(TAG, "Start invoke Add Comment Command: new body: " + mCommentView.getText());
         int postId = (int) FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
         mPresenter.postComment(postId, mCommentView.getText().toString(), 0);
       }
     }
     if (view.getId() == R.id.edit_button) {
-
       ((Callback) getActivity()).onEditItemSelected(mUriPreview);
-
     }
     if (view.getId() == R.id.change_image_link) {
-
       selectImage();
-
     }
-
     if (view.getId() == R.id.delete_button) {
-
       ((Callback) getActivity()).onDeleteItemSelected(mUriPreview);
-
     }
     if (view.getId() == R.id.like_button) {
-
       int mCountIsLikes = 0;
       int isLikeFlag = 0;
-
       String mCountLikes = mLikesCountView.getText().toString();
       if (mCountLikes != null) {
         mCountIsLikes = Integer.parseInt(mCountLikes);
-
-
       }
       if (mCountIsLikes >= 0) {
         if (mLikeButton.getTag() == "1") {
-
           isLikeFlag = 0;
           mLikeButton.setTag("0");
           mLikeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
           mCountIsLikes = mCountIsLikes - 1;
-
-
         } else if (mLikeButton.getTag() == "0") {
           isLikeFlag = 1;
           mLikeButton.setTag("1");
           mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
           mCountIsLikes = mCountIsLikes + 1;
-
-
         }
-
         mLikesCountView.setText(String.valueOf(mCountIsLikes));
         ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag, mCountIsLikes);
       } else {
         mLikesCountView.setText(String.valueOf(0));
         ((Callback) getActivity()).onLikeItemSelected(mUriPreview, 0, mCountIsLikes);
       }
-
-
     }
-
-
   }
 
   @Override
@@ -551,9 +476,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     updateDescriptionColumnPreview(mNewsUpdateModel.getText());
   }
 
-
   private void invokeEditNewsCommand() {
-
     String upTitle = null;
     String upDescription = null;
     long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
@@ -561,33 +484,24 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     if (mTitleView != null) {
       upTitle = mTitleView.getText().toString();
     }
-
     if (mDescriptionView != null) {
-
       upDescription = mDescriptionView.getText().toString();
-
     }
-
     if (upTitle != null && upDescription != null && newTagsArray != null) {
       mPresenter.updateNews(newTagsArray, upTitle, upDescription, mUploadUrl, (int) idPreview);
     }
   }
 
-
   @Override
   public void showSuccessEditNewsDialog() {
-
     UIDialogNavigation.showWarningDialog(R.string.set_edit_success)
         .show(getActivity().getSupportFragmentManager(), "info");
-
   }
 
   @Override
   public void showErrorEditNewsDialog() {
-
     UIDialogNavigation.showWarningDialog(R.string.set_edit_success)
         .show(getActivity().getSupportFragmentManager(), "info");
-
   }
 
   @Override
@@ -598,9 +512,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
 
   @Override
   public void showErrorAddCommentDialog() {
-
   }
-
 
   @Override
   public void onReceiveResult(int resultCode, Bundle resultData) {

@@ -1,8 +1,6 @@
 package com.dbbest.amateurfeed.data.adapter;
 
-/**
- * Created by antonina on 07.02.17.
- */
+
 
 import android.content.Context;
 import android.database.Cursor;

@@ -6,9 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.app.net.command.CheckTagCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.SearchCommand;
@@ -16,12 +14,8 @@ import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.model.Dictionary;
 import com.dbbest.amateurfeed.model.News;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
-import com.dbbest.amateurfeed.view.DetailView;
 import com.dbbest.amateurfeed.view.SearchView;
-
 import java.util.ArrayList;
-
-import static android.R.attr.tag;
 
 
 public class SearchPresenter extends Presenter<SearchView>
@@ -31,9 +25,6 @@ public class SearchPresenter extends Presenter<SearchView>
   private CommandResultReceiver mResultReceiver;
 
   public void searchNews(String searchParam) {
-    if (getView() != null) {
-      SearchView view = getView();
-    }
     Command command = new SearchCommand(searchParam);
     command.send(CODE_SEARCH_NEWS, mResultReceiver);
   }
@@ -81,18 +72,14 @@ public class SearchPresenter extends Presenter<SearchView>
 
   protected Cursor getPreviewByIdCursor(long mIdPreview) {
     Uri uriPreview = FeedContract.PreviewEntry.buildGetPreviewById(mIdPreview);
-
     return App.instance().getContentResolver().query(uriPreview, null, null, null, null);
   }
 
   @Override
   public void onFail(int code, Bundle data) {
-    if (getView() != null) {
-    }
   }
 
   @Override
   public void onProgress(int code, Bundle data, int progress) {
-
   }
 }

@@ -20,11 +20,11 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver.Receiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadService;
-import com.dbbest.amateurfeed.app.storage.processor.UserPreferences;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.model.TagModel;
-import com.dbbest.amateurfeed.ui.util.UIDialogNavigation;
+import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
+import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
 import com.dbbest.amateurfeed.view.DetailView;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,11 +62,8 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
 
     switch (item.getItemId()) {
       case android.R.id.home:
-
         ((Callback) getActivity()).moveToFeedFragment();
-
         return true;
-
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -96,17 +93,12 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
   }
 
   private void invokeAddNewsCommand() {
-
     if (mTitleView != null) {
       upTitle = mTitleView.getText().toString();
     }
-
     if (mDescriptionView != null) {
-
       upDescription = mDescriptionView.getText().toString();
-
     }
-
     if (upTitle != null && upDescription != null && tags != null && mUploadUrl != null) {
       mPresenter.addNewNews(upTitle, upDescription, mUploadUrl, tags);
     }
@@ -115,7 +107,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
   @Override
   public void onClick(View view) {
     if (view.getId() == R.id.publish_item_button) {
-
       String textDescription = mDescriptionView.getText().toString();
       if (textDescription != null) {
         String[] tags = Utils.getTagsPattern(textDescription);
@@ -131,16 +122,12 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
         mReceiver.setReceiver(this);
         Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
             BlobUploadService.class);
-
         intent.putExtra("receiver", mReceiver);
         intent.putExtra("uri", mUriImage);
-
         getActivity().startService(intent);
-
       } else {
         invokeAddNewsCommand();
       }
-
     }
   }
 
@@ -153,7 +140,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
 
   private void insertTagsInBd() {
     if (!tags.isEmpty()) {
-
       for (TagModel tagModel : tags) {
         Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
         ContentValues tagValues = new ContentValues();
@@ -162,7 +148,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
         tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID,
             FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
         cVTagsVector.add(tagValues);
-
         Log.i(TAG,
             "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " "
                 + "name: " + tagModel.getName() + " " +
@@ -176,12 +161,9 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
         }
       }
     }
-
     showSuccessEditNewsDialog();
     ((Callback) getActivity()).refreshFeed();
     ((Callback) getActivity()).moveToFeedFragment();
-
-
   }
 
   @Override
@@ -195,8 +177,9 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
     previewValues.put(FeedContract.PreviewEntry.COLUMN_TEXT, upDescription);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_LIKES, 0);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_IS_LIKE, 0);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR, UserPreferences.getFullName());
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE, UserPreferences.getImage());
+    previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR, new UserPreferences().getFullName());
+    previewValues
+        .put(FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE, new UserPreferences().getImage());
     String createDate = Utils.getCurrentTime();
     previewValues.put(FeedContract.PreviewEntry.COLUMN_CREATE_DATE, createDate);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_IMAGE, mUploadUrl);
@@ -209,13 +192,11 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
       App.instance().getContentResolver()
           .bulkInsert(FeedContract.PreviewEntry.CONTENT_URI, cvArray);
     }
-
     insertTagsInBd();
   }
 
   @Override
   public void updateDetailsFields(Bundle data) {
-
   }
 
   @Override
@@ -226,19 +207,15 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
 
   @Override
   public void showErrorEditNewsDialog() {
-
   }
 
   @Override
   public void showSuccessAddCommentDialog() {
-
   }
 
   @Override
   public void showErrorAddCommentDialog() {
-
   }
-
 
   @Override
   public void onReceiveResult(int resultCode, Bundle resultData) {

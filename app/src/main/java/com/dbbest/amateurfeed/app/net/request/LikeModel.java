@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class LikeModel implements Parcelable {
 
-  @SuppressWarnings("unused")
   public static final Parcelable.Creator<LikeModel> CREATOR = new Parcelable.Creator<LikeModel>() {
     @Override
     public LikeModel createFromParcel(Parcel in) {

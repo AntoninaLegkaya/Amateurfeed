@@ -2,89 +2,77 @@ package com.dbbest.amateurfeed.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
 public class NewsCreateModel implements Parcelable {
 
-    @SerializedName("title")
-    private String mTitle;
-
-    @SerializedName("text")
-    private String mText;
-
-    @SerializedName("image")
-    private String mImage;
-
-    @SerializedName("tags")
-    private List<TagModel> mTags = new ArrayList<>();
-
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public String getText() {
-        return mText;
-    }
-
-    public String getImage() {
-        return mImage;
-    }
-
-    public List<TagModel> getTags() {
-        return mTags;
-    }
-
-    public NewsCreateModel(String title, String text, String image, List<TagModel> tags) {
-
-        mTitle = title;
-        mText = text;
-        mImage = image;
-        mTags = tags;
+  public static final Creator<NewsCreateModel> CREATOR = new Creator<NewsCreateModel>() {
+    @Override
+    public NewsCreateModel createFromParcel(Parcel in) {
+      return new NewsCreateModel(in);
     }
 
     @Override
-    public int describeContents() {
-        return 0;
+    public NewsCreateModel[] newArray(int size) {
+      return new NewsCreateModel[size];
     }
+  };
+  @SerializedName("title")
+  private String mTitle;
+  @SerializedName("text")
+  private String mText;
+  @SerializedName("image")
+  private String mImage;
+  @SerializedName("tags")
+  private List<TagModel> mTags = new ArrayList<>();
 
+  public NewsCreateModel(String title, String text, String image, List<TagModel> tags) {
 
-    private NewsCreateModel(Parcel in) {
-        mTitle = in.readString();
-        mText = in.readString();
-        mImage = in.readString();
-        mTags = new ArrayList<TagModel>();
-        in.readTypedList(mTags, TagModel.CREATOR);
-    }
+    mTitle = title;
+    mText = text;
+    mImage = image;
+    mTags = tags;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mTitle);
-        dest.writeString(mText);
-        dest.writeString(mImage);
-        dest.writeTypedList(mTags);
-    }
+  private NewsCreateModel(Parcel in) {
+    mTitle = in.readString();
+    mText = in.readString();
+    mImage = in.readString();
+    mTags = new ArrayList<TagModel>();
+    in.readTypedList(mTags, TagModel.CREATOR);
+  }
 
+  public String getTitle() {
+    return mTitle;
+  }
 
-    public static final Creator<NewsCreateModel> CREATOR = new Creator<NewsCreateModel>() {
-        @Override
-        public NewsCreateModel createFromParcel(Parcel in) {
-            return new NewsCreateModel(in);
-        }
+  public String getText() {
+    return mText;
+  }
 
-        @Override
-        public NewsCreateModel[] newArray(int size) {
-            return new NewsCreateModel[size];
-        }
-    };
+  public String getImage() {
+    return mImage;
+  }
 
+  public List<TagModel> getTags() {
+    return mTags;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(mTitle);
+    dest.writeString(mText);
+    dest.writeString(mImage);
+    dest.writeTypedList(mTags);
+  }
 
 //    @Override
 //    public String toString() {

@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.dbbest.amateurfeed.BuildConfig;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.DetailPresenter;
-import com.dbbest.amateurfeed.utils.UtilImagePreferences;
 import com.dbbest.amateurfeed.utils.Utils;
+import com.dbbest.amateurfeed.utils.preferences.ImagePreferences;
 import com.dbbest.amateurfeed.view.DetailView;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,9 +33,9 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
 
   public final static String TAG_BASE = BaseChangeDetailFragment.class.getName();
   public final static String DETAIL_FRAGMENT_COMMENT = "DetailFragmentI_comment";
-  private static final int PHOTO_REQUEST_CAMERA = 0;//camera
-  private static final int PHOTO_REQUEST_GALLERY = 1;//gallery
-  private static final int PHOTO_REQUEST_CUT = 2;//image crop
+  private static final int PHOTO_REQUEST_CAMERA = 0;
+  private static final int PHOTO_REQUEST_GALLERY = 1;
+  private static final int PHOTO_REQUEST_CUT = 2;
   public ImageView mImageView;
   protected String TAG = BaseChangeDetailFragment.class.getName();
   protected String userChosenTask;
@@ -134,7 +134,7 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    String PHOTO_FILE_NAME = UtilImagePreferences.getValue();
+    String PHOTO_FILE_NAME = new ImagePreferences().getValue();
     File path;
     if (Utils.externalMemoryAvailable()) {
       path = Environment.getExternalStorageDirectory();
@@ -206,7 +206,7 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
   public void gallery() {
     //set UUID to filename
     String PHOTO_FILE_NAME = UUID.randomUUID().toString() + ".jpg";
-    UtilImagePreferences.putValue(PHOTO_FILE_NAME);
+    new ImagePreferences().putValue(PHOTO_FILE_NAME);
     Intent intent = new Intent(Intent.ACTION_PICK);
     intent.setType("image/*");
     startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
@@ -221,9 +221,8 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
           "/Image");
       Log.i(TAG_BASE, "no storage device ");
     }
-    //set UUID to filename
     String PHOTO_FILE_NAME = UUID.randomUUID().toString() + ".jpg";
-    UtilImagePreferences.putValue(PHOTO_FILE_NAME);
+    new ImagePreferences().putValue(PHOTO_FILE_NAME);
     Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
     File dir = new File(path, "/Image");
     if (!dir.exists()) {
@@ -242,7 +241,6 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
     }
   }
 
-  //Android N crop image
   public void crop(Uri uri) {
     getContext().grantUriPermission("com.android.camera", uri,
         Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -267,7 +265,6 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
     startActivityForResult(intent, PHOTO_REQUEST_CUT);
   }
 
-  //file uri to real location in filesystem
   public String getRealPathFromURI(Uri contentURI) {
     Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
     if (cursor == null) {

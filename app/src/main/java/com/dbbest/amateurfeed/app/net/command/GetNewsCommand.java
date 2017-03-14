@@ -233,7 +233,7 @@ public class GetNewsCommand extends Command {
 
         }
 
-        createCommentDate = mComment.getCreatedate();
+        createCommentDate = mComment.getCreateDate();
         childrenComment = mComment.getChildren();
 
         ContentValues commentValues = new ContentValues();
