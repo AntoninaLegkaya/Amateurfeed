@@ -27,13 +27,11 @@ public class UserNewsAdapter extends CursorRecyclerAdapter<UserNewsHolder> {
   private final String TAG = UserNewsAdapter.class.getName();
   protected Cursor mCursor;
   private Activity activity;
-//  private Context mContext;
 
 
   public UserNewsAdapter(Cursor c, int flags,
       SearchAdapterShowItemDetails detailsHandler) {
     super(c, false);
-//    this.mContext = context;
     mSearchAdapterShowItemDetails = detailsHandler;
   }
 

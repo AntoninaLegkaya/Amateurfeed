@@ -38,8 +38,8 @@ import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver.Receiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadService;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.adapter.CommentsAdapter;
 import com.dbbest.amateurfeed.data.adapter.TagAdapter;
-import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
 import com.dbbest.amateurfeed.model.CommentModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
@@ -74,7 +74,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
   private String mCurrentPhotoPath;
   private RecyclerView mHorizontalList;
   private RecyclerView mCommentList;
-  private VerticalListAdapter mVerticalListAdapter;
+  private CommentsAdapter mCommentsAdapter;
   private TagAdapter mTagAdapter;
   private BlobUploadResultReceiver mReceiver;
 
@@ -193,8 +193,8 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     mCommentList = (RecyclerView) itemView.findViewById(R.id.comment_recycler_view);
     mCommentList.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-    mVerticalListAdapter = new VerticalListAdapter(getActivity());
-    mCommentList.setAdapter(mVerticalListAdapter);
+    mCommentsAdapter = new CommentsAdapter(null, 0);
+    mCommentList.setAdapter(mCommentsAdapter);
 
     return itemView;
   }
@@ -266,7 +266,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
         }
         Cursor mCursorComments = getCommentCursor(mIdPreview);
         if (mCursorComments.moveToFirst()) {
-          mVerticalListAdapter.swapCursor(mCursorComments);
+          mCommentsAdapter.swapCursor(mCursorComments);
         }
         int count = mCursorComments.getCount();
         mCommentCountView.setText(String.valueOf(count));

@@ -239,7 +239,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     }
     );
 
-//    mPreviewAdapter.swapCursor(null);
     mRecyclerView.setAdapter(mPreviewAdapter);
 
     if (savedInstanceState != null) {

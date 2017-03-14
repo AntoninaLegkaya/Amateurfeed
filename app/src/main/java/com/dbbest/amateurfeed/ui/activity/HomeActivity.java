@@ -82,7 +82,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     refreshContent();
   }
 
-
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);

@@ -6,21 +6,22 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class AmateurfeedSyncService extends Service {
-    private static final Object sSyncAdapterLock = new Object();
-    private static AmateurfeedSyncAdapter sSunshineSyncAdapter = null;
 
-    @Override
-    public void onCreate() {
-        Log.d("SunshineSyncService", "onCreate - SunshineSyncService");
-        synchronized (sSyncAdapterLock) {
-            if (sSunshineSyncAdapter == null) {
-                sSunshineSyncAdapter = new AmateurfeedSyncAdapter(getApplicationContext(), true);
-            }
-        }
-    }
+  private static final Object sSyncAdapterLock = new Object();
+  private static AmateurfeedSyncAdapter sSunshineSyncAdapter = null;
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return sSunshineSyncAdapter.getSyncAdapterBinder();
+  @Override
+  public void onCreate() {
+    Log.d("SunshineSyncService", "onCreate - SunshineSyncService");
+    synchronized (sSyncAdapterLock) {
+      if (sSunshineSyncAdapter == null) {
+        sSunshineSyncAdapter = new AmateurfeedSyncAdapter(getApplicationContext(), true);
+      }
     }
+  }
+
+  @Override
+  public IBinder onBind(Intent intent) {
+    return sSunshineSyncAdapter.getSyncAdapterBinder();
+  }
 }
