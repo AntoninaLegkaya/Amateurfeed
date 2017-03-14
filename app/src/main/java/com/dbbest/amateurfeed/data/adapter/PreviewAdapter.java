@@ -1,8 +1,9 @@
 package com.dbbest.amateurfeed.data.adapter;
 
-import android.content.Context;
+import android.common.widget.CursorRecyclerAdapter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,14 +17,13 @@ import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.adapter.PreviewAdapter.PreviewAdapterViewHolder;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.utils.Constants;
 import com.dbbest.amateurfeed.utils.Utils;
 
-public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewAdapterViewHolder> {
+public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHolder> {
 
-  private static String ADAPTER = "Preview Adapter";
-  final private Context mContext;
   private final View mEmptyView;
   private final FeedAdapterOnClickHandler mClickHandler;
   private final FeedCommentAdapterOnClickHandler mCommentClickHandler;
@@ -31,12 +31,13 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
   private final FeedEditAdapterOnClickHandler mEditClickHandler;
   private final FeedRemoveAdapterOnClickHandler mRemoveClickHandler;
   private final FeedAdapterLoadNews mLoadNewsHandler;
+  private String TAG = PreviewAdapter.class.getName();
   private Cursor mCursor;
   private RecyclerView mHorizontalList;
   private TagAdapter mTagAdapter;
 
 
-  public PreviewAdapter(Context context, View emptyView, int choiceMode,
+  public PreviewAdapter(Cursor cursor, int flags, View emptyView, int choiceMode,
       FeedAdapterOnClickHandler clickHandler,
       FeedCommentAdapterOnClickHandler commentClickHandler,
       FeedLikeAdapterOnClickHandler likeClickHandler,
@@ -44,7 +45,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
       FeedRemoveAdapterOnClickHandler removeClickHandler,
       FeedAdapterLoadNews loadNewsHandler) {
 
-    mContext = context;
+    super(cursor, flags);
     mClickHandler = clickHandler;
     mCommentClickHandler = commentClickHandler;
     mLikeClickHandler = likeClickHandler;
@@ -55,14 +56,15 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
   }
 
   @Override
-  public int getItemViewType(int position) {
-    if (mCursor != null) {
-      mCursor.moveToPosition(position);
-      return (mCursor.getInt(FeedNewsFragment.COL_IS_MY) == 1) ? Constants.VIEW_TYPE_MY
+  public int getItemViewType(int position, @Nullable Cursor cursor) {
+    if (cursor != null) {
+      cursor.moveToPosition(position);
+      return (cursor.getInt(FeedNewsFragment.COL_IS_MY) == 1) ? Constants.VIEW_TYPE_MY
           : Constants.VIEW_TYPE_USER;
     }
     return Constants.VIEW_TYPE_ITEM_EMPTY;
   }
+
 
   @Override
   public PreviewAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -70,11 +72,9 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
 
       int layoutId = -1;
       switch (viewType) {
-
         case Constants.VIEW_TYPE_MY: {
           layoutId = R.layout.item_my_news_layout;
           break;
-
         }
         case Constants.VIEW_TYPE_USER: {
           layoutId = R.layout.item_news_layout;
@@ -84,57 +84,53 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
           layoutId = R.layout.item_empty_news;
           break;
         }
-
       }
-
       View view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutId, viewGroup, false);
       view.setFocusable(true);
-
       return new PreviewAdapterViewHolder(view);
-
-
     } else {
       throw new RuntimeException("Not bound to RecyclerView");
     }
-
   }
 
-  @Override
-  public void onBindViewHolder(PreviewAdapterViewHolder holder, int position) {
 
-    //check for last item
+  @Override
+  public void onBindViewHolder(PreviewAdapterViewHolder holder, @Nullable Cursor cursor,
+      int position) {
     if ((position >= getItemCount() - 1)) {
-      Log.i(ADAPTER, "Load new items : count = 5  offset: " + getItemCount());
+      Log.i(TAG, "Load new items : count = 5  offset: " + getItemCount());
       mLoadNewsHandler.load(holder, getItemCount(), 5);
     }
 
-    mCursor.moveToPosition(position);
+    cursor.moveToPosition(position);
 
-    long mIdPreview = mCursor.getLong(FeedNewsFragment.COL_FEED_ID);
-    Glide.with(mContext)
-        .load(mCursor.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
+    long mIdPreview = cursor.getLong(FeedNewsFragment.COL_FEED_ID);
+    Glide.with(App.instance().getApplicationContext())
+        .load(cursor.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
         .error(R.drawable.art_snow)
         .crossFade()
         .into(holder.mIconView);
 
     String fullName =
-        mCursor.getString(FeedNewsFragment.COL_AUTHOR);
+        cursor.getString(FeedNewsFragment.COL_AUTHOR);
     holder.mFullNameView.setText(fullName + String.valueOf(mIdPreview));
 
-    String description = mCursor.getString(FeedNewsFragment.COL_TEXT);
+    String description = cursor.getString(FeedNewsFragment.COL_TEXT);
     if (description != null) {
       holder.mDescriptionView.setText(description);
     }
 
     String title =
-        mCursor.getString(FeedNewsFragment.COL_TITLTE);
+        cursor.getString(FeedNewsFragment.COL_TITLTE);
     holder.mTitleView.setText(title);
 
     String date =
-        mCursor.getString(FeedNewsFragment.COL_CREATE_DATE);
+        cursor.getString(FeedNewsFragment.COL_CREATE_DATE);
     String day = null;
 
-    day = Utils.getFriendlyDayString(mContext, Utils.getLongFromString(date), true);
+    day = Utils
+        .getFriendlyDayString(App.instance().getApplicationContext(), Utils.getLongFromString(date),
+            true);
 
     if (day == null) {
       holder.mDateView.setText(date);
@@ -143,15 +139,15 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     }
 
     int countLikes =
-        mCursor.getInt(FeedNewsFragment.COL_LIKES);
+        cursor.getInt(FeedNewsFragment.COL_LIKES);
     holder.mLikesCountView.setText(String.valueOf(countLikes));
 
-    Glide.with(mContext)
-        .load(mCursor.getString(FeedNewsFragment.COL_IMAGE))
+    Glide.with(App.instance().getApplicationContext())
+        .load(cursor.getString(FeedNewsFragment.COL_IMAGE))
         .error(R.drawable.art_snow)
         .crossFade()
         .into(holder.mImageView);
-    int mIsLike = mCursor.getInt(FeedNewsFragment.COL_IS_LIKE);
+    int mIsLike = cursor.getInt(FeedNewsFragment.COL_IS_LIKE);
     if (mIsLike == 1) {
       holder.mLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
       holder.mLikeButton.setTag("1");
@@ -186,40 +182,15 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     if (mCursorTags != null) {
       mTagAdapter.swapCursor(mCursorTags);
     }
-  }
-
-  @Override
-  public int getItemCount() {
-
-    if (null == mCursor) {
-      return 0;
-    } else {
-      return mCursor.getCount();
-    }
 
   }
 
-  public Cursor getCursor() {
-    return mCursor;
-  }
 
   public void selectView(RecyclerView.ViewHolder viewHolder) {
     if (viewHolder instanceof PreviewAdapterViewHolder) {
       PreviewAdapterViewHolder vfh = (PreviewAdapterViewHolder) viewHolder;
       vfh.onClick(vfh.itemView);
     }
-  }
-
-  public void swapCursor(Cursor newCursor) {
-    mCursor = newCursor;
-    notifyDataSetChanged();
-    mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
-  }
-
-  private void deleteItem(RecyclerView.ViewHolder holder, int position) {
-    notifyItemRemoved(position);
-    notifyItemRangeChanged(position, mCursor.getCount());
-    holder.itemView.setVisibility(View.GONE);
   }
 
 
@@ -294,15 +265,12 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
       }
       mRemoveButton = (ImageButton) itemView.findViewById(R.id.delete_button);
       mRemoveButton.setOnClickListener(this);
-
       itemView.setOnClickListener(this);
-
       mHorizontalList = (RecyclerView) itemView.findViewById(R.id.list_tags_view);
       mHorizontalList.setLayoutManager(
-          new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+          new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
       mTagAdapter = new TagAdapter(null, 0);
       mHorizontalList.setAdapter(mTagAdapter);
-
     }
 
 
@@ -310,6 +278,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     public void onClick(View view) {
       int adapterPosition = getAdapterPosition();
       long id;
+      mCursor = getCursor();
       if (mCursor != null) {
         mCursor.moveToPosition(adapterPosition);
         int idx = mCursor.getColumnIndex(FeedContract.PreviewEntry._ID);
@@ -334,6 +303,4 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewA
     }
 
   }
-
-
 }

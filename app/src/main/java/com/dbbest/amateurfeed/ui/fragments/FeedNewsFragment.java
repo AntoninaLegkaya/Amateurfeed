@@ -186,7 +186,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
     mRecyclerView.setHasFixedSize(true);
 
-    mPreviewAdapter = new PreviewAdapter(mContext, emptyView, mChoiceMode,
+    mPreviewAdapter = new PreviewAdapter(null,0, emptyView, mChoiceMode,
 
         new PreviewAdapter.FeedAdapterOnClickHandler() {
           @Override
@@ -239,7 +239,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     }
     );
 
-    mPreviewAdapter.swapCursor(null);
+//    mPreviewAdapter.swapCursor(null);
     mRecyclerView.setAdapter(mPreviewAdapter);
 
     if (savedInstanceState != null) {
@@ -309,6 +309,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
     mPreviewAdapter.swapCursor(data);
 
     updateEmptyView();
