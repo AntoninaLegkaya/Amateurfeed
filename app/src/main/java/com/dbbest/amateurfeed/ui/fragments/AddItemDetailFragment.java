@@ -27,7 +27,6 @@ import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
 import com.dbbest.amateurfeed.view.DetailView;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 
@@ -38,7 +37,7 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
   private static final String PARAM_KEY = "param_key";
   public final String TAG = AddItemDetailFragment.class.getName();
   private Button mPublishButton;
-  private List<TagModel> tags = new ArrayList<>();
+  private ArrayList<TagModel> tags = new ArrayList<>();
   private String upTitle = null;
   private String upDescription = null;
   private BlobUploadResultReceiver mReceiver;
@@ -88,7 +87,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
     mPublishButton.setOnClickListener(this);
     mDescriptionView = (AppCompatEditText) view.findViewById(R.id.item_description);
     mTitleView = (AppCompatEditText) view.findViewById(R.id.item_title);
-
     return view;
   }
 
@@ -99,8 +97,8 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
     if (mDescriptionView != null) {
       upDescription = mDescriptionView.getText().toString();
     }
-    if (upTitle != null && upDescription != null && tags != null && mUploadUrl != null) {
-      mPresenter.addNewNews(upTitle, upDescription, mUploadUrl, tags);
+    if (upTitle != null && upDescription != null && tags != null && mUploadImagePath != null) {
+      mPresenter.addNewNews(upTitle, upDescription, mUploadImagePath, tags);
     }
   }
 
@@ -116,18 +114,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
           }
         }
       }
-
-      if (mUriImage != null) {
-        mReceiver = new BlobUploadResultReceiver(new Handler());
-        mReceiver.setReceiver(this);
-        Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
-            BlobUploadService.class);
-        intent.putExtra("receiver", mReceiver);
-        intent.putExtra("uri", mUriImage);
-        getActivity().startService(intent);
-      } else {
-        invokeAddNewsCommand();
-      }
     }
   }
 
@@ -135,7 +121,24 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
   public void addTagToItemDetail(Bundle data) {
     TagModel tagModel = data.getParcelable("tagModel");
     tags.add(tagModel);
+    checkUpdateImage();
+  }
 
+  @Override
+  public void checkUpdateImage() {
+    if (mUriImageSelected != null) {
+      mReceiver = new BlobUploadResultReceiver(new Handler());
+      mReceiver.setReceiver(this);
+      Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
+          BlobUploadService.class);
+      intent.putExtra("receiver", mReceiver);
+      intent.putExtra("uri", mUriImageSelected);
+      getActivity().startService(intent);
+    } else {
+      UIDialogNavigation.showWarningDialog(R.string.add_news_image)
+          .show(getActivity().getSupportFragmentManager(), "info");
+      tags.clear();
+    }
   }
 
   private void insertTagsInBd() {
@@ -152,7 +155,6 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
             "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " "
                 + "name: " + tagModel.getName() + " " +
                 "preview_id: " + FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-
         if (cVTagsVector.size() > 0) {
           ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
           cVTagsVector.toArray(cvArray);
@@ -182,10 +184,9 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
         .put(FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE, new UserPreferences().getImage());
     String createDate = Utils.getCurrentTime();
     previewValues.put(FeedContract.PreviewEntry.COLUMN_CREATE_DATE, createDate);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_IMAGE, mUploadUrl);
+    previewValues.put(FeedContract.PreviewEntry.COLUMN_IMAGE, mUploadImagePath);
     previewValues.put(FeedContract.PreviewEntry.COLUMN_IS_MY, 1);
     cVTagsVector.add(previewValues);
-
     if (cVTagsVector.size() > 0) {
       ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
       cVTagsVector.toArray(cvArray);
@@ -217,6 +218,7 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
   public void showErrorAddCommentDialog() {
   }
 
+
   @Override
   public void onReceiveResult(int resultCode, Bundle resultData) {
     switch (resultCode) {
@@ -224,7 +226,7 @@ public class AddItemDetailFragment extends BaseChangeDetailFragment implements D
         break;
       case BlobUploadService.STATUS_FINISHED:
         String result = resultData.getString("result");
-        mUploadUrl = result;
+        mUploadImagePath = result;
         invokeAddNewsCommand();
         break;
       case BlobUploadService.STATUS_ERROR:

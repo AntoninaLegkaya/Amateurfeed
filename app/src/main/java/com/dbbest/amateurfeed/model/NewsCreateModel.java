@@ -27,9 +27,9 @@ public class NewsCreateModel implements Parcelable {
   @SerializedName("image")
   private String mImage;
   @SerializedName("tags")
-  private List<TagModel> mTags = new ArrayList<>();
+  private ArrayList<TagModel> mTags = new ArrayList<>();
 
-  public NewsCreateModel(String title, String text, String image, List<TagModel> tags) {
+  public NewsCreateModel(String title, String text, String image, ArrayList<TagModel> tags) {
 
     mTitle = title;
     mText = text;
@@ -57,7 +57,7 @@ public class NewsCreateModel implements Parcelable {
     return mImage;
   }
 
-  public List<TagModel> getTags() {
+  public ArrayList<TagModel> getTags() {
     return mTags;
   }
 

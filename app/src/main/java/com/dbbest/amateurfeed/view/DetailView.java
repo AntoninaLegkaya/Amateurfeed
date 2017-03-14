@@ -3,23 +3,22 @@ package com.dbbest.amateurfeed.view;
 import android.common.framework.IView;
 import android.os.Bundle;
 
-/**
- * Created by antonina on 24.01.17.
- */
 
 public interface DetailView extends IView {
 
-    public void addTagToItemDetail(Bundle data);
+  public void addTagToItemDetail(Bundle data);
 
-    void updateDetailsFields(Bundle data);
+  void updateDetailsFields(Bundle data);
 
-    void showSuccessEditNewsDialog();
+  void showSuccessEditNewsDialog();
 
-    void showErrorEditNewsDialog();
+  void showErrorEditNewsDialog();
 
-    void showSuccessAddCommentDialog();
+  void showSuccessAddCommentDialog();
 
-    void showErrorAddCommentDialog();
+  void showErrorAddCommentDialog();
 
-    void refreshFeedNews(Bundle data);
+  void refreshFeedNews(Bundle data);
+
+  void checkUpdateImage();
 }

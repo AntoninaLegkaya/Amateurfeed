@@ -7,18 +7,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class TagModel implements Parcelable {
 
-  public static final Parcelable.Creator<TagModel> CREATOR =
-      new Parcelable.Creator<TagModel>() {
-        @Override
-        public TagModel createFromParcel(Parcel in) {
-          return new TagModel(in);
-        }
+  public static final Parcelable.Creator<TagModel> CREATOR = new Parcelable.Creator<TagModel>() {
+    @Override
+    public TagModel createFromParcel(Parcel source) {
+      return new TagModel(source);
+    }
 
-        @Override
-        public TagModel[] newArray(int size) {
-          return new TagModel[size];
-        }
-      };
+    @Override
+    public TagModel[] newArray(int size) {
+      return new TagModel[size];
+    }
+  };
   @SerializedName("id")
   private int mId;
   @SerializedName("name")
@@ -58,7 +57,7 @@ public class TagModel implements Parcelable {
   @Override
   public void writeToParcel(Parcel dest, int flags) {
 
-    dest.writeLong(mId);
+    dest.writeInt(mId);
     dest.writeString(mName);
   }
 }

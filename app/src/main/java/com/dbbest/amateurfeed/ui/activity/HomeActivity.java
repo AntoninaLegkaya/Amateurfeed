@@ -21,8 +21,8 @@ import android.widget.TabHost;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
+import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.AddItemDetailFragment;
@@ -510,7 +510,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   }
 
   @Override
-  public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int layoutId) {
+  public void showItemDetailsFragment(UserNewsHolder vh, Uri uri, int layoutId) {
     mArgsDetail = new Bundle();
     mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
     mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);

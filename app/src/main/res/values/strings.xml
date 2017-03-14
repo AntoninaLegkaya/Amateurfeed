@@ -134,6 +134,7 @@
     <string name="set_edit_error" >Please logout and authenticate again</string>
     <string name="set_add_comment_success" translatable="false">You Added Comment :)</string>
     <string name="add_news_success" translatable="false">You Add News :)</string>
+    <string name="add_news_image" >Select Your Image</string>
 
     <!--Search Screen Dialog-->
     <string name="search_error" >News not found</string>

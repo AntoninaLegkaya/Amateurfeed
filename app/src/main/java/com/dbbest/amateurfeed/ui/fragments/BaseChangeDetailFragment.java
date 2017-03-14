@@ -39,12 +39,12 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
   public ImageView mImageView;
   protected String TAG = BaseChangeDetailFragment.class.getName();
   protected String userChosenTask;
-  protected Uri mUriImage;
   protected DetailPresenter mPresenter;
   protected Uri mUriPreview;
   protected TextView mDescriptionView;
   protected TextView mTitleView;
-  protected String mUploadUrl;
+  protected String mUploadImagePath;
+  protected Uri mUriImageSelected;
 
 
   @Override
@@ -79,6 +79,11 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
 
   @Override
   public void refreshFeedNews(Bundle data) {
+
+  }
+
+  @Override
+  public void checkUpdateImage() {
 
   }
 
@@ -186,8 +191,8 @@ public class BaseChangeDetailFragment extends Fragment implements DetailView {
 
         File file = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
         Log.i(TAG_BASE, "Cut image  by Path : " + file.getPath());
-        mUriImage = Uri.fromFile(file);
-        Log.i(TAG_BASE, "Cut image  by Uri : " + mUriImage);
+        mUriImageSelected = Uri.fromFile(file);
+        Log.i(TAG_BASE, "Cut image  by Uri : " + mUriImageSelected);
         InputStream ims = null;
         try {
           ims = new FileInputStream(file);

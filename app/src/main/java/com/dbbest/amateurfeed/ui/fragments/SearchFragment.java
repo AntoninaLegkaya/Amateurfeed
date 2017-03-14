@@ -23,7 +23,8 @@ import android.widget.ImageButton;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.FeedProvider;
-import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
+import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter;
+import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.presenter.SearchPresenter;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.view.SearchView;
@@ -39,7 +40,7 @@ public class SearchFragment extends Fragment implements SearchView,
   private AppCompatEditText mSearchField;
   private ImageButton mDeleteSearchParam;
   private ImageButton mSearchButton;
-  private GridViewAdapter mGridViewAdapter;
+  private UserNewsAdapter mUserNewsAdapter;
   private RecyclerView mRecyclerView;
   private SearchPresenter mPresenter;
 
@@ -84,24 +85,24 @@ public class SearchFragment extends Fragment implements SearchView,
     mSearchButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mGridViewAdapter.changeCursor(null);
+        mUserNewsAdapter.changeCursor(null);
         mPresenter.searchNews(mSearchField.getText().toString());
       }
     });
     mRecyclerView = (RecyclerView) view.findViewById(R.id.search_feed_list_view);
 
     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    mGridViewAdapter = new GridViewAdapter(null, 0, getContext(),
-        new GridViewAdapter.SearchAdapterShowItemDetails() {
+    mUserNewsAdapter = new UserNewsAdapter(null, 0,
+        new UserNewsAdapter.SearchAdapterShowItemDetails() {
           @Override
-          public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri,
+          public void showItemDetailsFragment(UserNewsHolder vh, Uri uri,
               int typeItem) {
             ((Callback) getActivity()).showItemDetailsFragment(vh, uri, typeItem);
           }
         });
     GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
     mRecyclerView.setLayoutManager(layoutManager);
-    mRecyclerView.setAdapter(mGridViewAdapter);
+    mRecyclerView.setAdapter(mUserNewsAdapter);
     return view;
   }
 
@@ -150,7 +151,7 @@ public class SearchFragment extends Fragment implements SearchView,
     Log.i(SearchFragment.SEARCH_FRAGMENT, " Loading finished");
     if (loader.getId() == SEARCH_NEWS_LOADER && data != null) {
       Log.i(SearchFragment.SEARCH_FRAGMENT, " Loading finished, data not Null");
-      mGridViewAdapter.swapCursor(data);
+      mUserNewsAdapter.swapCursor(data);
     } else {
       showEmptySearchDialog();
     }
@@ -159,7 +160,7 @@ public class SearchFragment extends Fragment implements SearchView,
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
     Log.i(SearchFragment.SEARCH_FRAGMENT, "Reset Loader");
-    mGridViewAdapter.swapCursor(null);
+    mUserNewsAdapter.swapCursor(null);
   }
 
   @Override
@@ -184,6 +185,6 @@ public class SearchFragment extends Fragment implements SearchView,
 
   public interface Callback {
 
-    public void showItemDetailsFragment(GridViewAdapter.GridViewHolder vh, Uri uri, int typeItem);
+    public void showItemDetailsFragment(UserNewsHolder vh, Uri uri, int typeItem);
   }
 }

@@ -2,7 +2,6 @@ package com.dbbest.amateurfeed.data.adapter;
 
 import android.app.Activity;
 import android.common.widget.CursorRecyclerAdapter;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -13,35 +12,37 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.utils.Constants;
 
 
-public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridViewHolder> {
+public class UserNewsAdapter extends CursorRecyclerAdapter<UserNewsHolder> {
 
   private final int ITEM_TYPE = 0;
   private final SearchAdapterShowItemDetails mSearchAdapterShowItemDetails;
-  private final String TAG = GridViewAdapter.class.getName();
+  private final String TAG = UserNewsAdapter.class.getName();
   protected Cursor mCursor;
   private Activity activity;
-  private Context mContext;
+//  private Context mContext;
 
 
-  public GridViewAdapter(Cursor c, int flags, Context context,
+  public UserNewsAdapter(Cursor c, int flags,
       SearchAdapterShowItemDetails detailsHandler) {
     super(c, false);
-    this.mContext = context;
+//    this.mContext = context;
     mSearchAdapterShowItemDetails = detailsHandler;
   }
 
   @Override
-  public GridViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+  public UserNewsHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
     View view = LayoutInflater.from(viewGroup.getContext())
         .inflate(R.layout.item_grid, viewGroup, false);
     view.setFocusable(true);
-    return new GridViewHolder(view);
+    return new UserNewsHolder(view);
   }
 
   @Override
@@ -50,14 +51,14 @@ public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridV
   }
 
   @Override
-  public void onBindViewHolder(GridViewHolder holder, @Nullable Cursor cursor, int position) {
+  public void onBindViewHolder(UserNewsHolder holder, @Nullable Cursor cursor, int position) {
 
     if (cursor.moveToPosition(position)) {
       if (holder.mTextView != null) {
         (holder.mTextView).setText(cursor.getString(FeedNewsFragment.COL_TITLTE));
       }
       if (holder.mImageView != null) {
-        Glide.with(mContext)
+        Glide.with(App.instance().getApplicationContext())
             .load(cursor.getString(FeedNewsFragment.COL_IMAGE))
             .error(R.drawable.art_snow)
             .crossFade()
@@ -68,15 +69,15 @@ public class GridViewAdapter extends CursorRecyclerAdapter<GridViewAdapter.GridV
 
   public interface SearchAdapterShowItemDetails {
 
-    void showItemDetailsFragment(GridViewHolder vh, Uri uri, int typeItem);
+    void showItemDetailsFragment(UserNewsHolder vh, Uri uri, int typeItem);
   }
 
-  public class GridViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  public class UserNewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView mTextView;
     private ImageView mImageView;
 
-    public GridViewHolder(View view) {
+    public UserNewsHolder(View view) {
       super(view);
       mImageView = (ImageView) view.findViewById(R.id.image);
       mTextView = (TextView) view.findViewById(R.id.text);

@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class NewsUpdateModel implements Parcelable {
@@ -28,9 +27,9 @@ public class NewsUpdateModel implements Parcelable {
   @SerializedName("image")
   private String mImage;
   @SerializedName("tags")
-  private List<TagModel> mTags = new ArrayList<>();
+  private ArrayList<TagModel> mTags = new ArrayList<>();
 
-  public NewsUpdateModel(List<TagModel> tags, String title, String text, String image) {
+  public NewsUpdateModel(ArrayList<TagModel> tags, String title, String text, String image) {
 
     mTitle = title;
     mText = text;
@@ -58,7 +57,7 @@ public class NewsUpdateModel implements Parcelable {
     return mImage;
   }
 
-  public List<TagModel> getTags() {
+  public ArrayList<TagModel> getTags() {
     return mTags;
   }
 

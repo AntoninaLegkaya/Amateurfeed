@@ -33,11 +33,12 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.app.azur.preferences.CloudPreferences;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver.Receiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadService;
 import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.data.adapter.HorizontalListAdapter;
+import com.dbbest.amateurfeed.data.adapter.TagAdapter;
 import com.dbbest.amateurfeed.data.adapter.VerticalListAdapter;
 import com.dbbest.amateurfeed.model.CommentModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
@@ -45,7 +46,6 @@ import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 
@@ -75,7 +75,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
   private RecyclerView mHorizontalList;
   private RecyclerView mCommentList;
   private VerticalListAdapter mVerticalListAdapter;
-  private HorizontalListAdapter mHorizontalListAdapter;
+  private TagAdapter mTagAdapter;
   private BlobUploadResultReceiver mReceiver;
 
 
@@ -130,17 +130,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
               for (String tag : tags) {
                 mPresenter.checkTag(tag);
               }
-            }
-            if (mUriImage != null) {
-              mReceiver = new BlobUploadResultReceiver(new Handler());
-              mReceiver.setReceiver(this);
-              Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
-                  BlobUploadService.class);
-              intent.putExtra("receiver", mReceiver);
-              intent.putExtra("uri", mUriImage);
-              getActivity().startService(intent);
-            } else {
-              invokeEditNewsCommand();
             }
           }
         }
@@ -198,8 +187,8 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     mHorizontalList = (RecyclerView) itemView.findViewById(R.id.list_tags_view);
     mHorizontalList.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-    mHorizontalListAdapter = new HorizontalListAdapter(getActivity());
-    mHorizontalList.setAdapter(mHorizontalListAdapter);
+    mTagAdapter = new TagAdapter(null, 0);
+    mHorizontalList.setAdapter(mTagAdapter);
 
     mCommentList = (RecyclerView) itemView.findViewById(R.id.comment_recycler_view);
     mCommentList.setLayoutManager(
@@ -261,9 +250,9 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
             mImageView.setImageBitmap(bitmap);
           }
         };
-        mUploadUrl = data.getString(FeedNewsFragment.COL_IMAGE);
+        mUploadImagePath = data.getString(FeedNewsFragment.COL_IMAGE);
         Glide.with(this)
-            .load(mUploadUrl)
+            .load(mUploadImagePath)
             .asBitmap()
             .error(R.drawable.art_snow)
             .into(target);
@@ -283,7 +272,7 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
         mCommentCountView.setText(String.valueOf(count));
         Cursor mCursorTags = getTagCursor(mIdPreview);
         if (mCursorTags.moveToFirst()) {
-          mHorizontalListAdapter.swapCursor(mCursorTags);
+          mTagAdapter.swapCursor(mCursorTags);
         }
       }
     }
@@ -325,7 +314,8 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
   }
 
   public ArrayList<TagModel> getTags(long mIdPreview) {
-    Cursor cursor = getTagCursor(mIdPreview);
+    Cursor cursor;
+    cursor = getTagCursor(mIdPreview);
     ArrayList<TagModel> tagModels = new ArrayList<TagModel>();
     if (cursor != null) {
       if (cursor.moveToFirst()) {
@@ -343,8 +333,10 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
   @Override
   public void addTagToItemDetail(Bundle bundle) {
     TagModel tagModel = bundle.getParcelable("tagModel");
-    ArrayList<TagModel> tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-    if (tagModel != null) {
+    ArrayList<TagModel> tags;
+    tags = getTags(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+    if (!bundle.isEmpty() && tagModel != null) {
+
       Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
       boolean flag = true;
       for (TagModel model : tags) {
@@ -364,10 +356,52 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
           cVTagsVector.toArray(cvArray);
           App.instance().getContentResolver()
               .bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
-          Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-          mHorizontalListAdapter.swapCursor(newTagCursor);
+          Log.i(TAG, "Add new tag: " + tagModel.getName());
         }
       }
+      Cursor newTagCursor = getTagCursor(FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
+      Log.i(TAG, "Swap cursor new tags ");
+      mTagAdapter.swapCursor(newTagCursor);
+    }
+    checkUpdateImage();
+
+  }
+
+  public void checkUpdateImage() {
+    if (mUriImageSelected != null) {
+      Log.i(TAG, "You selected new image ");
+      mReceiver = new BlobUploadResultReceiver(new Handler());
+      mReceiver.setReceiver(this);
+      Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
+          BlobUploadService.class);
+      intent.putExtra("receiver", mReceiver);
+      intent.putExtra("uri", mUriImageSelected);
+      getActivity().startService(intent);
+    } else {
+      CloudPreferences preferences = new CloudPreferences();
+      if (mUploadImagePath != null) {
+        Log.i(TAG, "Get old path to image: " + mUploadImagePath);
+      }
+      invokeEditNewsCommand();
+    }
+  }
+
+  private void invokeEditNewsCommand() {
+
+    Log.i(TAG, "Invoke edit news Command ");
+    String upTitle = null;
+    String upDescription = null;
+    long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
+    ArrayList<TagModel> newTagsArray = getTags(idPreview);
+    if (mTitleView != null) {
+      upTitle = mTitleView.getText().toString();
+    }
+    if (mDescriptionView != null) {
+      upDescription = mDescriptionView.getText().toString();
+    }
+    if (upTitle != null && upDescription != null && newTagsArray != null) {
+      mPresenter
+          .updateNews(newTagsArray, upTitle, upDescription, mUploadImagePath, (int) idPreview);
     }
   }
 
@@ -476,21 +510,6 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
     updateDescriptionColumnPreview(mNewsUpdateModel.getText());
   }
 
-  private void invokeEditNewsCommand() {
-    String upTitle = null;
-    String upDescription = null;
-    long idPreview = FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-    List<TagModel> newTagsArray = getTags(idPreview);
-    if (mTitleView != null) {
-      upTitle = mTitleView.getText().toString();
-    }
-    if (mDescriptionView != null) {
-      upDescription = mDescriptionView.getText().toString();
-    }
-    if (upTitle != null && upDescription != null && newTagsArray != null) {
-      mPresenter.updateNews(newTagsArray, upTitle, upDescription, mUploadUrl, (int) idPreview);
-    }
-  }
 
   @Override
   public void showSuccessEditNewsDialog() {
@@ -521,7 +540,8 @@ public class EditItemDetailFragment extends BaseChangeDetailFragment implements
         break;
       case BlobUploadService.STATUS_FINISHED:
         String result = resultData.getString("result");
-        mUploadUrl = result;
+        mUploadImagePath = result;
+        Log.i(TAG, "Get new path to image: " + mUploadImagePath);
         invokeEditNewsCommand();
         break;
       case BlobUploadService.STATUS_ERROR:

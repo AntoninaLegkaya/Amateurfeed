@@ -11,6 +11,7 @@ import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.EditNewsCommand;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.view.DetailView;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DetailPresenter extends Presenter<DetailView> implements
@@ -28,7 +29,7 @@ public class DetailPresenter extends Presenter<DetailView> implements
     command.send(CODE_CHECK_TAG, mResultReceiver);
   }
 
-  public void updateNews(List<TagModel> tagModels, String title, String text, String image,
+  public void updateNews(ArrayList<TagModel> tagModels, String title, String text, String image,
       int id) {
     Command command = new EditNewsCommand(tagModels, title, text, image, id);
     command.send(CODE_EDIT_NEWS, mResultReceiver);
@@ -39,8 +40,8 @@ public class DetailPresenter extends Presenter<DetailView> implements
     command.send(CODE_ADD_COMMENT, mResultReceiver);
   }
 
-  public void addNewNews(String title, String text, String image, List<TagModel> tagModels) {
-    Command command = new AddNewItemNewsCommand(title, text, image, tagModels);
+  public void addNewNews(String title, String text, String image, ArrayList<TagModel> tagModels) {
+    Command command = new AddNewItemNewsCommand(tagModels, title, text, image);
     command.send(CODE_ADD_NEW_ITEM, mResultReceiver);
   }
 
@@ -81,7 +82,9 @@ public class DetailPresenter extends Presenter<DetailView> implements
 
   @Override
   public void onFail(int code, Bundle data) {
-
+    if (code == CODE_CHECK_TAG) {
+      getView().checkUpdateImage();
+    }
   }
 
   @Override

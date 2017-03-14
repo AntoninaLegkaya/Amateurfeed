@@ -2,7 +2,6 @@ package com.dbbest.amateurfeed.app.net.command;
 
 import android.os.Bundle;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
@@ -11,12 +10,12 @@ import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class EditNewsCommand extends Command {
 
-  public static final Parcelable.Creator<EditNewsCommand> CREATOR = new Parcelable.Creator<EditNewsCommand>() {
+  public static final Creator<EditNewsCommand> CREATOR = new Creator<EditNewsCommand>() {
     @Override
     public EditNewsCommand createFromParcel(Parcel source) {
       return new EditNewsCommand(source);
@@ -28,26 +27,41 @@ public class EditNewsCommand extends Command {
     }
   };
   private String TAG = EditNewsCommand.class.getName();
-  private List<TagModel> mTagModels = new ArrayList<>();
-  private NewsUpdateModel mNewsUpdateModel;
+  private ArrayList<TagModel> mTagModels = new ArrayList<>();
+  private String mTitle;
+  private String mText;
+  private String mImage;
   private int mId;
 
-  public EditNewsCommand(List<TagModel> tagModels, String title, String text, String image,
+  public EditNewsCommand(ArrayList<TagModel> tagModels, String title, String text, String image,
       int id) {
     mId = id;
-    mNewsUpdateModel = new NewsUpdateModel(tagModels, title, text, image);
+    mTagModels = tagModels;
+    mTitle = title;
+    mText = text;
+    mImage = image;
+    for (TagModel model : tagModels) {
+      Log.i(TAG, "What you give NewsUpdateModel Tag: " + model.getName() + '\n');
+    }
   }
 
   public EditNewsCommand(Parcel in) {
     super(in);
     mId = in.readInt();
-    mNewsUpdateModel = in.readParcelable(NewsUpdateModel.class.getClassLoader());
+    mTitle = in.readString();
+    mText = in.readString();
+    mImage = in.readString();
+    mTagModels = new ArrayList<TagModel>();
+    in.readTypedList(mTagModels, TagModel.CREATOR);
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
     dest.writeInt(mId);
-    dest.writeParcelable(mNewsUpdateModel, flags);
+    dest.writeString(mTitle);
+    dest.writeString(mText);
+    dest.writeString(mImage);
+    dest.writeTypedList(mTagModels);
 
   }
 
@@ -56,12 +70,13 @@ public class EditNewsCommand extends Command {
 
     RestApiClient apiClient = App.getApiFactory().restClient();
     AuthToken authToken = new AuthToken();
-
+    NewsUpdateModel mNewsUpdateModel = new NewsUpdateModel(mTagModels, mTitle, mText, mImage);
     Log.i(TAG, "Edit News [_ID]: " + mId + "\n" +
         "Title: " + mNewsUpdateModel.getTitle() + '\n' +
         "Description: " + mNewsUpdateModel.getText() + '\n' +
         "Image: " + mNewsUpdateModel.getImage());
-    for (TagModel model : mNewsUpdateModel.getTags()) {
+    ArrayList<TagModel> tags = mNewsUpdateModel.getTags();
+    for (TagModel model : tags) {
       Log.i(TAG, "Tag: " + model.getName() + '\n');
     }
 
@@ -70,7 +85,6 @@ public class EditNewsCommand extends Command {
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         NewsResponseModel data = response.data();
-
         Log.i(TAG, "Updated  Item By ID:  " + data.getId());
         Bundle bundle = new Bundle();
         bundle.putParcelable("model", mNewsUpdateModel);

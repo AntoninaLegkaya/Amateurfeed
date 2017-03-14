@@ -3,6 +3,7 @@ package com.dbbest.amateurfeed.app.net.command;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
@@ -24,6 +25,7 @@ public class CheckTagCommand extends Command {
       return new CheckTagCommand[size];
     }
   };
+  private String TAG = CheckTagCommand.class.getName();
   private String mTagName;
 
   public CheckTagCommand(String tag) {
@@ -54,8 +56,8 @@ public class CheckTagCommand extends Command {
         Bundle bundle = new Bundle();
         boolean flag = false;
         for (TagModel tag : data) {
-
           if (mTagName.equals(tag.getName())) {
+            Log.i(TAG, "You check tag: " + mTagName + ": this new tag for news");
             flag = true;
             bundle.putParcelable(TAG_MODEL, new TagModel(tag.getId(), tag.getName()));
           }
