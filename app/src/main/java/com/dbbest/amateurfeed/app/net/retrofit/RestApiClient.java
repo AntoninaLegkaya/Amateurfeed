@@ -20,6 +20,7 @@ import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
+import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.model.UserProfileModel;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -125,5 +126,9 @@ public class RestApiClient {
 
   public ResponseWrapper<Dictionary> searchNews(String searchParam) {
     return executeCall(mApiService.getMapUsersNews(searchParam));
+  }
+
+  public ResponseWrapper<ArrayList<UserNewsModel>> getMyNews(String token) {
+    return executeCall(mApiService.getSpecifiedNewsByUser(token));
   }
 }

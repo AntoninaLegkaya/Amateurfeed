@@ -36,7 +36,7 @@ public class SearchFragment extends Fragment implements SearchView,
 
   private static final String PARAM_KEY = "param_key";
   private static final int SEARCH_NEWS_LOADER = 3;
-  public static String SEARCH_FRAGMENT = "SearchFragment";
+  public static String TAG = SearchFragment.class.getName();
   private AppCompatEditText mSearchField;
   private ImageButton mDeleteSearchParam;
   private ImageButton mSearchButton;
@@ -132,7 +132,7 @@ public class SearchFragment extends Fragment implements SearchView,
         selection += selectionArg[i] + ", ";
       }
       selection = selection.substring(0, selection.length() - 2) + ")";
-      Log.i(SEARCH_FRAGMENT, "Query to  DB:  get Preview info : selection: " + selection
+      Log.i(TAG, "Query to  DB:  get Preview info : selection: " + selection
           + " Count selection arguments: " + selectionArg.length);
       return new CursorLoader(getActivity(),
           previewListUri,
@@ -148,9 +148,9 @@ public class SearchFragment extends Fragment implements SearchView,
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    Log.i(SearchFragment.SEARCH_FRAGMENT, " Loading finished");
+    Log.i(TAG, " Loading finished");
     if (loader.getId() == SEARCH_NEWS_LOADER && data != null) {
-      Log.i(SearchFragment.SEARCH_FRAGMENT, " Loading finished, data not Null");
+      Log.i(TAG, " Loading finished, data not Null");
       mUserNewsAdapter.swapCursor(data);
     } else {
       showEmptySearchDialog();
@@ -159,7 +159,7 @@ public class SearchFragment extends Fragment implements SearchView,
 
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
-    Log.i(SearchFragment.SEARCH_FRAGMENT, "Reset Loader");
+    Log.i(TAG, "Reset Loader");
     mUserNewsAdapter.swapCursor(null);
   }
 

@@ -85,7 +85,7 @@ public interface RestApiServices {
       @Body NewsUpdateModel updateModel, @Path("id") int id);
 
   @GET("news/my")
-  Call<ResponseWrapper<ArrayList<UserNewsModel>>> getSpecifiedNewsByUser();
+  Call<ResponseWrapper<ArrayList<UserNewsModel>>> getSpecifiedNewsByUser(@Header("Authorization") String token);
 
   @PUT("news/{id}/like")
   Call<ResponseWrapper<Object>> isLikeNews(@Header("Authorization") String token,

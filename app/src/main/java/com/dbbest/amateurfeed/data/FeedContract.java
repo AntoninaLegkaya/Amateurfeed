@@ -26,16 +26,22 @@ public class FeedContract {
         ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_USER_NEWS;
     public static final String CONTENT_ITEM_TYPE =
         ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_USER_NEWS;
-
     public static final String TABLE_NAME = "user_news";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_UPDATE_DATE = "update_date";
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_IMAGE = "image";
     public static final String COLUMN_LIKES = "likes";
+    public static final int PREVIEW_ID_PATH_POSITION = 1;
+    private static final String PATH_USER_NEWS_ID = "/" + PATH_USER_NEWS + "/";
+    public static final Uri CONTENT_ID_URI_BASE = Uri.parse(BASE_CONTENT_URI + PATH_USER_NEWS_ID);
 
     public static Uri buildUserNewsUri(long id) {
       return ContentUris.withAppendedId(CONTENT_URI, id);
+    }
+
+    public static Uri buildGetNewsById(long id) {
+      return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
     }
   }
 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/item_header"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  app:columnCount="2">
+
+  <TextView
+
+    android:id="@+id/my_item_title"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:textColor="@color/app_blue_text"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal"
+    app:layout_rowSpan="2"
+    tools:text="This is First Text " />
+  <TextView
+    android:id="@+id/my_item_update_date"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:text="@string/my_item_amount_likes"
+    android:textColor="@color/app_black"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center"
+    tools:text="Today" />
+
+  <ImageView
+    android:id="@+id/my_item_image"
+    android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+    android:adjustViewBounds="true"
+    android:maxHeight="@dimen/preview_icon"
+    android:maxWidth="@dimen/preview_icon"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center"
+    app:layout_rowSpan="2"
+    tools:src="@mipmap/splash" />
+
+
+  <TextView
+    android:id="@+id/my_item_status_label"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:text="@string/my_item_status_label"
+    android:textColor="@color/app_blue_text"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal" />
+
+  <TextView
+    android:id="@+id/my_item_status"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:textColor="@color/app_black"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal"
+    tools:text="Active" />
+
+  <TextView
+    android:id="@+id/my_item_amount_likes_label"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:text="@string/my_item_amount_likes"
+    android:textColor="@color/app_blue_text"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal" />
+
+  <TextView
+    android:id="@+id/my_item_amount_likes"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:text="@string/my_item_amount_likes"
+    android:textColor="@color/app_black"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal"
+    tools:text="0" />
+
+
+</android.support.v7.widget.GridLayout>

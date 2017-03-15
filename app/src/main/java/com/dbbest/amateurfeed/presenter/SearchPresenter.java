@@ -13,7 +13,6 @@ import com.dbbest.amateurfeed.app.net.command.SearchCommand;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.model.Dictionary;
 import com.dbbest.amateurfeed.model.News;
-import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.view.SearchView;
 import java.util.ArrayList;
 
@@ -23,6 +22,7 @@ public class SearchPresenter extends Presenter<SearchView>
 
   private static final int CODE_SEARCH_NEWS = 0;
   private CommandResultReceiver mResultReceiver;
+  private String TAG = SearchPresenter.class.getName();
 
   public void searchNews(String searchParam) {
     Command command = new SearchCommand(searchParam);
@@ -57,7 +57,7 @@ public class SearchPresenter extends Presenter<SearchView>
             Cursor cursor = getPreviewByIdCursor(news.getId());
             if (cursor.moveToFirst()) {
               ids.add(String.valueOf(news.getId()));
-              Log.i(SearchFragment.SEARCH_FRAGMENT, "news : "
+              Log.i(TAG, "news : "
                   + String.valueOf(news.getId())
                   + " Found in BD: "
                   + cursor.moveToFirst());

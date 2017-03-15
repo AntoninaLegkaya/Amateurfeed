@@ -18,7 +18,6 @@ public class Dictionary implements Parcelable {
       return new Dictionary[size];
     }
   };
-  ;
   @SerializedName("users")
   private ArrayList<UserFeedCreatorExpand> mUsers = new ArrayList<>();
   ;

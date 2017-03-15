@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
+import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import java.util.HashMap;
 
 public class FeedProvider extends ContentProvider {
@@ -35,6 +36,7 @@ public class FeedProvider extends ContentProvider {
   static final int PREVIEW_TAG = 700;
   static final int PREVIEW_TAG_ID = 701;
   static final int USER_NEWS = 800;
+  static final int USER_NEWS_ID = 801;
   private static final UriMatcher sUriMatcher = buildUriMatcher();
   private static final SQLiteQueryBuilder sCommentByCreatorQueryBuilder;
   private static final SQLiteQueryBuilder sPreviewByTagQueryBuilder;
@@ -59,7 +61,16 @@ public class FeedProvider extends ContentProvider {
   public static long TEST_TAG_ID = 1;
   public static String TEST_TAG_AUTHOR = "Tony";
   public static long TEST_ID = 1;
+  private static HashMap<String, String> sUserNesProjectionMap = new HashMap<String, String>();
   private static HashMap<String, String> sPreviewProjectionMap = new HashMap<String, String>();
+
+  static {
+    for (int i = 0; i < ProfileFragment.NEWS_COLUMNS.length; i++) {
+      sUserNesProjectionMap.put(
+          ProfileFragment.NEWS_COLUMNS[i],
+          ProfileFragment.NEWS_COLUMNS[i]);
+    }
+  }
 
   static {
     for (int i = 0; i < FeedContract.PreviewEntry.DEFAULT_PROJECTION.length; i++) {
@@ -138,6 +149,7 @@ public class FeedProvider extends ContentProvider {
     matcher.addURI(authority, FeedContract.PATH_PROFILE, PROFILE);
     matcher.addURI(authority, FeedContract.PATH_PREVIEW_TAG, PREVIEW_TAG);
     matcher.addURI(authority, FeedContract.PATH_USER_NEWS, USER_NEWS);
+    matcher.addURI(authority, FeedContract.PATH_USER_NEWS + "/#", USER_NEWS_ID);
     matcher.addURI(authority, FeedContract.PATH_PREVIEW_TAG + "/#", PREVIEW_TAG_ID);
     return matcher;
   }
@@ -149,6 +161,19 @@ public class FeedProvider extends ContentProvider {
     qb.setProjectionMap(sPreviewProjectionMap);
     qb.appendWhere(FeedContract.PreviewEntry._ID + "=" + uri.getPathSegments()
         .get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION));
+    String orderBy = null;
+    SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+
+    return qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+  }
+
+  private Cursor getUserNewsByIdSelection(Uri uri, String[] projection, String selection,
+      String[] selectionArgs, String sortOrder) {
+    SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+    qb.setTables(FeedContract.UserNewsEntry.TABLE_NAME);
+    qb.setProjectionMap(sUserNesProjectionMap);
+    qb.appendWhere(FeedContract.UserNewsEntry._ID + "=" + uri.getPathSegments()
+        .get(FeedContract.UserNewsEntry.PREVIEW_ID_PATH_POSITION));
     String orderBy = null;
     SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
@@ -287,6 +312,8 @@ public class FeedProvider extends ContentProvider {
         return FeedContract.PreviewTagEntry.CONTENT_ITEM_TYPE;
       case USER_NEWS:
         return FeedContract.UserNewsEntry.CONTENT_TYPE;
+      case USER_NEWS_ID:
+        return FeedContract.UserNewsEntry.CONTENT_ITEM_TYPE;
       case COMMENT:
         return FeedContract.CommentEntry.CONTENT_TYPE;
       case COMMENT_POST_ID:
@@ -381,6 +408,11 @@ public class FeedProvider extends ContentProvider {
             null,
             sortOrder
         );
+        break;
+      }
+
+      case USER_NEWS_ID: {
+        retCursor = getUserNewsByIdSelection(uri, projection, selection, selectionArgs, sortOrder);
         break;
       }
       case CREATOR: {

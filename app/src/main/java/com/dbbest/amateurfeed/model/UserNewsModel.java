@@ -1,9 +1,23 @@
 package com.dbbest.amateurfeed.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 
-public class UserNewsModel {
+public class UserNewsModel implements Parcelable {
+
+  public static final Creator<UserNewsModel> CREATOR = new Creator<UserNewsModel>() {
+    @Override
+    public UserNewsModel createFromParcel(Parcel in) {
+      return new UserNewsModel(in);
+    }
+
+    @Override
+    public UserNewsModel[] newArray(int size) {
+      return new UserNewsModel[size];
+    }
+  };
 
   @SerializedName("id")
   private int mId;
@@ -34,6 +48,25 @@ public class UserNewsModel {
     mLikes = likes;
   }
 
+  private UserNewsModel(Parcel in) {
+    mId = in.readInt();
+    mTitle = in.readString();
+    mUpdateDate = in.readString();
+    mStatus = in.readString();
+    mImage = in.readString();
+    mLikes = in.readInt();
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(mId);
+    dest.writeString(mTitle);
+    dest.writeString(mUpdateDate);
+    dest.writeString(mStatus);
+    dest.writeString(mImage);
+    dest.writeInt(mLikes);
+  }
+
   public int getId() {
     return mId;
   }
@@ -57,4 +90,11 @@ public class UserNewsModel {
   public int getLikes() {
     return mLikes;
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+
 }

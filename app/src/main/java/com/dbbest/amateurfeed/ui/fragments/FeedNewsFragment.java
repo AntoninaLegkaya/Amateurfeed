@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter.FeedAdapterLoadNews;
 import com.dbbest.amateurfeed.utils.Utils;
@@ -98,6 +99,10 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
   public static final int COL_CREATOR_NAME = 1;
   public static final int COL_CREATOR_IS_ADMIN = 2;
   public static final int COL_CREATOR_IMAGE = 3;
+
+
+
+
   private static final String PARAM_KEY = "param_key";
   private static final int NEWS_LOADER = 0;
   private static final String SELECTED_KEY = "selected_position";
@@ -186,7 +191,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
     mRecyclerView.setHasFixedSize(true);
 
-    mPreviewAdapter = new PreviewAdapter(null,0, emptyView, mChoiceMode,
+    mPreviewAdapter = new PreviewAdapter(null, 0, emptyView, mChoiceMode,
 
         new PreviewAdapter.FeedAdapterOnClickHandler() {
           @Override

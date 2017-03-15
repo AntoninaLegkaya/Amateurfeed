@@ -70,4 +70,7 @@
     <string name="search_hint">параметр поиска</string>
     <string name="search_error">Новости не найдены.</string>
   <string name="add_news_image">Выберите фото</string>
+  <string name="my_item_amount_likes">Количесво Лайков:</string>
+    <string name="my_item_status_label">Статус:</string>
+    <string name="my_news_toolbar_label">Мои Новости</string>
 </resources>
