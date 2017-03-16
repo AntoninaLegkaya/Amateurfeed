@@ -3,6 +3,7 @@ package com.dbbest.amateurfeed.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -11,13 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.model.UserNewsModel;
+import com.dbbest.amateurfeed.ui.activity.HomeActivity;
 
 
-public class MyNewsPreviewFragment extends Fragment {
+public class UserNewsPreviewFragment extends Fragment {
 
   private ImageView mPreviewImage;
   private TextView mPreviewTitle;
@@ -27,12 +30,12 @@ public class MyNewsPreviewFragment extends Fragment {
   private UserNewsModel userNewsModel;
 
 
-  public MyNewsPreviewFragment() {
+  public UserNewsPreviewFragment() {
     setHasOptionsMenu(true);
   }
 
-  public static MyNewsPreviewFragment newInstance(Bundle bundle) {
-    MyNewsPreviewFragment fragment = new MyNewsPreviewFragment();
+  public static UserNewsPreviewFragment newInstance(Bundle bundle) {
+    UserNewsPreviewFragment fragment = new UserNewsPreviewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -41,13 +44,16 @@ public class MyNewsPreviewFragment extends Fragment {
   public boolean onOptionsItemSelected(MenuItem item) {
     String upTitle = null;
     String upDescription = null;
-
     switch (item.getItemId()) {
       case android.R.id.home:
-
-//        ((Callback) getActivity()).moveToFeedFragment();
+        Toast.makeText(getActivity(), "Go to Profile Screen--->", Toast.LENGTH_SHORT).show();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+            .beginTransaction();
+        ((HomeActivity)getActivity()).refreshContent();
+        transaction.attach(getActivity().getSupportFragmentManager().findFragmentByTag(
+            HomeActivity.PROFILE_FRAGMENT_TAG));
+        transaction.commit();
         return true;
-
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -58,17 +64,14 @@ public class MyNewsPreviewFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     final View rootView = inflater.inflate(R.layout.fragment_my_news, container, false);
-
     Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-
     Bundle arguments = getArguments();
     if (arguments != null) {
       userNewsModel = arguments.getParcelable("model");
     }
-
     mPreviewTitle = (TextView) rootView.findViewById(R.id.my_item_title);
     mPreviewUpdateDate = (TextView) rootView.findViewById(R.id.my_item_update_date);
     mPreviewStatus = (TextView) rootView.findViewById(R.id.my_item_status);
@@ -95,7 +98,6 @@ public class MyNewsPreviewFragment extends Fragment {
             .crossFade()
             .into(mPreviewImage);
       }
-
     }
     return rootView;
   }

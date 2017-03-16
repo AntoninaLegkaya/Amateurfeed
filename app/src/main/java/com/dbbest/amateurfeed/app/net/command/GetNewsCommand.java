@@ -12,6 +12,7 @@ import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.FeedContract.PreviewEntry;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.NewsRequestModel;
 import com.dbbest.amateurfeed.model.TagModel;
@@ -60,7 +61,6 @@ public class GetNewsCommand extends Command {
     if (response != null) {
 
       if (response.isSuccessful() && response.data() != null) {
-
         ArrayList<NewsPreviewResponseModel> data = response.data();
         // Insert the new news information into the database
         Vector<ContentValues> cVVector = new Vector<ContentValues>(data.size());

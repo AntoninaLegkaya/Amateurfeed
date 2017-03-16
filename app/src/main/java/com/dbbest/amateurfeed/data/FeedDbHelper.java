@@ -19,7 +19,7 @@ public class FeedDbHelper extends SQLiteOpenHelper {
     final String SQL_CREATE_USER_NEWS_TABLE =
         "CREATE TABLE " + FeedContract.UserNewsEntry.TABLE_NAME + " (" +
             FeedContract.UserNewsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            FeedContract.UserNewsEntry.COLUMN_TITLE + " TEXT UNIQUE NOT NULL, " +
+            FeedContract.UserNewsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
             FeedContract.UserNewsEntry.COLUMN_UPDATE_DATE + " TEXT NOT NULL, " +
             FeedContract.UserNewsEntry.COLUMN_STATUS + " TEXT NOT NULL, " +
             FeedContract.UserNewsEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +

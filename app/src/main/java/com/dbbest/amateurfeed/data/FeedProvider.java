@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
-import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
+import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import java.util.HashMap;
 
 public class FeedProvider extends ContentProvider {
@@ -65,10 +65,10 @@ public class FeedProvider extends ContentProvider {
   private static HashMap<String, String> sPreviewProjectionMap = new HashMap<String, String>();
 
   static {
-    for (int i = 0; i < ProfileFragment.NEWS_COLUMNS.length; i++) {
+    for (int i = 0; i < UserNewsEntry.NEWS_COLUMNS.length; i++) {
       sUserNesProjectionMap.put(
-          ProfileFragment.NEWS_COLUMNS[i],
-          ProfileFragment.NEWS_COLUMNS[i]);
+          UserNewsEntry.NEWS_COLUMNS[i],
+          UserNewsEntry.NEWS_COLUMNS[i]);
     }
   }
 

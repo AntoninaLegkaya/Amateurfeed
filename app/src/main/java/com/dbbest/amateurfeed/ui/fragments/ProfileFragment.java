@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -26,28 +25,20 @@ import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
-import com.dbbest.amateurfeed.data.adapter.MyNewsAdapter;
-import com.dbbest.amateurfeed.data.adapter.MyNewsAdapter.MyNewsHolder;
-import com.dbbest.amateurfeed.data.adapter.MyNewsAdapter.ShowItemDetailsCallback;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.MyNewsHolder;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.ShowItemDetailsCallback;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.ProfilePresenter;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
-import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
 import com.dbbest.amateurfeed.view.ProfileView;
 import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment implements ProfileView,
-    LoaderManager.LoaderCallbacks<Cursor>, ShowItemDetailsCallback {
+    LoaderManager.LoaderCallbacks<Cursor> {
 
-  public static final String[] NEWS_COLUMNS = {
-      FeedContract.UserNewsEntry.TABLE_NAME + "." + FeedContract.UserNewsEntry._ID,
-      FeedContract.UserNewsEntry.COLUMN_TITLE,
-      UserNewsEntry.COLUMN_UPDATE_DATE,
-      UserNewsEntry.COLUMN_STATUS,
-      UserNewsEntry.COLUMN_IMAGE,
-      UserNewsEntry.COLUMN_LIKES,
-  };
+
   public static final int COL_MY_NEWS_ID = 0;
   public static final int COL_MY_NEWS_TITLE = 1;
   public static final int COL_MY_NEWS_UPDATE_DATE = 2;
@@ -55,7 +46,7 @@ public class ProfileFragment extends Fragment implements ProfileView,
   public static final int COL_MY_NEWS_IMAGE = 4;
   public static final int COL_MY_NEWS_LIKES = 5;
   private static final String PARAM_KEY = "param_key";
-  private final String PREFERENCE_FRAGMENT_TAG = "PREFTAG";
+
   private final int LOAD_MY_NEWS = 0;
   private String TAG = ProfileFragment.class.getName();
   private ProfilePresenter mPresenter;
@@ -64,7 +55,7 @@ public class ProfileFragment extends Fragment implements ProfileView,
   private ImageView mProfileImage;
   private TextView mProfileName;
   private ArrayList<String> stringArrayList;
-  private MyNewsAdapter myNewsAdapter;
+  private ItemNewsAdapter itemNewsAdapter;
   private FloatingActionButton mFloatingActionButton;
 
   public static ProfileFragment newInstance(String key) {
@@ -155,71 +146,29 @@ public class ProfileFragment extends Fragment implements ProfileView,
 
     GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
     mRecyclerView.setLayoutManager(layoutManager);
-    myNewsAdapter = new MyNewsAdapter(null, 0, new ShowItemDetailsCallback() {
+    itemNewsAdapter = new ItemNewsAdapter(null, 0, new ShowItemDetailsCallback() {
       @Override
-      public void showItemDetailsFragment(MyNewsHolder vh, int id) {
-        Cursor cursor = getUserNewsCursor(id);
-        if (cursor.moveToFirst()) {
-          String day = null;
-          String date = cursor.getString(COL_MY_NEWS_UPDATE_DATE);
-          Log.i(TAG, "Date Update News: "+ date);
-          if (date != null) {
-//            day = Utils
-//                .getFriendlyDayString(App.instance().getApplicationContext(),
-//                    Utils.getLongFromString(date),
-//                    true);
-          } else {
-            date = "";
-          }
-          UserNewsModel model = new UserNewsModel(cursor.getInt(COL_MY_NEWS_ID),
-              cursor.getString(COL_MY_NEWS_TITLE),
-              date,
-              cursor.getString(COL_MY_NEWS_STATUS),
-              cursor.getString(COL_MY_NEWS_IMAGE),
-              cursor.getInt(COL_MY_NEWS_LIKES)
-          );
-
-          Bundle args = new Bundle();
-          args.putParcelable("model", model);
-          FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-              .beginTransaction();
-          Fragment instantiateUserNewsFragment;
-          if (!args.isEmpty()) {
-            instantiateUserNewsFragment = Fragment
-                .instantiate(getContext(), MyNewsPreviewFragment.class.getName());
-            instantiateUserNewsFragment.setArguments(args);
-            transaction.add(android.R.id.tabcontent, instantiateUserNewsFragment, "MNF");
-            transaction.commit();
-          }
-
-        }
+      public void showUserNewsDetailFragment(MyNewsHolder vh, int id) {
+        ((ShowItemDetailsCallback) getActivity()).showUserNewsDetailFragment(vh, id);
       }
     });
-    mRecyclerView.setAdapter(myNewsAdapter);
+    mRecyclerView.setAdapter(itemNewsAdapter);
 
     return rootView;
   }
 
-  private Cursor getUserNewsCursor(int mIdUserNews) {
-    Uri uriTagsList = FeedContract.UserNewsEntry.buildGetNewsById(mIdUserNews);
-    return App.instance().getContentResolver().query(
-        uriTagsList,
-        null,
-        null,
-        null,
-        null
-    );
-  }
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     Uri previewListUri = FeedContract.UserNewsEntry.CONTENT_URI;
+    // Sort order:  Ascending, by .
+    String sortOrder = UserNewsEntry.COLUMN_UPDATE_DATE + " DESC";
     return new CursorLoader(getActivity(),
         previewListUri,
-        NEWS_COLUMNS,
+        FeedContract.UserNewsEntry.NEWS_COLUMNS,
         null,
         null,
-        null
+        sortOrder
     );
   }
 
@@ -229,7 +178,7 @@ public class ProfileFragment extends Fragment implements ProfileView,
       Log.i(TAG, " Loading finished");
       if (data.moveToFirst()) {
         Log.i(TAG, " Loading finished, data not Null");
-        myNewsAdapter.swapCursor(data);
+        itemNewsAdapter.swapCursor(data);
       }
     }
 
@@ -238,7 +187,7 @@ public class ProfileFragment extends Fragment implements ProfileView,
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
     Log.i(TAG, "Reset Loader");
-    myNewsAdapter.swapCursor(null);
+    itemNewsAdapter.swapCursor(null);
   }
 
   @Override
@@ -257,8 +206,5 @@ public class ProfileFragment extends Fragment implements ProfileView,
         .show(getActivity().getSupportFragmentManager(), "warn");
   }
 
-  @Override
-  public void showItemDetailsFragment(MyNewsHolder vh, int id) {
 
-  }
 }

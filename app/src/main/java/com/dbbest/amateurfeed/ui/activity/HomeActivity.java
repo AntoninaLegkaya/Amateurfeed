@@ -4,6 +4,7 @@ import static com.dbbest.amateurfeed.R.id.imageView;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,19 +22,25 @@ import android.widget.TabHost;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.MyNewsHolder;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter.UserNewsHolder;
+import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.AddItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.BaseChangeDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.ui.fragments.UserNewsPreviewFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.BottomTab;
 import com.dbbest.amateurfeed.utils.Constants;
+import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
 import java.util.HashMap;
 import java.util.Stack;
@@ -42,7 +49,8 @@ import java.util.Stack;
 public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener,
     HomeView,
     WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback,
-    BaseChangeDetailFragment.Callback, SearchFragment.Callback {
+    BaseChangeDetailFragment.Callback, SearchFragment.Callback,
+    ItemNewsAdapter.ShowItemDetailsCallback {
 
   public static final String FEED_NEWS_FRAGMENT_TAG = "FNFTAG";
   public static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
@@ -50,10 +58,12 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   public static final String SEARCH_FRAGMENT_TAG = "STAG";
   public static final String PROFILE_FRAGMENT_TAG = "PTAG";
   public static final String EDIT_PROFILE_FRAGMENT_TAG = "PREFTAG";
+  public static final String USER_NEWS_FRAGMENT_TAG = "MNF";
   public static final String MANAGE_FRAGMENTS = "ManageFragments";
   static final int REQUEST_IMAGE_CAPTURE = 1;
   public static int RESULT_LOAD_IMAGE = 1;
-  private static String TAG_HOME = "HomeActivity";
+  private static String TAG = HomeActivity.class.getName();
+  private final String PREFERENCE_FRAGMENT_TAG = "PREFTAG";
   private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
   private String userChosenTask;
   private DialogFragment mProgressDialog;
@@ -98,7 +108,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     }
   }
 
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -120,6 +129,8 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
       backStacks.put(BottomTab.SEARCH, new Stack<String>());
       backStacks.put(BottomTab.PROFILE, new Stack<String>());
       backStacks.put(BottomTab.DETAIL, new Stack<String>());
+      backStacks.put(BottomTab.USER_NEWS, new Stack<String>());
+
     }
   }
 
@@ -209,7 +220,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   }
 
 
-  private void refreshContent() {
+  public void refreshContent() {
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     if (backStacks != null) {
       Stack<String> detailStack = backStacks.get(BottomTab.DETAIL);
@@ -244,6 +255,16 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
           if (!top.isDetached()) {
             ft.detach(top);
             Log.i(MANAGE_FRAGMENTS, "Detach : " + profileStack.peek());
+          }
+        }
+      }
+      Stack<String> userNewsStack = backStacks.get(BottomTab.USER_NEWS);
+      if (!userNewsStack.isEmpty()) {
+        Fragment top = getSupportFragmentManager().findFragmentByTag(userNewsStack.peek());
+        if (top != null) {
+          if (!top.isDetached()) {
+            ft.detach(top);
+            Log.i(MANAGE_FRAGMENTS, "Detach : " + userNewsStack.peek());
           }
         }
       }
@@ -288,7 +309,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     String mCountLikes = (vh.mLikesCountView.getText()).toString();
     if (mCountLikes != null) {
       mCountIsLikes = Integer.parseInt(mCountLikes);
-      Log.i(TAG_HOME, "Count Likes: " + mCountIsLikes);
     }
     mUriId = uri;
     if (mCountIsLikes >= 0) {
@@ -306,7 +326,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
       vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
       mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
     } else {
-      Log.i(TAG_HOME, "Error in like clear All!");
+      Log.i(TAG, "Error in like clear All!");
       vh.mLikesCountView.setText(String.valueOf(0));
       mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), 0);
     }
@@ -385,7 +405,6 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     if (newsFragment != null) {
       newsFragment.refreshFragmentLoader();
     }
-
   }
 
   @Override
@@ -516,5 +535,72 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     Fragment fragment = EditItemDetailFragment.newInstance(DETAIL_NEWS_FRAGMENT_TAG);
     fragment.setArguments(mArgsDetail);
     addFragment(mArgsDetail);
+  }
+
+  @Override
+  public void showUserNewsDetailFragment(MyNewsHolder vh, int id) {
+
+    Cursor cursor = getUserNewsCursor(id);
+    if (cursor.moveToFirst()) {
+      String day = null;
+      String date = cursor.getString(ProfileFragment.COL_MY_NEWS_UPDATE_DATE);
+      if (date != null) {
+        Log.i(TAG, "Update date : " + date);
+        day = Utils
+            .getFriendlyDayString(App.instance().getApplicationContext(),
+                Utils.getLongFromString(date),
+                true);
+      } else {
+        date = "";
+      }
+      int idNews = cursor.getInt(ProfileFragment.COL_MY_NEWS_ID);
+      Log.i(TAG, "Id : " + "[" + ProfileFragment.COL_MY_NEWS_ID + "]" + idNews);
+
+      String title = cursor.getString(ProfileFragment.COL_MY_NEWS_TITLE);
+      Log.i(TAG, "Title : " + "[" + ProfileFragment.COL_MY_NEWS_TITLE + "]" + title);
+
+      Log.i(TAG, "Date : " + "[" + ProfileFragment.COL_MY_NEWS_UPDATE_DATE + "]" + date);
+
+      String status = cursor.getString(ProfileFragment.COL_MY_NEWS_STATUS);
+      Log.i(TAG, "Status : " + "[" + ProfileFragment.COL_MY_NEWS_STATUS + "]" + status);
+
+      String image = cursor.getString(ProfileFragment.COL_MY_NEWS_IMAGE);
+      Log.i(TAG, "Image : " + "[" + ProfileFragment.COL_MY_NEWS_IMAGE + "]" + image);
+
+      int likes = cursor.getInt(ProfileFragment.COL_MY_NEWS_LIKES);
+      Log.i(TAG, "Likes : " + "[" + ProfileFragment.COL_MY_NEWS_LIKES + "]" + likes);
+
+      UserNewsModel model = new UserNewsModel(idNews, title, day, status, image, likes);
+
+      Bundle args = new Bundle();
+      args.putParcelable("model", model);
+      FragmentTransaction transaction = getSupportFragmentManager()
+          .beginTransaction();
+      Fragment instantiateUserNewsFragment;
+      if (!args.isEmpty()) {
+
+        BottomTab bottomTabUserNews = BottomTab.getByTag(USER_NEWS_FRAGMENT_TAG);
+        Stack<String> userNewsStack = backStacks.get(bottomTabUserNews);
+        userNewsStack.push(USER_NEWS_FRAGMENT_TAG);
+        refreshContent();
+        instantiateUserNewsFragment = Fragment
+            .instantiate(getContext(), UserNewsPreviewFragment.class.getName());
+        instantiateUserNewsFragment.setArguments(args);
+        transaction.add(android.R.id.tabcontent, instantiateUserNewsFragment,
+            HomeActivity.USER_NEWS_FRAGMENT_TAG);
+        transaction.commit();
+      }
+    }
+  }
+
+  private Cursor getUserNewsCursor(int mIdUserNews) {
+    Uri uri = FeedContract.UserNewsEntry.buildGetNewsById(mIdUserNews);
+    return App.instance().getContentResolver().query(
+        uri,
+        UserNewsEntry.NEWS_COLUMNS,
+        null,
+        null,
+        null
+    );
   }
 }

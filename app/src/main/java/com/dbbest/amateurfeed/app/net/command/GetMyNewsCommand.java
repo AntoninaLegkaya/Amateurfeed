@@ -51,6 +51,8 @@ public class GetMyNewsCommand extends Command {
     ResponseWrapper<ArrayList<UserNewsModel>> response = apiClient.getMyNews(authToken.bearer());
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
+
+        App.instance().getContentResolver().delete(UserNewsEntry.CONTENT_URI, null, null);
         ArrayList<UserNewsModel> userNewsModels = response.data();
         Bundle bundle = new Bundle();
         if (userNewsModels != null) {
@@ -88,14 +90,13 @@ public class GetMyNewsCommand extends Command {
             previewValues.put(UserNewsEntry._ID, _id);
             previewValues.put(UserNewsEntry.COLUMN_TITLE, mTitle);
             previewValues.put(UserNewsEntry.COLUMN_UPDATE_DATE, mUpdateDate);
-            previewValues.put(UserNewsEntry.COLUMN_LIKES, mLikes);
             previewValues.put(UserNewsEntry.COLUMN_STATUS, mStatus);
             if (mImage == null) {
               previewValues.put(UserNewsEntry.COLUMN_IMAGE, "");
             } else {
               previewValues.put(UserNewsEntry.COLUMN_IMAGE, mImage);
             }
-
+            previewValues.put(UserNewsEntry.COLUMN_LIKES, mLikes);
             cVVector.add(previewValues);
             i = i + 1;
           }

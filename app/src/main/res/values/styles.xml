@@ -1,177 +1,179 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="toolbarStyle">@style/Toolbar</item>
-        <item name="preferenceTheme">@style/AppPreferenceTheme</item>
-    </style>
+<resources>
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="toolbarStyle">@style/Toolbar</item>
+    <item name="preferenceTheme">@style/AppPreferenceTheme</item>
+  </style>
 
-    <!--main activity toolbar style-->
+  <!--main activity toolbar style-->
 
-    <style name="Toolbar" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
-        <item name="android:textColorPrimary">@color/white</item>
-    </style>
-    <!--Toolbar Profile Fragment-->
-    <style name="Toolbar.Profile" parent="Theme.AppCompat.NoActionBar">
-        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
-        <item name="android:textColorPrimary">@color/app_black</item>
-        <item name="android:background">@color/white</item>
-    </style>
+  <style name="Toolbar" parent="Theme.AppCompat.NoActionBar">
+    <item name="android:background">?attr/colorPrimary</item>
+    <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+    <item name="android:textColorPrimary">@color/white</item>
+  </style>
+  <!--Toolbar Profile Fragment-->
+  <style name="MyToolbarStyle">
+    <item name="android:maxHeight">@dimen/abc_action_bar_default_height_material</item>
+    <item name="android:background">@color/primary</item>
+    <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    <item name="titleTextAppearance">@style/TextAppearance.AppCompat.Title</item>
 
-    <!--Button-->
-    <style name="Toolbar.Button" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
-        <item name="android:textColorPrimary">@color/white</item>
+  </style>
 
-    </style>
+  <!--Button-->
+  <style name="Toolbar.Button" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <item name="android:background">?attr/colorPrimary</item>
+    <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+    <item name="android:textColorPrimary">@color/white</item>
 
-
-     <!--Custom Preference Theme inherits from the v14 support library Material Theme -->
-    <style name="AppPreferenceTheme" parent="@style/PreferenceFixTheme">
-        <item name="preferenceFragmentCompatStyle">@style/PreferenceFixTheme</item>
-    </style>
+  </style>
 
 
-    <!-- Style for a custom Preference Entry -->
-    <style name="AppPreference">
-        <item name="android:layout">@layout/preference_material</item>
-    </style>
+  <!--Custom Preference Theme inherits from the v14 support library Material Theme -->
+  <style name="AppPreferenceTheme" parent="@style/PreferenceFixTheme">
+    <item name="preferenceFragmentCompatStyle">@style/PreferenceFixTheme</item>
+  </style>
 
 
-    <!--Splash Screen Theme-->
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/background_splash</item>
-    </style>
-
-    <!--Main Screen Theme-->
-    <style name="AppTheme.Main" parent="AppTheme">
-        <item name="android:textColorPrimary">@android:color/white</item>
-    </style>
-
-    <!--Setting Screen Theme-->
-    <style name="AppTheme.Settings" parent="AppTheme">
-        <item name="android:textColorPrimary">@color/primary_text</item>
-        <item name="toolbarStyle">@style/Toolbar</item>
-    </style>
-
-    <!--Style for  Login Screen TextInputLayout-->
-
-    <style name="Widget.Design.TextInputLayout" parent="AppTheme">
-        <item name="hintTextAppearance">@style/AppTheme.TextFloatLabelAppearance</item>
-        <item name="errorTextAppearance">@style/AppTheme.TextErrorAppearance</item>
-        <item name="counterTextAppearance">@style/TextAppearance.Design.Counter</item>
-        <item name="counterOverflowTextAppearance">@style/TextAppearance.Design.Counter.Overflow</item>
-    </style>
-
-    <style name="AppTheme.TextFloatLabelAppearance" parent="TextAppearance.Design.Hint">
-        <!-- Floating label appearance here -->
-        <item name="android:textColor">@color/secondary_text</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="AppTheme.TextErrorAppearance" parent="TextAppearance.Design.Error">
-        <!-- Error message appearance here -->
-        <item name="android:textColor">@color/secondary_text</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <!--Style for Login Screen  Button-->
-
-    <style name="ButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:background">@drawable/button_shape</item>
-    </style>
-
-    <style name="ButtonComment" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:background">@drawable/button_comment</item>
-        <item name="android:height">30dp</item>
-        <item name="android:width">50dp</item>
-    </style>
-
-    <style name="AddItemButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:background">@drawable/button_comment</item>
-        <item name="android:height">30dp</item>
-        <item name="android:width">50dp</item>
-    </style>
+  <!-- Style for a custom Preference Entry -->
+  <style name="AppPreference">
+    <item name="android:layout">@layout/preference_material</item>
+  </style>
 
 
-    <!--Style for  Detail Screen TextInputLayout-->
+  <!--Splash Screen Theme-->
+  <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <item name="android:windowBackground">@drawable/background_splash</item>
+  </style>
 
-    <style name="Widget.Design.DetailTextInputLayout" parent="AppTheme">
-        <item name="hintTextAppearance">@style/AppTheme.DetailTextFloatLabelAppearance</item>
-        <item name="errorTextAppearance">@style/AppTheme.DetailTextErrorAppearance</item>
-        <item name="counterTextAppearance">@style/TextAppearance.Design.Counter</item>
-        <item name="counterOverflowTextAppearance">@style/TextAppearance.Design.Counter.Overflow</item>
-    </style>
+  <!--Main Screen Theme-->
+  <style name="AppTheme.Main" parent="AppTheme">
+    <item name="android:textColorPrimary">@android:color/white</item>
+  </style>
 
-    <style name="AppTheme.DetailTextFloatLabelAppearance" parent="TextAppearance.Design.Hint">
-        <!-- Floating label appearance here -->
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:hint">@color/app_black</item>
-        <item name="android:textSize">12sp</item>
-    </style>
+  <!--Setting Screen Theme-->
+  <style name="AppTheme.Settings" parent="AppTheme">
+    <item name="android:textColorPrimary">@color/primary_text</item>
+    <item name="toolbarStyle">@style/Toolbar</item>
+  </style>
 
-    <style name="AppTheme.DetailTextErrorAppearance" parent="TextAppearance.Design.Error">
-        <!-- Error message appearance here -->
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:textSize">12sp</item>
-    </style>
+  <!--Style for  Login Screen TextInputLayout-->
 
-    <style name="AppTheme.Widget.InputCommentField" parent="AppTheme">
+  <style name="Widget.Design.TextInputLayout" parent="AppTheme">
+    <item name="hintTextAppearance">@style/AppTheme.TextFloatLabelAppearance</item>
+    <item name="errorTextAppearance">@style/AppTheme.TextErrorAppearance</item>
+    <item name="counterTextAppearance">@style/TextAppearance.Design.Counter</item>
+    <item name="counterOverflowTextAppearance">@style/TextAppearance.Design.Counter.Overflow</item>
+  </style>
 
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:background">@drawable/field_shape</item>
-        <item name="android:textSize">12sp</item>
+  <style name="AppTheme.TextFloatLabelAppearance" parent="TextAppearance.Design.Hint">
+    <!-- Floating label appearance here -->
+    <item name="android:textColor">@color/secondary_text</item>
+    <item name="android:textSize">16sp</item>
+  </style>
 
-    </style>
+  <style name="AppTheme.TextErrorAppearance" parent="TextAppearance.Design.Error">
+    <!-- Error message appearance here -->
+    <item name="android:textColor">@color/secondary_text</item>
+    <item name="android:textSize">16sp</item>
+  </style>
 
-    <style name="AppTheme.Widget.InputSearchParamField" parent="AppTheme">
+  <!--Style for Login Screen  Button-->
 
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:background">@drawable/field_shape</item>
-        <item name="android:textSize">12sp</item>
+  <style name="ButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:background">@drawable/button_shape</item>
+  </style>
+
+  <style name="ButtonComment" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:background">@drawable/button_comment</item>
+    <item name="android:height">30dp</item>
+    <item name="android:width">50dp</item>
+  </style>
+
+  <style name="AddItemButton" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:background">@drawable/button_comment</item>
+    <item name="android:height">30dp</item>
+    <item name="android:width">50dp</item>
+  </style>
 
 
-    </style>
+  <!--Style for  Detail Screen TextInputLayout-->
+
+  <style name="Widget.Design.DetailTextInputLayout" parent="AppTheme">
+    <item name="hintTextAppearance">@style/AppTheme.DetailTextFloatLabelAppearance</item>
+    <item name="errorTextAppearance">@style/AppTheme.DetailTextErrorAppearance</item>
+    <item name="counterTextAppearance">@style/TextAppearance.Design.Counter</item>
+    <item name="counterOverflowTextAppearance">@style/TextAppearance.Design.Counter.Overflow</item>
+  </style>
+
+  <style name="AppTheme.DetailTextFloatLabelAppearance" parent="TextAppearance.Design.Hint">
+    <!-- Floating label appearance here -->
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:hint">@color/app_black</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+
+  <style name="AppTheme.DetailTextErrorAppearance" parent="TextAppearance.Design.Error">
+    <!-- Error message appearance here -->
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+
+  <style name="AppTheme.Widget.InputCommentField" parent="AppTheme">
+
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:background">@drawable/field_shape</item>
+    <item name="android:textSize">12sp</item>
+
+  </style>
+
+  <style name="AppTheme.Widget.InputSearchParamField" parent="AppTheme">
+
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:background">@drawable/field_shape</item>
+    <item name="android:textSize">12sp</item>
 
 
-    <!--Style for warning dialog-->
-    <style name="WarningDialogMessageTextStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/warning_dialog_message_text</item>
-        <item name="android:textSize">@dimen/warning_dialog_message_text_size</item>
-    </style>
+  </style>
 
-    <style name="WarningDialogButtonStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/warning_dialog_button_text</item>
-        <item name="android:textSize">@dimen/warning_dialog_button_text_size</item>
-    </style>
 
-    <style name="TabHome" parent="AppTheme.Main">
-        <item name="android:textColor">@color/hint_text</item>
-        <item name="android:textSize">@dimen/tab_item_text_size</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
-    </style>
+  <!--Style for warning dialog-->
+  <style name="WarningDialogMessageTextStyle">
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/warning_dialog_message_text</item>
+    <item name="android:textSize">@dimen/warning_dialog_message_text_size</item>
+  </style>
 
-    <style name="Theme_ProgressDialog">
-        <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
-        <item name="colorAccent">@color/primary</item>
-    </style>
-    <!--Alert Dialog-->
-    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textColor">@color/app_black</item>
-        <item name="android:typeface">serif</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:gravity">center</item>
-    </style>
+  <style name="WarningDialogButtonStyle">
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/warning_dialog_button_text</item>
+    <item name="android:textSize">@dimen/warning_dialog_button_text_size</item>
+  </style>
+
+  <style name="TabHome" parent="AppTheme.Main">
+    <item name="android:textColor">@color/hint_text</item>
+    <item name="android:textSize">@dimen/tab_item_text_size</item>
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="android:textStyle">normal</item>
+  </style>
+
+  <style name="Theme_ProgressDialog">
+    <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
+    <item name="colorAccent">@color/primary</item>
+  </style>
+  <!--Alert Dialog-->
+  <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:textColor">@color/app_black</item>
+    <item name="android:typeface">serif</item>
+    <item name="android:textSize">10sp</item>
+    <item name="android:gravity">center</item>
+  </style>
 
 </resources>

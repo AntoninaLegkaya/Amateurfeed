@@ -6,6 +6,7 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.ui.activity.HomeActivity;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.ui.fragments.UserNewsPreviewFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 
@@ -16,7 +17,9 @@ public enum BottomTab {
   PROFILE(HomeActivity.PROFILE_FRAGMENT_TAG, R.drawable.ic_perm_identity_black_18dp,
       ProfileFragment.class),
   DETAIL(HomeActivity.DETAIL_NEWS_FRAGMENT_TAG, R.drawable.ic_home_black_18dp,
-      EditItemDetailFragment.class);
+      EditItemDetailFragment.class),
+  USER_NEWS(HomeActivity.USER_NEWS_FRAGMENT_TAG, R.drawable.ic_perm_identity_black_18dp,
+      UserNewsPreviewFragment.class);
 
   public String tag;
   public

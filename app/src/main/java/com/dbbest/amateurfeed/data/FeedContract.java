@@ -36,6 +36,17 @@ public class FeedContract {
     private static final String PATH_USER_NEWS_ID = "/" + PATH_USER_NEWS + "/";
     public static final Uri CONTENT_ID_URI_BASE = Uri.parse(BASE_CONTENT_URI + PATH_USER_NEWS_ID);
 
+    public static final String[] NEWS_COLUMNS = {
+        FeedContract.UserNewsEntry.TABLE_NAME + "." + FeedContract.UserNewsEntry._ID,
+        FeedContract.UserNewsEntry.COLUMN_TITLE,
+        UserNewsEntry.COLUMN_UPDATE_DATE,
+        UserNewsEntry.COLUMN_STATUS,
+        UserNewsEntry.COLUMN_IMAGE,
+        UserNewsEntry.COLUMN_LIKES,
+    };
+
+
+
     public static Uri buildUserNewsUri(long id) {
       return ContentUris.withAppendedId(CONTENT_URI, id);
     }

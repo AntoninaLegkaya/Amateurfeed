@@ -14,20 +14,20 @@ import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.data.adapter.MyNewsAdapter.MyNewsHolder;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.MyNewsHolder;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 
-public class MyNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
+public class ItemNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
 
   private final int ITEM_TYPE = 0;
   private final ShowItemDetailsCallback mShowItemDetails;
-  private final String TAG = MyNewsAdapter.class.getName();
+  private final String TAG = ItemNewsAdapter.class.getName();
   protected Cursor mCursor;
   private Activity activity;
 
 
-  public MyNewsAdapter(Cursor c, int flags,
+  public ItemNewsAdapter(Cursor c, int flags,
       ShowItemDetailsCallback detailsHandler) {
     super(c, false);
     mShowItemDetails = detailsHandler;
@@ -66,7 +66,7 @@ public class MyNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
 
   public interface ShowItemDetailsCallback {
 
-    void showItemDetailsFragment(MyNewsHolder vh, int id);
+    void showUserNewsDetailFragment(MyNewsHolder vh, int id);
   }
 
   public class MyNewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -90,7 +90,7 @@ public class MyNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
           mCursor.moveToPosition(getAdapterPosition());
           int idx = mCursor.getColumnIndex(FeedContract.UserNewsEntry._ID);
           id = (int) mCursor.getLong(idx);
-          mShowItemDetails.showItemDetailsFragment(this, id);
+          mShowItemDetails.showUserNewsDetailFragment(this, id);
         }
       }
     }
