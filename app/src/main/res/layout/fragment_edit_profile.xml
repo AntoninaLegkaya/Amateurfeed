@@ -1,78 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/feed_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/search_content"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:animateLayoutChanges="true"
-            app:popupTheme="@style/Toolbar">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
-                <Button
-
-                    android:id="@+id/cancel_button"
-                    style="@style/Toolbar.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:layout_marginRight="@dimen/profile_info_horizontal_padding"
-
-                    android:textColor="@android:color/white"
-                    tools:text="@string/cancel_button"
-                    android:elevation="8dp"
-                    />
-
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/edit_profile_toolbar_label"
-                    android:textColor="@android:color/white"
-                    />
-
-                <Button
-
-                    android:id="@+id/save_button"
-                    style="@style/Toolbar.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|right"
-                    android:layout_marginLeft="@dimen/profile_info_horizontal_padding"
-
-                    android:textColor="@android:color/white"
-                    tools:text="@string/save_button"
-                    android:elevation="8dp"
-                    />
-            </LinearLayout>
-
-        </android.support.v7.widget.Toolbar>
+    android:orientation="vertical">
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="In this place will be Edite profile Info"/>
+    <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:elevation="4dp"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    </LinearLayout>
+      <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:animateLayoutChanges="true"
+        app:popupTheme="@style/Toolbar">
+
+
+      </android.support.v7.widget.Toolbar>
+      <TextView
+        android:id="@+id/toolbar_title"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/edit_profile_toolbar_label"
+        android:textColor="@android:color/white" />
+
+    </android.support.design.widget.AppBarLayout>
+    <include
+      layout="@layout/item_edit_profile_header"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/abc_list_item_padding_horizontal_material" />
+
+
+    <FrameLayout
+      android:id="@+id/mapContainer"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
+      android:gravity="top"
+      android:background="@color/primary_light"/>
+
+
+  </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
+
+

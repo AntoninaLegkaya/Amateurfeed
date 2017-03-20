@@ -24,19 +24,19 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter;
-import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.MyNewsHolder;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
-import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.AddItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.BaseChangeDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
+import com.dbbest.amateurfeed.ui.fragments.EditProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
-import com.dbbest.amateurfeed.ui.fragments.UserNewsPreviewFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
+import com.dbbest.amateurfeed.ui.fragments.UserNewsPreviewFragment;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.BottomTab;
 import com.dbbest.amateurfeed.utils.Constants;
@@ -50,7 +50,8 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     HomeView,
     WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback,
     BaseChangeDetailFragment.Callback, SearchFragment.Callback,
-    ItemNewsAdapter.ShowItemDetailsCallback {
+    ItemNewsAdapter.ShowItemDetailsCallback,
+    ProfileFragment.ProfileShowDetails {
 
   public static final String FEED_NEWS_FRAGMENT_TAG = "FNFTAG";
   public static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
@@ -124,12 +125,14 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
       backStacks = (HashMap<BottomTab, Stack<String>>) savedInstanceState.getSerializable("stacks");
       refreshContent();
     } else {
+
       backStacks = new HashMap<BottomTab, Stack<String>>();
       backStacks.put(BottomTab.HOME, new Stack<String>());
       backStacks.put(BottomTab.SEARCH, new Stack<String>());
       backStacks.put(BottomTab.PROFILE, new Stack<String>());
       backStacks.put(BottomTab.DETAIL, new Stack<String>());
       backStacks.put(BottomTab.USER_NEWS, new Stack<String>());
+      backStacks.put(BottomTab.EDIT_PROFILE, new Stack<String>());
 
     }
   }
@@ -265,6 +268,16 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
           if (!top.isDetached()) {
             ft.detach(top);
             Log.i(MANAGE_FRAGMENTS, "Detach : " + userNewsStack.peek());
+          }
+        }
+      }
+      Stack<String> editProfileStack = backStacks.get(BottomTab.EDIT_PROFILE);
+      if (!editProfileStack.isEmpty()) {
+        Fragment top = getSupportFragmentManager().findFragmentByTag(editProfileStack.peek());
+        if (top != null) {
+          if (!top.isDetached()) {
+            ft.detach(top);
+            Log.i(MANAGE_FRAGMENTS, "Detach : " + editProfileStack.peek());
           }
         }
       }
@@ -528,7 +541,9 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   }
 
   @Override
-  public void showItemDetailsFragment(UserNewsHolder vh, Uri uri, int layoutId) {
+  public void showItemDetailsFragment(
+      com.dbbest.amateurfeed.data.adapter.UserNewsAdapter.UserNewsHolder vh, Uri uri,
+      int layoutId) {
     mArgsDetail = new Bundle();
     mArgsDetail.putParcelable(EditItemDetailFragment.DETAIL_URI, uri);
     mArgsDetail.putInt(EditItemDetailFragment.DETAIL_TYPE, layoutId);
@@ -538,7 +553,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   }
 
   @Override
-  public void showUserNewsDetailFragment(MyNewsHolder vh, int id) {
+  public void showUserNewsDetailFragment(UserNewsHolder vh, int id) {
 
     Cursor cursor = getUserNewsCursor(id);
     if (cursor.moveToFirst()) {
@@ -602,5 +617,22 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
         null,
         null
     );
+  }
+
+  @Override
+  public void showEditProfileFragment() {
+
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    Fragment instantiateEditProfileFragment;
+
+    BottomTab bottomTabUserNews = BottomTab.getByTag(EDIT_PROFILE_FRAGMENT_TAG);
+    Stack<String> userNewsStack = backStacks.get(bottomTabUserNews);
+    userNewsStack.push(EDIT_PROFILE_FRAGMENT_TAG);
+    refreshContent();
+    instantiateEditProfileFragment = Fragment
+        .instantiate(getContext(), EditProfileFragment.class.getName());
+    transaction.add(android.R.id.tabcontent, instantiateEditProfileFragment,
+        HomeActivity.EDIT_PROFILE_FRAGMENT_TAG);
+    transaction.commit();
   }
 }

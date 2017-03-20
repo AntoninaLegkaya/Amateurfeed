@@ -24,6 +24,7 @@ import com.dbbest.amateurfeed.utils.Utils;
 
 public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHolder> {
 
+  private static final String TAG = PreviewAdapter.class.getName();
   private final View mEmptyView;
   private final FeedAdapterOnClickHandler mClickHandler;
   private final FeedCommentAdapterOnClickHandler mCommentClickHandler;
@@ -31,7 +32,6 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
   private final FeedEditAdapterOnClickHandler mEditClickHandler;
   private final FeedRemoveAdapterOnClickHandler mRemoveClickHandler;
   private final FeedAdapterLoadNews mLoadNewsHandler;
-  private String TAG = PreviewAdapter.class.getName();
   private Cursor mCursor;
   private RecyclerView mHorizontalList;
   private TagAdapter mTagAdapter;

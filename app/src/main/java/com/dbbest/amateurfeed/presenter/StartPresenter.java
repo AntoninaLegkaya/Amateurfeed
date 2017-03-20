@@ -12,10 +12,10 @@ import com.dbbest.amateurfeed.app.net.command.LoginCommand;
 import com.dbbest.amateurfeed.app.net.command.RegistrationFacebookCommand;
 import com.dbbest.amateurfeed.app.net.command.UserProfileCommand;
 import com.dbbest.amateurfeed.utils.Utils;
-import com.dbbest.amateurfeed.utils.location.LatLng;
 import com.dbbest.amateurfeed.utils.location.UserLocationProvider;
 import com.dbbest.amateurfeed.view.StartView;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.maps.model.LatLng;
 
 
 public class StartPresenter extends Presenter<StartView> implements
@@ -68,13 +68,12 @@ public class StartPresenter extends Presenter<StartView> implements
   public void loginFaceBook(String token) {
     LatLng location = mLocationProvider.getLastLocation();
     RegistrationFacebookCommand command = new RegistrationFacebookCommand(token,
-        location.longitude(), location.latitude());
+        location.longitude, location.latitude);
     LoginManager.getInstance().logOut();
 
     if (getView() != null) {
       getView().showProgressDialog();
     }
-
     command.send(CODE_REGISTRATION_FB, mResultReceiver);
   }
 
@@ -102,10 +101,8 @@ public class StartPresenter extends Presenter<StartView> implements
       if (code == CODE_CLOUD_PREF) {
       }
       if (code == CODE_USER_PREF) {
-
       }
     }
-
   }
 
   @Override

@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.format.Time;
 import com.dbbest.amateurfeed.R;
+import com.google.android.gms.maps.model.LatLng;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -317,4 +318,7 @@ public class Utils {
     return format.format(c.getTime());
   }
 
+  public static boolean isValid(LatLng location) {
+    return location.latitude != 0.0d && location.longitude != 0.0d;
+  }
 }

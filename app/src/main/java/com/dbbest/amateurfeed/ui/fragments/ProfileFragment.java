@@ -26,8 +26,8 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter;
-import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.MyNewsHolder;
 import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.ShowItemDetailsCallback;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.ProfilePresenter;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
@@ -133,14 +133,9 @@ public class ProfileFragment extends Fragment implements ProfileView,
     mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+        ((ProfileShowDetails) getActivity()).showEditProfileFragment();
       }
     });
-
-//        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
 
     mRecyclerView.setHasFixedSize(true);
 
@@ -148,7 +143,7 @@ public class ProfileFragment extends Fragment implements ProfileView,
     mRecyclerView.setLayoutManager(layoutManager);
     itemNewsAdapter = new ItemNewsAdapter(null, 0, new ShowItemDetailsCallback() {
       @Override
-      public void showUserNewsDetailFragment(MyNewsHolder vh, int id) {
+      public void showUserNewsDetailFragment(UserNewsHolder vh, int id) {
         ((ShowItemDetailsCallback) getActivity()).showUserNewsDetailFragment(vh, id);
       }
     });
@@ -206,5 +201,9 @@ public class ProfileFragment extends Fragment implements ProfileView,
         .show(getActivity().getSupportFragmentManager(), "warn");
   }
 
+  public interface ProfileShowDetails {
+
+    void showEditProfileFragment();
+  }
 
 }

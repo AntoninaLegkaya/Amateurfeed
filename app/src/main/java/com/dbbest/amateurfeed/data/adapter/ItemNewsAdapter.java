@@ -14,11 +14,11 @@ import com.bumptech.glide.Glide;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.MyNewsHolder;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 
-public class ItemNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
+public class ItemNewsAdapter extends CursorRecyclerAdapter<UserNewsHolder> {
 
   private final int ITEM_TYPE = 0;
   private final ShowItemDetailsCallback mShowItemDetails;
@@ -34,11 +34,11 @@ public class ItemNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
   }
 
   @Override
-  public MyNewsHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+  public UserNewsHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
     View view = LayoutInflater.from(viewGroup.getContext())
         .inflate(R.layout.item_grid, viewGroup, false);
     view.setFocusable(true);
-    return new MyNewsHolder(view);
+    return new UserNewsHolder(view);
   }
 
   @Override
@@ -47,7 +47,7 @@ public class ItemNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
   }
 
   @Override
-  public void onBindViewHolder(MyNewsHolder holder, @Nullable Cursor cursor,
+  public void onBindViewHolder(UserNewsHolder holder, @Nullable Cursor cursor,
       int position) {
 
     if (cursor.moveToPosition(position)) {
@@ -66,15 +66,15 @@ public class ItemNewsAdapter extends CursorRecyclerAdapter<MyNewsHolder> {
 
   public interface ShowItemDetailsCallback {
 
-    void showUserNewsDetailFragment(MyNewsHolder vh, int id);
+    void showUserNewsDetailFragment(UserNewsHolder vh, int id);
   }
 
-  public class MyNewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  public class UserNewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView mTextView;
     private ImageView mImageView;
 
-    public MyNewsHolder(View view) {
+    public UserNewsHolder(View view) {
       super(view);
       mImageView = (ImageView) view.findViewById(R.id.image);
       mTextView = (TextView) view.findViewById(R.id.text);

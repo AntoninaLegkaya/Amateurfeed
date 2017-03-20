@@ -10,6 +10,9 @@
   <!-- SyncAdapter related -->
   <string name="sync_account_type" translatable="false">amateurfeed.dbbest.com</string>
 
+  <!--Google Map-->
+  <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBo08owLuBT5YewWZlocnZzIRgelXQIWbw</string>
+
   <!--Login Screen-->
   <string name="ok_button">Ok</string>
   <string name="link_sign_up_screen"><u>Sign up</u></string>
@@ -34,10 +37,10 @@
 
 
   <!--Forgot Password-->
-  <string name="lable_toolbar_forgot_password">Reset Password</string>
+  <string name="label_toolbar_forgot_password">Reset Password</string>
   <string name="error_dialog_reset_password">Password was not reseted. \n Check e-mail!</string>
   <string name="info_dialog_reset_password">Old Password was reseted. \n On your e-mail will be sent new Password</string>
-  <string name="lable_reset_password">If you forgot password </string>
+  <string name="label_reset_password">If you forgot password </string>
   <string name="link_reset_password_screen"> <u>Forgot password</u> </string>
   <string name="reset_button">Reset</string>
 
@@ -175,5 +178,8 @@
 
   <!--Search Scree-->
   <string name="search_hint">search parameter</string>
+  <string name="phone_number">Phone number</string>
+  <string name="user_email">User email</string>
+  <string name="user_name">User name</string>
 
 </resources>

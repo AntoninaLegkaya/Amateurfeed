@@ -7,6 +7,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.VIBRATE" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
   <uses-feature
@@ -27,6 +28,10 @@
     android:name=".App"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
+    <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="@string/google_maps_key" />
+
     <activity
       android:name=".ui.activity.StartActivity"
       android:theme="@style/AppTheme.Main">
@@ -107,6 +112,10 @@
     <service
       android:exported="false"
       android:name=".app.azur.service.BlobUploadService" />
+
+    <service
+      android:exported="false"
+      android:name="com.dbbest.amateurfeed.utils.location.service.GeocodeService" />
 
     <!-- The SyncAdapter service -->
     <service
