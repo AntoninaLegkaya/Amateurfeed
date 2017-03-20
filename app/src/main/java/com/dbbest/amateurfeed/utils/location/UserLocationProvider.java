@@ -96,16 +96,15 @@ public class UserLocationProvider implements GoogleApiClient.ConnectionCallbacks
   private LatLng grabLocation(@Nullable Location location) {
     LatLng latLng = null;
     if (location != null) {
-      Log.i(TAG,
-          " Grab Location Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location
-              .getLongitude());
+//      Log.i(TAG,
+//          " Grab Location Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location
+//              .getLongitude());
       latLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
     return latLng;
   }
 
   private void requestLocation() {
-    Log.i(TAG, "Location request");
     LocationRequest locationRequest = new LocationRequest();
     locationRequest.setNumUpdates(1);
     locationRequest.setInterval(1);//5000
@@ -115,7 +114,6 @@ public class UserLocationProvider implements GoogleApiClient.ConnectionCallbacks
         == PackageManager.PERMISSION_GRANTED ||
         ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
-      Log.i(TAG, "Location requestLocationUpdates");
       LocationServices.FusedLocationApi
           .requestLocationUpdates(mGoogleApiClient, locationRequest, this);
     } else if (mListener != null) {

@@ -186,6 +186,9 @@ public class FeedContract {
       return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
     }
 
+    public static Uri buildSetAuthorImageInPreviewUriById(long id) {
+      return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
+    }
     public static Uri buildSetDescriptionInPreviewById(long id) {
       return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
     }

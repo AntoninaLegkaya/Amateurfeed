@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 
-public class EditItemDetailFragment extends BaseChangeDetailFragment implements
+public class EditItemDetailFragment extends BaseEditDetailFragment implements
     LoaderCallbacks<Cursor>, OnClickListener,
     Receiver {
 

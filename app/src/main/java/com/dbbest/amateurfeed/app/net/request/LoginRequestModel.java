@@ -12,7 +12,6 @@ public class LoginRequestModel implements Parcelable {
         public LoginRequestModel createFromParcel(Parcel source) {
           return new LoginRequestModel(source);
         }
-
         @Override
         public LoginRequestModel[] newArray(int size) {
           return new LoginRequestModel[size];

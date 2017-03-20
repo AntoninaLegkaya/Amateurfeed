@@ -30,7 +30,7 @@ import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.AddItemDetailFragment;
-import com.dbbest.amateurfeed.ui.fragments.BaseChangeDetailFragment;
+import com.dbbest.amateurfeed.ui.fragments.BaseEditDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
@@ -49,8 +49,8 @@ import java.util.Stack;
 public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChangeListener,
     HomeView,
     WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback,
-    BaseChangeDetailFragment.Callback, SearchFragment.Callback,
-    ItemNewsAdapter.ShowItemDetailsCallback,
+    BaseEditDetailFragment.Callback, SearchFragment.Callback,
+    ItemNewsAdapter.ShowItemDetailsCallback, EditProfileFragment.Callback,
     ProfileFragment.ProfileShowDetails {
 
   public static final String FEED_NEWS_FRAGMENT_TAG = "FNFTAG";
@@ -477,7 +477,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
   @Override
   public void showSuccessDeleteDialog() {
-    UIDialogNavigation.showWarningDialog(R.string.set_delete_succes)
+    UIDialogNavigation.showWarningDialog(R.string.set_delete_success)
         .show(getSupportFragmentManager(), "warn");
   }
 
@@ -634,5 +634,15 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     transaction.add(android.R.id.tabcontent, instantiateEditProfileFragment,
         HomeActivity.EDIT_PROFILE_FRAGMENT_TAG);
     transaction.commit();
+  }
+
+  @Override
+  public void moveToProfileFragment() {
+    refreshContent();
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    BottomTab bottomTabHome = BottomTab.getByTag(BottomTab.PROFILE.tag);
+    Stack<String> profileStack = backStacks.get(bottomTabHome);
+    showFragment(profileStack, ft);
+    mCurrentTag = BottomTab.PROFILE.tag;
   }
 }

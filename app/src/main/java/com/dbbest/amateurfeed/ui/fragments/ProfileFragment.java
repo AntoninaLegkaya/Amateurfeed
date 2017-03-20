@@ -121,10 +121,6 @@ public class ProfileFragment extends Fragment implements ProfileView,
         if (view.getId() == R.id.settings_button) {
           Toast.makeText(getActivity(), "Go to Settings Screen--->", Toast.LENGTH_SHORT).show();
 
-//          getActivity().getSupportFragmentManager().beginTransaction()
-//              .replace(android.R.id.tabcontent,
-//                  new PrefFragment(), PREFERENCE_FRAGMENT_TAG).commit();
-////                    startActivity(UiActivityNavigation.settingsActivity(getActivity()));
         }
       }
     });
@@ -148,7 +144,6 @@ public class ProfileFragment extends Fragment implements ProfileView,
       }
     });
     mRecyclerView.setAdapter(itemNewsAdapter);
-
     return rootView;
   }
 
@@ -156,7 +151,6 @@ public class ProfileFragment extends Fragment implements ProfileView,
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     Uri previewListUri = FeedContract.UserNewsEntry.CONTENT_URI;
-    // Sort order:  Ascending, by .
     String sortOrder = UserNewsEntry.COLUMN_UPDATE_DATE + " DESC";
     return new CursorLoader(getActivity(),
         previewListUri,
@@ -176,7 +170,6 @@ public class ProfileFragment extends Fragment implements ProfileView,
         itemNewsAdapter.swapCursor(data);
       }
     }
-
   }
 
   @Override

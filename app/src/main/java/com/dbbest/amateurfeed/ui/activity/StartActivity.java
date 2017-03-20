@@ -3,6 +3,7 @@ package com.dbbest.amateurfeed.ui.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
@@ -153,6 +154,13 @@ public class StartActivity extends AppCompatActivity implements StartView {
   }
 
   @Override
+  public void requestPermission(int code, @NonNull String... permissions) {
+    if (permissions.length > 0) {
+      ActivityCompat.requestPermissions(this, permissions, code);
+    }
+  }
+
+  @Override
   public void showErrorConnectionDialog() {
     UIDialogNavigation.showWarningDialog(R.string.no_internet_connection)
         .show(getSupportFragmentManager(), "warn");
@@ -169,5 +177,10 @@ public class StartActivity extends AppCompatActivity implements StartView {
   public Context getContext() {
     return this;
   }
-
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    mPresenter.onPermissionsRequestResult(requestCode, grantResults);
+  }
 }

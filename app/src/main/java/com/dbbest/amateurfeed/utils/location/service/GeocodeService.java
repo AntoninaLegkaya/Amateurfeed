@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import java.io.IOException;
 import java.util.List;
@@ -16,9 +15,9 @@ import java.util.Locale;
 
 public class GeocodeService extends IntentService {
 
-  public static final int STATUS_RUNNING = 0;
-  public static final int STATUS_FINISHED = 1;
-  public static final int STATUS_ERROR = 2;
+  public static final int STATUS_RUNNING = 3;
+  public static final int STATUS_FINISHED = 4;
+  public static final int STATUS_ERROR = 5;
   private Context mContext;
   private String TAG = GeocodeService.class.getName();
 
@@ -51,8 +50,9 @@ public class GeocodeService extends IntentService {
       addressText = String.format("%s, %s",
           address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
           address.getCountryName());
+      bundle.putString("result", addressText);
       bundle.putString("address", address.getAddressLine(0));
-      bundle.putString("country",  address.getCountryName());
+      bundle.putString("country", address.getCountryName());
       bundle.putDouble("lat", latitude);
       bundle.putDouble("lon", longitude);
       receiver.send(STATUS_FINISHED, bundle);

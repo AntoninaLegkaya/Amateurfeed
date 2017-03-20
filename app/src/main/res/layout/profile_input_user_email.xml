@@ -25,7 +25,7 @@
     android:text="@string/user_email" />
 
   <ImageButton
-    android:id="@+id/delete_param_button"
+    android:id="@+id/clear_email_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_delete_image_button"

@@ -9,6 +9,7 @@ import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
 import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
+import com.dbbest.amateurfeed.app.net.request.UpdateProfileRequestModel;
 import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
@@ -130,5 +131,10 @@ public class RestApiClient {
 
   public ResponseWrapper<ArrayList<UserNewsModel>> getMyNews(String token) {
     return executeCall(mApiService.getSpecifiedNewsByUser(token));
+  }
+
+  public ResponseWrapper<Object> updateUserProfile(String token,
+      UpdateProfileRequestModel updateProfileRequestModel) {
+    return executeCall(mApiService.putSpecifiedUserInfo(token, updateProfileRequestModel));
   }
 }

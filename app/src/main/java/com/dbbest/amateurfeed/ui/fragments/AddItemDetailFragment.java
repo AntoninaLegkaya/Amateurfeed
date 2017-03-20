@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 
-public class AddItemDetailFragment extends BaseChangeDetailFragment implements DetailView,
+public class AddItemDetailFragment extends BaseEditDetailFragment implements DetailView,
     View.OnClickListener,
     Receiver {
 

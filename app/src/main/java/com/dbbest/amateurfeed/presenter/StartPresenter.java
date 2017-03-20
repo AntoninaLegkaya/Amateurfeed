@@ -1,9 +1,12 @@
 package com.dbbest.amateurfeed.presenter;
 
+import android.Manifest;
 import android.common.framework.Presenter;
 import android.common.util.TextUtils;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
 import com.dbbest.amateurfeed.app.net.command.AzureCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
@@ -24,8 +27,7 @@ public class StartPresenter extends Presenter<StartView> implements
 
   private static final String INCORRECT_PASSWORD_MSG_RESPONSE = "An error has occurred.";
   private static final int PERMISSION_LOCATION = 0;
-
-
+  private static final String TAG = StartPresenter.class.getName();
   private static final int CODE_LOGIN = 0;
   private static final int CODE_REGISTRATION_FB = 1;
   private static final int CODE_CLOUD_PREF = 2;
@@ -132,6 +134,13 @@ public class StartPresenter extends Presenter<StartView> implements
       mResultReceiver = new CommandResultReceiver();
     }
     mResultReceiver.setListener(this);
+
+    if (mLocationProvider == null) {
+      mLocationProvider = new UserLocationProvider(view.getContext());
+    }
+
+    mLocationProvider.setListener(this);
+    mLocationProvider.update();
   }
 
   @Override
@@ -139,6 +148,9 @@ public class StartPresenter extends Presenter<StartView> implements
     super.onDetachView(view);
     if (mResultReceiver != null) {
       mResultReceiver.setListener(null);
+    }
+    if (mLocationProvider != null) {
+      mLocationProvider.setListener(null);
     }
   }
 
@@ -155,7 +167,29 @@ public class StartPresenter extends Presenter<StartView> implements
 
   @Override
   public void onLocationPermissionsDenied() {
+    if (getView() != null) {
+      Log.i(TAG, "Location permission denied");
+      getView().requestPermission(PERMISSION_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+          Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+  }
 
+  public void onPermissionsRequestResult(int requestCode, @NonNull int[] grantResults) {
+    if (requestCode == PERMISSION_LOCATION) {
+      boolean isLocationPermissionGranted = true;
+      if (grantResults.length > 0) {
+        for (int permissionResult : grantResults) {
+          if (permissionResult == PackageManager.PERMISSION_DENIED) {
+            isLocationPermissionGranted = false;
+            break;
+          }
+        }
+      }
+      if (isLocationPermissionGranted) {
+        Log.i(TAG, "Location permission granted");
+        mLocationProvider.update();
+      }
+    }
   }
 
 }

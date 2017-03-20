@@ -128,11 +128,11 @@
   <string name="empty_feed_list">No News Information Available.</string>
 
   <!--News Feed-->
-  <string name="get_news_succes">I get it! :)</string>
+  <string name="get_news_success">I get it! :)</string>
   <string name="get_news_error">I can get it! :(</string>
-  <string name="set_like_succes" translatable="false">I like/dislike it! :)</string>
+  <string name="set_like_success" translatable="false">I like/dislike it! :)</string>
   <string name="set_like_error" translatable="false">I can like/dislike it! :(</string>
-  <string name="set_delete_succes" translatable="false">You Post Abuse :)</string>
+  <string name="set_delete_success" translatable="false">You Post Abuse :)</string>
   <string name="set_delete_error" translatable="false">You do not  Post Abuse :(</string>
   <string name="set_good_by" translatable="false">By! :)</string>
 
@@ -144,6 +144,9 @@
   <string name="add_news_success" translatable="false">You Add News :)</string>
   <string name="add_news_image">Select Your Image</string>
 
+  <!--Edit Profile Screen-->
+  <string name="update_profile_success">Profile was updated</string>
+  <string name="update_profile_error">Profile was not updated</string>
   <!--Search Screen Dialog-->
   <string name="search_error">News not found</string>
 
