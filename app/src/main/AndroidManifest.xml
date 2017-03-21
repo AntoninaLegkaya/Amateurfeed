@@ -61,10 +61,6 @@
 
     </activity>
     <activity
-      android:label="@string/label_activity_settings"
-      android:name=".ui.activity.SettingsActivity"
-      android:theme="@style/AppTheme.Settings" />
-    <activity
       android:name=".ui.activity.SplashActivity"
       android:theme="@style/SplashTheme">
       <intent-filter>

@@ -9,9 +9,6 @@ import com.dbbest.amateurfeed.app.net.request.ResetRequestPasswordModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 
-/**
- * Created by antonina on 19.01.17.
- */
 
 public class ResetPasswordCommand extends Command {
     private final ResetRequestPasswordModel mResetRequest;

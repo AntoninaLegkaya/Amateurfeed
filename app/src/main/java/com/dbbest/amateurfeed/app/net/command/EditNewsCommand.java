@@ -10,7 +10,6 @@ import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class EditNewsCommand extends Command {

@@ -31,9 +31,11 @@ import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
 import com.dbbest.amateurfeed.ui.fragments.AddItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.BaseEditDetailFragment;
+import com.dbbest.amateurfeed.ui.fragments.ChangePasswordFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.ui.fragments.PreferFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.fragments.UserNewsPreviewFragment;
@@ -55,16 +57,18 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
 
   public static final String FEED_NEWS_FRAGMENT_TAG = "FNFTAG";
   public static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
-  public static final String DETAIL_ADD_NEWS_FRAGMENT_TAG = "DNFTAG_ADD";
+  public static final String DETAIL_ADD_NEWS_FRAGMENT_TAG = "DNFTAG_ADD_TAG";
   public static final String SEARCH_FRAGMENT_TAG = "STAG";
   public static final String PROFILE_FRAGMENT_TAG = "PTAG";
-  public static final String EDIT_PROFILE_FRAGMENT_TAG = "PREFTAG";
-  public static final String USER_NEWS_FRAGMENT_TAG = "MNF";
+  public static final String EDIT_PROFILE_FRAGMENT_TAG = "PROFTAG";
+  public static final String USER_NEWS_FRAGMENT_TAG = "UNFTAG";
+  public static final String USER_PREFERNCES_TAG = "UPTAG";
+  public static final String CHANGE_PASSWORD_TAG = "CHPTAG";
   public static final String MANAGE_FRAGMENTS = "ManageFragments";
   static final int REQUEST_IMAGE_CAPTURE = 1;
   public static int RESULT_LOAD_IMAGE = 1;
   private static String TAG = HomeActivity.class.getName();
-  private final String PREFERENCE_FRAGMENT_TAG = "PREFTAG";
+  //  private final String PREFERENCE_FRAGMENT_TAG = "PREFTAG";
   private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
   private String userChosenTask;
   private DialogFragment mProgressDialog;
@@ -133,7 +137,8 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
       backStacks.put(BottomTab.DETAIL, new Stack<String>());
       backStacks.put(BottomTab.USER_NEWS, new Stack<String>());
       backStacks.put(BottomTab.EDIT_PROFILE, new Stack<String>());
-
+      backStacks.put(BottomTab.PREFERENCES, new Stack<String>());
+      backStacks.put(BottomTab.CHANGE_PASSWORD, new Stack<String>());
     }
   }
 
@@ -278,6 +283,26 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
           if (!top.isDetached()) {
             ft.detach(top);
             Log.i(MANAGE_FRAGMENTS, "Detach : " + editProfileStack.peek());
+          }
+        }
+      }
+      Stack<String> prefStack = backStacks.get(BottomTab.PREFERENCES);
+      if (!prefStack.isEmpty()) {
+        Fragment top = getSupportFragmentManager().findFragmentByTag(prefStack.peek());
+        if (top != null) {
+          if (!top.isDetached()) {
+            ft.detach(top);
+            Log.i(MANAGE_FRAGMENTS, "Detach : " + prefStack.peek());
+          }
+        }
+      }
+      Stack<String> passStack = backStacks.get(BottomTab.CHANGE_PASSWORD);
+      if (!passStack.isEmpty()) {
+        Fragment top = getSupportFragmentManager().findFragmentByTag(passStack.peek());
+        if (top != null) {
+          if (!top.isDetached()) {
+            ft.detach(top);
+            Log.i(MANAGE_FRAGMENTS, "Detach : " + passStack.peek());
           }
         }
       }
@@ -644,5 +669,33 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     Stack<String> profileStack = backStacks.get(bottomTabHome);
     showFragment(profileStack, ft);
     mCurrentTag = BottomTab.PROFILE.tag;
+  }
+
+  @Override
+  public void showPreferencesFragment() {
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    BottomTab bottomTabUserNews = BottomTab.getByTag(USER_PREFERNCES_TAG);
+    Stack<String> prefStack = backStacks.get(bottomTabUserNews);
+    prefStack.push(USER_PREFERNCES_TAG);
+    refreshContent();
+    Fragment instantiatePrefFragment = Fragment
+        .instantiate(getContext(), PreferFragment.class.getName());
+    transaction.add(android.R.id.tabcontent, instantiatePrefFragment,
+        HomeActivity.USER_PREFERNCES_TAG);
+    transaction.commit();
+  }
+
+  @Override
+  public void showChangePasswordFragment() {
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    BottomTab bottomTabUserNews = BottomTab.getByTag(CHANGE_PASSWORD_TAG);
+    Stack<String> passStack = backStacks.get(bottomTabUserNews);
+    passStack.push(CHANGE_PASSWORD_TAG);
+    refreshContent();
+    Fragment instantiatePrefFragment = Fragment
+        .instantiate(getContext(), ChangePasswordFragment.class.getName());
+    transaction.add(android.R.id.tabcontent, instantiatePrefFragment,
+        HomeActivity.CHANGE_PASSWORD_TAG);
+    transaction.commit();
   }
 }

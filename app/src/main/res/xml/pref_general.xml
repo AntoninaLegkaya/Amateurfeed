@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-    <CheckBoxPreference
-        android:defaultValue="@string/pref_enable_notifications_default"
-        android:key="@string/pref_enable_notifications_key"
-        android:summaryOff="@string/pref_enable_notifications_false"
-        android:summaryOn="@string/pref_enable_notifications_true"
-        android:title="@string/pref_enable_notifications_label"/>
-
-    <Preference
-        android:title="@string/title_intent_change_password">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="http://codepath.com/"/>
-    </Preference>
-    <Preference
-        android:title="@string/title_intent_edite_profile">
-        <intent android:action=".ui.EditProfileActivity"/>
-    </Preference>
-
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+  <CheckBoxPreference
+    android:defaultValue="@string/pref_enable_notifications_default"
+    android:key="@string/pref_enable_notifications_key"
+    android:summaryOff="@string/pref_enable_notifications_false"
+    android:summaryOn="@string/pref_enable_notifications_true"
+    android:layout_width="match_parent"
+    android:textColor="@color/app_black"
+    android:title="@string/pref_enable_notifications_label" />
+  <Preference
+    android:key="@string/startChangePassword"
+    android:title="@string/title_intent_change_password">
+    <!--<intent-->
+    <!--android:action="android.intent.action.VIEW"-->
+    <!--android:data="http://codepath.com/" />-->
+  </Preference>
+  <Preference
+    android:key="@string/startEditProfile"
+    android:title="@string/title_intent_edit_profile">
+    <!--<intent android:action=".ui.EditProfileActivity" />-->
+  </Preference>
+  <Preference
+    android:key="@string/startLogout"
+    android:title="@string/title_intent_logout">
+    <!--<intent android:action=".ui.EditProfileActivity" />-->
+  </Preference>
 </PreferenceScreen>

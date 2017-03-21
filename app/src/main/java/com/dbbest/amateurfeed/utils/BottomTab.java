@@ -4,9 +4,11 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.ui.activity.HomeActivity;
+import com.dbbest.amateurfeed.ui.fragments.ChangePasswordFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditItemDetailFragment;
 import com.dbbest.amateurfeed.ui.fragments.EditProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.ui.fragments.PreferFragment;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment;
 import com.dbbest.amateurfeed.ui.fragments.SearchFragment;
 import com.dbbest.amateurfeed.ui.fragments.UserNewsPreviewFragment;
@@ -22,7 +24,11 @@ public enum BottomTab {
   USER_NEWS(HomeActivity.USER_NEWS_FRAGMENT_TAG, R.drawable.ic_perm_identity_black_18dp,
       UserNewsPreviewFragment.class),
   EDIT_PROFILE(HomeActivity.EDIT_PROFILE_FRAGMENT_TAG, R.drawable.ic_perm_identity_black_18dp,
-      EditProfileFragment.class);
+      EditProfileFragment.class),
+  PREFERENCES(HomeActivity.USER_PREFERNCES_TAG, R.drawable.ic_perm_identity_black_18dp,
+      PreferFragment.class),
+  CHANGE_PASSWORD(HomeActivity.CHANGE_PASSWORD_TAG, R.drawable.ic_perm_identity_black_18dp,
+      ChangePasswordFragment.class);
 
   public String tag;
   public

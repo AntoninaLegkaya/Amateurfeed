@@ -137,4 +137,8 @@ public class RestApiClient {
       UpdateProfileRequestModel updateProfileRequestModel) {
     return executeCall(mApiService.putSpecifiedUserInfo(token, updateProfileRequestModel));
   }
+
+  public ResponseWrapper<Object> logout(String token) {
+    return executeCall(mApiService.logout(token));
+  }
 }

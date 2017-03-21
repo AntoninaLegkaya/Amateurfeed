@@ -119,8 +119,7 @@ public class ProfileFragment extends Fragment implements ProfileView,
       @Override
       public void onClick(View view) {
         if (view.getId() == R.id.settings_button) {
-          Toast.makeText(getActivity(), "Go to Settings Screen--->", Toast.LENGTH_SHORT).show();
-
+          ((ProfileShowDetails) getActivity()).showPreferencesFragment();
         }
       }
     });
@@ -197,6 +196,10 @@ public class ProfileFragment extends Fragment implements ProfileView,
   public interface ProfileShowDetails {
 
     void showEditProfileFragment();
+
+    void showPreferencesFragment();
+
+    void showChangePasswordFragment();
   }
 
 }

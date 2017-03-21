@@ -1,6 +1,7 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
 import android.app.Activity;
+import android.common.framework.IView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -25,16 +26,14 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter.FeedAdapterLoadNews;
 import com.dbbest.amateurfeed.utils.Utils;
-import com.dbbest.amateurfeed.view.FeedView;
 
 
 public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
     SharedPreferences.OnSharedPreferenceChangeListener,
-    View.OnClickListener, FeedView {
+    View.OnClickListener, IView {
 
   public static final String[] PREVIEW_COLUMNS = {
       FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID,
@@ -50,7 +49,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
   };
 
   public static final int COL_FEED_ID = 0;
-  public static final int COL_TITLTE = 1;
+  public static final int COL_TITLE = 1;
   public static final int COL_TEXT = 2;
   public static final int COL_LIKES = 3;
   public static final int COL_IS_LIKE = 4;

@@ -3,25 +3,19 @@ package com.dbbest.amateurfeed.presenter;
 import android.common.framework.Presenter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
-import com.dbbest.amateurfeed.app.net.command.LogoutCommand;
-import com.dbbest.amateurfeed.ui.navigator.UiActivityNavigation;
-import com.dbbest.amateurfeed.view.PreferenceView;
+import com.dbbest.amateurfeed.view.ChangePasswordView;
 
-public class PreferencePresenter extends Presenter<PreferenceView> implements
+public class ChangePasswordPresenter extends Presenter<ChangePasswordView> implements
     CommandResultReceiver.CommandListener {
 
-  private static final int CODE_LOGOUT = 0;
+  private static final int CODE_CHANGE_PASSWORD = 0;
+
   private CommandResultReceiver mResetReceiver;
 
-  public void logout() {
-    Command logoutCommand = new LogoutCommand();
-    logoutCommand.send(CODE_LOGOUT, mResetReceiver);
-  }
 
   @Override
-  protected void onAttachView(@NonNull PreferenceView view) {
+  protected void onAttachView(@NonNull ChangePasswordView view) {
     if (mResetReceiver == null) {
       mResetReceiver = new CommandResultReceiver();
     }
@@ -29,7 +23,7 @@ public class PreferencePresenter extends Presenter<PreferenceView> implements
   }
 
   @Override
-  protected void onDetachView(@NonNull PreferenceView view) {
+  protected void onDetachView(@NonNull ChangePasswordView view) {
     if (mResetReceiver != null) {
       mResetReceiver.setListener(null);
     }
@@ -37,11 +31,7 @@ public class PreferencePresenter extends Presenter<PreferenceView> implements
 
   @Override
   public void onSuccess(int code, Bundle data) {
-    if (getView() != null) {
-      if (code == CODE_LOGOUT) {
-        getView().navigateToStartScreen();
-      }
-    }
+
   }
 
   @Override

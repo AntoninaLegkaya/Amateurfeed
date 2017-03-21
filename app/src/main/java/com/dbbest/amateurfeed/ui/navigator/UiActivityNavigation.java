@@ -5,14 +5,12 @@ import android.content.Intent;
 
 import com.dbbest.amateurfeed.ui.activity.HomeActivity;
 import com.dbbest.amateurfeed.ui.activity.ResetPasswordActivity;
-import com.dbbest.amateurfeed.ui.activity.SettingsActivity;
 import com.dbbest.amateurfeed.ui.activity.SignUpActivity;
 import com.dbbest.amateurfeed.ui.activity.StartActivity;
 
 public class UiActivityNavigation {
 
     private UiActivityNavigation() {
-
     }
 
     public static Intent startActivity(Context context) {
@@ -29,10 +27,6 @@ public class UiActivityNavigation {
 
     public static Intent homeActivity(Context context) {
         return new Intent(context, HomeActivity.class);
-    }
-
-    public static Intent settingsActivity(Context context) {
-        return new Intent(context, SettingsActivity.class);
     }
 
 }

@@ -52,7 +52,7 @@ public class ItemNewsAdapter extends CursorRecyclerAdapter<UserNewsHolder> {
 
     if (cursor.moveToPosition(position)) {
       if (holder.mTextView != null) {
-        (holder.mTextView).setText(cursor.getString(FeedNewsFragment.COL_TITLTE));
+        (holder.mTextView).setText(cursor.getString(FeedNewsFragment.COL_TITLE));
       }
       if (holder.mImageView != null) {
         Glide.with(App.instance().getApplicationContext())

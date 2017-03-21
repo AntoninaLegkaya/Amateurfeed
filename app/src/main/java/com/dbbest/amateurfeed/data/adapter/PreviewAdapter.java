@@ -121,7 +121,7 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
     }
 
     String title =
-        cursor.getString(FeedNewsFragment.COL_TITLTE);
+        cursor.getString(FeedNewsFragment.COL_TITLE);
     holder.mTitleView.setText(title);
 
     String date =

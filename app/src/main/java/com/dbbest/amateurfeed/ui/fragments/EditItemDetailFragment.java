@@ -230,7 +230,7 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
           mDescriptionView.setText(description);
         }
         String title =
-            data.getString(FeedNewsFragment.COL_TITLTE);
+            data.getString(FeedNewsFragment.COL_TITLE);
         mTitleView.setText(title);
         String date =
             data.getString(FeedNewsFragment.COL_CREATE_DATE);

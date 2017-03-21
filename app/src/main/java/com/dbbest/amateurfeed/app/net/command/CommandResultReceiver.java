@@ -10,17 +10,18 @@ import android.support.v4.os.StackedResultReceiver;
 public class CommandResultReceiver extends
     StackedResultReceiver<CommandResultReceiver.CommandListener> {
 
-  public static final Parcelable.Creator<CommandResultReceiver> CREATOR = new Parcelable.Creator<CommandResultReceiver>() {
-    @Override
-    public CommandResultReceiver createFromParcel(Parcel source) {
-      return new CommandResultReceiver(source);
-    }
+  public static final Parcelable.Creator<CommandResultReceiver> CREATOR =
+      new Parcelable.Creator<CommandResultReceiver>() {
+        @Override
+        public CommandResultReceiver createFromParcel(Parcel source) {
+          return new CommandResultReceiver(source);
+        }
 
-    @Override
-    public CommandResultReceiver[] newArray(int size) {
-      return new CommandResultReceiver[size];
-    }
-  };
+        @Override
+        public CommandResultReceiver[] newArray(int size) {
+          return new CommandResultReceiver[size];
+        }
+      };
   private static final int CODE_SUCCESS = 0;
   private static final int CODE_FAIL = 1;
   private static final int CODE_PROGRESS = 2;

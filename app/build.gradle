@@ -53,7 +53,7 @@ ext {
     multidex = '1.0.0'
     retrofit = '2.1.0'
     okhttp = '3.4.1'
-    googlePlaySevices = '10.0.1'
+    googlePlaySevices = '10.2.0'
     facebookSdk = '4.16.0'
     glide = '3.7.0'
     stetho = '1.4.1'
@@ -66,7 +66,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "com.android.support:multidex:${multidex}"
-    compile "com.takisoft.fix:preference-v7:25.0.1.0"
+    compile "com.android.support:preference-v14:${rootProject.ext.supportLibraryVersion}"
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
     compile "com.squareup.retrofit2:converter-gson:${retrofit}"
     compile "com.facebook.stetho:stetho:${stetho}"
