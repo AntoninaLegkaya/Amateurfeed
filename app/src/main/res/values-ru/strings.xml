@@ -81,4 +81,11 @@
     <string name="hint_current_password">Текущий пароль</string>
     <string name="hint_new_password">Новый пароль</string>
     <string name="hint_new_password_again">Новый пароль снова</string>
+    <string name="title_intent_logout">Выход</string>
+    <string name="change_password_error">Пароль не изменен</string>
+    <string name="change_password_success">Пароль изменен</string>
+    <string name="input_password_error">Неверно введен новый пароль</string>
+    <string name="input_curr_password_error">Неверно введен текущий пароль</string>
+    <string name="input_confirm_password_error">Неверно введен подтвержающий пароль</string>
+  <string name="pass_confirm_password_error">Новый и подствержающий пароли не совпадают</string>
 </resources>

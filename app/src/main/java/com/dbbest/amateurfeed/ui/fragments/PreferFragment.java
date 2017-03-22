@@ -42,9 +42,7 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-
     super.onCreate(savedInstanceState);
-
     mPresenter = new PreferencePresenter();
     ((AppCompatActivity) getActivity()).setSupportActionBar(createToolbar());
     ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,7 +66,6 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
             return true;
           }
         });
-
     Preference prefLogout = getPreferenceManager()
         .findPreference(getString(R.string.startLogout));
     prefLogout
@@ -83,22 +80,18 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-
     addPreferencesFromResource(R.xml.pref_general);
-
   }
 
   private Toolbar createToolbar() {
     Toolbar toolbar = new Toolbar(getActivity());
     Toolbar.LayoutParams toolBarParams = new Toolbar.LayoutParams(
         Toolbar.LayoutParams.MATCH_PARENT,
-        R.attr.actionBarSize
-    );
+        R.attr.actionBarSize);
     toolbar.setLayoutParams(toolBarParams);
     toolbar.setBackgroundColor(Color.BLUE);
     toolbar.setPopupTheme(R.style.MyToolbarStyle);
     toolbar.setVisibility(View.VISIBLE);
-
     TextView textView = new TextView(getContext());
     textView.setText(getString(R.string.preference_toolbar_label));
     toolbar.addView(textView);
@@ -115,4 +108,6 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
   public void navigateToStartScreen() {
     startActivity(UiActivityNavigation.startActivity(getContext()));
   }
+
+
 }

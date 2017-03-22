@@ -4,6 +4,9 @@ import android.common.framework.IView;
 
 
 public interface PreferenceView extends IView {
+
   void navigateToStartScreen();
+
+
 
 }

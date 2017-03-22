@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.NetworkUtil;
+import com.dbbest.amateurfeed.app.net.request.ChangePasswordRequestModel;
 import com.dbbest.amateurfeed.app.net.request.LikeModel;
 import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationFaceBookRequestModel;
@@ -140,5 +141,9 @@ public class RestApiClient {
 
   public ResponseWrapper<Object> logout(String token) {
     return executeCall(mApiService.logout(token));
+  }
+
+  public ResponseWrapper<Object> changePassword(String token, ChangePasswordRequestModel requestModel) {
+    return executeCall(mApiService.changePassword(token, requestModel));
   }
 }

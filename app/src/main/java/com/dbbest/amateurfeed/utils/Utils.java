@@ -88,8 +88,9 @@ public class Utils {
   }
 
   public static boolean isPasswordValid(String password) {
+
+    return (password != null && !password.equals("")) ? true : false;
 //        return PASSWORD_PATTERN.matcher(password).matches();
-    return true;
   }
 
   public static boolean isFullNameValid(String firstName) {
