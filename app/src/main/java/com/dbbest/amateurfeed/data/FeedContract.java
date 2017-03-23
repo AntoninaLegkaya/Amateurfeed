@@ -246,9 +246,16 @@ public class FeedContract {
       return ContentUris.withAppendedId(CONTENT_ID_URI_BASE, id);
     }
 
+
     public static long getIdFromUri(Uri uri) {
 
       return Long.parseLong(uri.getPathSegments().get(1));
+    }
+    public static Uri buildGetIdCreatorByAuthor(String author) {
+      return CONTENT_ID_URI_BASE.buildUpon().appendPath(author).build();
+    }
+    public static String getAuthorFromUri(Uri uri) {
+      return uri.getPathSegments().get(1);
     }
   }
 

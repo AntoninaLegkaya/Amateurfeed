@@ -38,6 +38,7 @@ import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver.Receiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadService;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.FeedContract.CommentEntry;
 import com.dbbest.amateurfeed.data.adapter.CommentsAdapter;
 import com.dbbest.amateurfeed.data.adapter.TagAdapter;
 import com.dbbest.amateurfeed.model.CommentModel;
@@ -214,7 +215,6 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
     if (loader.getId() == DETAIL_NEWS_LOADER) {
-
       if (data.moveToFirst()) {
         long mIdPreview = data.getLong(FeedNewsFragment.COL_FEED_ID);
         Glide.with(this)
@@ -224,7 +224,7 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
             .into(mIconView);
         String fullName =
             data.getString(FeedNewsFragment.COL_AUTHOR);
-        mFullNameView.setText(fullName + String.valueOf(mIdPreview));
+        mFullNameView.setText(fullName);
         String description = data.getString(FeedNewsFragment.COL_TEXT);
         if (description != null) {
           mDescriptionView.setText(description);
@@ -235,11 +235,13 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
         String date =
             data.getString(FeedNewsFragment.COL_CREATE_DATE);
         String day = null;
-        day = Utils.getFriendlyDayString(getActivity(), Utils.getLongFromString(date), true);
-        if (day == null) {
-          mDateView.setText(date);
-        } else {
-          mDateView.setText(day);
+        if (date != null) {
+          day = Utils.getFriendlyDayString(getActivity(), Utils.getLongFromString(date), true);
+          if (day == null) {
+            mDateView.setText(date);
+          } else {
+            mDateView.setText(day);
+          }
         }
         int countLikes =
             data.getInt(FeedNewsFragment.COL_LIKES);
@@ -462,7 +464,7 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
       if (mUriPreview != null && mCommentView != null && mCommentView.getText() != null) {
         Log.i(TAG, "Start invoke Add Comment Command: new body: " + mCommentView.getText());
         int postId = (int) FeedContract.PreviewEntry.getIdFromUri(mUriPreview);
-        mPresenter.postComment(postId, mCommentView.getText().toString(), 0);
+        mPresenter.postComment(postId, mCommentView.getText().toString(), null);
       }
     }
     if (view.getId() == R.id.edit_button) {
@@ -548,5 +550,56 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
         String error = resultData.getString(Intent.EXTRA_TEXT);
         break;
     }
+  }
+
+  @Override
+  public void addCommentToBd(Bundle data) {
+    int postId = data.getInt("post_id");
+    String body = data.getString("body");
+    int creatorID = getCreatorId();
+    Uri commentUri = CommentEntry.buildCommentUri(postId);
+    Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
+    ContentValues previewValues = new ContentValues();
+    previewValues.put(CommentEntry.COLUMN_POST_ID, postId);
+    previewValues.put(FeedContract.CommentEntry.COLUMN_CREATOR_KEY, creatorID);
+    previewValues.put(CommentEntry.COLUMN_BODY, body);
+    previewValues.put(CommentEntry.COLUMN_PARENT_COMMENT_ID, 0);
+    previewValues.put(CommentEntry.COLUMN_CREATE_DATE, Utils.getCurrentTime());
+    cVTagsVector.add(previewValues);
+    if (cVTagsVector.size() > 0) {
+      ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
+      cVTagsVector.toArray(cvArray);
+      App.instance().getContentResolver()
+          .bulkInsert(FeedContract.CommentEntry.CONTENT_URI, cvArray);
+    }
+    refreshItemDetailsFragmentLoader();
+//    mCommentsAdapter.notifyDataSetChanged();
+  }
+
+  private int getCreatorId() {
+
+    if (mFullNameView != null) {
+      String author = mFullNameView.getText().toString();
+      Uri uriCreatorAuthor = FeedContract.CreatorEntry.buildGetIdCreatorByAuthor(
+          author);
+      Log.i(TAG, "Get Creator ID for Author: " + author);
+      if (author != null && author.trim().length() > 0) {
+        Cursor byAuthorCreatorCursor = App.instance().getApplicationContext().getContentResolver()
+            .query(
+                uriCreatorAuthor,
+                null,
+                null,
+                null,
+                null
+            );
+        if (byAuthorCreatorCursor.moveToFirst()) {
+
+          int creatorId = byAuthorCreatorCursor.getInt(FeedNewsFragment.COL_CREATOR_UNIC_ID);
+          Log.i(TAG, "Get Creator ID for Author: " + author + " [creator_id]: " + creatorId);
+          return creatorId;
+        }
+      }
+    }
+    return 0;
   }
 }

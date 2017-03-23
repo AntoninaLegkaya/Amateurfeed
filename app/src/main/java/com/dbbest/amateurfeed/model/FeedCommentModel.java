@@ -22,10 +22,10 @@ public class FeedCommentModel implements Parcelable {
   @SerializedName("body")
   private String mBody;
   @SerializedName("parentCommentId")
-  private int mParentCommentId;
+  private Integer mParentCommentId;
 
 
-  public FeedCommentModel(int postId, String body, int parentCommentId) {
+  public FeedCommentModel(int postId, String body, Integer parentCommentId) {
     mPostId = postId;
     mBody = body;
     mParentCommentId = parentCommentId;
@@ -34,14 +34,14 @@ public class FeedCommentModel implements Parcelable {
   protected FeedCommentModel(Parcel in) {
     mPostId = in.readInt();
     mBody = in.readString();
-    mParentCommentId = in.readInt();
+    mParentCommentId = (Integer) in.readSerializable();
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeInt(mPostId);
     dest.writeString(mBody);
-    dest.writeInt(mParentCommentId);
+    dest.writeSerializable(mParentCommentId);
   }
 
   @Override
@@ -57,7 +57,7 @@ public class FeedCommentModel implements Parcelable {
     return mBody;
   }
 
-  public int getParentCommentId() {
+  public Integer getParentCommentId() {
     return mParentCommentId;
   }
 

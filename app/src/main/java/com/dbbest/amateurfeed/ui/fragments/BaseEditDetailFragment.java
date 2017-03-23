@@ -58,6 +58,11 @@ public class BaseEditDetailFragment extends EditFragment implements DetailView {
   }
 
   @Override
+  public void addCommentToBd(Bundle data) {
+
+  }
+
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mPresenter = new DetailPresenter();

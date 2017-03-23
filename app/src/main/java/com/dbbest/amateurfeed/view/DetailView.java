@@ -21,4 +21,6 @@ public interface DetailView extends IView {
   void refreshFeedNews(Bundle data);
 
   void checkUpdateImage();
+
+  void addCommentToBd(Bundle data);
 }

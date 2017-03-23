@@ -44,7 +44,6 @@ public class PreferencePresenter extends Presenter<PreferenceView> implements
       if (code == CODE_LOGOUT) {
         getView().navigateToStartScreen();
       }
-
     }
   }
 

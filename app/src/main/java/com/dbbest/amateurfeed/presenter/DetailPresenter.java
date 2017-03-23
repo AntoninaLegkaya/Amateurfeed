@@ -12,7 +12,6 @@ import com.dbbest.amateurfeed.app.net.command.EditNewsCommand;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.view.DetailView;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailPresenter extends Presenter<DetailView> implements
     CommandResultReceiver.CommandListener {
@@ -35,7 +34,7 @@ public class DetailPresenter extends Presenter<DetailView> implements
     command.send(CODE_EDIT_NEWS, mResultReceiver);
   }
 
-  public void postComment(int postId, String body, int parentCommentId) {
+  public void postComment(int postId, String body, Integer parentCommentId) {
     AddCommentCommand command = new AddCommentCommand(postId, body, parentCommentId);
     command.send(CODE_ADD_COMMENT, mResultReceiver);
   }
@@ -71,7 +70,9 @@ public class DetailPresenter extends Presenter<DetailView> implements
         getView().updateDetailsFields(data);
       }
       if (code == CODE_ADD_COMMENT) {
+        getView().addCommentToBd(data);
         getView().showSuccessAddCommentDialog();
+
       }
       if (code == CODE_ADD_NEW_ITEM) {
         getView().refreshFeedNews(data);

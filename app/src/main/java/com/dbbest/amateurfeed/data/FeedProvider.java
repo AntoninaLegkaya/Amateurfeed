@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
+import com.dbbest.amateurfeed.data.FeedContract.CreatorEntry;
 import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import java.util.HashMap;
 
@@ -30,6 +31,7 @@ public class FeedProvider extends ContentProvider {
   static final int PROFILE = 400;
   static final int CREATOR = 500;
   static final int CREATOR_ID = 501;
+  static final int CREATOR_AUTHOR = 502;
   static final int TAG = 600;
   static final int TAG_ID = 601;
   static final int TAG_PREVIEW_ID = 602;
@@ -44,10 +46,14 @@ public class FeedProvider extends ContentProvider {
   private static final SQLiteQueryBuilder sPreviewByAuthorQueryBuilder;
   private static final SQLiteQueryBuilder sTagByIdQueryBuilder;
   private static final SQLiteQueryBuilder sCreatorByIdQueryBuilder;
+  private static final SQLiteQueryBuilder sCreatorByAuthorQueryBuilder;
   private static final SQLiteQueryBuilder sCommentByIdQueryBuilder;
   private static final String sCreatorSelection =
       FeedContract.CreatorEntry.TABLE_NAME +
           "." + FeedContract.CreatorEntry._ID + " = ? ";
+  private static final String sCreatorSelectionByAuthorName =
+      FeedContract.CreatorEntry.TABLE_NAME +
+          "." + CreatorEntry.COLUMN_NAME + " = ? ";
   private static final String sTagsListSelection =
       FeedContract.TagEntry.COLUMN_PREVIEW_ID + " = ? ";
   private static final String sCommentListSelection =
@@ -125,6 +131,11 @@ public class FeedProvider extends ContentProvider {
   }
 
   static {
+    sCreatorByAuthorQueryBuilder = new SQLiteQueryBuilder();
+    sCreatorByAuthorQueryBuilder.setTables(FeedContract.CreatorEntry.TABLE_NAME);
+  }
+
+  static {
     sCommentByIdQueryBuilder = new SQLiteQueryBuilder();
     sCommentByIdQueryBuilder.setTables(FeedContract.CommentEntry.TABLE_NAME);
   }
@@ -143,6 +154,7 @@ public class FeedProvider extends ContentProvider {
     matcher.addURI(authority, FeedContract.PATH_COMMENT, COMMENT);
     matcher.addURI(authority, FeedContract.PATH_COMMENT + "/#", COMMENT_POST_ID);
     matcher.addURI(authority, FeedContract.PATH_CREATOR, CREATOR);
+    matcher.addURI(authority, FeedContract.PATH_CREATOR + "/*", CREATOR_AUTHOR);
     matcher.addURI(authority, FeedContract.PATH_TAG, TAG);
     matcher.addURI(authority, FeedContract.PATH_TAG + "/#", TAG_ID);
     matcher.addURI(authority, FeedContract.PATH_TAG + "/#", TAG_PREVIEW_ID);
@@ -283,6 +295,24 @@ public class FeedProvider extends ContentProvider {
     return c;
   }
 
+  private Cursor getIdCreatorByAuthor(Uri uri, String[] projection, String sortOrder) {
+
+    String author = FeedContract.CreatorEntry.getAuthorFromUri(uri);
+    String[] selectionArgs;
+    String selection;
+    selectionArgs = new String[]{author};
+    selection = sCreatorSelectionByAuthorName;
+
+    return  sCreatorByAuthorQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        projection,
+        selection,
+        selectionArgs,
+        null,
+        null,
+        sortOrder
+    );
+  }
+
   private int updateColumnInPreview(Uri uri, ContentValues cv, String selection,
       String[] selectionArgs) {
     String id = uri.getPathSegments().get(FeedContract.PreviewEntry.PREVIEW_ID_PATH_POSITION);
@@ -323,6 +353,8 @@ public class FeedProvider extends ContentProvider {
       case CREATOR:
         return FeedContract.CreatorEntry.CONTENT_TYPE;
       case CREATOR_ID:
+        return FeedContract.CreatorEntry.CONTENT_ITEM_TYPE;
+      case CREATOR_AUTHOR:
         return FeedContract.CreatorEntry.CONTENT_ITEM_TYPE;
       case TAG:
         return FeedContract.TagEntry.CONTENT_TYPE;
@@ -429,6 +461,11 @@ public class FeedProvider extends ContentProvider {
       }
       case CREATOR_ID: {
         retCursor = getCreatorById(uri, projection, selection, selectionArgs, sortOrder);
+        break;
+      }
+
+      case CREATOR_AUTHOR: {
+        retCursor = getIdCreatorByAuthor(uri, projection, sortOrder);
         break;
       }
       case TAG: {

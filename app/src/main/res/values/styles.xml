@@ -11,17 +11,24 @@
   <!--main activity toolbar style-->
 
   <style name="Toolbar" parent="Theme.AppCompat.NoActionBar">
-    <item name="android:background">?attr/colorPrimary</item>
+    <item name="android:background">@color/primary</item>
     <item name="popupTheme">@style/Theme.AppCompat.Light</item>
     <item name="android:textColorPrimary">@color/white</item>
   </style>
   <!--Toolbar Profile Fragment-->
   <style name="MyToolbarStyle">
     <item name="android:maxHeight">@dimen/abc_action_bar_default_height_material</item>
-    <item name="android:background">@color/primary</item>
+    <item name="android:background">?attr/colorPrimary</item>
     <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     <item name="titleTextAppearance">@style/TextAppearance.AppCompat.Title</item>
+  </style>
 
+  <!--CollapsingToolbar Profile Fragment-->
+  <style name="CollapsingToolbarStyle">
+    <item name="android:background">@color/white</item>
+    <item name="android:maxHeight">@dimen/abc_action_bar_default_height_material</item>
+    <item name="popupTheme">@style/Theme.AppCompat.Light.NoActionBar</item>
+    <item name="titleTextAppearance">@style/TextAppearance.AppCompat.Title</item>
   </style>
 
   <!--Button-->

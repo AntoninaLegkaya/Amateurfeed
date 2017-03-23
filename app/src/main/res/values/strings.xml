@@ -14,18 +14,18 @@
   <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBo08owLuBT5YewWZlocnZzIRgelXQIWbw</string>
 
   <!--Login Screen-->
-  <string name="ok_button">Ok</string>
+  <string name="ok_button">OK</string>
   <string name="link_sign_up_screen"><u>Sign up</u></string>
   <string name="login">E-mail</string>
 
-  <string name="lable_sign_up">If you do not registered</string>
-  <string name="lable_toolbar_login_in">Login in</string>
+  <string name="label_sign_up">If you do not registered</string>
+  <string name="label_toolbar_login_in">Login in</string>
 
   <!--Sign Up Screen-->
-  <string name="lable_already_sign_up">Already have en account? </string>
+  <string name="label_already_sign_up">Already have en account? </string>
   <string name="link_login_screen"><u>Login In</u></string>
 
-  <string name="lable_toolbar_sign_up">Sign Up</string>
+  <string name="label_toolbar_sign_up">Sign Up</string>
   <string name="sign_up_button">Registrate</string>
 
   <string name="fullname">Name (required)</string>

@@ -68,6 +68,7 @@ public class UserNewsPreviewFragment extends Fragment {
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(null);
     Bundle arguments = getArguments();
     if (arguments != null) {
       userNewsModel = arguments.getParcelable("model");

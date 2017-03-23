@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/activity_link_margin"
-            android:text="@string/lable_sign_up"
+            android:text="@string/label_sign_up"
             android:textColor="@color/secondary_text"
            />
 

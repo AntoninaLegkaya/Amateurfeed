@@ -258,26 +258,21 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     if (getLoaderManager().getLoader(NEWS_LOADER) != null) {
       getLoaderManager().restartLoader(NEWS_LOADER, null, this);
     }
-
   }
 
 
   @Override
   public void onClick(View view) {
-
   }
 
   private void updateEmptyView() {
-
     if (mPreviewAdapter.getItemCount() == 0) {
       TextView tv = (TextView) getView().findViewById(R.id.recycle_feed_empty);
       if (null != tv) {
         int message = R.string.empty_feed_list;
         tv.setText(message);
       }
-
     }
-
   }
 
   @Override

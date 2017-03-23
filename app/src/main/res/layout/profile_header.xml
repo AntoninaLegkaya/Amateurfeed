@@ -46,18 +46,20 @@
       app:layout_columnWeight="1"
       app:layout_gravity="top|right"
       app:layout_rowSpan="3" />
+
     <ImageView
       android:id="@+id/divider"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingTop="0.5dp"
-      android:paddingBottom="0.5dp"
+      android:paddingTop="1dp"
+      android:paddingBottom="1dp"
       android:background="@color/app_black"
       android:gravity="center"
       android:src="@drawable/line_horizontal"
       app:layout_columnSpan="3"
       app:layout_columnWeight="1"
-      android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"/>
+      android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+     />
   </android.support.v7.widget.GridLayout>
 
 </android.support.design.widget.CoordinatorLayout>
