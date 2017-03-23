@@ -65,6 +65,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   public static final String USER_PREFERNCES_TAG = "UPTAG";
   public static final String CHANGE_PASSWORD_TAG = "CHPTAG";
   public static final String MANAGE_FRAGMENTS = "ManageFragments";
+  public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
   static final int REQUEST_IMAGE_CAPTURE = 1;
   public static int RESULT_LOAD_IMAGE = 1;
   private static String TAG = HomeActivity.class.getName();
@@ -119,6 +120,13 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     setContentView(R.layout.home_activity);
     mPresenter = new HomePresenter();
     mPresenter.getNews(0, 5);
+    if (getIntent().getExtras() != null) {
+      for (String key : getIntent().getExtras().keySet()) {
+        Object value = getIntent().getExtras().get(key);
+        Log.d(TAG, "Key: " + key + " Value: " + value);
+      }
+    }
+
     mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
     mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
     addTab(BottomTab.HOME);

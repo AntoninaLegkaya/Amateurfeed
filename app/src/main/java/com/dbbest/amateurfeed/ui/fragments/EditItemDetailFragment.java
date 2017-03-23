@@ -86,7 +86,6 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
 
   public static EditItemDetailFragment newInstance(String key) {
     EditItemDetailFragment fragment = new EditItemDetailFragment();
-
     Bundle bundle = new Bundle();
     bundle.putString(PARAM_KEY, key);
     fragment.setArguments(bundle);
@@ -116,10 +115,8 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
   public boolean onOptionsItemSelected(MenuItem item) {
     String upTitle = null;
     String upDescription = null;
-
     switch (item.getItemId()) {
       case android.R.id.home:
-
         ((Callback) getActivity()).moveToFeedFragment();
         return true;
       case R.id.action: {
@@ -573,7 +570,6 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
           .bulkInsert(FeedContract.CommentEntry.CONTENT_URI, cvArray);
     }
     refreshItemDetailsFragmentLoader();
-//    mCommentsAdapter.notifyDataSetChanged();
   }
 
   private int getCreatorId() {
