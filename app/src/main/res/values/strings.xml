@@ -46,6 +46,7 @@
 
   <!--Setting Screen-->
   <string name="label_activity_settings">Settings</string>
+  <string name="checkbox_preference" translatable="false">checkbox_preference</string>
 
   <!--Dialog-->
   <string name="cancel">Cancel</string>
@@ -73,6 +74,7 @@
   <string name="startEditProfile" translatable="false">startEditProfile</string>
   <string name="startChangePassword" translatable="false">startChangePassword</string>
   <string name="startLogout" translatable="false">logout</string>
+  <string name="notifier_push">Check Push Notification</string>
 
   <!--Edit Profile Screen-->
   <string name="edit_profile_toolbar_label">Edit Profile</string>

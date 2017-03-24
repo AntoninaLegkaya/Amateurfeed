@@ -100,11 +100,20 @@
         android:resource="@xml/filepaths" />
     </provider>
 
-
     <service
       android:exported="false"
       android:name="com.dbbest.amateurfeed.app.net.command.ExecutionService" />
 
+    <!-- Declaring Service in Manifest -->
+    <service
+      android:exported="false"
+      android:name=".app.azur.service.BlobUploadService" />
+    <service
+      android:exported="false"
+      android:name="com.dbbest.amateurfeed.utils.location.service.GeocodeService" />
+    <service
+      android:exported="false"
+      android:name=".data.sync.ContinuousSyncService" />
 
     <!-- SyncAdapter's dummy authentication service -->
     <service android:name="com.dbbest.amateurfeed.data.sync.AmateurfeedAuthenticatorService">
@@ -116,20 +125,11 @@
         android:resource="@xml/authenticator" />
     </service>
 
-
-    <!-- Declaring Service in Manifest -->
-    <service
-      android:exported="false"
-      android:name=".app.azur.service.BlobUploadService" />
-
-    <service
-      android:exported="false"
-      android:name="com.dbbest.amateurfeed.utils.location.service.GeocodeService" />
-
     <!-- The SyncAdapter service -->
     <service
       android:exported="true"
-      android:name="com.dbbest.amateurfeed.data.sync.AmateurfeedSyncService">
+      android:name="com.dbbest.amateurfeed.data.sync.AmateurfeedSyncService"
+      android:process=":sync">
       <intent-filter>
         <action android:name="android.content.SyncAdapter" />
       </intent-filter>

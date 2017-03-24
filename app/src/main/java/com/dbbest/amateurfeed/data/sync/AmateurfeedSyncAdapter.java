@@ -6,33 +6,42 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
 import android.util.Log;
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
+import com.dbbest.amateurfeed.app.net.command.Command;
+import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
+import com.dbbest.amateurfeed.app.net.command.UpdateNewsCommand;
+import com.dbbest.amateurfeed.data.FeedContract;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
+public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implements
+    CommandResultReceiver.CommandListener {
 
-  // Interval at which to sync with the weather, in seconds.
+  // Interval at which to sync with the news, in seconds.
   // 60 seconds (1 minute) * 180 = 3 hours
-  public static final int SYNC_INTERVAL = 60 * 180;
+  public static final int SYNC_INTERVAL = 60;
   public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
-  public static final String ACTION_DATA_UPDATED = "com.example.antonina.less12.app.ACTION_DATA_UPDATED";
   final public static int PREVIEW_STATUS_OK = 0;
   final public static int PREVIEW_STATUS_SERVER_DOWN = 1;
   final public static int PREVIEW_STATUS_SERVER_INVALID = 2;
   final public static int PREVIEW_STATUS_UNKNOWN = 3;
   final public static int PREVIEW_STATUS_INVALID = 4;
-  private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-  private static final int WEATHER_NOTIFICATION_ID = 3004;
-  public final String LOG_TAG = AmateurfeedSyncAdapter.class.getSimpleName();
-  private NewsResponseModel responceNews;
+  private static final String TAG = AmateurfeedSyncAdapter.class.getSimpleName();
+  private static final int NEWS_NOTIFICATION_ID = 3004;
+  private static final int CODE_GET_NEWS = 0;
+  private CommandResultReceiver mResultReceiver;
+
 
   public AmateurfeedSyncAdapter(Context context, boolean autoInitialize) {
     super(context, autoInitialize);
@@ -41,7 +50,8 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
   /**
    * Helper method to schedule the sync adapter periodic execution
    */
-  public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+  public static void configurePeriodicSync(Context context, int syncInterval,
+      int flexTime) {
     Account account = getSyncAccount(context);
     String authority = context.getString(R.string.content_authority);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -68,6 +78,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
     ContentResolver.requestSync(getSyncAccount(context),
         context.getString(R.string.content_authority), bundle);
+    Log.i(TAG, "Sync immediately. App get Push notification ");
   }
 
   /**
@@ -89,7 +100,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // If the password doesn't exist, the account doesn't exist
     if (null == accountManager.getPassword(newAccount)) {
-
+      Log.i(TAG, "Password: " + accountManager.getPassword(newAccount));
         /*
          * Add the account and account type, no password or user data
          * If successful, return the Account object, otherwise report an error.
@@ -103,7 +114,6 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
              * then call ContentResolver.setIsSyncable(account, AUTHORITY, 1)
              * here.
              */
-
       onAccountCreated(newAccount, context);
     }
     return newAccount;
@@ -118,6 +128,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
+    Log.i(TAG, "Account: " + newAccount.toString());
     ContentResolver
         .setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
 
@@ -134,9 +145,46 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
   @Override
   public void onPerformSync(Account account, Bundle extras, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
-    Log.d(LOG_TAG, "Starting sync");
 
-    //TODO Do Retrofit Request to Get new Data
+    if (checkPref()) {
+      Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
+      Cursor cursor = App.instance().getContentResolver().query(
+          previewListUri,
+          null,
+          null,
+          null,
+          null
+      );
+      if (cursor.moveToFirst()) {
+        Command command = new UpdateNewsCommand(0, cursor.getCount());
+        command.send(CODE_GET_NEWS, mResultReceiver);
+      }
+      Log.i(TAG, "Thread transfer data Server<--->Device");
+    } else {
+      Log.i(TAG, App.instance().getApplicationContext().getString(R.string.notifier_push));
+    }
+  }
+
+  @Override
+  public void onSuccess(int code, Bundle data) {
+    Log.i(TAG, "Updated data by sync");
+    ((Callback) getContext()).refreshFeed();
+  }
+
+  @Override
+  public void onFail(int code, Bundle data) {
+    Log.e(TAG, "Not Updated data by sync");
+  }
+
+  @Override
+  public void onProgress(int code, Bundle data, int progress) {
+  }
+
+  private boolean checkPref() {
+    SharedPreferences mySharedPreferences = PreferenceManager
+        .getDefaultSharedPreferences(App.instance().getApplicationContext());
+    return mySharedPreferences
+        .getBoolean(App.instance().getString(R.string.checkbox_preference), true);
 
   }
 
@@ -145,5 +193,10 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter {
       PREVIEW_STATUS_UNKNOWN, PREVIEW_STATUS_INVALID})
   public @interface PreviewStatus {
 
+  }
+
+  public interface Callback {
+
+    void refreshFeed();
   }
 }

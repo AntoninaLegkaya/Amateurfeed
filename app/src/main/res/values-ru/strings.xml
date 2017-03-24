@@ -88,4 +88,6 @@
     <string name="input_curr_password_error">Неверно введен текущий пароль</string>
     <string name="input_confirm_password_error">Неверно введен подтвержающий пароль</string>
   <string name="pass_confirm_password_error">Новый и подствержающий пароли не совпадают</string>
+  <string name="input_password_length_error">Длина пароля должа быть не меньше 6 символов</string>
+  <string name="notifier_push">Проверьте включены ли уведомления</string>
 </resources>

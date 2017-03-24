@@ -1,27 +1,34 @@
 package com.dbbest.amateurfeed.app.fcm;
 
+import static com.dbbest.amateurfeed.data.sync.AmateurfeedSyncAdapter.syncImmediately;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.content.CursorLoader;
 import android.util.Log;
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.sync.AmateurfeedSyncAdapter;
 import com.dbbest.amateurfeed.ui.activity.HomeActivity;
+import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+  public static final int NOTIFICATION_ID = 1;
   private static final String TAG = "MyGcmListenerService";
   private static final String EXTRA_DATA = "data";
   private static final String EXTRA_WEATHER = "weather";
   private static final String EXTRA_LOCATION = "location";
-  public static final int NOTIFICATION_ID = 1;
-
 
   @Override
   public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -35,14 +42,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
     // [END_EXCLUDE]
 
-    // TODO(developer): Handle FCM messages here.
-    // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-    Log.d(TAG, "From: " + remoteMessage.getFrom());
-
     // Check if message contains a data payload.
     if (remoteMessage.getData().size() > 0) {
       Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+
+
     }
+    syncImmediately(App.instance().getApplicationContext());
 
     // Check if message contains a notification payload.
     if (remoteMessage.getNotification() != null) {

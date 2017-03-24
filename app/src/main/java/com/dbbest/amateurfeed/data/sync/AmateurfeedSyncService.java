@@ -8,20 +8,19 @@ import android.util.Log;
 public class AmateurfeedSyncService extends Service {
 
   private static final Object sSyncAdapterLock = new Object();
-  private static AmateurfeedSyncAdapter sSunshineSyncAdapter = null;
+  private static AmateurfeedSyncAdapter sAmateurfeedSyncAdapter = null;
 
   @Override
   public void onCreate() {
-    Log.d("SunshineSyncService", "onCreate - SunshineSyncService");
     synchronized (sSyncAdapterLock) {
-      if (sSunshineSyncAdapter == null) {
-        sSunshineSyncAdapter = new AmateurfeedSyncAdapter(getApplicationContext(), true);
+      if (sAmateurfeedSyncAdapter == null) {
+        sAmateurfeedSyncAdapter = new AmateurfeedSyncAdapter(getApplicationContext(), true);
       }
     }
   }
 
   @Override
   public IBinder onBind(Intent intent) {
-    return sSunshineSyncAdapter.getSyncAdapterBinder();
+    return sAmateurfeedSyncAdapter.getSyncAdapterBinder();
   }
 }

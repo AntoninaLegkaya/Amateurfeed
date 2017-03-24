@@ -29,7 +29,7 @@ public class FeedDbHelper extends SQLiteOpenHelper {
     final String SQL_CREATE_PROFILE_USER_TABLE =
         "CREATE TABLE " + FeedContract.UserProfileEntry.TABLE_NAME + " (" +
             FeedContract.UserProfileEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            FeedContract.UserProfileEntry.COLUMN_FULL_NAME + " TEXT UNIQUE NOT NULL, " +
+            FeedContract.UserProfileEntry.COLUMN_FULL_NAME + " TEXT  NOT NULL, " +
             FeedContract.UserProfileEntry.COLUMN_EMAIL + " TEXT NOT NULL, " +
             FeedContract.UserProfileEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +
             FeedContract.UserProfileEntry.COLUMN_SKYPE + " TEXT NOT NULL, " +
@@ -41,15 +41,14 @@ public class FeedDbHelper extends SQLiteOpenHelper {
     final String SQL_CREATE_COMMENT_USER_TABLE =
         "CREATE TABLE " + FeedContract.CommentEntry.TABLE_NAME + " (" +
             FeedContract.CommentEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-
             FeedContract.CommentEntry.COLUMN_POST_ID + " INTEGER NOT NULL, " +
             FeedContract.CommentEntry.COLUMN_CREATOR_KEY + " INTEGER NOT NULL, " +
             FeedContract.CommentEntry.COLUMN_BODY + " TEXT  NOT NULL, " +
             FeedContract.CommentEntry.COLUMN_PARENT_COMMENT_ID + " INTEGER NOT NULL, " +
-            FeedContract.CommentEntry.COLUMN_CREATE_DATE + " TEXT  NOT NULL, " +
-            // Set up the creator column as a foreign key to creator table.
-            " FOREIGN KEY (" + FeedContract.CommentEntry.COLUMN_CREATOR_KEY + ") REFERENCES " +
-            FeedContract.CreatorEntry.TABLE_NAME + " (" + FeedContract.CreatorEntry._ID + ")" +
+            FeedContract.CommentEntry.COLUMN_CREATE_DATE + " TEXT  NOT NULL " +
+//            // Set up the creator column as a foreign key to creator table.
+//            " FOREIGN KEY (" + FeedContract.CommentEntry.COLUMN_CREATOR_KEY + ") REFERENCES " +
+//            FeedContract.CreatorEntry.TABLE_NAME + " (" + FeedContract.CreatorEntry._ID + ")" +
 
             ");";
 
@@ -78,9 +77,9 @@ public class FeedDbHelper extends SQLiteOpenHelper {
     final String SQL_CREATE_CREATOR_TABLE =
         "CREATE TABLE " + FeedContract.CreatorEntry.TABLE_NAME + " (" +
             FeedContract.CreatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            FeedContract.CreatorEntry.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
+            FeedContract.CreatorEntry.COLUMN_NAME + " TEXT  NOT NULL, " +
             FeedContract.CreatorEntry.COLUMN_IS_ADMIN + " INTEGER NOT NULL," +
-            FeedContract.CreatorEntry.COLUMN_IMAGE + " TEXT UNIQUE  " +
+            FeedContract.CreatorEntry.COLUMN_IMAGE + " TEXT   " +
             ");";
 
     final String SQL_CREATE_PREVIEW_TAG_TABLE =

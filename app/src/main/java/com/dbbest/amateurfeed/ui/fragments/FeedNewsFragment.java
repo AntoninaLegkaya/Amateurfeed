@@ -100,8 +100,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
   public static final int COL_CREATOR_IMAGE = 3;
 
 
-
-
   private static final String PARAM_KEY = "param_key";
   private static final int NEWS_LOADER = 0;
   private static final String SELECTED_KEY = "selected_position";
@@ -290,12 +288,8 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
     Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
-
-    // Sort order:  Ascending, by .
     String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
-    Log.i(FEED_FRAGMENT, "Query to  DB get Preview Table All items");
     return new CursorLoader(getActivity(),
         previewListUri,
         PREVIEW_COLUMNS,
@@ -307,15 +301,11 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
     mPreviewAdapter.swapCursor(data);
-
     updateEmptyView();
     if (data.getCount() == 0) {
       getActivity().supportStartPostponedEnterTransition();
-
     } else {
-
       mRecyclerView.getViewTreeObserver()
           .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override

@@ -23,6 +23,15 @@ public class FeedProvider extends ContentProvider {
   public static final String sPreviewSelectionId =
       FeedContract.PreviewEntry.TABLE_NAME +
           "." + FeedContract.PreviewEntry._ID;
+  public static final String sTagSelection =
+      FeedContract.TagEntry.TABLE_NAME +
+          "." + FeedContract.TagEntry._ID + " = ? ";
+  public static final String sCommentSelection =
+      FeedContract.CommentEntry.TABLE_NAME +
+          "." + FeedContract.CommentEntry._ID + " = ? ";
+  public static final String sCreatorSelection =
+      FeedContract.CreatorEntry.TABLE_NAME +
+          "." + FeedContract.CreatorEntry._ID + " = ? ";
   static final int PREVIEW = 100;
   static final int PREVIEW_ID = 101;
   static final int PREVIEW_AUTHOR = 102;
@@ -48,9 +57,6 @@ public class FeedProvider extends ContentProvider {
   private static final SQLiteQueryBuilder sCreatorByIdQueryBuilder;
   private static final SQLiteQueryBuilder sCreatorByAuthorQueryBuilder;
   private static final SQLiteQueryBuilder sCommentByIdQueryBuilder;
-  private static final String sCreatorSelection =
-      FeedContract.CreatorEntry.TABLE_NAME +
-          "." + FeedContract.CreatorEntry._ID + " = ? ";
   private static final String sCreatorSelectionByAuthorName =
       FeedContract.CreatorEntry.TABLE_NAME +
           "." + CreatorEntry.COLUMN_NAME + " = ? ";
@@ -61,9 +67,6 @@ public class FeedProvider extends ContentProvider {
   private static final String sPreviewSelectionAuthor =
       FeedContract.PreviewEntry.TABLE_NAME +
           "." + FeedContract.PreviewEntry.COLUMN_AUTHOR + " = ? ";
-  private static final String sCommentSelection =
-      FeedContract.CommentEntry.TABLE_NAME +
-          "." + FeedContract.CommentEntry._ID + " = ? ";
   public static long TEST_TAG_ID = 1;
   public static String TEST_TAG_AUTHOR = "Tony";
   public static long TEST_ID = 1;
@@ -303,7 +306,7 @@ public class FeedProvider extends ContentProvider {
     selectionArgs = new String[]{author};
     selection = sCreatorSelectionByAuthorName;
 
-    return  sCreatorByAuthorQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+    return sCreatorByAuthorQueryBuilder.query(mOpenHelper.getReadableDatabase(),
         projection,
         selection,
         selectionArgs,
@@ -376,7 +379,6 @@ public class FeedProvider extends ContentProvider {
     Cursor retCursor;
     switch (sUriMatcher.match(uri)) {
       case PREVIEW: {
-        Log.i(TAG_LOG, "Query Get All Data from preview.table by SELECTION = " + selection);
         retCursor = mOpenHelper.getReadableDatabase().query(
             FeedContract.PreviewEntry.TABLE_NAME,
             projection,
@@ -387,8 +389,6 @@ public class FeedProvider extends ContentProvider {
             sortOrder
 
         );
-        Log.i(TAG_LOG,
-            "Query Get All Data from preview.table retCursor= " + retCursor.moveToFirst());
         break;
       }
       case PREVIEW_ID: {

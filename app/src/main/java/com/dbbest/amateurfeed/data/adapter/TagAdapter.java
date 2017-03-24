@@ -46,7 +46,7 @@ public class TagAdapter extends CursorRecyclerAdapter<TagViewHolder> {
             .foramatTagName(App.instance().getApplicationContext(),
                 cursor.getString(FeedNewsFragment.COL_TAG_NAME));
         holder.mTagName.setText(tag);
-        Log.i(TAG, "Set Tag to List:   " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
+//        Log.i(TAG, "Set Tag to List:   " + cursor.getString(FeedNewsFragment.COL_TAG_NAME));
       }
 
     }

@@ -4,9 +4,11 @@ import static com.dbbest.amateurfeed.R.id.imageView;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
@@ -26,6 +28,7 @@ import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter;
 import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
+import com.dbbest.amateurfeed.data.sync.AmateurfeedSyncAdapter;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
@@ -53,7 +56,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     WarningDialog.OnWarningDialogListener, FeedNewsFragment.Callback,
     BaseEditDetailFragment.Callback, SearchFragment.Callback,
     ItemNewsAdapter.ShowItemDetailsCallback, EditProfileFragment.Callback,
-    ProfileFragment.ProfileShowDetails {
+    ProfileFragment.ProfileShowDetails, AmateurfeedSyncAdapter.Callback {
 
   public static final String FEED_NEWS_FRAGMENT_TAG = "FNFTAG";
   public static final String DETAIL_NEWS_FRAGMENT_TAG = "DNFTAG";
@@ -148,7 +151,10 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
       backStacks.put(BottomTab.PREFERENCES, new Stack<String>());
       backStacks.put(BottomTab.CHANGE_PASSWORD, new Stack<String>());
     }
+
+    AmateurfeedSyncAdapter.initializeSyncAdapter(this);
   }
+
 
   @Override
   public void onTabChanged(String tabTag) {

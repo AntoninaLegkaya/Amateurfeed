@@ -1,11 +1,14 @@
 package com.dbbest.amateurfeed.ui.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.ui.navigator.UiActivityNavigation;
 
@@ -47,6 +50,7 @@ public class SplashActivity extends AppCompatActivity {
 
   private void nextScreen() {
     AuthToken authToken = new AuthToken();
+    loadPref();
     Intent intent;
     if (authToken.isValid()) {
       intent = UiActivityNavigation.homeActivity(SplashActivity.this);
@@ -55,5 +59,13 @@ public class SplashActivity extends AppCompatActivity {
     }
     startActivity(intent);
     finish();
+  }
+
+  private void loadPref() {
+    SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+    boolean my_checkbox_preference = mySharedPreferences
+        .getBoolean(getString(R.string.checkbox_preference), true);
+
   }
 }
