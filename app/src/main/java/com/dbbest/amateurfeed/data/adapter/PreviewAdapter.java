@@ -113,7 +113,7 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
 
     String fullName =
         cursor.getString(FeedNewsFragment.COL_AUTHOR);
-    holder.mFullNameView.setText(fullName + String.valueOf(mIdPreview));
+    holder.mFullNameView.setText(fullName);
 
     String description = cursor.getString(FeedNewsFragment.COL_TEXT);
     if (description != null) {
