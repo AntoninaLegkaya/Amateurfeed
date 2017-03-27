@@ -29,6 +29,7 @@ import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter;
 import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.data.sync.AmateurfeedSyncAdapter;
+import com.dbbest.amateurfeed.data.sync.TimerReceiverSyncInterval;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.HomePresenter;
 import com.dbbest.amateurfeed.ui.dialog.WarningDialog;
@@ -153,6 +154,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     }
 
     AmateurfeedSyncAdapter.initializeSyncAdapter(this);
+//    TimerReceiverSyncInterval.scheduleAlarms(this);
   }
 
 

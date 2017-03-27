@@ -29,7 +29,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
 
   // Interval at which to sync with the news, in seconds.
   // 60 seconds (1 minute) * 180 = 3 hours
-  public static final int SYNC_INTERVAL = 60;
+  public static final int SYNC_INTERVAL = 5;
   public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
   final public static int PREVIEW_STATUS_OK = 0;
   final public static int PREVIEW_STATUS_SERVER_DOWN = 1;

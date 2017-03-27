@@ -45,10 +45,10 @@ public class FeedDbHelper extends SQLiteOpenHelper {
             FeedContract.CommentEntry.COLUMN_CREATOR_KEY + " INTEGER NOT NULL, " +
             FeedContract.CommentEntry.COLUMN_BODY + " TEXT  NOT NULL, " +
             FeedContract.CommentEntry.COLUMN_PARENT_COMMENT_ID + " INTEGER NOT NULL, " +
-            FeedContract.CommentEntry.COLUMN_CREATE_DATE + " TEXT  NOT NULL " +
+            FeedContract.CommentEntry.COLUMN_CREATE_DATE + " TEXT  NOT NULL, " +
 //            // Set up the creator column as a foreign key to creator table.
-//            " FOREIGN KEY (" + FeedContract.CommentEntry.COLUMN_CREATOR_KEY + ") REFERENCES " +
-//            FeedContract.CreatorEntry.TABLE_NAME + " (" + FeedContract.CreatorEntry._ID + ")" +
+            " FOREIGN KEY (" + FeedContract.CommentEntry.COLUMN_CREATOR_KEY + ") REFERENCES " +
+            FeedContract.CreatorEntry.TABLE_NAME + " (" + FeedContract.CreatorEntry._ID + ")" +
 
             ");";
 

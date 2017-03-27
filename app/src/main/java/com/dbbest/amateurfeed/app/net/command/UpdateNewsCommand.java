@@ -108,13 +108,14 @@ public class UpdateNewsCommand extends Command {
             tagValues.put(FeedContract.TagEntry.COLUMN_NAME, mNameTag);
             tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, _id);
             try {
-              App.instance().getContentResolver()
-                  .insert(FeedContract.TagEntry.CONTENT_URI, tagValues);
-            } catch (Exception e) {
-              Log.e(TAG, "This tag row already exist! try to update it");
+
               App.instance().getContentResolver()
                   .update(FeedContract.TagEntry.CONTENT_URI, tagValues, FeedProvider.sTagSelection,
                       new String[]{String.valueOf(_id)});
+            } catch (Exception e) {
+              Log.e(TAG, "This tag not exist! try to insert it");
+              App.instance().getContentResolver()
+                  .insert(FeedContract.TagEntry.CONTENT_URI, tagValues);
             }
 
 

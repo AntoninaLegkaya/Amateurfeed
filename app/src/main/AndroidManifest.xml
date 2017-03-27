@@ -111,9 +111,6 @@
     <service
       android:exported="false"
       android:name="com.dbbest.amateurfeed.utils.location.service.GeocodeService" />
-    <service
-      android:exported="false"
-      android:name=".data.sync.ContinuousSyncService" />
 
     <!-- SyncAdapter's dummy authentication service -->
     <service android:name="com.dbbest.amateurfeed.data.sync.AmateurfeedAuthenticatorService">
@@ -152,7 +149,16 @@
       </intent-filter>
     </service>
     <!-- [END firebase_iid_service] -->
+    <receiver
+      android:enabled="true"
+      android:name="com.dbbest.amateurfeed.data.sync.TimerReceiverSyncInterval">
+      <intent-filter android:priority="999">
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+      </intent-filter>
+    </receiver>
 
+    <service android:name="com.dbbest.amateurfeed.data.sync.NotificationServiceSyncInterval"/>
 
   </application>
 
