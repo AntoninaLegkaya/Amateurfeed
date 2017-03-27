@@ -6,14 +6,12 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
 import android.util.Log;
 import com.dbbest.amateurfeed.App;
@@ -22,6 +20,7 @@ import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.UpdateNewsCommand;
 import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.utils.Utils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -145,8 +144,8 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
   @Override
   public void onPerformSync(Account account, Bundle extras, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
-
-    if (checkPref()) {
+    boolean displayNotifications = Utils.checkNotificationPref();
+    if (displayNotifications) {
       Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
       Cursor cursor = App.instance().getContentResolver().query(
           previewListUri,
@@ -180,13 +179,6 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
   public void onProgress(int code, Bundle data, int progress) {
   }
 
-  private boolean checkPref() {
-    SharedPreferences mySharedPreferences = PreferenceManager
-        .getDefaultSharedPreferences(App.instance().getApplicationContext());
-    return mySharedPreferences
-        .getBoolean(App.instance().getString(R.string.checkbox_preference), true);
-
-  }
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({PREVIEW_STATUS_OK, PREVIEW_STATUS_SERVER_DOWN, PREVIEW_STATUS_SERVER_INVALID,

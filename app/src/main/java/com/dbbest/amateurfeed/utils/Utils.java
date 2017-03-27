@@ -5,14 +5,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.format.Time;
+import android.util.Log;
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
+import com.dbbest.amateurfeed.ui.fragments.PreferFragment;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +37,7 @@ public class Utils {
   public static final String TAG_LOG_LOAD_NEW_DATA = "Get news";
   public static final String DATE_FORMAT = "yyyyMMdd";
   public static final int MY_PERMISSIONS_REQUEST_STORAGE = 123;
+  private static final String TAG = Utils.class.getName();
   private static final Pattern EMAIL_PATTERN = Pattern.compile(
       "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
           "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
@@ -312,7 +318,6 @@ public class Utils {
     }
   }
 
-
   public static String getCurrentTime() {
     Calendar c = Calendar.getInstance();
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -321,5 +326,23 @@ public class Utils {
 
   public static boolean isValid(LatLng location) {
     return location.latitude != 0.0d && location.longitude != 0.0d;
+  }
+
+  public static boolean checkNotificationPref() {
+    SharedPreferences prefs =
+        getDefaultSharedPreferencesMultiProcess(App.instance().getApplicationContext());
+    String displayNotificationsKey = App.instance().getApplicationContext()
+        .getString(R.string.pref_enable_notifications_key);
+    boolean displayNotifications = prefs.getBoolean(displayNotificationsKey,
+        Boolean.parseBoolean(App.instance().getApplicationContext()
+            .getString(R.string.pref_enable_notifications_default)));
+    Log.i(TAG, "Check notification push message: " + displayNotifications);
+    return displayNotifications;
+  }
+  public static SharedPreferences getDefaultSharedPreferencesMultiProcess(
+      Context context) {
+    return context.getSharedPreferences(
+        context.getPackageName() + "_preferences",
+        Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
   }
 }

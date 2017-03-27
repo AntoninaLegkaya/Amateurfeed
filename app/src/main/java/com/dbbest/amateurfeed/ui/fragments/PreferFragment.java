@@ -5,14 +5,15 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.Preference.OnPreferenceChangeListener;
 import android.support.v7.preference.Preference.OnPreferenceClickListener;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.dbbest.amateurfeed.App;
@@ -20,14 +21,17 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.PreferencePresenter;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment.ProfileShowDetails;
 import com.dbbest.amateurfeed.ui.navigator.UiActivityNavigation;
+import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.PreferenceView;
 
 
 public class PreferFragment extends PreferenceFragmentCompat implements PreferenceView,
     OnSharedPreferenceChangeListener {
 
+  public static final String PUSH_FILE_NAME = ".push";
   private PreferencePresenter mPresenter;
   private CheckBoxPreference prefNotification;
+  private String TAG = PreferFragment.class.getName();
 
   @Override
   public void onAttach(Context context) {
@@ -97,31 +101,39 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
 
     final Preference checkBoxPreference = getPreferenceManager().findPreference(
         getString(R.string.pref_enable_notifications_key));
-    boolean notifyFlag = checkNotificationPref();
+    boolean notifyFlag = Utils.checkNotificationPref();
     if (checkBoxPreference instanceof CheckBoxPreference) {
       prefNotification = (CheckBoxPreference) checkBoxPreference;
       prefNotification.setChecked(notifyFlag);
-      prefNotification.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+      prefNotification.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
         @Override
-        public boolean onPreferenceClick(Preference preference) {
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+          Log.i(TAG, " Push preference new variable: " + newValue);
+          if (preference instanceof CheckBoxPreference) {
+            SharedPreferences mySharedPreferences = Utils
+                .getDefaultSharedPreferencesMultiProcess(App.instance().getApplicationContext());
+            mySharedPreferences.edit()
+                .putBoolean(getString(R.string.checkbox_preference),
+                    (Boolean) newValue).apply();
+            Log.i(TAG, "Push preference enable: " + newValue);
+          }
           return true;
         }
       });
     }
   }
 
-
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (key.equals(getContext().getString(R.string.pref_enable_notifications_key))) {
-
       Preference exercisesPref = findPreference(key);
       if (exercisesPref instanceof CheckBoxPreference) {
-        SharedPreferences mySharedPreferences = PreferenceManager
-            .getDefaultSharedPreferences(App.instance().getApplicationContext());
-        mySharedPreferences.edit()
-            .putBoolean(getString(R.string.checkbox_preference),
-                prefNotification.isChecked()).apply();
+//        SharedPreferences mySharedPreferences = PreferenceManager
+//            .getDefaultSharedPreferences(App.instance().getApplicationContext());
+//        mySharedPreferences.edit()
+//            .putBoolean(getString(R.string.checkbox_preference),
+//                prefNotification.isChecked()).apply();
+//        Log.i(TAG, "Global Push preference enable: " + prefNotification.isChecked());
       }
     }
   }
@@ -158,10 +170,4 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
   }
 
 
-  private boolean checkNotificationPref() {
-    SharedPreferences mySharedPreferences = PreferenceManager
-        .getDefaultSharedPreferences(App.instance().getApplicationContext());
-    return mySharedPreferences.getBoolean(getString(R.string.checkbox_preference), true);
-
-  }
 }
