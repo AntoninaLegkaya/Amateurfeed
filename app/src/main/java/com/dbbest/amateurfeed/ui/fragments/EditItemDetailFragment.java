@@ -480,7 +480,6 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
       if (mCountLikes != null) {
         mCountIsLikes = Integer.parseInt(mCountLikes);
       }
-      if (mCountIsLikes >= 0) {
         if (mLikeButton.getTag() == "1") {
           isLikeFlag = 0;
           mLikeButton.setTag("0");
@@ -494,10 +493,6 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
         }
         mLikesCountView.setText(String.valueOf(mCountIsLikes));
         ((Callback) getActivity()).onLikeItemSelected(mUriPreview, isLikeFlag, mCountIsLikes);
-      } else {
-        mLikesCountView.setText(String.valueOf(0));
-        ((Callback) getActivity()).onLikeItemSelected(mUriPreview, 0, mCountIsLikes);
-      }
     }
   }
 

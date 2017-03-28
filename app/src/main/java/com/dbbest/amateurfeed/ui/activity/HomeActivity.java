@@ -364,25 +364,19 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
       mCountIsLikes = Integer.parseInt(mCountLikes);
     }
     mUriId = uri;
-    if (mCountIsLikes >= 0) {
-      if (vh.mLikeButton.getTag() == "1") {
-        isLikeFlag = 0;
-        vh.mLikeButton.setTag("0");
-        vh.mLikeButton.setImageResource(mDisLikeImage);
-        mCountIsLikes = mCountIsLikes - 1;
-      } else if (vh.mLikeButton.getTag() == "0") {
-        isLikeFlag = 1;
-        vh.mLikeButton.setTag("1");
-        vh.mLikeButton.setImageResource(mLikeImage);
-        mCountIsLikes = mCountIsLikes + 1;
-      }
-      vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
-      mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
-    } else {
-      Log.i(TAG, "Error in like clear All!");
-      vh.mLikesCountView.setText(String.valueOf(0));
-      mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), 0);
+    if (vh.mLikeButton.getTag() == "1") {
+      isLikeFlag = 0;
+      vh.mLikeButton.setTag("0");
+      vh.mLikeButton.setImageResource(mDisLikeImage);
+      mCountIsLikes = mCountIsLikes - 1;
+    } else if (vh.mLikeButton.getTag() == "0") {
+      isLikeFlag = 1;
+      vh.mLikeButton.setTag("1");
+      vh.mLikeButton.setImageResource(mLikeImage);
+      mCountIsLikes = mCountIsLikes + 1;
     }
+    vh.mLikesCountView.setText(String.valueOf(mCountIsLikes));
+    mPresenter.putLike(FeedContract.PreviewEntry.getIdFromUri(uri), isLikeFlag);
   }
 
   @Override
