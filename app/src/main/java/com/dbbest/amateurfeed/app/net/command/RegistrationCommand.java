@@ -3,6 +3,7 @@ package com.dbbest.amateurfeed.app.net.command;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
 import com.dbbest.amateurfeed.app.net.response.LoginResponseModel;
@@ -54,6 +55,10 @@ public class RegistrationCommand extends Command {
         LoginResponseModel data = response.data();
         AuthToken authToken = new AuthToken();
         authToken.update(data.getAccessToken());
+        authToken.updateFcmToken(mRegistrationRequest.getmDeviceToken());
+        authToken.updateDeviceId(mRegistrationRequest.getmDeviceId());
+        authToken.updateDeviceOs(mRegistrationRequest.getmOsType());
+        Log.i(TAG, authToken.toString());
         notifySuccess(Bundle.EMPTY);
       } else {
         notifyError(Bundle.EMPTY);

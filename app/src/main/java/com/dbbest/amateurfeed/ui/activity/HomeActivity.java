@@ -4,11 +4,9 @@ import static com.dbbest.amateurfeed.R.id.imageView;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
@@ -154,7 +152,8 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
     }
 
     AmateurfeedSyncAdapter.initializeSyncAdapter(this);
-//    TimerReceiverSyncInterval.scheduleAlarms(this);
+    TimerReceiverSyncInterval.scheduleAlarms(this);
+
   }
 
 

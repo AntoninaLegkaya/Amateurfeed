@@ -56,7 +56,7 @@ public interface RestApiServices {
       @Body ChangePasswordRequestModel request);
 
   @POST("account/device-info")
-  Call<Object> deviceInfo(@Header("Authorization") String token, @Body DeviceInfoModel infoModel);
+  Call<ResponseWrapper<Object>> deviceInfo(@Header("Authorization") String token, @Body DeviceInfoModel infoModel);
 
   @GET("account/logout")
   Call<ResponseWrapper<Object>> logout(@Header("Authorization") String token);

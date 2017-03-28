@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 import com.dbbest.amateurfeed.data.FeedContract.CreatorEntry;
+import com.dbbest.amateurfeed.data.FeedContract.TagEntry;
 import com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry;
 import java.util.HashMap;
 
@@ -23,9 +24,17 @@ public class FeedProvider extends ContentProvider {
   public static final String sPreviewSelectionId =
       FeedContract.PreviewEntry.TABLE_NAME +
           "." + FeedContract.PreviewEntry._ID;
+
   public static final String sTagSelection =
       FeedContract.TagEntry.TABLE_NAME +
-          "." + FeedContract.TagEntry._ID + " = ? ";
+          "." + FeedContract.TagEntry.COLUMN_TAG_ID + " = ? ";
+  public static final String sTagIdPreviewSelection =
+      FeedContract.TagEntry.TABLE_NAME +
+          "." + TagEntry.COLUMN_PREVIEW_ID + " = ? ";
+
+
+  public static final String sMultipleTagSelection =
+      sTagSelection + " AND " + sTagIdPreviewSelection;
   public static final String sCommentSelection =
       FeedContract.CommentEntry.TABLE_NAME +
           "." + FeedContract.CommentEntry._ID + " = ? ";

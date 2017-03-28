@@ -4,6 +4,7 @@ package com.dbbest.amateurfeed.app.net.command;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.LoginRequestModel;
 import com.dbbest.amateurfeed.app.net.request.RegistrationRequestModel;
@@ -54,6 +55,10 @@ public class LoginCommand extends Command {
         LoginResponseModel data = response.data();
         AuthToken authToken = new AuthToken();
         authToken.update(data.getAccessToken());
+        authToken.updateFcmToken(mLoginRequest.getmDeviceToken());
+        authToken.updateDeviceId(mLoginRequest.getmDeviceId());
+        authToken.updateDeviceOs(mLoginRequest.getmOsType());
+        Log.i(TAG, authToken.toString());
         notifySuccess(Bundle.EMPTY);
         CurrentUser user = new CurrentUser();
         user.setId(data.getUserId());

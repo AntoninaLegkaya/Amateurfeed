@@ -17,6 +17,7 @@ import com.dbbest.amateurfeed.app.net.response.NewsResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.model.AbuseModel;
 import com.dbbest.amateurfeed.model.AzureServiceSettings;
+import com.dbbest.amateurfeed.model.DeviceInfoModel;
 import com.dbbest.amateurfeed.model.Dictionary;
 import com.dbbest.amateurfeed.model.FeedCommentModel;
 import com.dbbest.amateurfeed.model.NewsCreateModel;
@@ -68,7 +69,6 @@ public class RestApiClient {
       return NetworkUtil.handleError(e);
     }
   }
-
 
   public ResponseWrapper<LoginResponseModel> registration(RegistrationRequestModel request) {
     return executeCall(mApiService.register(request));
@@ -143,7 +143,12 @@ public class RestApiClient {
     return executeCall(mApiService.logout(token));
   }
 
-  public ResponseWrapper<Object> changePassword(String token, ChangePasswordRequestModel requestModel) {
+  public ResponseWrapper<Object> changePassword(String token,
+      ChangePasswordRequestModel requestModel) {
     return executeCall(mApiService.changePassword(token, requestModel));
+  }
+
+  public ResponseWrapper<Object> updateDeviceInfo(String token, DeviceInfoModel requestModel) {
+    return executeCall(mApiService.deviceInfo(token, requestModel));
   }
 }

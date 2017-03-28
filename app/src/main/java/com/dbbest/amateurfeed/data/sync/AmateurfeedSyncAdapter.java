@@ -29,7 +29,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
 
   // Interval at which to sync with the news, in seconds.
   // 60 seconds (1 minute) * 180 = 3 hours
-  public static final int SYNC_INTERVAL = 5;
+  public static final int SYNC_INTERVAL = 60;
   public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
   final public static int PREVIEW_STATUS_OK = 0;
   final public static int PREVIEW_STATUS_SERVER_DOWN = 1;
@@ -77,7 +77,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
     ContentResolver.requestSync(getSyncAccount(context),
         context.getString(R.string.content_authority), bundle);
-    Log.i(TAG, "Sync immediately. App get Push notification ");
+    Log.i(TAG, "Sync immediately. ");
   }
 
   /**
@@ -122,7 +122,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
         /*
          * Since we've created an account
          */
-    AmateurfeedSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+    configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
 
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
@@ -144,8 +144,7 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
   @Override
   public void onPerformSync(Account account, Bundle extras, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
-    boolean displayNotifications = Utils.checkNotificationPref();
-    if (displayNotifications) {
+
       Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
       Cursor cursor = App.instance().getContentResolver().query(
           previewListUri,
@@ -157,11 +156,10 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
       if (cursor.moveToFirst()) {
         Command command = new UpdateNewsCommand(0, cursor.getCount());
         command.send(CODE_GET_NEWS, mResultReceiver);
+        cursor.close();
       }
       Log.i(TAG, "Thread transfer data Server<--->Device");
-    } else {
-      Log.i(TAG, App.instance().getApplicationContext().getString(R.string.notifier_push));
-    }
+
   }
 
   @Override

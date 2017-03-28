@@ -127,8 +127,6 @@ public class UserLocationProvider implements GoogleApiClient.ConnectionCallbacks
     if (mListener != null) {
       mListener.onUserLocationUpdated(location);
     }
-    // TODO: send new user location
-
   }
 
 

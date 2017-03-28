@@ -351,6 +351,8 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
             }
           });
     }
+
+
   }
 
   @Override

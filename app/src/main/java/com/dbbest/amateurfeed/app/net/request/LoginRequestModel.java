@@ -65,4 +65,16 @@ public class LoginRequestModel implements Parcelable {
     dest.writeString(mDeviceToken);
 
   }
+
+  public String getmDeviceId() {
+    return mDeviceId;
+  }
+
+  public String getmOsType() {
+    return mOsType;
+  }
+
+  public String getmDeviceToken() {
+    return mDeviceToken;
+  }
 }

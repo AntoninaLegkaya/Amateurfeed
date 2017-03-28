@@ -79,4 +79,16 @@ public class RegistrationRequestModel implements Parcelable {
     dest.writeString(mOsType);
     dest.writeString(mDeviceToken);
   }
+
+  public String getmDeviceId() {
+    return mDeviceId;
+  }
+
+  public String getmOsType() {
+    return mOsType;
+  }
+
+  public String getmDeviceToken() {
+    return mDeviceToken;
+  }
 }

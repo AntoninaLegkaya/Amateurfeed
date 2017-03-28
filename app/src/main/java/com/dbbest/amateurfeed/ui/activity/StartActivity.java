@@ -2,14 +2,17 @@ package com.dbbest.amateurfeed.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.dbbest.amateurfeed.BuildConfig;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.StartPresenter;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
@@ -23,6 +26,7 @@ import com.facebook.login.widget.LoginButton;
 
 public class StartActivity extends AppCompatActivity implements StartView {
 
+  private final String TAG = StartActivity.class.getName();
   private StartPresenter mPresenter;
   private LoginButton mFacebookLoginButton;
   private CallbackManager mCallbackManager;
@@ -41,12 +45,15 @@ public class StartActivity extends AppCompatActivity implements StartView {
     mLoginEdit = (AppCompatEditText) findViewById(R.id.login);
     mPasswordEdit = (AppCompatEditText) findViewById(R.id.password);
     mLoginBtn = (Button) findViewById(R.id.login_button);
+    final String deviceId = Secure.getString(
+        getApplicationContext().getContentResolver(),
+        Secure.ANDROID_ID);
+
     mLoginBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        mPresenter
-            .login(mLoginEdit.getText().toString(), mPasswordEdit.getText().toString(), null, null,
-                null);
+        mPresenter.login(mLoginEdit.getText().toString(), mPasswordEdit.getText().toString(),
+            deviceId,  getString(R.string.os_device),  BuildConfig.OPEN_FIREBASE_API_KEY);
       }
     });
     mCallbackManager = CallbackManager.Factory.create();
@@ -177,6 +184,7 @@ public class StartActivity extends AppCompatActivity implements StartView {
   public Context getContext() {
     return this;
   }
+
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {

@@ -2,6 +2,7 @@ package com.dbbest.amateurfeed.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.dbbest.amateurfeed.BuildConfig;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.SignUpPresenter;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
@@ -33,6 +35,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.sign_up);
+    final String deviceId = Secure.getString(
+        getApplicationContext().getContentResolver(),
+        Secure.ANDROID_ID);
     mPresenter = new SignUpPresenter();
     mEmailEditText = (AppCompatEditText) findViewById(R.id.email);
     mNameEditText = (AppCompatEditText) findViewById(R.id.fullname);
@@ -61,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
         mPresenter
             .registration(mEmailEditText.getText().toString(), mNameEditText.getText().toString(),
                 mPhoneEditText.getText().toString(), null, mPasswordEditText.getText().toString(),
-                null, "Android", null);
+                deviceId, getString(R.string.os_device), BuildConfig.OPEN_FIREBASE_API_KEY);
       }
     });
 

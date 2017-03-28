@@ -4,21 +4,17 @@ import static com.dbbest.amateurfeed.data.sync.AmateurfeedSyncAdapter.syncImmedi
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
-import android.support.v4.content.CursorLoader;
 import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.data.sync.AmateurfeedSyncAdapter;
 import com.dbbest.amateurfeed.ui.activity.HomeActivity;
-import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
+import com.dbbest.amateurfeed.utils.Utils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -48,12 +44,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     }
-    syncImmediately(App.instance().getApplicationContext());
+    boolean displayNotifications = Utils.checkNotificationPref();
+    if (displayNotifications) {
+      Log.i(TAG, "Sync immediately. Get Push notification");
+      syncImmediately(App.instance().getApplicationContext());
 
-    // Check if message contains a notification payload.
-    if (remoteMessage.getNotification() != null) {
-      Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-      sendNotification(remoteMessage.getNotification().getBody());
+      // Check if message contains a notification payload.
+      if (remoteMessage.getNotification() != null) {
+        Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        sendNotification(remoteMessage.getNotification().getBody());
+      }
+    } else {
+      Log.i(TAG, App.instance().getApplicationContext().getString(R.string.notifier_push));
     }
 
     // Also if you intend on generating your own notifications as a result of a received FCM
