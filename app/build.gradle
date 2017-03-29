@@ -1,5 +1,23 @@
-apply plugin: 'com.android.application'
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
 
+    dependencies {
+        // These docs use an open ended version so that our plugin
+        // can be updated quickly in response to Android tooling updates
+
+        // We recommend changing it to the latest version from our changelog:
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 def buildNumber() {
     if (project.hasProperty('buildNumber')) {
@@ -25,20 +43,17 @@ android {
 
     defaultConfig {
         def versionMajor = 0
-
         applicationId "com.dbbest.amateurfeed"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode versionMajor + buildNumberInt()
         versionName "${versionMajor}${buildNumber()}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
         multiDexEnabled true
-
-
     }
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -53,7 +68,7 @@ ext {
     multidex = '1.0.0'
     retrofit = '2.1.0'
     okhttp = '3.4.1'
-    googlePlaySevices = '10.2.0'
+    googlePlaySevices = '10.2.1'
     facebookSdk = '4.16.0'
     glide = '3.7.0'
     stetho = '1.4.1'
@@ -89,5 +104,8 @@ dependencies {
     compile "com.microsoft.azure.android:azure-storage-android:${azureStorage}"
 
     testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+        transitive = true;
+    }
 }
 apply plugin: 'com.google.gms.google-services'

@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import com.crashlytics.android.Crashlytics;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedContract;
@@ -46,6 +47,7 @@ import com.dbbest.amateurfeed.utils.BottomTab;
 import com.dbbest.amateurfeed.utils.Constants;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.HomeView;
+import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -120,6 +122,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.home_activity);
+    Fabric.with(this, new Crashlytics());
     mPresenter = new HomePresenter();
     mPresenter.getNews(0, 5);
     if (getIntent().getExtras() != null) {

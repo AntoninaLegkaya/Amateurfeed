@@ -160,6 +160,11 @@
 
     <service android:name="com.dbbest.amateurfeed.data.sync.NotificationServiceSyncInterval"/>
 
+    <meta-data
+      android:name="io.fabric.ApiKey"
+      android:value="cf7adbfb08e2d62a934d60dd2837a9a9439f6b6b"
+      />
+
   </application>
 
 </manifest>
