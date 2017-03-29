@@ -6,11 +6,11 @@
 ##
 ##############################################################################
 
-Variables for local build test
-BUILD_URL="http://jenkins:8080/view/Android/job/Android_HIMYNAMEIS"
-BUILD_ID="2016-02-11_14-07-21"
-BUILD_NUMBER="1"
-GIT_BRANCH="master"
+#Variables for local build test
+#BUILD_URL="http://jenkins:8080/view/Android/job/Android_HIMYNAMEIS"
+#BUILD_ID="2016-02-11_14-07-21"
+#BUILD_NUMBER="1"
+#GIT_BRANCH="master"
 
 typeset err_code
 echo "Build Url: $BUILD_URL"
@@ -30,8 +30,8 @@ branch="$(echo $GIT_BRANCH | sed 's .\{7\}  ')"
 build_type='unknown'
 
 chmod +x ./gradlew
-./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}"
-#./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}" crashlyticsUploadDistributionRelease
+#./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}"
+./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}" crashlyticsUploadDistributionRelease
 err_code=$?
 
 rm -rf build_results/
