@@ -8,3 +8,4 @@
 apk-output/
 .externalNativeBuild
 .DS_Store
+/build_results

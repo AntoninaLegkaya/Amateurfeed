@@ -21,14 +21,6 @@ repositories {
 
 def buildNumber() {
     if (project.hasProperty('buildNumber')) {
-        return "." + buildNumber
-    } else {
-        return ""
-    }
-}
-
-def buildNumberInt() {
-    if (project.hasProperty('buildNumber')) {
         return Integer.parseInt(buildNumber)
     } else {
         return 0
@@ -36,8 +28,6 @@ def buildNumberInt() {
 }
 
 android {
-
-
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion "${rootProject.ext.buildToolsVersion}"
 
@@ -46,8 +36,8 @@ android {
         applicationId "com.dbbest.amateurfeed"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode versionMajor + buildNumberInt()
-        versionName "${versionMajor}${buildNumber()}"
+        versionCode buildNumber()
+        versionName "${versionMajor}.${buildNumber()}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -56,6 +46,12 @@ android {
             debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            if (project.hasProperty('changeLog') && changeLog.length() > 0) {
+                ext.betaDistributionReleaseNotes = changeLog
+            }
+            ext.betaDistributionEmailsFilePath = "$project.rootDir/beta-distribution-emails.txt"
+            ext.betaDistributionNotifications = true
         }
     }
     buildTypes.each {
