@@ -30,8 +30,8 @@ branch="$(echo $GIT_BRANCH | sed 's .\{7\}  ')"
 build_type='unknown'
 
 chmod +x ./gradlew
-#./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}"
-./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}" crashlyticsUploadDistributionRelease
+./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}"
+#./gradlew clean assemble -PbuildNumber=${BUILD_NUMBER} -PchangeLog="${CHANGE_LOG}" crashlyticsUploadDistributionRelease
 err_code=$?
 
 rm -rf build_results/
