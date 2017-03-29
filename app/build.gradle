@@ -80,6 +80,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile project(path: ':common-library')
     compile "com.android.support:multidex:${multidex}"
     compile "com.android.support:preference-v14:${rootProject.ext.supportLibraryVersion}"
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
@@ -88,7 +89,6 @@ dependencies {
     compile "com.facebook.stetho:stetho-okhttp3:${stetho}"
     compile "com.squareup.okhttp3:logging-interceptor:${okhttp}"
     compile "com.facebook.android:facebook-android-sdk:${facebookSdk}"
-    compile project(path: ':common-library')
     compile "com.google.firebase:firebase-core:${googlePlaySevices}"
     compile "com.google.firebase:firebase-messaging:${googlePlaySevices}"
     compile "com.google.android.gms:play-services-location:${googlePlaySevices}"
