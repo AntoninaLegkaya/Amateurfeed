@@ -20,7 +20,7 @@
 
     <TextView
 
-        android:id="@+id/list_item_description"
+        android:id="@+id/text_description"
         android:layout_width="wrap_content"
         android:padding="@dimen/abc_list_item_padding_horizontal_material"
         android:textColor="@color/app_black"
@@ -39,7 +39,7 @@
         >
 
         <ImageButton
-            android:id="@+id/like_button"
+            android:id="@+id/button_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -49,7 +49,7 @@
             />
 
         <TextView
-            android:id="@+id/list_item_likes_count"
+            android:id="@+id/text_count_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
@@ -78,7 +78,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/comment_button"
+                android:id="@+id/button_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -86,7 +86,7 @@
                 android:elevation="8dp"
                 />
             <TextView
-                android:id="@+id/list_item_comment_count"
+                android:id="@+id/text_comment_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -99,7 +99,7 @@
 
 
         <ImageButton
-            android:id="@+id/edit_button"
+            android:id="@+id/button_edit_item_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -109,7 +109,7 @@
             />
 
         <ImageButton
-            android:id="@+id/delete_button"
+            android:id="@+id/button_delete_item_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

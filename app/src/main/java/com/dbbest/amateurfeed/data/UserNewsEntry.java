@@ -1,0 +1,2 @@
+package com.dbbest.amateurfeed.data;public class UserNewsEntry{public static final android.net.Uri CONTENT_URI =
+        com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry.BASE_CONTENT_URI.buildUpon().appendPath(com.dbbest.amateurfeed.data.FeedContract.UserNewsEntry.PATH_USER_NEWS).build();}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.GridLayout
-    android:id="@+id/item_my"
+    android:id="@+id/layout_item_user"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,7 +12,7 @@
 
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/descriptionInputLayout"
+        android:id="@+id/layout_description_input"
         style="@style/AppTheme.Widget.InputCommentField"
         app:layout_columnSpan="3"
         app:layout_columnWeight="1"
@@ -21,7 +21,7 @@
         >
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/list_item_description"
+            android:id="@+id/text_description"
             style="@style/Widget.Design.DetailTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -44,7 +44,7 @@
         app:layout_rowSpan="2">
 
         <ImageButton
-            android:id="@+id/like_button"
+            android:id="@+id/button_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -54,7 +54,7 @@
             />
 
         <TextView
-            android:id="@+id/list_item_likes_count"
+            android:id="@+id/text_count_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
@@ -90,7 +90,7 @@
             >
 
             <TextView
-                android:id="@+id/list_item_comment_count"
+                android:id="@+id/text_comment_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -101,7 +101,7 @@
                 tools:text="0"/>
 
             <TextView
-                android:id="@+id/item_comment_label_id"
+                android:id="@+id/text_comment_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -123,7 +123,7 @@
 
 
         <ImageButton
-            android:id="@+id/delete_button"
+            android:id="@+id/button_delete_item_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
