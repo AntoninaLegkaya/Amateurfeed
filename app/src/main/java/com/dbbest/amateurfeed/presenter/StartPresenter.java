@@ -33,40 +33,40 @@ public class StartPresenter extends Presenter<StartView> implements
   private static final int CODE_CLOUD_PREF = 2;
   private static final int CODE_USER_PREF = 3;
 
-  private CommandResultReceiver mResultReceiver;
-  private UserLocationProvider mLocationProvider;
+  private CommandResultReceiver resultReceiver;
+  private UserLocationProvider locationProvider;
 
   @Override
   protected void onAttachView(@NonNull StartView view) {
     super.onAttachView(view);
-    if (mResultReceiver == null) {
-      mResultReceiver = new CommandResultReceiver();
+    if (resultReceiver == null) {
+      resultReceiver = new CommandResultReceiver();
     }
-    mResultReceiver.setListener(this);
+    resultReceiver.setListener(this);
 
-    if (mLocationProvider == null) {
-      mLocationProvider = new UserLocationProvider(view.getContext());
+    if (locationProvider == null) {
+      locationProvider = new UserLocationProvider(view.getContext());
     }
 
-    mLocationProvider.setListener(this);
-    mLocationProvider.update();
+    locationProvider.setListener(this);
+    locationProvider.update();
   }
 
   @Override
   protected void onDetachView(@NonNull StartView view) {
     super.onDetachView(view);
-    if (mResultReceiver != null) {
-      mResultReceiver.setListener(null);
+    if (resultReceiver != null) {
+      resultReceiver.setListener(null);
     }
-    if (mLocationProvider != null) {
-      mLocationProvider.setListener(null);
+    if (locationProvider != null) {
+      locationProvider.setListener(null);
     }
   }
 
   @Override
   public void onSuccess(int code, Bundle data) {
-    getView().dismissProgressDialog();
     if (getView() != null) {
+      getView().dismissProgressDialog();
       if (code == CODE_LOGIN) {
         getCloudPreference();
         getUserPreference();
@@ -141,11 +141,11 @@ public class StartPresenter extends Presenter<StartView> implements
       view.showProgressDialog();
     }
     Command command = new LoginCommand(email, password, deviceId, osType, deviceToken);
-    command.send(CODE_LOGIN, mResultReceiver);
+    command.send(CODE_LOGIN, resultReceiver);
   }
 
   public void loginFaceBook(String token) {
-    LatLng location = mLocationProvider.getLastLocation();
+    LatLng location = locationProvider.getLastLocation();
     RegistrationFacebookCommand command = new RegistrationFacebookCommand(token,
         location.longitude, location.latitude);
     LoginManager.getInstance().logOut();
@@ -153,18 +153,18 @@ public class StartPresenter extends Presenter<StartView> implements
     if (getView() != null) {
       getView().showProgressDialog();
     }
-    command.send(CODE_REGISTRATION_FB, mResultReceiver);
+    command.send(CODE_REGISTRATION_FB, resultReceiver);
   }
 
-  public void getCloudPreference() {
+  private void getCloudPreference() {
     AzureCommand azureCommand = new AzureCommand();
 
-    azureCommand.send(CODE_CLOUD_PREF, mResultReceiver);
+    azureCommand.send(CODE_CLOUD_PREF, resultReceiver);
   }
 
-  public void getUserPreference() {
+  private void getUserPreference() {
     UserProfileCommand userProfileCommand = new UserProfileCommand();
-    userProfileCommand.send(CODE_USER_PREF, mResultReceiver);
+    userProfileCommand.send(CODE_USER_PREF, resultReceiver);
 
   }
 
@@ -181,7 +181,7 @@ public class StartPresenter extends Presenter<StartView> implements
       }
       if (isLocationPermissionGranted) {
         Log.i(TAG, "Location permission granted");
-        mLocationProvider.update();
+        locationProvider.update();
       }
     }
   }

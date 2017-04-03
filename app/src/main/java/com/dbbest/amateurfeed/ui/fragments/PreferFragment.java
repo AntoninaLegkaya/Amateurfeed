@@ -118,6 +118,7 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
             mySharedPreferences.edit()
                 .putBoolean(getString(R.string.checkbox_preference),
                     (Boolean) newValue).apply();
+            presenter.updateUserSettings((boolean) newValue);
             Log.i(TAG, "Push preference enable: " + newValue);
           }
           return true;

@@ -123,7 +123,7 @@ public interface RestApiServices {
       @Body UpdateProfileRequestModel updateProfileRequestModel);
 
   @PUT("user/update-settings")
-  Call<Object> updateSettings(@Header("Authorization") String token,
+  Call<ResponseWrapper<Object>> updateSettings(@Header("Authorization") String token,
       @Body UserSettingsModel isSettingsUpdateModel);
 
 

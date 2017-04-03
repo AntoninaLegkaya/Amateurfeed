@@ -25,6 +25,7 @@ import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.model.UserProfileModel;
+import com.dbbest.amateurfeed.model.UserSettingsModel;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -116,13 +117,16 @@ public class RestApiClient {
     return executeCall(mApiService.logout(token));
   }
 
-  public ResponseWrapper<Object> changePassword(String token,
-      ChangePasswordRequestModel requestModel) {
+  public ResponseWrapper<Object> changePassword(String token, ChangePasswordRequestModel requestModel) {
     return executeCall(mApiService.changePassword(token, requestModel));
   }
 
   public ResponseWrapper<Object> updateDeviceInfo(String token, DeviceInfoModel requestModel) {
     return executeCall(mApiService.deviceInfo(token, requestModel));
+  }
+
+  public ResponseWrapper<Object> updateSettings(String token, UserSettingsModel requestModel) {
+    return executeCall(mApiService.updateSettings(token, requestModel));
   }
 
   private <T> ResponseWrapper<T> executeCall(Call<ResponseWrapper<T>> call) {

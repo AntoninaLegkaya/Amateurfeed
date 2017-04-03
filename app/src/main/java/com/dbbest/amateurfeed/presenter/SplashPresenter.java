@@ -6,21 +6,20 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
-import com.dbbest.amateurfeed.app.net.command.LogoutCommand;
 import com.dbbest.amateurfeed.app.net.command.UpdateSettingsCommand;
-import com.dbbest.amateurfeed.view.PreferenceView;
+import com.dbbest.amateurfeed.view.SplashView;
 
-public class PreferencePresenter extends Presenter<PreferenceView> implements
+public class SplashPresenter extends Presenter<SplashView> implements
     CommandResultReceiver.CommandListener {
 
-  private static final int CODE_LOGOUT = 0;
-  private static final int CODE_PUSH_NOTIFIER = 1;
-  private static final String TAG = PreferencePresenter.class.getName();
+  private static final int CODE_PUSH_NOTIFIER = 0;
+  private static final String TAG = SplashPresenter.class.getName();
 
   private CommandResultReceiver resultReceiver;
 
   @Override
-  protected void onAttachView(@NonNull PreferenceView view) {
+  protected void onAttachView(@NonNull SplashView view) {
+    super.onAttachView(view);
     if (resultReceiver == null) {
       resultReceiver = new CommandResultReceiver();
     }
@@ -28,22 +27,22 @@ public class PreferencePresenter extends Presenter<PreferenceView> implements
   }
 
   @Override
-  protected void onDetachView(@NonNull PreferenceView view) {
+  protected void onDetachView(@NonNull SplashView view) {
+    super.onDetachView(view);
     if (resultReceiver != null) {
       resultReceiver.setListener(null);
     }
+
   }
 
   @Override
   public void onSuccess(int code, Bundle data) {
     if (getView() != null) {
-      if (code == CODE_LOGOUT) {
-        getView().navigateToStartScreen();
-      }
       if (code == CODE_PUSH_NOTIFIER) {
         Log.i(TAG, "Push notification enable from Server!");
       }
     }
+
   }
 
   @Override
@@ -54,11 +53,6 @@ public class PreferencePresenter extends Presenter<PreferenceView> implements
   @Override
   public void onProgress(int code, Bundle data, int progress) {
 
-  }
-
-  public void logout() {
-    Command logoutCommand = new LogoutCommand();
-    logoutCommand.send(CODE_LOGOUT, resultReceiver);
   }
 
   public void updateUserSettings(boolean enablePush) {
