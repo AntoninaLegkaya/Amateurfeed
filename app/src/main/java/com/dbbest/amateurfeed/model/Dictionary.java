@@ -19,23 +19,21 @@ public class Dictionary implements Parcelable {
     }
   };
   @SerializedName("users")
-  private ArrayList<UserFeedCreatorExpand> mUsers = new ArrayList<>();
+  private ArrayList<UserFeedCreatorExpand> users = new ArrayList<>();
   ;
   @SerializedName("news")
-  private ArrayList<News> mNews = new ArrayList<>();
+  private ArrayList<NewsModel> news = new ArrayList<>();
 
-  public Dictionary(ArrayList<UserFeedCreatorExpand> users, ArrayList<News> news) {
-    mUsers = users;
-    mNews = news;
+  public Dictionary(ArrayList<UserFeedCreatorExpand> users, ArrayList<NewsModel> news) {
+    this.users = users;
+    this.news = news;
   }
 
-
   public Dictionary(Parcel in) {
-
-    mUsers = new ArrayList<UserFeedCreatorExpand>();
-    in.readTypedList(mUsers, UserFeedCreatorExpand.CREATOR);
-    mNews = new ArrayList<News>();
-    in.readTypedList(mNews, News.CREATOR);
+    users = new ArrayList<UserFeedCreatorExpand>();
+    in.readTypedList(users, UserFeedCreatorExpand.CREATOR);
+    news = new ArrayList<NewsModel>();
+    in.readTypedList(news, NewsModel.CREATOR);
   }
 
   @Override
@@ -45,15 +43,15 @@ public class Dictionary implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeTypedList(mNews);
-    dest.writeTypedList(mUsers);
+    dest.writeTypedList(news);
+    dest.writeTypedList(users);
   }
 
   public ArrayList<UserFeedCreatorExpand> getUsers() {
-    return mUsers;
+    return users;
   }
 
-  public ArrayList<News> getNews() {
-    return mNews;
+  public ArrayList<NewsModel> getNews() {
+    return news;
   }
 }

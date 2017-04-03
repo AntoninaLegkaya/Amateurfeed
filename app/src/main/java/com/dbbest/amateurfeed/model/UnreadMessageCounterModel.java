@@ -6,14 +6,14 @@ import com.google.gson.annotations.SerializedName;
 public class UnreadMessageCounterModel {
 
   @SerializedName("counter")
-  private int mCounter;
+  private int counter;
 
   public UnreadMessageCounterModel(int counter) {
 
-    mCounter = counter;
+    this.counter = counter;
   }
 
   public int getCounter() {
-    return mCounter;
+    return counter;
   }
 }

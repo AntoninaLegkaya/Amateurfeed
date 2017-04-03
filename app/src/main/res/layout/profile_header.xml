@@ -5,14 +5,13 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content">
   <android.support.v7.widget.GridLayout
-    android:id="@+id/item_header"
+    android:id="@+id/layout_item_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:columnCount="3"
     app:rowCount="4">
-
     <ImageView
-      android:id="@+id/user_icon"
+      android:id="@+id/image_user_icon"
       android:layout_width="@dimen/profile_icon"
       android:layout_height="@dimen/profile_icon"
       android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
@@ -23,9 +22,8 @@
       app:layout_gravity="center"
       app:layout_rowSpan="3"
       tools:src="@mipmap/splash" />
-
     <TextView
-      android:id="@+id/user_name"
+      android:id="@+id/text_user_name"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
@@ -37,7 +35,7 @@
       app:layout_gravity="left|center"
       app:layout_rowSpan="3" />
     <ImageButton
-      android:id="@+id/settings_button"
+      android:id="@+id/button_settings"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
@@ -46,21 +44,18 @@
       app:layout_columnWeight="1"
       app:layout_gravity="top|right"
       app:layout_rowSpan="3" />
-
     <ImageView
-      android:id="@+id/divider"
+      android:id="@+id/image_divider"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingTop="1dp"
-      android:paddingBottom="1dp"
+      android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+      android:paddingTop="@dimen/padding_1dp"
+      android:paddingBottom="@dimen/padding_1dp"
       android:background="@color/app_black"
       android:gravity="center"
       android:src="@drawable/line_horizontal"
       app:layout_columnSpan="3"
-      app:layout_columnWeight="1"
-      android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
-     />
+      app:layout_columnWeight="1" />
   </android.support.v7.widget.GridLayout>
-
 </android.support.design.widget.CoordinatorLayout>
 

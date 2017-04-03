@@ -26,19 +26,20 @@ public class AddNewItemNewsCommand extends Command {
       return new AddNewItemNewsCommand[size];
     }
   };
-  private String TAG = AddNewItemNewsCommand.class.getName();
-  private ArrayList<TagModel> mTagModels = new ArrayList<>();
-  private String mTitle;
-  private String mText;
-  private String mImage;
+  public static final String NEWS_ID = "newsId";
+  private final String TAG = AddNewItemNewsCommand.class.getName();
+  private ArrayList<TagModel> tagModels = new ArrayList<>();
+  private String title;
+  private String text;
+  private String image;
 
   public AddNewItemNewsCommand(ArrayList<TagModel> tagModels, String title, String text,
       String image
   ) {
-    mTagModels = tagModels;
-    mTitle = title;
-    mText = text;
-    mImage = image;
+    this.tagModels = tagModels;
+    this.title = title;
+    this.text = text;
+    this.image = image;
     for (TagModel model : tagModels) {
       Log.i(TAG, "What you give NewsUpdateModel Tag: " + model.getName() + '\n');
     }
@@ -46,19 +47,19 @@ public class AddNewItemNewsCommand extends Command {
 
   public AddNewItemNewsCommand(Parcel in) {
     super(in);
-    mTitle = in.readString();
-    mText = in.readString();
-    mImage = in.readString();
-    mTagModels = new ArrayList<TagModel>();
-    in.readTypedList(mTagModels, TagModel.CREATOR);
+    title = in.readString();
+    text = in.readString();
+    image = in.readString();
+    tagModels = new ArrayList<>();
+    in.readTypedList(tagModels, TagModel.CREATOR);
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeString(mTitle);
-    dest.writeString(mText);
-    dest.writeString(mImage);
-    dest.writeTypedList(mTagModels);
+    dest.writeString(title);
+    dest.writeString(text);
+    dest.writeString(image);
+    dest.writeTypedList(tagModels);
 
   }
 
@@ -67,7 +68,7 @@ public class AddNewItemNewsCommand extends Command {
 
     RestApiClient apiClient = App.getApiFactory().restClient();
     AuthToken authToken = new AuthToken();
-    NewsCreateModel mNewsCreateModel = new NewsCreateModel(mTitle, mText, mImage, mTagModels);
+    NewsCreateModel mNewsCreateModel = new NewsCreateModel(title, text, image, tagModels);
     Log.i(TAG, "Edit News " + "\n" +
         "Title: " + mNewsCreateModel.getTitle() + '\n' +
         "Description: " + mNewsCreateModel.getText() + '\n' +
@@ -84,7 +85,7 @@ public class AddNewItemNewsCommand extends Command {
         NewsResponseModel data = response.data();
         Log.i(TAG, "Updated  Item By ID:  " + data.getId());
         Bundle bundle = new Bundle();
-        bundle.putInt("newsId", data.getId());
+        bundle.putInt(NEWS_ID, data.getId());
         notifySuccess(bundle);
 
       } else {

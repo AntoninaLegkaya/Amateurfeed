@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package  com.dbbest.amateurfeed.data;
+package com.dbbest.amateurfeed.data;
 
 import android.net.Uri;
 import android.test.AndroidTestCase;
@@ -24,19 +24,19 @@ import android.test.AndroidTestCase;
  */
 public class TestFeedContract extends AndroidTestCase {
 
-    // intentionally includes a slash to make sure Uri is getting quoted correctly
-    private static final String TEST_PREVIEW_IS_MY = "/1";
+  // intentionally includes a slash to make sure Uri is getting quoted correctly
+  private static final String TEST_PREVIEW_IS_MY = "/1";
 
 
-    public void testBuildWeatherLocation() {
-        Uri getIsMyFlagUri = FeedContract.PreviewEntry.buildIsMyPreview(TEST_PREVIEW_IS_MY);
-        assertNotNull("Error: Null Uri returned.  You must fill-in buildPreview in " +
-                        "PreviewContract.",
-                getIsMyFlagUri);
-        assertEquals("Error: Preview id not properly appended to the end of the Uri",
-                TEST_PREVIEW_IS_MY, getIsMyFlagUri.getLastPathSegment());
-        assertEquals("Error: Preview  Uri doesn't match our expected result",
-                getIsMyFlagUri.toString(),
-                "content://com.dbbest.amateurfeed.app/preview/%2F1");
-    }
+  public void testBuildWeatherLocation() {
+    Uri getIsMyFlagUri = PreviewEntry.buildIsMyPreview(TEST_PREVIEW_IS_MY);
+    assertNotNull("Error: Null Uri returned.  You must fill-in buildPreview in " +
+            "PreviewContract.",
+        getIsMyFlagUri);
+    assertEquals("Error: Preview id not properly appended to the end of the Uri",
+        TEST_PREVIEW_IS_MY, getIsMyFlagUri.getLastPathSegment());
+    assertEquals("Error: Preview  Uri doesn't match our expected result",
+        getIsMyFlagUri.toString(),
+        "content://com.dbbest.amateurfeed.app/preview/%2F1");
+  }
 }

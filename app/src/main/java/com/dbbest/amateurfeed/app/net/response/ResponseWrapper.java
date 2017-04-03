@@ -6,47 +6,47 @@ import com.google.gson.annotations.SerializedName;
 public class ResponseWrapper<D> {
 
   @SerializedName("statusCode")
-  private int mStatusCode;
+  private int statusCode;
 
   @SerializedName("success")
-  private boolean mSuccess;
+  private boolean success;
 
   @SerializedName("errorMessage")
-  private String mErrorMessage;
+  private String errorMessage;
 
   @SerializedName("data")
-  private D mData;
+  private D data;
 
   public ResponseWrapper(int statusCode, boolean success, String errorMessage, D data) {
-    mStatusCode = statusCode;
-    mSuccess = success;
-    mErrorMessage = errorMessage;
-    mData = data;
-  }
-
-  public int code() {
-    return mStatusCode;
-  }
-
-  public boolean isSuccessful() {
-    return mSuccess;
-  }
-
-  public String message() {
-    return mErrorMessage;
-  }
-
-  public D data() {
-    return mData;
+    this.statusCode = statusCode;
+    this.success = success;
+    this.errorMessage = errorMessage;
+    this.data = data;
   }
 
   @Override
   public String toString() {
     return "ResponseWrapper{" +
-        "mStatusCode=" + mStatusCode +
-        ", mSuccess=" + mSuccess +
-        ", mErrorMessage='" + mErrorMessage + '\'' +
-        ", mData=" + mData +
+        "statusCode=" + statusCode +
+        ", success=" + success +
+        ", errorMessage='" + errorMessage + '\'' +
+        ", data=" + data +
         '}';
+  }
+
+  public int code() {
+    return statusCode;
+  }
+
+  public boolean isSuccessful() {
+    return success;
+  }
+
+  public String message() {
+    return errorMessage;
+  }
+
+  public D data() {
+    return data;
   }
 }

@@ -6,6 +6,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
@@ -28,10 +29,8 @@ import com.dbbest.amateurfeed.view.PreferenceView;
 public class PreferFragment extends PreferenceFragmentCompat implements PreferenceView,
     OnSharedPreferenceChangeListener {
 
-  public static final String PUSH_FILE_NAME = ".push";
-  private PreferencePresenter mPresenter;
-  private CheckBoxPreference prefNotification;
-  private String TAG = PreferFragment.class.getName();
+  private final static String TAG = PreferFragment.class.getName();
+  private PreferencePresenter presenter;
 
   @Override
   public void onAttach(Context context) {
@@ -41,13 +40,13 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
   @Override
   public void onStart() {
     super.onStart();
-    mPresenter.attachView(this);
+    presenter.attachView(this);
   }
 
   @Override
   public void onStop() {
     super.onStop();
-    mPresenter.detachView();
+    presenter.detachView();
   }
 
   @Override
@@ -66,10 +65,14 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mPresenter = new PreferencePresenter();
+    presenter = new PreferencePresenter();
     ((AppCompatActivity) getActivity()).setSupportActionBar(createToolbar());
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    Preference prefEditProfile = findPreference(getString(R.string.startEditProfile));
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+    Preference prefEditProfile;
+    prefEditProfile = findPreference(getString(R.string.startEditProfile));
     prefEditProfile
         .setOnPreferenceClickListener(new OnPreferenceClickListener() {
           @Override
@@ -94,7 +97,7 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
         .setOnPreferenceClickListener(new OnPreferenceClickListener() {
           @Override
           public boolean onPreferenceClick(Preference preference) {
-            mPresenter.logout();
+            presenter.logout();
             return true;
           }
         });
@@ -103,7 +106,7 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
         getString(R.string.pref_enable_notifications_key));
     boolean notifyFlag = Utils.checkNotificationPref();
     if (checkBoxPreference instanceof CheckBoxPreference) {
-      prefNotification = (CheckBoxPreference) checkBoxPreference;
+      CheckBoxPreference prefNotification = (CheckBoxPreference) checkBoxPreference;
       prefNotification.setChecked(notifyFlag);
       prefNotification.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
         @Override
@@ -128,12 +131,9 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
     if (key.equals(getContext().getString(R.string.pref_enable_notifications_key))) {
       Preference exercisesPref = findPreference(key);
       if (exercisesPref instanceof CheckBoxPreference) {
-//        SharedPreferences mySharedPreferences = PreferenceManager
-//            .getDefaultSharedPreferences(App.instance().getApplicationContext());
-//        mySharedPreferences.edit()
-//            .putBoolean(getString(R.string.checkbox_preference),
-//                prefNotification.isChecked()).apply();
-//        Log.i(TAG, "Global Push preference enable: " + prefNotification.isChecked());
+
+//Todo send server request for push-notification
+
       }
     }
   }
@@ -141,6 +141,17 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(R.xml.pref_general);
+  }
+
+  @NonNull
+  @Override
+  public Context getContext() {
+    return App.instance().getApplicationContext();
+  }
+
+  @Override
+  public void navigateToStartScreen() {
+    startActivity(UiActivityNavigation.startActivity(getContext()));
   }
 
   private Toolbar createToolbar() {
@@ -156,17 +167,6 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
     textView.setText(getString(R.string.preference_toolbar_label));
     toolbar.addView(textView);
     return toolbar;
-  }
-
-  @NonNull
-  @Override
-  public Context getContext() {
-    return App.instance().getApplicationContext();
-  }
-
-  @Override
-  public void navigateToStartScreen() {
-    startActivity(UiActivityNavigation.startActivity(getContext()));
   }
 
 

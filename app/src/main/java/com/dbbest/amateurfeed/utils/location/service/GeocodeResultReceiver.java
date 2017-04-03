@@ -6,7 +6,7 @@ import android.os.ResultReceiver;
 
 public class GeocodeResultReceiver extends ResultReceiver {
 
-  private Receiver mReceiver;
+  private Receiver receiver;
 
   /**
    * Create a new ResultReceive to receive results.  Your
@@ -17,21 +17,19 @@ public class GeocodeResultReceiver extends ResultReceiver {
     super(handler);
   }
 
-
-
-  public void setReceiver(Receiver receiver) {
-    mReceiver = receiver;
-  }
-
   @Override
   protected void onReceiveResult(int resultCode, Bundle resultData) {
-    if (mReceiver != null) {
-      mReceiver.onReceiveResult(resultCode, resultData);
+    if (receiver != null) {
+      receiver.onReceiveResult(resultCode, resultData);
     }
+  }
+
+  public void setReceiver(Receiver r) {
+    this.receiver = r;
   }
 
   public interface Receiver {
 
-    public void onReceiveResult(int resultCode, Bundle resultData);
+    void onReceiveResult(int resultCode, Bundle resultData);
   }
 }

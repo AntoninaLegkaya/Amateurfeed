@@ -18,30 +18,30 @@ public class FeedCommentModel implements Parcelable {
     }
   };
   @SerializedName("postId")
-  private int mPostId;
+  private int postId;
   @SerializedName("body")
-  private String mBody;
+  private String body;
   @SerializedName("parentCommentId")
-  private Integer mParentCommentId;
+  private Integer parentCommentId;
 
 
   public FeedCommentModel(int postId, String body, Integer parentCommentId) {
-    mPostId = postId;
-    mBody = body;
-    mParentCommentId = parentCommentId;
+    this.postId = postId;
+    this.body = body;
+    this.parentCommentId = parentCommentId;
   }
 
-  protected FeedCommentModel(Parcel in) {
-    mPostId = in.readInt();
-    mBody = in.readString();
-    mParentCommentId = (Integer) in.readSerializable();
+  private FeedCommentModel(Parcel in) {
+    postId = in.readInt();
+    body = in.readString();
+    parentCommentId = (Integer) in.readSerializable();
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(mPostId);
-    dest.writeString(mBody);
-    dest.writeSerializable(mParentCommentId);
+    dest.writeInt(postId);
+    dest.writeString(body);
+    dest.writeSerializable(parentCommentId);
   }
 
   @Override
@@ -49,26 +49,25 @@ public class FeedCommentModel implements Parcelable {
     return 0;
   }
 
-  public int getPostId() {
-    return mPostId;
-  }
-
-  public String getBody() {
-    return mBody;
-  }
-
-  public Integer getParentCommentId() {
-    return mParentCommentId;
-  }
-
-
   @Override
   public String toString() {
 
     return "FeedCommentModel{"
-        + "mPostId=" + mPostId + '\n'
-        + "mBody=" + mBody + '\n'
-        + "mParentCommentId=" + mParentCommentId
+        + "postId=" + postId + '\n'
+        + "body=" + body + '\n'
+        + "parentCommentId=" + parentCommentId
         + '}';
+  }
+
+  public int getPostId() {
+    return postId;
+  }
+
+  public String getBody() {
+    return body;
+  }
+
+  public Integer getParentCommentId() {
+    return parentCommentId;
   }
 }

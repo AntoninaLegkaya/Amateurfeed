@@ -1,51 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout
-    android:id="@+id/item"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:columnCount="2"
-    style="@style/AppTheme.Widget.InputCommentField"
-    android:layout_margin="4dp">
-
-    <TextView
-        android:id="@+id/item_list_author_comment"
-        android:fontFamily="sans-serif"
-        android:gravity="left"
-        android:textColor="@color/primary"
-        android:textSize="12sp"
-        app:layout_columnWeight="1"
-        app:layout_gravity="fill_horizontal"
-        tools:text="Author"
-        android:padding="@dimen/activity_link_margin"/>
-
-    <TextView
-        android:id="@+id/item_list_date_comment"
-        android:padding="@dimen/activity_link_margin"
-        android:fontFamily="sans-serif"
-        android:gravity="center_horizontal"
-        android:textColor="@color/secondary_text"
-        android:textSize="12sp"
-        app:layout_columnWeight="1"
-        app:layout_gravity="center"
-        tools:text="Today, April 03"/>
-
-
-    <TextView
-        android:id="@+id/item_list_text_comment"
-        android:fontFamily="sans-serif"
-        android:gravity="left"
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-        android:textColor="@color/app_black"
-        app:layout_columnSpan="2"
-        app:layout_rowSpan="2"
-        app:layout_gravity="fill_horizontal"
-        android:textSize="14sp"
-        android:padding="@dimen/activity_link_margin"
-        tools:text="Comment text"/>
-
-
-
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/layout_item_comment"
+  style="@style/AppTheme.Widget.InputCommentField"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/layout_margin"
+  app:columnCount="2">
+  <TextView
+    android:id="@+id/text_author_name"
+    android:padding="@dimen/layout_margin"
+    android:fontFamily="sans-serif"
+    android:gravity="left"
+    android:textColor="@color/primary"
+    android:textSize="@dimen/text_size_12sp"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal"
+    tools:text="Author" />
+  <TextView
+    android:id="@+id/text_date_create"
+    android:padding="@dimen/layout_margin"
+    android:fontFamily="sans-serif"
+    android:gravity="center_horizontal"
+    android:textColor="@color/secondary_text"
+    android:textSize="@dimen/text_size_12sp"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center"
+    tools:text="Today, April 03" />
+  <TextView
+    android:id="@+id/text_comment"
+    android:padding="@dimen/layout_margin"
+    android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+    android:fontFamily="sans-serif"
+    android:gravity="left"
+    android:textColor="@color/app_black"
+    android:textSize="@dimen/text_size_14sp"
+    app:layout_columnSpan="2"
+    app:layout_gravity="fill_horizontal"
+    app:layout_rowSpan="2"
+    tools:text="Comment text" />
 </android.support.v7.widget.GridLayout>

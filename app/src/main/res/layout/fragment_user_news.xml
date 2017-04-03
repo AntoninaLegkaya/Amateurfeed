@@ -33,7 +33,7 @@
     android:padding="@dimen/padding_5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
     <include
-      layout="@layout/item_my_news_details"
+      layout="@layout/item_user_news_details"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/abc_dialog_list_padding_vertical_material"

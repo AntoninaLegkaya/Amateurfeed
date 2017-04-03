@@ -10,14 +10,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.format.Time;
 import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.ui.fragments.PreferFragment;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,30 +25,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class Utils {
 
-  public static final String TAG_LOG_LOAD_NEW_DATA = "Get news";
-  public static final String DATE_FORMAT = "yyyyMMdd";
-  public static final int MY_PERMISSIONS_REQUEST_STORAGE = 123;
+  private static final int MY_PERMISSIONS_REQUEST_STORAGE = 123;
   private static final String TAG = Utils.class.getName();
   private static final Pattern EMAIL_PATTERN = Pattern.compile(
       "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
           "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-  private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-      "(" +
-          "(?=.*\\d)" +
 
-          "(?=.*[a-z])" +
-
-          "." +
-
-          "{6,20}" +
-          ")"
-  );
   private static final Pattern NAME_PATTERN = Pattern.compile(
       "^[a-zA-Z0-9а-яА-Я ёЁ]+$"
 
@@ -73,13 +59,13 @@ public class Utils {
   );
   private static final Pattern TAG_PATTERN = Pattern.compile("(\\B#\\w)\\w+");
 
-  public static final String[] getTagsPattern(String input) {
-    StringBuffer buffer = new StringBuffer();
+  public static String[] getTagsPattern(String input) {
+    StringBuilder buffer = new StringBuilder();
     String[] strLines = input.split("\n");
     for (String line : strLines) {
       Matcher matcher = TAG_PATTERN.matcher(line);
       while (matcher.find()) {
-        buffer.append(matcher.group().substring(1) + " ");
+        buffer.append(matcher.group().substring(1)).append(" ");
       }
     }
     return buffer.toString().split(" ");
@@ -95,8 +81,7 @@ public class Utils {
 
   public static boolean isPasswordValid(String password) {
 
-    return (password != null && !password.equals("")) ? true : false;
-//        return PASSWORD_PATTERN.matcher(password).matches();
+    return (password != null && !password.equals(""));
   }
 
   public static boolean isFullNameValid(String firstName) {
@@ -109,75 +94,40 @@ public class Utils {
 
   public static long getLongFromString(String currentDate) {
 //    "2010-10-15T09:27:37";
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
     Date parseDate = null;
     try {
       parseDate = format.parse(currentDate);
     } catch (ParseException e) {
       e.printStackTrace();
     }
-    return parseDate.getTime();
+    return parseDate != null ? parseDate.getTime() : 0;
   }
 
-  public static String getFriendlyDayString(Context context, long dateInMillis,
-      boolean displayLongToday) {
+  public static String getFriendlyDayString(Context context, long dateInMillis, boolean displayLongToday) {
     // The day string for forecast uses the following logic:
     // For today: "Today, June 8"
     // For tomorrow:  "Tomorrow"
     // For the next 5 days: "Wednesday" (just the day name)
     // For all days after that: "Mon Jun 8"
 
-    Time time = new Time();
-    time.setToNow();
-    long currentTime = System.currentTimeMillis();
-    int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
-    int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
+//    Time time = new Time();
+//    time.setToNow();
+//    long currentTime = System.currentTimeMillis();
+//    int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
+//    int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
 
     // If the date we're building the String for is today's date, the format
     // is "Today, June 24"
-    if (displayLongToday && julianDay == currentJulianDay) {
+//    if (displayLongToday && julianDay == currentJulianDay) {
+    if (displayLongToday && dateInMillis == getTodayLongDate()) {
       String today = context.getString(R.string.today);
       int formatId = R.string.format_full_friendly_date;
       return String.format(context.getString(formatId), today, getFormattedMonthDay(dateInMillis));
-    }
-//        else if (julianDay < currentJulianDay - 7) {
-//            // If the input date is less than a week in the pass, just return the day name.
-//            return getDayName(context, dateInMillis);
-//        }
-    else {
-      // Otherwise, use the form "Mon Jun 3"
-      SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm");
-      return shortenedDateFormat.format(dateInMillis);
-    }
-  }
-
-  public static String getFormattedMonthDay(long dateInMillis) {
-    Time time = new Time();
-    time.setToNow();
-    SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utils.DATE_FORMAT);
-    SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd HH:mm");
-    String monthDayString = monthDayFormat.format(dateInMillis);
-    return monthDayString;
-  }
-
-  public static String getDayName(Context context, long dateInMillis) {
-    // If the date is today, return the localized version of "Today" instead of the actual
-    // day name.
-
-    Time t = new Time();
-    t.setToNow();
-    int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
-    int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
-    if (julianDay == currentJulianDay) {
-      return context.getString(R.string.today);
-    } else if (julianDay == currentJulianDay - 1) {
-      return context.getString(R.string.yesterday);
     } else {
-      Time time = new Time();
-      time.setToNow();
-      // Otherwise, the format is just the day of the week (e.g "Wednesday".
-      SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-      return dayFormat.format(dateInMillis);
+      // Otherwise, use the form "Mon Jun 3"
+      SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm", Locale.US);
+      return shortenedDateFormat.format(dateInMillis);
     }
   }
 
@@ -188,27 +138,7 @@ public class Utils {
     return currDate.getTimeInMillis();
   }
 
-  public static boolean isAddressValid(String address) {
-    return false;
-  }
-
-  public static boolean isDeviceIdValid(String deviceId) {
-    return false;
-  }
-
-  public static boolean isOsTypeValid(String osType) {
-    return false;
-  }
-
-  public static boolean isDeviceTokenValid(String deviceToken) {
-    return false;
-  }
-
-  public static long getLongData(String string) {
-    return -1;
-  }
-
-  public static String foramatTagName(Context context, String tag) {
+  public static String formatTagName(Context context, String tag) {
     int formatId = R.string.format_tag;
     return String.format(context.getString(formatId), tag);
   }
@@ -276,19 +206,6 @@ public class Utils {
     return "image/" + ext;
   }
 
-  public static String getPathExtension(String path) {
-
-    if (path == null) {
-      return null;
-    }
-    int mid = path.lastIndexOf(".");
-    if (mid == -1) {
-      return null;
-    }
-    String ext = path.substring(mid + 1, path.length());
-    return ext.toLowerCase();
-  }
-
   public static boolean externalMemoryAvailable() {
     if (Environment.isExternalStorageRemovable()) {
       //device support sd card. We need to check sd card availability.
@@ -307,20 +224,18 @@ public class Utils {
     }
     FileChannel source = new FileInputStream(sourceFile).getChannel();
     FileChannel destination = new FileOutputStream(destFile).getChannel();
-    if (destination != null && source != null) {
+    if (source != null) {
       destination.transferFrom(source, 0, source.size());
     }
     if (source != null) {
       source.close();
     }
-    if (destination != null) {
-      destination.close();
-    }
+    destination.close();
   }
 
   public static String getCurrentTime() {
     Calendar c = Calendar.getInstance();
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
     return format.format(c.getTime());
   }
 
@@ -339,10 +254,29 @@ public class Utils {
     Log.i(TAG, "Check notification push message: " + displayNotifications);
     return displayNotifications;
   }
+
   public static SharedPreferences getDefaultSharedPreferencesMultiProcess(
       Context context) {
     return context.getSharedPreferences(
         context.getPackageName() + "_preferences",
-        Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+        Context.MODE_MULTI_PROCESS);
+  }
+
+  private static String getFormattedMonthDay(long dateInMillis) {
+    SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMM dd HH:mm", Locale.US);
+    return monthDayFormat.format(dateInMillis);
+  }
+
+  private static String getPathExtension(String path) {
+
+    if (path == null) {
+      return null;
+    }
+    int mid = path.lastIndexOf(".");
+    if (mid == -1) {
+      return null;
+    }
+    String ext = path.substring(mid + 1, path.length());
+    return ext.toLowerCase();
   }
 }

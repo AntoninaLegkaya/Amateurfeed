@@ -36,6 +36,83 @@ public class StartPresenter extends Presenter<StartView> implements
   private CommandResultReceiver mResultReceiver;
   private UserLocationProvider mLocationProvider;
 
+  @Override
+  protected void onAttachView(@NonNull StartView view) {
+    super.onAttachView(view);
+    if (mResultReceiver == null) {
+      mResultReceiver = new CommandResultReceiver();
+    }
+    mResultReceiver.setListener(this);
+
+    if (mLocationProvider == null) {
+      mLocationProvider = new UserLocationProvider(view.getContext());
+    }
+
+    mLocationProvider.setListener(this);
+    mLocationProvider.update();
+  }
+
+  @Override
+  protected void onDetachView(@NonNull StartView view) {
+    super.onDetachView(view);
+    if (mResultReceiver != null) {
+      mResultReceiver.setListener(null);
+    }
+    if (mLocationProvider != null) {
+      mLocationProvider.setListener(null);
+    }
+  }
+
+  @Override
+  public void onSuccess(int code, Bundle data) {
+    getView().dismissProgressDialog();
+    if (getView() != null) {
+      if (code == CODE_LOGIN) {
+        getCloudPreference();
+        getUserPreference();
+        getView().navigateToHomeScreen();
+      }
+    }
+  }
+
+  @Override
+  public void onFail(int code, Bundle data) {
+    if (getView() != null) {
+      getView().dismissProgressDialog();
+      int errCode = Command.grabErrorCode(data);
+      String errMessage = Command.grabErrorText(data);
+      if (errCode == NetworkUtil.CODE_SOCKET_TIMEOUT
+          || errCode == NetworkUtil.CODE_UNABLE_TO_RESOLVE_HOST) {
+        getView().showErrorConnectionDialog();
+      } else {
+        if (errMessage != null && errMessage.equals(INCORRECT_PASSWORD_MSG_RESPONSE)) {
+          getView().showErrorIncorrectPassword();
+        } else {
+          getView().showErrorLoginDialog();
+        }
+      }
+    }
+  }
+
+  @Override
+  public void onProgress(int code, Bundle data, int progress) {
+
+  }
+
+  @Override
+  public void onUserLocationUpdated(LatLng location) {
+
+  }
+
+  @Override
+  public void onLocationPermissionsDenied() {
+    if (getView() != null) {
+      Log.i(TAG, "Location permission denied");
+      getView().requestPermission(PERMISSION_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+          Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+  }
+
   public void login(String email, String password, String deviceId, String osType,
       String deviceToken) {
 
@@ -89,89 +166,6 @@ public class StartPresenter extends Presenter<StartView> implements
     UserProfileCommand userProfileCommand = new UserProfileCommand();
     userProfileCommand.send(CODE_USER_PREF, mResultReceiver);
 
-  }
-
-  @Override
-  public void onSuccess(int code, Bundle data) {
-    getView().dismissProgressDialog();
-    if (getView() != null) {
-      if (code == CODE_LOGIN) {
-        getCloudPreference();
-        getUserPreference();
-        getView().navigateToHomeScreen();
-      }
-      if (code == CODE_CLOUD_PREF) {
-      }
-      if (code == CODE_USER_PREF) {
-      }
-    }
-  }
-
-  @Override
-  public void onFail(int code, Bundle data) {
-    if (getView() != null) {
-      getView().dismissProgressDialog();
-      int errCode = Command.grabErrorCode(data);
-      String errMessage = Command.grabErrorText(data);
-      if (errCode == NetworkUtil.CODE_SOCKET_TIMEOUT
-          || errCode == NetworkUtil.CODE_UNABLE_TO_RESOLVE_HOST) {
-        getView().showErrorConnectionDialog();
-      } else {
-        if (errMessage != null && errMessage.equals(INCORRECT_PASSWORD_MSG_RESPONSE)) {
-          getView().showErrorIncorrectPassword();
-        } else {
-          getView().showErrorLoginDialog();
-        }
-      }
-    }
-  }
-
-
-  @Override
-  protected void onAttachView(@NonNull StartView view) {
-    super.onAttachView(view);
-    if (mResultReceiver == null) {
-      mResultReceiver = new CommandResultReceiver();
-    }
-    mResultReceiver.setListener(this);
-
-    if (mLocationProvider == null) {
-      mLocationProvider = new UserLocationProvider(view.getContext());
-    }
-
-    mLocationProvider.setListener(this);
-    mLocationProvider.update();
-  }
-
-  @Override
-  protected void onDetachView(@NonNull StartView view) {
-    super.onDetachView(view);
-    if (mResultReceiver != null) {
-      mResultReceiver.setListener(null);
-    }
-    if (mLocationProvider != null) {
-      mLocationProvider.setListener(null);
-    }
-  }
-
-
-  @Override
-  public void onProgress(int code, Bundle data, int progress) {
-
-  }
-
-  @Override
-  public void onUserLocationUpdated(LatLng location) {
-
-  }
-
-  @Override
-  public void onLocationPermissionsDenied() {
-    if (getView() != null) {
-      Log.i(TAG, "Location permission denied");
-      getView().requestPermission(PERMISSION_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-          Manifest.permission.ACCESS_FINE_LOCATION);
-    }
   }
 
   public void onPermissionsRequestResult(int requestCode, @NonNull int[] grantResults) {

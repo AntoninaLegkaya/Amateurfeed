@@ -20,30 +20,30 @@ public class RegistrationFaceBookRequestModel implements Parcelable {
         }
       };
   @SerializedName("code")
-  private String mCode;
+  private String code;
   @SerializedName("longitude")
-  private double mLongitude;
+  private double longitude;
   @SerializedName("latitude")
-  private double mLatitude;
+  private double latitude;
   @SerializedName("deviceId")
-  private String mDeviceId;
+  private String deviceId;
   @SerializedName("osType")
-  private int mOsType;
+  private int osType;
   @SerializedName("deviceToken")
-  private String mDeviceToken;
+  private String deviceToken;
 
 
   public RegistrationFaceBookRequestModel(String code, double longitude, double latitude) {
-    mCode = code;
-    mLongitude = longitude;
-    mLatitude = latitude;
+    this.code = code;
+    this.longitude = longitude;
+    this.latitude = latitude;
 
   }
 
   private RegistrationFaceBookRequestModel(Parcel in) {
-    mCode = in.readString();
-    mLongitude = in.readDouble();
-    mLatitude = in.readDouble();
+    code = in.readString();
+    longitude = in.readDouble();
+    latitude = in.readDouble();
 
   }
 
@@ -54,8 +54,8 @@ public class RegistrationFaceBookRequestModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(mCode);
-    dest.writeDouble(mLongitude);
-    dest.writeDouble(mLatitude);
+    dest.writeString(code);
+    dest.writeDouble(longitude);
+    dest.writeDouble(latitude);
   }
 }

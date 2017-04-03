@@ -10,32 +10,32 @@ public class UserProfileModel {
   private String fullName;
 
   @SerializedName("email")
-  private String mEmail;
+  private String email;
 
   @SerializedName("image")
-  private String mImage;
+  private String image;
 
   @SerializedName("skype")
-  private String mSkype;
+  private String skype;
 
   @SerializedName("address")
-  private String mAddress;
+  private String address;
 
   @SerializedName("job")
-  private String mJob;
+  private String job;
 
   @SerializedName("phone")
-  private String mPhone;
+  private String phone;
 
   public UserProfileModel(String fullName, String email, String image, String skype, String address,
       String job, String phone) {
     this.fullName = fullName;
-    mEmail = email;
-    mImage = image;
-    mSkype = skype;
-    mAddress = address;
-    mJob = job;
-    mPhone = phone;
+    this.email = email;
+    this.image = image;
+    this.skype = skype;
+    this.address = address;
+    this.job = job;
+    this.phone = phone;
   }
 
   public String getFullName() {
@@ -43,26 +43,26 @@ public class UserProfileModel {
   }
 
   public String getEmail() {
-    return mEmail;
+    return email;
   }
 
   public String getImage() {
-    return mImage;
+    return image;
   }
 
   public String getSkype() {
-    return mSkype;
+    return skype;
   }
 
   public String getAddress() {
-    return mAddress;
+    return address;
   }
 
   public String getJob() {
-    return mJob;
+    return job;
   }
 
   public String getPhone() {
-    return mPhone;
+    return phone;
   }
 }

@@ -21,36 +21,29 @@ public class AzureServiceSettings implements Parcelable {
         }
       };
   @SerializedName("accountName")
-  private String mAccountName;
+  private String accountName;
   @SerializedName("accountKey")
-  private String mAccountKey;
+  private String accountKey;
   @SerializedName("storageUrl")
-  private String mStorageUrl;
+  private String storageUrl;
   @SerializedName("containerName")
-  private String mContainerName;
-
-  protected AzureServiceSettings(Parcel in) {
-    mAccountName = in.readString();
-    mAccountKey = in.readString();
-    mStorageUrl = in.readString();
-    mContainerName = in.readString();
-  }
+  private String containerName;
 
   public AzureServiceSettings(String accountName, String accountKey, String storageUrl,
       String containerName) {
-    mAccountName = accountName;
-    mAccountKey = accountKey;
-    mStorageUrl = storageUrl;
-    mContainerName = containerName;
+    this.accountName = accountName;
+    this.accountKey = accountKey;
+    this.storageUrl = storageUrl;
+    this.containerName = containerName;
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
 
-    dest.writeString(mAccountName);
-    dest.writeString(mAccountKey);
-    dest.writeString(mStorageUrl);
-    dest.writeString(mContainerName);
+    dest.writeString(accountName);
+    dest.writeString(accountKey);
+    dest.writeString(storageUrl);
+    dest.writeString(containerName);
   }
 
   @Override
@@ -59,19 +52,26 @@ public class AzureServiceSettings implements Parcelable {
   }
 
   public String getAccountName() {
-    return mAccountName;
+    return accountName;
   }
 
   public String getAccountKey() {
-    return mAccountKey;
+    return accountKey;
   }
 
   public String getStorageUrl() {
-    return mStorageUrl;
+    return storageUrl;
   }
 
   public String getContainerName() {
-    return mContainerName;
+    return containerName;
+  }
+
+  protected AzureServiceSettings(Parcel in) {
+    accountName = in.readString();
+    accountKey = in.readString();
+    storageUrl = in.readString();
+    containerName = in.readString();
   }
 }
 

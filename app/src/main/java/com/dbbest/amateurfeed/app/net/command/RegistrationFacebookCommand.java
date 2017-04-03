@@ -26,39 +26,37 @@ public class RegistrationFacebookCommand extends Command {
         }
       };
   private final static String KEY_IS_COMPLETED_PROFILE = "profile_completed";
-  private final RegistrationFaceBookRequestModel mRegistrationFacebookRequest;
-
-  public RegistrationFacebookCommand(String code, double longitude, double latitude) {
-    mRegistrationFacebookRequest = new RegistrationFaceBookRequestModel(code, longitude, latitude);
-  }
-
-  private RegistrationFacebookCommand(Parcel in) {
-    super(in);
-    mRegistrationFacebookRequest = in
-        .readParcelable(RegistrationRequestModel.class.getClassLoader());
-  }
+  private final RegistrationFaceBookRequestModel registrationFacebookRequest;
 
   public static boolean grabIsProfileCompleted(@NonNull Bundle bundle) {
     return bundle.getBoolean(KEY_IS_COMPLETED_PROFILE, false);
   }
 
+  public RegistrationFacebookCommand(String code, double longitude, double latitude) {
+    registrationFacebookRequest = new RegistrationFaceBookRequestModel(code, longitude, latitude);
+  }
+
+  private RegistrationFacebookCommand(Parcel in) {
+    super(in);
+    registrationFacebookRequest = in
+        .readParcelable(RegistrationRequestModel.class.getClassLoader());
+  }
+
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeParcelable(mRegistrationFacebookRequest, flags);
+    dest.writeParcelable(registrationFacebookRequest, flags);
   }
 
   @Override
   public void execute() {
     RestApiClient apiClient = App.getApiFactory().restClient();
     ResponseWrapper<LoginResponseModel> response = apiClient
-        .registrationFacebook(mRegistrationFacebookRequest);
+        .registrationFacebook(registrationFacebookRequest);
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         LoginResponseModel data = response.data();
         AuthToken authToken = new AuthToken();
         authToken.update(data.getAccessToken());
-
-
       } else {
         Bundle bundle = getStatusBundle(response);
         notifyError(bundle);

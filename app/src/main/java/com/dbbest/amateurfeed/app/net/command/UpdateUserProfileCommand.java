@@ -23,21 +23,21 @@ public class UpdateUserProfileCommand extends Command {
           return new UpdateUserProfileCommand[size];
         }
       };
-  private UpdateProfileRequestModel mProfileRequestModel;
+  private UpdateProfileRequestModel profileRequestModel;
 
   public UpdateUserProfileCommand(String name, String email, String image, String phone,
       String job) {
-    mProfileRequestModel = new UpdateProfileRequestModel(name, email, image, phone, job);
+    profileRequestModel = new UpdateProfileRequestModel(name, email, image, phone, job);
   }
 
-  protected UpdateUserProfileCommand(Parcel in) {
+  private UpdateUserProfileCommand(Parcel in) {
     super(in);
-    mProfileRequestModel = in.readParcelable(UpdateProfileRequestModel.class.getClassLoader());
+    profileRequestModel = in.readParcelable(UpdateProfileRequestModel.class.getClassLoader());
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeParcelable(mProfileRequestModel, flags);
+    dest.writeParcelable(profileRequestModel, flags);
   }
 
   @Override
@@ -46,7 +46,7 @@ public class UpdateUserProfileCommand extends Command {
     RestApiClient apiClient = App.getApiFactory().restClient();
     AuthToken authToken = new AuthToken();
     ResponseWrapper<Object> response = apiClient
-        .updateUserProfile(authToken.bearer(),mProfileRequestModel);
+        .updateUserProfile(authToken.bearer(), profileRequestModel);
     if (response != null) {
       if (response.isSuccessful()) {
 

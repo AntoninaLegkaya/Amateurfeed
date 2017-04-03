@@ -15,44 +15,22 @@ public class PasswordResetPresenter extends Presenter<ResetPasswordView> impleme
     CommandResultReceiver.CommandListener {
 
   private static final int CODE_RESET_PASSWORD = 0;
-
-  private CommandResultReceiver mResetReceiver;
-
-  public void resetPassword(String email) {
-
-    if (getView() != null) {
-      ResetPasswordView view = getView();
-
-      if (TextUtils.isEmpty(email)) {
-        view.showEmptyEmailError();
-        return;
-      } else if (!Utils.isEmailValid(email)) {
-        view.showEmailValidationError();
-        return;
-      }
-
-      view.showProgressDialog();
-      Command command = new ResetPasswordCommand(email);
-      command.send(CODE_RESET_PASSWORD, mResetReceiver);
-    }
-  }
-
+  private CommandResultReceiver resultReceiver;
 
   @Override
   protected void onAttachView(@NonNull ResetPasswordView view) {
-    if (mResetReceiver == null) {
-      mResetReceiver = new CommandResultReceiver();
+    if (resultReceiver == null) {
+      resultReceiver = new CommandResultReceiver();
     }
-    mResetReceiver.setListener(this);
+    resultReceiver.setListener(this);
   }
 
   @Override
   protected void onDetachView(@NonNull ResetPasswordView view) {
-    if (mResetReceiver != null) {
-      mResetReceiver.setListener(null);
+    if (resultReceiver != null) {
+      resultReceiver.setListener(null);
     }
   }
-
 
   @Override
   public void onSuccess(int code, Bundle data) {
@@ -75,6 +53,25 @@ public class PasswordResetPresenter extends Presenter<ResetPasswordView> impleme
   public void onProgress(int code, Bundle data, int progress) {
     if (getView() != null) {
       getView().dismissProgressDialog();
+    }
+  }
+
+  public void resetPassword(String email) {
+
+    if (getView() != null) {
+      ResetPasswordView view = getView();
+
+      if (TextUtils.isEmpty(email)) {
+        view.showEmptyEmailError();
+        return;
+      } else if (!Utils.isEmailValid(email)) {
+        view.showEmailValidationError();
+        return;
+      }
+
+      view.showProgressDialog();
+      Command command = new ResetPasswordCommand(email);
+      command.send(CODE_RESET_PASSWORD, resultReceiver);
     }
   }
 }

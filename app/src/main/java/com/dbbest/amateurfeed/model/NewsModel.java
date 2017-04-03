@@ -4,17 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-public class News implements Parcelable {
+public class NewsModel implements Parcelable {
 
-  public static final Creator<News> CREATOR = new Creator<News>() {
+  public static final Creator<NewsModel> CREATOR = new Creator<NewsModel>() {
     @Override
-    public News createFromParcel(Parcel in) {
-      return new News(in);
+    public NewsModel createFromParcel(Parcel in) {
+      return new NewsModel(in);
     }
 
     @Override
-    public News[] newArray(int size) {
-      return new News[size];
+    public NewsModel[] newArray(int size) {
+      return new NewsModel[size];
     }
   };
   @SerializedName("id")
@@ -22,22 +22,14 @@ public class News implements Parcelable {
   @SerializedName("name")
   private String mName;
 
-  public News(int id, String name) {
+  public NewsModel(int id, String name) {
     mId = id;
     mName = name;
   }
 
-  public News(Parcel in) {
+  public NewsModel(Parcel in) {
     mId = in.readInt();
     mName = in.readString();
-  }
-
-  public int getId() {
-    return mId;
-  }
-
-  public String getName() {
-    return mName;
   }
 
   @Override
@@ -57,5 +49,13 @@ public class News implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeInt(mId);
     dest.writeString(mName);
+  }
+
+  public int getId() {
+    return mId;
+  }
+
+  public String getName() {
+    return mName;
   }
 }

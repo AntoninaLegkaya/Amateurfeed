@@ -6,13 +6,13 @@ import com.google.gson.annotations.SerializedName;
 public class NewsResponseModel {
 
   @SerializedName("newsId")
-  private int mId;
+  private int id;
 
   public NewsResponseModel(int id) {
-    mId = id;
+    this.id = id;
   }
 
   public int getId() {
-    return mId;
+    return id;
   }
 }

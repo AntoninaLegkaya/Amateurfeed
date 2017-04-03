@@ -19,33 +19,25 @@ public class TagModel implements Parcelable {
     }
   };
   @SerializedName("id")
-  private int mId;
+  private int id;
   @SerializedName("name")
-  private String mName;
+  private String name;
 
   public TagModel(int id, String name) {
-    mId = id;
-    mName = name;
+    this.id = id;
+    this.name = name;
   }
 
   public TagModel(Parcel in) {
-    mId = in.readInt();
-    mName = in.readString();
-  }
-
-  public int getId() {
-    return mId;
-  }
-
-  public String getName() {
-    return mName;
+    id = in.readInt();
+    name = in.readString();
   }
 
   @Override
   public String toString() {
     return "TagModel{" +
-        "mId=" + mId +
-        ", mName='" + mName +
+        "id=" + id +
+        ", name='" + name +
         '}';
   }
 
@@ -57,7 +49,15 @@ public class TagModel implements Parcelable {
   @Override
   public void writeToParcel(Parcel dest, int flags) {
 
-    dest.writeInt(mId);
-    dest.writeString(mName);
+    dest.writeInt(id);
+    dest.writeString(name);
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
   }
 }

@@ -2,7 +2,7 @@ package com.dbbest.amateurfeed.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.Settings.Secure;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -20,52 +20,47 @@ import com.dbbest.amateurfeed.view.SignUpView;
 
 public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
-  private SignUpPresenter mPresenter;
-  private TextView mLoginScreenLink;
-  private TextView mResetPswLink;
-  private DialogFragment mProgressDialog;
-  private Button mSignUpButton;
-  private AppCompatEditText mEmailEditText;
-  private AppCompatEditText mNameEditText;
-  private AppCompatEditText mPhoneEditText;
-  private AppCompatEditText mPasswordEditText;
+  private SignUpPresenter presenter;
+  private DialogFragment progressDialog;
+  private AppCompatEditText emailEditText;
+  private AppCompatEditText nameEditText;
+  private AppCompatEditText phoneEditText;
+  private AppCompatEditText passwordEditText;
 
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.sign_up);
-    final String deviceId = Secure.getString(
-        getApplicationContext().getContentResolver(),
-        Secure.ANDROID_ID);
-    mPresenter = new SignUpPresenter();
-    mEmailEditText = (AppCompatEditText) findViewById(R.id.email);
-    mNameEditText = (AppCompatEditText) findViewById(R.id.fullname);
-    mPhoneEditText = (AppCompatEditText) findViewById(R.id.phone);
-    mPasswordEditText = (AppCompatEditText) findViewById(R.id.password);
-    mLoginScreenLink = (TextView) findViewById(R.id.login_link);
-    mLoginScreenLink.setOnClickListener(new View.OnClickListener() {
+    setContentView(R.layout.activity_sign_up);
+    final String deviceId = Settings.Secure.ANDROID_ID;
+    presenter = new SignUpPresenter();
+    emailEditText = (AppCompatEditText) findViewById(R.id.text_email);
+    nameEditText = (AppCompatEditText) findViewById(R.id.text_full_name);
+    phoneEditText = (AppCompatEditText) findViewById(R.id.text_phone);
+    passwordEditText = (AppCompatEditText) findViewById(R.id.text_password);
+    TextView loginScreenLink = (TextView) findViewById(R.id.text_login_link);
+    loginScreenLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         startActivity(UiActivityNavigation.startActivity(SignUpActivity.this));
       }
     });
-    mResetPswLink = (TextView) findViewById(R.id.reset_link);
-    mResetPswLink.setOnClickListener(new View.OnClickListener() {
+    TextView resetPswLink = (TextView) findViewById(R.id.text_reset_link);
+    resetPswLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        if (view.getId() == R.id.reset_link) {
+        if (view.getId() == R.id.text_reset_link) {
           startActivity(UiActivityNavigation.resetPassActivity(SignUpActivity.this));
         }
       }
     });
-    mSignUpButton = (Button) findViewById(R.id.sign_up_button);
-    mSignUpButton.setOnClickListener(new View.OnClickListener() {
+    Button signUpButton = (Button) findViewById(R.id.button_sign_up);
+    signUpButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        mPresenter
-            .registration(mEmailEditText.getText().toString(), mNameEditText.getText().toString(),
-                mPhoneEditText.getText().toString(), null, mPasswordEditText.getText().toString(),
+        presenter
+            .registration(emailEditText.getText().toString(), nameEditText.getText().toString(),
+                phoneEditText.getText().toString(), null, passwordEditText.getText().toString(),
                 deviceId, getString(R.string.os_device), BuildConfig.OPEN_FIREBASE_API_KEY);
       }
     });
@@ -75,13 +70,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
   @Override
   protected void onStart() {
     super.onStart();
-    mPresenter.attachView(this);
+    presenter.attachView(this);
   }
 
   @Override
   protected void onStop() {
     super.onStop();
-    mPresenter.detachView();
+    presenter.detachView();
   }
 
   @Override
@@ -135,7 +130,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
   @Override
   public void showSuccessDialog() {
-    UIDialogNavigation.showWarningDialog(R.string.success_registartion)
+    UIDialogNavigation.showWarningDialog(R.string.success_registration)
         .show(getSupportFragmentManager(), "warn");
   }
 
@@ -147,20 +142,20 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
   @Override
   public void showErrorRegistrationDialog() {
-    UIDialogNavigation.showWarningDialog(R.string.error_registartion)
+    UIDialogNavigation.showWarningDialog(R.string.error_registration)
         .show(getSupportFragmentManager(), "warn");
   }
 
   @Override
   public void showProgressDialog() {
-    mProgressDialog = UIDialogNavigation.showProgressDialog();
-    mProgressDialog.show(getSupportFragmentManager(), "progress");
+    progressDialog = UIDialogNavigation.showProgressDialog();
+    progressDialog.show(getSupportFragmentManager(), "progress");
   }
 
   @Override
   public void dismissProgressDialog() {
-    if (mProgressDialog != null) {
-      mProgressDialog.dismiss();
+    if (progressDialog != null) {
+      progressDialog.dismiss();
     }
   }
 

@@ -25,20 +25,20 @@ public class EditNewsCommand extends Command {
       return new EditNewsCommand[size];
     }
   };
-  private String TAG = EditNewsCommand.class.getName();
+  private final String TAG = EditNewsCommand.class.getName();
   private ArrayList<TagModel> mTagModels = new ArrayList<>();
-  private String mTitle;
-  private String mText;
-  private String mImage;
-  private int mId;
+  private String title;
+  private String text;
+  private String image;
+  private int id;
 
   public EditNewsCommand(ArrayList<TagModel> tagModels, String title, String text, String image,
       int id) {
-    mId = id;
+    this.id = id;
     mTagModels = tagModels;
-    mTitle = title;
-    mText = text;
-    mImage = image;
+    this.title = title;
+    this.text = text;
+    this.image = image;
     for (TagModel model : tagModels) {
       Log.i(TAG, "What you give NewsUpdateModel Tag: " + model.getName() + '\n');
     }
@@ -46,31 +46,29 @@ public class EditNewsCommand extends Command {
 
   public EditNewsCommand(Parcel in) {
     super(in);
-    mId = in.readInt();
-    mTitle = in.readString();
-    mText = in.readString();
-    mImage = in.readString();
-    mTagModels = new ArrayList<TagModel>();
+    id = in.readInt();
+    title = in.readString();
+    text = in.readString();
+    image = in.readString();
+    mTagModels = new ArrayList<>();
     in.readTypedList(mTagModels, TagModel.CREATOR);
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeInt(mId);
-    dest.writeString(mTitle);
-    dest.writeString(mText);
-    dest.writeString(mImage);
+    dest.writeInt(id);
+    dest.writeString(title);
+    dest.writeString(text);
+    dest.writeString(image);
     dest.writeTypedList(mTagModels);
-
   }
 
   @Override
   public void execute() {
-
     RestApiClient apiClient = App.getApiFactory().restClient();
     AuthToken authToken = new AuthToken();
-    NewsUpdateModel mNewsUpdateModel = new NewsUpdateModel(mTagModels, mTitle, mText, mImage);
-    Log.i(TAG, "Edit News [_ID]: " + mId + "\n" +
+    NewsUpdateModel mNewsUpdateModel = new NewsUpdateModel(mTagModels, title, text, image);
+    Log.i(TAG, "Edit News [_ID]: " + id + "\n" +
         "Title: " + mNewsUpdateModel.getTitle() + '\n' +
         "Description: " + mNewsUpdateModel.getText() + '\n' +
         "Image: " + mNewsUpdateModel.getImage());
@@ -78,9 +76,8 @@ public class EditNewsCommand extends Command {
     for (TagModel model : tags) {
       Log.i(TAG, "Tag: " + model.getName() + '\n');
     }
-
     ResponseWrapper<NewsResponseModel> response = apiClient
-        .editNews(authToken.bearer(), mNewsUpdateModel, mId);
+        .editNews(authToken.bearer(), mNewsUpdateModel, id);
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         NewsResponseModel data = response.data();
@@ -88,7 +85,6 @@ public class EditNewsCommand extends Command {
         Bundle bundle = new Bundle();
         bundle.putParcelable("model", mNewsUpdateModel);
         notifySuccess(bundle);
-
       } else {
         notifyError(Bundle.EMPTY);
       }

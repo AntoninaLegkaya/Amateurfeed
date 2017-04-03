@@ -12,43 +12,44 @@ public class LoginRequestModel implements Parcelable {
         public LoginRequestModel createFromParcel(Parcel source) {
           return new LoginRequestModel(source);
         }
+
         @Override
         public LoginRequestModel[] newArray(int size) {
           return new LoginRequestModel[size];
         }
       };
   @SerializedName("email")
-  private String mEmail;
+  private String email;
   @SerializedName("password")
-  private String mPassword;
+  private String password;
   @SerializedName("longitude")
-  private double mLongitude;
+  private double longitude;
   @SerializedName("latitude")
-  private double mLatitude;
+  private double latitude;
   @SerializedName("deviceId")
-  private String mDeviceId;
+  private String deviceId;
   @SerializedName("osType")
-  private String mOsType;
+  private String osType;
   @SerializedName("deviceToken")
-  private String mDeviceToken;
+  private String deviceToken;
 
 
   public LoginRequestModel(String email, String password, String deviceId, String osType,
       String deviceToken) {
-    mEmail = email;
-    mPassword = password;
-    mDeviceId = deviceId;
-    mOsType = osType;
-    mDeviceToken = deviceToken;
+    this.email = email;
+    this.password = password;
+    this.deviceId = deviceId;
+    this.osType = osType;
+    this.deviceToken = deviceToken;
 
   }
 
   private LoginRequestModel(Parcel in) {
-    mEmail = in.readString();
-    mPassword = in.readString();
-    mDeviceId = in.readString();
-    mOsType = in.readString();
-    mDeviceToken = in.readString();
+    email = in.readString();
+    password = in.readString();
+    deviceId = in.readString();
+    osType = in.readString();
+    deviceToken = in.readString();
   }
 
   @Override
@@ -58,23 +59,23 @@ public class LoginRequestModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(mEmail);
-    dest.writeString(mPassword);
-    dest.writeString(mDeviceId);
-    dest.writeString(mOsType);
-    dest.writeString(mDeviceToken);
+    dest.writeString(email);
+    dest.writeString(password);
+    dest.writeString(deviceId);
+    dest.writeString(osType);
+    dest.writeString(deviceToken);
 
   }
 
-  public String getmDeviceId() {
-    return mDeviceId;
+  public String getDeviceId() {
+    return deviceId;
   }
 
-  public String getmOsType() {
-    return mOsType;
+  public String getOsType() {
+    return osType;
   }
 
-  public String getmDeviceToken() {
-    return mDeviceToken;
+  public String getDeviceToken() {
+    return deviceToken;
   }
 }

@@ -13,7 +13,6 @@ import com.dbbest.amateurfeed.ui.navigator.UiActivityNavigation;
 public class SplashActivity extends AppCompatActivity {
 
   private static final int FADE_DELAY = 500;
-  private String TAG = SplashActivity.class.getName();
 
   private Handler mHandler = new Handler(new Handler.Callback() {
     @Override
@@ -24,7 +23,6 @@ public class SplashActivity extends AppCompatActivity {
       return true;
     }
   });
-
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {

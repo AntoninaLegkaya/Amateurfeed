@@ -14,22 +14,22 @@ public class AzureCommand extends Command {
 
   public static final Parcelable.Creator<AzureCommand> CREATOR =
       new Parcelable.Creator<AzureCommand>() {
-    @Override
-    public AzureCommand createFromParcel(Parcel source) {
-      return new AzureCommand(source);
-    }
+        @Override
+        public AzureCommand createFromParcel(Parcel source) {
+          return new AzureCommand(source);
+        }
 
-    @Override
-    public AzureCommand[] newArray(int size) {
-      return new AzureCommand[size];
-    }
-  };
+        @Override
+        public AzureCommand[] newArray(int size) {
+          return new AzureCommand[size];
+        }
+      };
 
   public AzureCommand() {
 
   }
 
-  protected AzureCommand(Parcel in) {
+  private AzureCommand(Parcel in) {
 
     super(in);
   }
@@ -48,18 +48,15 @@ public class AzureCommand extends Command {
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         AzureServiceSettings settings = response.data();
-
         CloudPreferences cloudPreferences = new CloudPreferences();
         cloudPreferences.setCredentials(settings.getAccountName(), settings.getAccountKey(),
             settings.getContainerName(), settings.getStorageUrl());
         notifySuccess(Bundle.EMPTY);
-
-
       } else {
         notifyError(Bundle.EMPTY);
       }
     } else {
+      notifyError(Bundle.EMPTY);
     }
-
   }
 }

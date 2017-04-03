@@ -7,9 +7,9 @@ import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
-import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.UserProfileModel;
+import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
 
 public class UserProfileCommand extends Command {
 
@@ -25,7 +25,7 @@ public class UserProfileCommand extends Command {
           return new UserProfileCommand[size];
         }
       };
-  private String TAG = UserProfileCommand.class.getName();
+  private final String TAG = UserProfileCommand.class.getName();
 
   public UserProfileCommand() {
   }
@@ -42,7 +42,7 @@ public class UserProfileCommand extends Command {
   public void execute() {
 
     RestApiClient apiClient = App.getApiFactory().restClient();
-    AuthToken authToken= new AuthToken();
+    AuthToken authToken = new AuthToken();
     ResponseWrapper<UserProfileModel> response = apiClient
         .getUserInfo(authToken.bearer());
     if (response != null) {

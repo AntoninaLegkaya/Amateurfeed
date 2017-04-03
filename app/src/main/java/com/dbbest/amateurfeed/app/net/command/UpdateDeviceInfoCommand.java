@@ -23,20 +23,20 @@ public class UpdateDeviceInfoCommand extends Command {
           return new UpdateDeviceInfoCommand[size];
         }
       };
-  private DeviceInfoModel mDeviceInfoModel;
+  private DeviceInfoModel deviceInfoModel;
 
   public UpdateDeviceInfoCommand(String osType, String deviceToken, String deviceId) {
-    mDeviceInfoModel = new DeviceInfoModel(osType, deviceToken, deviceId);
+    deviceInfoModel = new DeviceInfoModel(osType, deviceToken, deviceId);
   }
 
-  protected UpdateDeviceInfoCommand(Parcel in) {
+  private UpdateDeviceInfoCommand(Parcel in) {
     super(in);
-    mDeviceInfoModel = in.readParcelable(DeviceInfoModel.class.getClassLoader());
+    deviceInfoModel = in.readParcelable(DeviceInfoModel.class.getClassLoader());
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeParcelable(mDeviceInfoModel, flags);
+    dest.writeParcelable(deviceInfoModel, flags);
   }
 
   @Override
@@ -45,7 +45,7 @@ public class UpdateDeviceInfoCommand extends Command {
     RestApiClient apiClient = App.getApiFactory().restClient();
     AuthToken authToken = new AuthToken();
     ResponseWrapper<Object> response = apiClient
-        .updateDeviceInfo(authToken.bearer(), mDeviceInfoModel);
+        .updateDeviceInfo(authToken.bearer(), deviceInfoModel);
     if (response != null) {
       if (response.isSuccessful()) {
 

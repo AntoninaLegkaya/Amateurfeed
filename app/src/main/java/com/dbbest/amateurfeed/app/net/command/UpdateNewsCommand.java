@@ -11,8 +11,11 @@ import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.response.NewsPreviewResponseModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
-import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.CommentEntry;
+import com.dbbest.amateurfeed.data.CreatorEntry;
 import com.dbbest.amateurfeed.data.FeedProvider;
+import com.dbbest.amateurfeed.data.PreviewEntry;
+import com.dbbest.amateurfeed.data.TagEntry;
 import com.dbbest.amateurfeed.model.AuthToken;
 import com.dbbest.amateurfeed.model.NewsRequestModel;
 import com.dbbest.amateurfeed.model.TagModel;
@@ -34,17 +37,16 @@ public class UpdateNewsCommand extends Command {
     }
   };
   private final String TAG = UpdateNewsCommand.class.getName();
-  private NewsRequestModel mNewsRequestModel;
+  private NewsRequestModel newsRequestModel;
 
   public UpdateNewsCommand(int offset, int count) {
     AuthToken authToken = new AuthToken();
-    mNewsRequestModel = new NewsRequestModel(offset, count, authToken.bearer());
+    newsRequestModel = new NewsRequestModel(offset, count, authToken.bearer());
   }
-
 
   private UpdateNewsCommand(Parcel in) {
     super(in);
-    mNewsRequestModel = in.readParcelable(NewsRequestModel.class.getClassLoader());
+    newsRequestModel = in.readParcelable(NewsRequestModel.class.getClassLoader());
   }
 
   @Override
@@ -53,89 +55,70 @@ public class UpdateNewsCommand extends Command {
     RestApiClient apiClient = App.getApiFactory().restClient();
 
     ResponseWrapper<ArrayList<NewsPreviewResponseModel>> response = apiClient
-        .getNews(mNewsRequestModel.getAccessToken(), mNewsRequestModel.getOffset(),
-            mNewsRequestModel.getCount());
+        .getNews(newsRequestModel.getAccessToken(), newsRequestModel.getOffset(),
+            newsRequestModel.getCount());
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         ArrayList<NewsPreviewResponseModel> data = response.data();
         int i = 0;
         for (NewsPreviewResponseModel preview : data) {
-          long _id;
-          String mTitle;
-          String mText;
-          int mLikes;
-          boolean mIsLike;
-          String mAuthor;
-          String mAuthorImage;
-          String mCreateDate;
-          String mImage;
-          boolean mIsMy;
-          ArrayList<TagModel> mTags;
+          long id;
+          String title;
+          String text;
+          int likes;
+          boolean isLike;
+          String author;
+          String authorImage;
+          String createDate;
+          String image;
+          boolean isMy;
+          ArrayList<TagModel> tagsList;
           int _idTag;
           String mNameTag;
           ArrayList<UserFeedCommentModel> mComments;
-          _id = preview.getId();
-          mTitle = preview.getTitle();
-          mText = preview.getText();
-          mTags = preview.getTags();
-          mLikes = preview.getLikes();
-          mIsLike = preview.isLike();
-          mAuthor = preview.getAuthor();
-          mAuthorImage = preview.getAuthorImage();
-          mCreateDate = preview.getCreateDate();
-          mImage = preview.getImage();
-          mIsMy = preview.isMy();
+          id = preview.getId();
+          title = preview.getTitle();
+          text = preview.getText();
+          tagsList = preview.getTags();
+          likes = preview.getLikes();
+          isLike = preview.isLike();
+          author = preview.getAuthor();
+          authorImage = preview.getAuthorImage();
+          createDate = preview.getCreateDate();
+          image = preview.getImage();
+          isMy = preview.isMy();
           mComments = preview.getComments();
           getCommentModel(mComments);
 
-          // Insert the tags news information into the database
-          for (TagModel tag : mTags) {
-            ContentValues tagValues = new ContentValues();
-            _idTag = tag.getId();
-            mNameTag = tag.getName();
-            tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, _idTag);
-            tagValues.put(FeedContract.TagEntry.COLUMN_NAME, mNameTag);
-            tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID, _id);
-            int rowUpdate = App.instance().getContentResolver()
-                .update(FeedContract.TagEntry.CONTENT_URI, tagValues,
-                    FeedProvider.sMultipleTagSelection,
-                    new String[]{String.valueOf(_idTag), String.valueOf(_id)});
-            if (rowUpdate == 0) {
-              Log.i(TAG,
-                  "This tag not exist! try to insert it [tagId, preview_id, nameTag]: " + "["
-                      + _idTag + " , " + _id + " , "
-                      + mNameTag + "]");
-              App.instance().getContentResolver()
-                  .insert(FeedContract.TagEntry.CONTENT_URI, tagValues);
-            }
-          }
+          putTagsInfo(id, tagsList);
+
           ContentValues previewValues = new ContentValues();
-          previewValues.put(FeedContract.PreviewEntry._ID, _id);
-          previewValues.put(FeedContract.PreviewEntry.COLUMN_TITLE, mTitle);
-          previewValues.put(FeedContract.PreviewEntry.COLUMN_TEXT, mText);
-          previewValues.put(FeedContract.PreviewEntry.COLUMN_LIKES, mLikes);
-          previewValues.put(FeedContract.PreviewEntry.COLUMN_IS_LIKE, mIsLike ? 1 : 0);
-          previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR, mAuthor);
-          if (mAuthorImage == null) {
-            previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE, "");
+          previewValues.put(PreviewEntry._ID, id);
+          previewValues.put(PreviewEntry.COLUMN_TITLE, title);
+          previewValues.put(PreviewEntry.COLUMN_TEXT, text);
+          previewValues.put(PreviewEntry.COLUMN_LIKES, likes);
+          previewValues.put(PreviewEntry.COLUMN_IS_LIKE, isLike ? 1 : 0);
+          previewValues.put(PreviewEntry.COLUMN_AUTHOR, author);
+          if (authorImage == null) {
+            previewValues.put(PreviewEntry.COLUMN_AUTHOR_IMAGE, "");
           } else {
-            previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE, mAuthorImage);
+            previewValues.put(PreviewEntry.COLUMN_AUTHOR_IMAGE, authorImage);
           }
-          previewValues.put(FeedContract.PreviewEntry.COLUMN_CREATE_DATE, mCreateDate);
-          if (mImage == null) {
-            previewValues.put(FeedContract.PreviewEntry.COLUMN_IMAGE, "");
+          previewValues.put(PreviewEntry.COLUMN_CREATE_DATE, createDate);
+          if (image == null) {
+            previewValues.put(PreviewEntry.COLUMN_IMAGE, "");
           } else {
-            previewValues.put(FeedContract.PreviewEntry.COLUMN_IMAGE, mImage);
+            previewValues.put(PreviewEntry.COLUMN_IMAGE, image);
           }
-          previewValues.put(FeedContract.PreviewEntry.COLUMN_IS_MY, mIsMy ? 1 : 0);
+          previewValues.put(PreviewEntry.COLUMN_IS_MY, isMy ? 1 : 0);
 
           int rowReturn = App.instance().getContentResolver()
-              .update(FeedContract.PreviewEntry.CONTENT_URI, previewValues,
-                  FeedProvider.sPreviewSelection, new String[]{String.valueOf(_id)});
+              .update(PreviewEntry.CONTENT_URI, previewValues,
+                  FeedProvider.sPreviewSelection, new String[]{String.valueOf(id)});
           if (rowReturn == 0) {
             Log.i(TAG, "This preview row not exist! try to insert it");
             App.instance().getContentResolver()
-                .insert(FeedContract.PreviewEntry.CONTENT_URI, previewValues);
+                .insert(PreviewEntry.CONTENT_URI, previewValues);
           }
         }
         notifySuccess(Bundle.EMPTY);
@@ -146,6 +129,36 @@ public class UpdateNewsCommand extends Command {
       notifyError(Bundle.EMPTY);
     }
 
+  }
+
+  @Override
+  public void writeToParcel(int flags, Parcel dest) {
+    dest.writeParcelable(newsRequestModel, flags);
+  }
+
+  private void putTagsInfo(long id, ArrayList<TagModel> tagsList) {
+    int _idTag;
+    String mNameTag;
+    for (TagModel tag : tagsList) {
+      ContentValues tagValues = new ContentValues();
+      _idTag = tag.getId();
+      mNameTag = tag.getName();
+      tagValues.put(TagEntry.COLUMN_TAG_ID, _idTag);
+      tagValues.put(TagEntry.COLUMN_NAME, mNameTag);
+      tagValues.put(TagEntry.COLUMN_PREVIEW_ID, id);
+      int rowUpdate = App.instance().getContentResolver()
+          .update(TagEntry.CONTENT_URI, tagValues,
+              FeedProvider.sMultipleTagSelection,
+              new String[]{String.valueOf(_idTag), String.valueOf(id)});
+      if (rowUpdate == 0) {
+        Log.i(TAG,
+            "This tag not exist! try to insert it [tagId, preview_id, nameTag]: " + "["
+                + _idTag + " , " + id + " , "
+                + mNameTag + "]");
+        App.instance().getContentResolver()
+            .insert(TagEntry.CONTENT_URI, tagValues);
+      }
+    }
   }
 
   private void getCommentModel(ArrayList<UserFeedCommentModel> mComments) {
@@ -178,49 +191,27 @@ public class UpdateNewsCommand extends Command {
         int mIsAdmin = (mCreator.isAdmin() ? 1 : 0);
         mImage = mCreator.getImage();
 
-        Uri uriCreatorId = FeedContract.CreatorEntry.buildCreatorUriById(creator_id);
+        Uri uriCreatorId = CreatorEntry.buildCreatorUriById(creator_id);
 
-        Cursor cursor = App.instance().getContentResolver().query(
-            uriCreatorId,
-            null,
-            null,
-            null,
-            null
-        );
-        if (!cursor.moveToFirst()) {
-
-          creatorValues.put(FeedContract.CreatorEntry._ID, creator_id);
-          creatorValues.put(FeedContract.CreatorEntry.COLUMN_NAME, mCreatorName);
-          creatorValues.put(FeedContract.CreatorEntry.COLUMN_IS_ADMIN, mIsAdmin);
-          creatorValues.put(FeedContract.CreatorEntry.COLUMN_IMAGE, mImage);
-          int i = App.instance().getContentResolver()
-              .update(FeedContract.CreatorEntry.CONTENT_URI, creatorValues,
-                  FeedProvider.sCreatorSelection, new String[]{String.valueOf(creator_id)});
-
-          if (i == 0) {
-            Log.i(TAG, "This creator row not exist! try to insert it");
-            App.instance().getContentResolver()
-                .insert(FeedContract.CreatorEntry.CONTENT_URI, creatorValues);
-          }
-        }
+        putCreatorInfo(creator_id, mCreatorName, mImage, creatorValues, mIsAdmin, uriCreatorId);
         createCommentDate = mComment.getCreateDate();
         childrenComment = mComment.getChildren();
 
         ContentValues commentValues = new ContentValues();
-        commentValues.put(FeedContract.CommentEntry._ID, _idComment);
-        commentValues.put(FeedContract.CommentEntry.COLUMN_POST_ID, post_id);
-        commentValues.put(FeedContract.CommentEntry.COLUMN_BODY, body);
-        commentValues.put(FeedContract.CommentEntry.COLUMN_PARENT_COMMENT_ID, parentCommentId);
-        commentValues.put(FeedContract.CommentEntry.COLUMN_CREATOR_KEY, mCreator.getId());
-        commentValues.put(FeedContract.CommentEntry.COLUMN_CREATE_DATE, createCommentDate);
+        commentValues.put(CommentEntry._ID, _idComment);
+        commentValues.put(CommentEntry.COLUMN_POST_ID, post_id);
+        commentValues.put(CommentEntry.COLUMN_BODY, body);
+        commentValues.put(CommentEntry.COLUMN_PARENT_COMMENT_ID, parentCommentId);
+        commentValues.put(CommentEntry.COLUMN_CREATOR_KEY, mCreator.getId());
+        commentValues.put(CommentEntry.COLUMN_CREATE_DATE, createCommentDate);
 
         int i = App.instance().getContentResolver()
-            .update(FeedContract.CommentEntry.CONTENT_URI, commentValues,
+            .update(CommentEntry.CONTENT_URI, commentValues,
                 FeedProvider.sCommentSelection, new String[]{String.valueOf(_idComment)});
         if (i == 0) {
           Log.i(TAG, "This comment row not exist! try to insert it");
           App.instance().getContentResolver()
-              .insert(FeedContract.CommentEntry.CONTENT_URI, commentValues);
+              .insert(CommentEntry.CONTENT_URI, commentValues);
         }
 
         childArray.add(childrenComment);
@@ -233,9 +224,30 @@ public class UpdateNewsCommand extends Command {
     }
   }
 
-  @Override
-  public void writeToParcel(int flags, Parcel dest) {
-    dest.writeParcelable(mNewsRequestModel, flags);
+  private void putCreatorInfo(int creator_id, String mCreatorName, String mImage, ContentValues creatorValues, int mIsAdmin, Uri uriCreatorId) {
+    Cursor cursor = App.instance().getContentResolver().query(
+        uriCreatorId,
+        null,
+        null,
+        null,
+        null
+    );
+    if (!cursor.moveToFirst()) {
+
+      creatorValues.put(CreatorEntry._ID, creator_id);
+      creatorValues.put(CreatorEntry.COLUMN_NAME, mCreatorName);
+      creatorValues.put(CreatorEntry.COLUMN_IS_ADMIN, mIsAdmin);
+      creatorValues.put(CreatorEntry.COLUMN_IMAGE, mImage);
+      int i = App.instance().getContentResolver()
+          .update(CreatorEntry.CONTENT_URI, creatorValues,
+              FeedProvider.sCreatorSelection, new String[]{String.valueOf(creator_id)});
+
+      if (i == 0) {
+        Log.i(TAG, "This creator row not exist! try to insert it");
+        App.instance().getContentResolver()
+            .insert(CreatorEntry.CONTENT_URI, creatorValues);
+      }
+    }
   }
 
 }

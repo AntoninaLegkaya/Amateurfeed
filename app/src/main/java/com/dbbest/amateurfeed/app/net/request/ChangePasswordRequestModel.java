@@ -9,36 +9,36 @@ public class ChangePasswordRequestModel implements Parcelable {
 
   public static final Parcelable.Creator<ChangePasswordRequestModel> CREATOR =
       new Parcelable.Creator<ChangePasswordRequestModel>() {
-    @Override
-    public ChangePasswordRequestModel createFromParcel(Parcel source) {
-      return new ChangePasswordRequestModel(source);
-    }
+        @Override
+        public ChangePasswordRequestModel createFromParcel(Parcel source) {
+          return new ChangePasswordRequestModel(source);
+        }
 
-    @Override
-    public ChangePasswordRequestModel[] newArray(int size) {
-      return new ChangePasswordRequestModel[size];
-    }
-  };
+        @Override
+        public ChangePasswordRequestModel[] newArray(int size) {
+          return new ChangePasswordRequestModel[size];
+        }
+      };
   @SerializedName("currentPassword")
-  private String mCurrentPassword;
+  private String currentPassword;
   @SerializedName("password")
-  private String mPassword;
+  private String password;
   @SerializedName("confirmPassword")
-  private String mConfirmPassword;
+  private String confirmPassword;
 
 
   public ChangePasswordRequestModel(String currentPassword, String password,
       String confirmPassword) {
-    mCurrentPassword = currentPassword;
-    mConfirmPassword = confirmPassword;
-    mPassword = password;
+    this.currentPassword = currentPassword;
+    this.confirmPassword = confirmPassword;
+    this.password = password;
 
   }
 
   private ChangePasswordRequestModel(Parcel in) {
-    mCurrentPassword = in.readString();
-    mPassword = in.readString();
-    mConfirmPassword = in.readString();
+    currentPassword = in.readString();
+    password = in.readString();
+    confirmPassword = in.readString();
 
   }
 
@@ -49,9 +49,9 @@ public class ChangePasswordRequestModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(mCurrentPassword);
-    dest.writeString(mPassword);
-    dest.writeString(mConfirmPassword);
+    dest.writeString(currentPassword);
+    dest.writeString(password);
+    dest.writeString(confirmPassword);
 
   }
 }

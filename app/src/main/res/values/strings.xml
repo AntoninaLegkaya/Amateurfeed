@@ -20,6 +20,8 @@
   <string name="ok_button">OK</string>
   <string name="link_sign_up_screen"><u>Sign up</u></string>
   <string name="login">E-mail</string>
+  <string name="login_text" translatable="false">tonychka1684@mail.ru</string>
+  <string name="password_text" translatable="false">123456a</string>
 
   <string name="label_sign_up">If you do not registered</string>
   <string name="label_toolbar_login_in">Login in</string>
@@ -31,7 +33,7 @@
   <string name="label_toolbar_sign_up">Sign Up</string>
   <string name="sign_up_button">Registrate</string>
 
-  <string name="fullname">Name (required)</string>
+  <string name="fullName">Name (required)</string>
   <string name="phone">Phone</string>
   <string name="address">Address</string>
   <string name="password">Password</string>
@@ -81,6 +83,7 @@
 
   <!--Edit Profile Screen-->
   <string name="edit_profile_toolbar_label">Edit Profile</string>
+  <string name="edit_profile_location">Location</string>
 
   <!--Item Details Screen-->
   <string name="detail_toolbar_label">Detail News</string>
@@ -90,6 +93,8 @@
   <string name="description_hint">Write You Description</string>
   <string name="title_hint">Write You Title</string>
   <string name="publish_button">Publish</string>
+  <string name="count_likes" translatable="false">0</string>
+  <string name="count_comments" translatable="false">0</string>
 
   <!--Change Password Screen-->
   <string name="change_toolbar_label">Change Password</string>
@@ -107,16 +112,13 @@
   <!-- Strings related to Notification Enabled preference -->
   <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>
   <string name="pref_enable_notifications_label">Push Notifications</string>
-
   <string name="pref_enable_notifications_true">Enabled</string>
   <string name="pref_enable_notifications_false">Not Enabled</string>
   <string name="pref_enable_notifications_default" translatable="false">true</string>
 
-
   <!--Button-->
   <string name="cancel_button">Cancel</string>
   <string name="save_button">Save</string>
-
 
   <!--Waring Dialog Start Screen-->
   <string name="emptyEmailError">Please enter e-mail</string>
@@ -129,14 +131,11 @@
   <string name="incorrectPhone">Incorrect phone</string>
   <string name="incorrectPassword">Incorrect password</string>
   <string name="incorrectLoginDialog">Check e-mail and password! \n Try again!</string>
-
   <string name="no_internet_connection">No internet connection</string>
   <string name="server_error">Server Error</string>
-  <string name="error_registartion">Registration fail!</string>
-  <string name="success_registartion">Registration Success!</string>
-
+  <string name="error_registration">Registration fail!</string>
+  <string name="success_registration">Registration Success!</string>
   <string name="abuse_dialog"> <h><b>Write abuse</b></h> \n For removing this news, write abuse to admin!</string>
-
 
   <!--Dialog check button-->
   <string name="like" translatable="false">Like</string>
@@ -152,23 +151,24 @@
   <!--News Feed-->
   <string name="get_news_success">I get it! :)</string>
   <string name="get_news_error">I can get it! :(</string>
-  <string name="set_like_success" translatable="false">I like/dislike it! :)</string>
-  <string name="set_like_error" translatable="false">I can like/dislike it! :(</string>
-  <string name="set_delete_success" translatable="false">You Post Abuse :)</string>
-  <string name="set_delete_error" translatable="false">You do not  Post Abuse :(</string>
-  <string name="set_good_by" translatable="false">By! :)</string>
+  <string name="set_like_success" translatable="false">I like/dislike it! </string>
+  <string name="set_like_error" translatable="false">I can like/dislike it! </string>
+  <string name="set_delete_success" translatable="false">You Post Abuse </string>
+  <string name="set_delete_error" translatable="false">You do not  Post Abuse </string>
+  <string name="set_good_by" translatable="false">By! </string>
 
   <!--Item Detail Dialog-->
   <string name="change_image" translatable="false">You invoke change image option</string>
-  <string name="set_edit_success" translatable="false">You Updated News :)</string>
+  <string name="set_edit_success" translatable="false">You Updated News </string>
   <string name="set_edit_error">Please logout and authenticate again</string>
-  <string name="set_add_comment_success" translatable="false">You Added Comment :)</string>
-  <string name="add_news_success" translatable="false">You Add News :)</string>
+  <string name="set_add_comment_success" translatable="false">You Added Comment </string>
+  <string name="add_news_success" translatable="false">You Add News </string>
   <string name="add_news_image">Select Your Image</string>
 
   <!--Edit Profile Screen-->
   <string name="update_profile_success">Profile was updated</string>
   <string name="update_profile_error">Profile was not updated</string>
+
   <!--Search Screen Dialog-->
   <string name="search_error">News not found</string>
 

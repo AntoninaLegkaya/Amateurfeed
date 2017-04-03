@@ -25,7 +25,7 @@ public class LikeModel implements Parcelable {
     this.isLike = isLike;
   }
 
-  protected LikeModel(Parcel in) {
+  private LikeModel(Parcel in) {
     isLike = in.readByte() != 0x00;
   }
 

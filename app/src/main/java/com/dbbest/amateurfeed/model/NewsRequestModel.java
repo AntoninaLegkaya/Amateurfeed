@@ -21,35 +21,23 @@ public class NewsRequestModel implements Parcelable {
         }
       };
   @SerializedName("offset")
-  private int mOffset;
+  private int offset;
   @SerializedName("count")
-  private int mCount;
+  private int count;
   @SerializedName("deviceToken")
-  private String mAccessToken;
+  private String accessToken;
 
   public NewsRequestModel(int offset, int count, String accessToken) {
-    mOffset = offset;
-    mCount = count;
-    mAccessToken = accessToken;
+    this.offset = offset;
+    this.count = count;
+    this.accessToken = accessToken;
 
   }
 
   private NewsRequestModel(Parcel in) {
-    mOffset = in.readInt();
-    mCount = in.readInt();
-    mAccessToken = in.readString();
-  }
-
-  public int getOffset() {
-    return mOffset;
-  }
-
-  public int getCount() {
-    return mCount;
-  }
-
-  public String getAccessToken() {
-    return mAccessToken;
+    offset = in.readInt();
+    count = in.readInt();
+    accessToken = in.readString();
   }
 
   @Override
@@ -59,9 +47,21 @@ public class NewsRequestModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(mOffset);
-    dest.writeInt(mCount);
-    dest.writeString(mAccessToken);
+    dest.writeInt(offset);
+    dest.writeInt(count);
+    dest.writeString(accessToken);
 
+  }
+
+  public int getOffset() {
+    return offset;
+  }
+
+  public int getCount() {
+    return count;
+  }
+
+  public String getAccessToken() {
+    return accessToken;
   }
 }

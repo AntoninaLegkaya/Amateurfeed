@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public final class LocationPreferences {
 
-  static final String TAG = LocationPreferences.class.getName();
+  private static final String TAG = LocationPreferences.class.getName();
   private static final String FILE_NAME = "location";
 
   private static final String KEY_LAT = "LAT";
@@ -18,8 +18,8 @@ public final class LocationPreferences {
 
   static void saveLastLocation(Context context, @Nullable LatLng latLng) {
     Log.i(TAG,
-        " Save Location on Preferences Latitude: " + latLng.latitude + "\n" + "Longitude: "
-            + latLng.longitude);
+        " Save Location on Preferences Latitude: " + (latLng != null ? latLng.latitude : 0) + "\n" + "Longitude: "
+            + (latLng != null ? latLng.longitude : 0));
     SharedPreferences.Editor editor = getSharedPreferences(context).edit();
     SharedPreferenceUtils.putDouble(editor, KEY_LAT, latLng == null ? 0d : latLng.latitude);
     SharedPreferenceUtils.putDouble(editor, KEY_LON, latLng == null ? 0d : latLng.longitude);

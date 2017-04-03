@@ -26,7 +26,7 @@ public class LogoutCommand extends Command {
   public LogoutCommand() {
   }
 
-  protected LogoutCommand(Parcel in) {
+  private LogoutCommand(Parcel in) {
     super(in);
   }
 
@@ -48,6 +48,5 @@ public class LogoutCommand extends Command {
     } else {
       notifyError(Bundle.EMPTY);
     }
-
   }
 }

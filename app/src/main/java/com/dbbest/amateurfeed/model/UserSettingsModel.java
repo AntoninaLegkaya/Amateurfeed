@@ -6,13 +6,13 @@ import com.google.gson.annotations.SerializedName;
 public class UserSettingsModel {
 
   @SerializedName("enablePush")
-  private boolean mEnablePush;
+  private boolean enablePush;
 
   public UserSettingsModel(boolean enablePush) {
-    mEnablePush = enablePush;
+    this.enablePush = enablePush;
   }
 
   public boolean isEnablePush() {
-    return mEnablePush;
+    return enablePush;
   }
 }

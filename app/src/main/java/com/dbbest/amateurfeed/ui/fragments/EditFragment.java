@@ -32,38 +32,10 @@ public class EditFragment extends Fragment {
   private static final int PHOTO_REQUEST_CAMERA = 0;
   private static final int PHOTO_REQUEST_GALLERY = 1;
   private static final int PHOTO_REQUEST_CUT = 2;
-  public ImageView mImageView;
+  public ImageView imageView;
   protected String userChosenTask;
-  protected String mUploadImagePath;
-  protected Uri mUriImageSelected;
-
-  protected void selectImage() {
-    final CharSequence[] items = {"Take Photo from Camera", "Choose from Gallery",
-        "Cancel"};
-    AlertDialog.Builder builder = new AlertDialog.Builder(
-        new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-    builder.setItems(items, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int item) {
-        boolean result = Utils.checkPermission(getContext());
-        if (items[item].equals("Take Photo from Camera")) {
-          userChosenTask = "Take Photo from Camera";
-          if (result) {
-            camera();
-          }
-        } else if (items[item].equals("Choose from Gallery")) {
-          userChosenTask = "Choose from Gallery";
-          if (result) {
-            gallery();
-          }
-        } else if (items[item].equals("Cancel")) {
-          dialog.dismiss();
-        }
-      }
-    });
-
-    builder.show();
-  }
+  protected String uploadImagePath;
+  protected Uri uriImageSelected;
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -88,13 +60,11 @@ public class EditFragment extends Fragment {
           Log.i(TAG_PARENT, "File path: " + data.getData().getPath());
           try {
             Utils.copyFile(sourceFile, destFile);
-            if (destFile != null) {
-              Uri photoURI = FileProvider.getUriForFile(getContext(),
-                  BuildConfig.APPLICATION_ID + ".provider",
-                  destFile);
-              Log.i(TAG_PARENT, "Crop image from Gallery by Url : " + photoURI);
-              crop(photoURI);
-            }
+            Uri photoURI = FileProvider.getUriForFile(getContext(),
+                BuildConfig.APPLICATION_ID + ".provider",
+                destFile);
+            Log.i(TAG_PARENT, "Crop image from Gallery by Url : " + photoURI);
+            crop(photoURI);
           } catch (IOException e) {
             e.printStackTrace();
           }
@@ -102,19 +72,17 @@ public class EditFragment extends Fragment {
         break;
       case PHOTO_REQUEST_CAMERA:
         File photoFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
-        if (photoFile != null) {
-          Uri photoURI = FileProvider.getUriForFile(getContext(),
-              BuildConfig.APPLICATION_ID + ".provider",
-              photoFile);
-          crop(photoURI);
-        }
+        Uri photoURI = FileProvider.getUriForFile(getContext(),
+            BuildConfig.APPLICATION_ID + ".provider",
+            photoFile);
+        crop(photoURI);
 
         break;
       case PHOTO_REQUEST_CUT:
         File file = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
         Log.i(TAG_PARENT, "Cut image  by Path : " + file.getPath());
-        mUriImageSelected = Uri.fromFile(file);
-        Log.i(TAG_PARENT, "Cut image  by Uri : " + mUriImageSelected);
+        uriImageSelected = Uri.fromFile(file);
+        Log.i(TAG_PARENT, "Cut image  by Uri : " + uriImageSelected);
         InputStream ims = null;
         try {
           ims = new FileInputStream(file);
@@ -122,7 +90,7 @@ public class EditFragment extends Fragment {
           Log.e(TAG_PARENT, "a error happened when cut picture data: " + e.getMessage());
         }
         Bitmap bm = BitmapFactory.decodeStream(ims);
-        mImageView.setImageBitmap(bm);
+        imageView.setImageBitmap(bm);
         break;
       default:
         break;
@@ -155,13 +123,11 @@ public class EditFragment extends Fragment {
     }
     Log.i(TAG_PARENT, "Get directory absolute Path: " + dir.getAbsolutePath());
     File photoFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
-    if (photoFile != null) {
-      Uri photoURI = FileProvider.getUriForFile(getContext(),
-          BuildConfig.APPLICATION_ID + ".provider",
-          photoFile);
-      intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-      startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
-    }
+    Uri photoURI = FileProvider.getUriForFile(getContext(),
+        BuildConfig.APPLICATION_ID + ".provider",
+        photoFile);
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+    startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
   }
 
   public void crop(Uri uri) {
@@ -198,6 +164,34 @@ public class EditFragment extends Fragment {
       cursor.close();
       return cursorString;
     }
+  }
+
+  protected void selectImage() {
+    final CharSequence[] items = {"Take Photo from Camera", "Choose from Gallery",
+        "Cancel"};
+    AlertDialog.Builder builder = new AlertDialog.Builder(
+        new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
+    builder.setItems(items, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int item) {
+        boolean result = Utils.checkPermission(getContext());
+        if (items[item].equals("Take Photo from Camera")) {
+          userChosenTask = "Take Photo from Camera";
+          if (result) {
+            camera();
+          }
+        } else if (items[item].equals("Choose from Gallery")) {
+          userChosenTask = "Choose from Gallery";
+          if (result) {
+            gallery();
+          }
+        } else if (items[item].equals("Cancel")) {
+          dialog.dismiss();
+        }
+      }
+    });
+
+    builder.show();
   }
 
 }

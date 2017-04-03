@@ -17,8 +17,8 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
     CommandResultReceiver.CommandListener {
 
   private static final String TAG = "MyFirebaseIIDService";
-  private int SENT_DEVICE_INFO_TO_SERVER = 0;
-  private CommandResultReceiver mResultReceiver;
+  private final int SENT_DEVICE_INFO_TO_SERVER = 0;
+  private CommandResultReceiver resultReceiver;
 
   /**
    * Called if InstanceID token is updated. This may occur if the security of
@@ -33,22 +33,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
     FirebaseMessaging.getInstance().subscribeToTopic("newsTopic");
     sendRegistrationToServer(refreshedToken);
 
-  }
-
-  /**
-   * Persist token to third-party servers.
-   *
-   * Modify this method to associate the user's FCM InstanceID token with any server-side account
-   * maintained by your application.
-   *
-   * @param token The new token.
-   */
-  private void sendRegistrationToServer(String token) {
-    AuthToken authToken = new AuthToken();
-    authToken.updateFcmToken(token);
-    Command command = new UpdateDeviceInfoCommand(authToken.getDeviceOs(), authToken.getFcmToken(),
-        authToken.getDeviceID());
-    command.send(SENT_DEVICE_INFO_TO_SERVER, mResultReceiver);
   }
 
   @Override
@@ -71,5 +55,21 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
   @Override
   public void onProgress(int code, Bundle data, int progress) {
 
+  }
+
+  /**
+   * Persist token to third-party servers.
+   *
+   * Modify this method to associate the user's FCM InstanceID token with any server-side account
+   * maintained by your application.
+   *
+   * @param token The new token.
+   */
+  private void sendRegistrationToServer(String token) {
+    AuthToken authToken = new AuthToken();
+    authToken.updateFcmToken(token);
+    Command command = new UpdateDeviceInfoCommand(authToken.getDeviceOs(), authToken.getFcmToken(),
+        authToken.getDeviceID());
+    command.send(SENT_DEVICE_INFO_TO_SERVER, resultReceiver);
   }
 }

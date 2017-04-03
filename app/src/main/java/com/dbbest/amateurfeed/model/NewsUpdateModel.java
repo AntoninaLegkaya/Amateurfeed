@@ -21,44 +21,28 @@ public class NewsUpdateModel implements Parcelable {
         }
       };
   @SerializedName("title")
-  private String mTitle;
+  private String title;
   @SerializedName("text")
-  private String mText;
+  private String text;
   @SerializedName("image")
-  private String mImage;
+  private String image;
   @SerializedName("tags")
-  private ArrayList<TagModel> mTags = new ArrayList<>();
+  private ArrayList<TagModel> tags = new ArrayList<>();
 
   public NewsUpdateModel(ArrayList<TagModel> tags, String title, String text, String image) {
 
-    mTitle = title;
-    mText = text;
-    mImage = image;
-    mTags = tags;
+    this.title = title;
+    this.text = text;
+    this.image = image;
+    this.tags = tags;
   }
 
   private NewsUpdateModel(Parcel in) {
-    mTitle = in.readString();
-    mText = in.readString();
-    mImage = in.readString();
-    mTags = new ArrayList<TagModel>();
-    in.readTypedList(mTags, TagModel.CREATOR);
-  }
-
-  public String getTitle() {
-    return mTitle;
-  }
-
-  public String getText() {
-    return mText;
-  }
-
-  public String getImage() {
-    return mImage;
-  }
-
-  public ArrayList<TagModel> getTags() {
-    return mTags;
+    title = in.readString();
+    text = in.readString();
+    image = in.readString();
+    tags = new ArrayList<TagModel>();
+    in.readTypedList(tags, TagModel.CREATOR);
   }
 
   @Override
@@ -68,9 +52,25 @@ public class NewsUpdateModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(mTitle);
-    dest.writeString(mText);
-    dest.writeString(mImage);
-    dest.writeTypedList(mTags);
+    dest.writeString(title);
+    dest.writeString(text);
+    dest.writeString(image);
+    dest.writeTypedList(tags);
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public ArrayList<TagModel> getTags() {
+    return tags;
   }
 }

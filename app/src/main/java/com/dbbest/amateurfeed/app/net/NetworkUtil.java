@@ -11,10 +11,6 @@ public class NetworkUtil {
   public static final int CODE_UNABLE_TO_RESOLVE_HOST = -605;
   public static final int CODE_UNKNOWN_IO_EXCEPTION = -605;
 
-  private NetworkUtil() {
-
-  }
-
   public static <T> ResponseWrapper<T> handleError(Exception e) {
     if (e != null) {
       if (e instanceof SocketTimeoutException) {
@@ -26,5 +22,9 @@ public class NetworkUtil {
     }
     return new ResponseWrapper<>(CODE_UNKNOWN_IO_EXCEPTION, false,
         "An unknown exception happened ¯\\_(ツ)_/¯", null);
+  }
+
+  private NetworkUtil() {
+
   }
 }

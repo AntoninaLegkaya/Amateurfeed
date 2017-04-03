@@ -12,39 +12,25 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.UpdateNewsCommand;
-import com.dbbest.amateurfeed.data.FeedContract;
-import com.dbbest.amateurfeed.utils.Utils;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.dbbest.amateurfeed.data.PreviewEntry;
 
 public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implements
     CommandResultReceiver.CommandListener {
 
   // Interval at which to sync with the news, in seconds.
   // 60 seconds (1 minute) * 180 = 3 hours
-  public static final int SYNC_INTERVAL = 60;
-  public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
-  final public static int PREVIEW_STATUS_OK = 0;
-  final public static int PREVIEW_STATUS_SERVER_DOWN = 1;
-  final public static int PREVIEW_STATUS_SERVER_INVALID = 2;
-  final public static int PREVIEW_STATUS_UNKNOWN = 3;
-  final public static int PREVIEW_STATUS_INVALID = 4;
+  private static final int SYNC_INTERVAL = 60;
+  private static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
   private static final String TAG = AmateurfeedSyncAdapter.class.getSimpleName();
   private static final int NEWS_NOTIFICATION_ID = 3004;
   private static final int CODE_GET_NEWS = 0;
-  private CommandResultReceiver mResultReceiver;
-
-
-  public AmateurfeedSyncAdapter(Context context, boolean autoInitialize) {
-    super(context, autoInitialize);
-  }
+  private CommandResultReceiver resultReceiver;
 
   /**
    * Helper method to schedule the sync adapter periodic execution
@@ -118,6 +104,10 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
     return newAccount;
   }
 
+  public static void initializeSyncAdapter(Context context) {
+    getSyncAccount(context);
+  }
+
   private static void onAccountCreated(Account newAccount, Context context) {
         /*
          * Since we've created an account
@@ -137,28 +127,28 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
     syncImmediately(context);
   }
 
-  public static void initializeSyncAdapter(Context context) {
-    getSyncAccount(context);
+  public AmateurfeedSyncAdapter(Context context, boolean autoInitialize) {
+    super(context, autoInitialize);
   }
 
   @Override
   public void onPerformSync(Account account, Bundle extras, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
 
-      Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
-      Cursor cursor = App.instance().getContentResolver().query(
-          previewListUri,
-          null,
-          null,
-          null,
-          null
-      );
-      if (cursor.moveToFirst()) {
-        Command command = new UpdateNewsCommand(0, cursor.getCount());
-        command.send(CODE_GET_NEWS, mResultReceiver);
-        cursor.close();
-      }
-      Log.i(TAG, "Thread transfer data Server<--->Device");
+    Uri previewListUri = PreviewEntry.CONTENT_URI;
+    Cursor cursor = App.instance().getContentResolver().query(
+        previewListUri,
+        null,
+        null,
+        null,
+        null
+    );
+    if (cursor != null && cursor.moveToFirst()) {
+      Command command = new UpdateNewsCommand(0, cursor.getCount());
+      command.send(CODE_GET_NEWS, resultReceiver);
+      cursor.close();
+    }
+    Log.i(TAG, "Thread transfer data Server<--->Device");
 
   }
 
@@ -177,13 +167,6 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
   public void onProgress(int code, Bundle data, int progress) {
   }
 
-
-  @Retention(RetentionPolicy.SOURCE)
-  @IntDef({PREVIEW_STATUS_OK, PREVIEW_STATUS_SERVER_DOWN, PREVIEW_STATUS_SERVER_INVALID,
-      PREVIEW_STATUS_UNKNOWN, PREVIEW_STATUS_INVALID})
-  public @interface PreviewStatus {
-
-  }
 
   public interface Callback {
 

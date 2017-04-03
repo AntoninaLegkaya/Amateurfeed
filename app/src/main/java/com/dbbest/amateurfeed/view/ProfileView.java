@@ -7,5 +7,6 @@ import android.os.Bundle;
 public interface ProfileView extends IView {
 
   void initLoader(Bundle data);
+
   void showEmptySearchDialog();
 }

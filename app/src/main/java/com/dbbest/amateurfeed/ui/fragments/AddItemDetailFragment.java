@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,8 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadResultReceiver.Receiver;
 import com.dbbest.amateurfeed.app.azur.service.BlobUploadService;
-import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.PreviewEntry;
+import com.dbbest.amateurfeed.data.TagEntry;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
@@ -34,17 +36,15 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
     View.OnClickListener,
     Receiver {
 
+  public static final String RESULT = "result";
+  public static final String NEWS_ID = "newsId";
+  public static final String URI = "uri";
+  public static final String RECEIVER = "receiver";
+  public static final String TAG_MODEL = "tagModel";
   private static final String PARAM_KEY = "param_key";
-  public final String TAG = AddItemDetailFragment.class.getName();
-  private Button mPublishButton;
   private ArrayList<TagModel> tags = new ArrayList<>();
-  private String upTitle = null;
-  private String upDescription = null;
-  private BlobUploadResultReceiver mReceiver;
-
-  public AddItemDetailFragment() {
-    setHasOptionsMenu(true);
-  }
+  private String upTitle;
+  private String upDescription;
 
   public static AddItemDetailFragment newInstance(String key) {
     AddItemDetailFragment fragment = new AddItemDetailFragment();
@@ -54,10 +54,12 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
     return fragment;
   }
 
+  public AddItemDetailFragment() {
+    setHasOptionsMenu(true);
+  }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    String upTitle = null;
-    String upDescription = null;
 
     switch (item.getItemId()) {
       case android.R.id.home:
@@ -73,66 +75,53 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
     View view = inflater.inflate(R.layout.fragment_add_item_detail, container, false);
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-    mImageView = (ImageButton) view.findViewById(R.id.add_image_item);
-    mImageView.setOnClickListener(new View.OnClickListener() {
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setDisplayShowTitleEnabled(false);
+    }
+    imageView = (ImageButton) view.findViewById(R.id.button_add_image_item);
+    imageView.setOnClickListener(new View.OnClickListener() {
       @Override
-      public void onClick(View view) {
+      public void onClick(View v) {
         selectImage();
       }
     });
 
-    mPublishButton = (Button) view.findViewById(R.id.publish_item_button);
-    mPublishButton.setOnClickListener(this);
-    mDescriptionView = (AppCompatEditText) view.findViewById(R.id.item_description);
-    mTitleView = (AppCompatEditText) view.findViewById(R.id.item_title);
+    Button publishButton = (Button) view.findViewById(R.id.button_publish_item);
+    publishButton.setOnClickListener(this);
+    descriptionView = (AppCompatEditText) view.findViewById(R.id.text_item_description);
+    titleView = (AppCompatEditText) view.findViewById(R.id.text_item_title);
     return view;
-  }
-
-  private void invokeAddNewsCommand() {
-    if (mTitleView != null) {
-      upTitle = mTitleView.getText().toString();
-    }
-    if (mDescriptionView != null) {
-      upDescription = mDescriptionView.getText().toString();
-    }
-    if (upTitle != null && upDescription != null && tags != null && mUploadImagePath != null) {
-      mPresenter.addNewNews(upTitle, upDescription, mUploadImagePath, tags);
-    }
   }
 
   @Override
   public void onClick(View view) {
-    if (view.getId() == R.id.publish_item_button) {
-      String textDescription = mDescriptionView.getText().toString();
-      if (textDescription != null) {
-        String[] tags = Utils.getTagsPattern(textDescription);
-        if (tags != null) {
-          for (String tag : tags) {
-            mPresenter.checkTag(tag);
-          }
-        }
+    if (view.getId() == R.id.button_publish_item) {
+      String textDescription = descriptionView.getText().toString();
+      String[] tagsPattern = Utils.getTagsPattern(textDescription);
+      for (String tag : tagsPattern) {
+        presenter.checkTag(tag);
       }
     }
   }
 
   @Override
   public void addTagToItemDetail(Bundle data) {
-    TagModel tagModel = data.getParcelable("tagModel");
+    TagModel tagModel = data.getParcelable(TAG_MODEL);
     tags.add(tagModel);
     checkUpdateImage();
   }
 
   @Override
   public void checkUpdateImage() {
-    if (mUriImageSelected != null) {
-      mReceiver = new BlobUploadResultReceiver(new Handler());
-      mReceiver.setReceiver(this);
+    if (uriImageSelected != null) {
+      BlobUploadResultReceiver receiver = new BlobUploadResultReceiver(new Handler());
+      receiver.setReceiver(this);
       Intent intent = new Intent(Intent.ACTION_SYNC, null, getContext(),
           BlobUploadService.class);
-      intent.putExtra("receiver", mReceiver);
-      intent.putExtra("uri", mUriImageSelected);
+      intent.putExtra(RECEIVER, receiver);
+      intent.putExtra(URI, uriImageSelected);
       getActivity().startService(intent);
     } else {
       UIDialogNavigation.showWarningDialog(R.string.add_news_image)
@@ -141,57 +130,30 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
     }
   }
 
-  private void insertTagsInBd() {
-    if (!tags.isEmpty()) {
-      for (TagModel tagModel : tags) {
-        Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
-        ContentValues tagValues = new ContentValues();
-        tagValues.put(FeedContract.TagEntry.COLUMN_TAG_ID, tagModel.getId());
-        tagValues.put(FeedContract.TagEntry.COLUMN_NAME, tagModel.getName());
-        tagValues.put(FeedContract.TagEntry.COLUMN_PREVIEW_ID,
-            FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-        cVTagsVector.add(tagValues);
-        Log.i(TAG,
-            "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " "
-                + "name: " + tagModel.getName() + " " +
-                "preview_id: " + FeedContract.PreviewEntry.getIdFromUri(mUriPreview));
-        if (cVTagsVector.size() > 0) {
-          ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
-          cVTagsVector.toArray(cvArray);
-          App.instance().getContentResolver()
-              .bulkInsert(FeedContract.TagEntry.CONTENT_URI, cvArray);
-        }
-      }
-    }
-    showSuccessEditNewsDialog();
-    ((Callback) getActivity()).refreshFeed();
-    ((Callback) getActivity()).moveToFeedFragment();
-  }
-
   @Override
   public void refreshFeedNews(Bundle data) {
-    int newsId = data.getInt("newsId");
-    mUriPreview = FeedContract.PreviewEntry.buildPreviewUriById(newsId);
-    Vector<ContentValues> cVTagsVector = new Vector<ContentValues>(1);
+    int newsId = data.getInt(NEWS_ID);
+    uriPreview = PreviewEntry.buildPreviewUriById(newsId);
+    Vector<ContentValues> cVTagsVector = new Vector<>(1);
     ContentValues previewValues = new ContentValues();
-    previewValues.put(FeedContract.PreviewEntry._ID, newsId);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_TITLE, upTitle);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_TEXT, upDescription);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_LIKES, 0);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_IS_LIKE, 0);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_AUTHOR, new UserPreferences().getFullName());
+    previewValues.put(PreviewEntry._ID, newsId);
+    previewValues.put(PreviewEntry.COLUMN_TITLE, upTitle);
+    previewValues.put(PreviewEntry.COLUMN_TEXT, upDescription);
+    previewValues.put(PreviewEntry.COLUMN_LIKES, 0);
+    previewValues.put(PreviewEntry.COLUMN_IS_LIKE, 0);
+    previewValues.put(PreviewEntry.COLUMN_AUTHOR, new UserPreferences().getFullName());
     previewValues
-        .put(FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE, new UserPreferences().getImage());
+        .put(PreviewEntry.COLUMN_AUTHOR_IMAGE, new UserPreferences().getImage());
     String createDate = Utils.getCurrentTime();
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_CREATE_DATE, createDate);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_IMAGE, mUploadImagePath);
-    previewValues.put(FeedContract.PreviewEntry.COLUMN_IS_MY, 1);
+    previewValues.put(PreviewEntry.COLUMN_CREATE_DATE, createDate);
+    previewValues.put(PreviewEntry.COLUMN_IMAGE, uploadImagePath);
+    previewValues.put(PreviewEntry.COLUMN_IS_MY, 1);
     cVTagsVector.add(previewValues);
     if (cVTagsVector.size() > 0) {
       ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
       cVTagsVector.toArray(cvArray);
       App.instance().getContentResolver()
-          .bulkInsert(FeedContract.PreviewEntry.CONTENT_URI, cvArray);
+          .bulkInsert(PreviewEntry.CONTENT_URI, cvArray);
     }
     insertTagsInBd();
   }
@@ -218,15 +180,13 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
   public void showErrorAddCommentDialog() {
   }
 
-
   @Override
   public void onReceiveResult(int resultCode, Bundle resultData) {
     switch (resultCode) {
       case BlobUploadService.STATUS_RUNNING:
         break;
       case BlobUploadService.STATUS_FINISHED:
-        String result = resultData.getString("result");
-        mUploadImagePath = result;
+        uploadImagePath = resultData.getString(RESULT);
         invokeAddNewsCommand();
         break;
       case BlobUploadService.STATUS_ERROR:
@@ -234,5 +194,44 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
         Log.e(TAG, error);
         break;
     }
+  }
+
+  private void invokeAddNewsCommand() {
+    if (titleView != null) {
+      upTitle = titleView.getText().toString();
+    }
+    if (descriptionView != null) {
+      upDescription = descriptionView.getText().toString();
+    }
+    if (upTitle != null && upDescription != null && tags != null && uploadImagePath != null) {
+      presenter.addNewNews(upTitle, upDescription, uploadImagePath, tags);
+    }
+  }
+
+  private void insertTagsInBd() {
+    if (!tags.isEmpty()) {
+      for (TagModel tagModel : tags) {
+        Vector<ContentValues> cVTagsVector = new Vector<>(1);
+        ContentValues tagValues = new ContentValues();
+        tagValues.put(TagEntry.COLUMN_TAG_ID, tagModel.getId());
+        tagValues.put(TagEntry.COLUMN_NAME, tagModel.getName());
+        tagValues.put(TagEntry.COLUMN_PREVIEW_ID,
+            PreviewEntry.getIdFromUri(uriPreview));
+        cVTagsVector.add(tagValues);
+        Log.i(TAG,
+            "Add tag from Description to BD (tag table): " + "id: " + tagModel.getId() + " "
+                + "name: " + tagModel.getName() + " " +
+                "preview_id: " + PreviewEntry.getIdFromUri(uriPreview));
+        if (cVTagsVector.size() > 0) {
+          ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
+          cVTagsVector.toArray(cvArray);
+          App.instance().getContentResolver()
+              .bulkInsert(TagEntry.CONTENT_URI, cvArray);
+        }
+      }
+    }
+    showSuccessEditNewsDialog();
+    ((Callback) getActivity()).refreshFeed();
+    ((Callback) getActivity()).moveToFeedFragment();
   }
 }

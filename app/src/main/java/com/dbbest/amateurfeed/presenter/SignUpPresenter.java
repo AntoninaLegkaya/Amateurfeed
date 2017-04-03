@@ -18,6 +18,48 @@ public class SignUpPresenter extends Presenter<SignUpView> implements
 
   private CommandResultReceiver mResultReceiver;
 
+  @Override
+  protected void onAttachView(@NonNull SignUpView view) {
+    if (mResultReceiver == null) {
+      mResultReceiver = new CommandResultReceiver();
+    }
+    mResultReceiver.setListener(this);
+  }
+
+  @Override
+  protected void onDetachView(@NonNull SignUpView view) {
+    if (mResultReceiver != null) {
+      mResultReceiver.setListener(null);
+    }
+  }
+
+  @Override
+  public void onSuccess(int code, Bundle data) {
+    if (getView() != null) {
+      getView().dismissProgressDialog();
+      getView().showSuccessDialog();
+      getView().navigateToStartScreen();
+    }
+  }
+
+  @Override
+  public void onFail(int code, Bundle data) {
+    if (getView() != null) {
+      getView().dismissProgressDialog();
+      int errCode = Command.grabErrorCode(data);
+      if (errCode == NetworkUtil.CODE_SOCKET_TIMEOUT
+          || errCode == NetworkUtil.CODE_UNABLE_TO_RESOLVE_HOST) {
+        getView().showErrorConnectionDialog();
+      } else {
+        getView().showErrorRegistrationDialog();
+      }
+    }
+  }
+
+  @Override
+  public void onProgress(int code, Bundle data, int progress) {
+  }
+
   public void registration(String email, String fullName, String phone, String address,
       String password, String deviceId, String osType, String deviceToken) {
 
@@ -61,48 +103,5 @@ public class SignUpPresenter extends Presenter<SignUpView> implements
 
 
     }
-  }
-
-  @Override
-  protected void onAttachView(@NonNull SignUpView view) {
-    if (mResultReceiver == null) {
-      mResultReceiver = new CommandResultReceiver();
-    }
-    mResultReceiver.setListener(this);
-  }
-
-  @Override
-  protected void onDetachView(@NonNull SignUpView view) {
-    if (mResultReceiver != null) {
-      mResultReceiver.setListener(null);
-    }
-  }
-
-
-  @Override
-  public void onSuccess(int code, Bundle data) {
-    if (getView() != null) {
-      getView().dismissProgressDialog();
-      getView().showSuccessDialog();
-      getView().navigateToStartScreen();
-    }
-  }
-
-  @Override
-  public void onFail(int code, Bundle data) {
-    if (getView() != null) {
-      getView().dismissProgressDialog();
-      int errCode = Command.grabErrorCode(data);
-      if (errCode == NetworkUtil.CODE_SOCKET_TIMEOUT
-          || errCode == NetworkUtil.CODE_UNABLE_TO_RESOLVE_HOST) {
-        getView().showErrorConnectionDialog();
-      } else {
-        getView().showErrorRegistrationDialog();
-      }
-    }
-  }
-
-  @Override
-  public void onProgress(int code, Bundle data, int progress) {
   }
 }

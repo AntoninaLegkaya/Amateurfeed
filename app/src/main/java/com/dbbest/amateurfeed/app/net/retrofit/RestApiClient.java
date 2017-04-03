@@ -25,6 +25,7 @@ import com.dbbest.amateurfeed.model.NewsUpdateModel;
 import com.dbbest.amateurfeed.model.TagModel;
 import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.model.UserProfileModel;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import retrofit2.Call;
@@ -40,34 +41,6 @@ public class RestApiClient {
 
   public RestApiClient(RestApiServices restApiService) {
     mApiService = restApiService;
-  }
-
-
-  private <T> ResponseWrapper<T> executeCall(Call<ResponseWrapper<T>> call) {
-    try {
-      Response<ResponseWrapper<T>> response = call.execute();
-      if (!response.isSuccessful()) {
-        if (response.errorBody() != null) {
-        }
-      }
-      if (response.body() != null && !response.body().isSuccessful()) {
-        if (response.body().code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-          String action = ACTION_UNAUTHORIZED;
-          if (response.body().message() != null && response.body().message()
-              .equals(USER_BLOCKED_MSG_RESPONSE)) {
-            action = ACTION_USER_BLOCKED;
-          }
-          Intent intent = new Intent(action);
-          LocalBroadcastManager.getInstance(App.instance())
-              .sendBroadcast(intent);
-        }
-
-      }
-
-      return response.body();
-    } catch (Exception e) {
-      return NetworkUtil.handleError(e);
-    }
   }
 
   public ResponseWrapper<LoginResponseModel> registration(RegistrationRequestModel request) {
@@ -150,5 +123,32 @@ public class RestApiClient {
 
   public ResponseWrapper<Object> updateDeviceInfo(String token, DeviceInfoModel requestModel) {
     return executeCall(mApiService.deviceInfo(token, requestModel));
+  }
+
+  private <T> ResponseWrapper<T> executeCall(Call<ResponseWrapper<T>> call) {
+    try {
+      Response<ResponseWrapper<T>> response = call.execute();
+      if (!response.isSuccessful()) {
+        if (response.errorBody() != null) {
+        }
+      }
+      if (response.body() != null && !response.body().isSuccessful()) {
+        if (response.body().code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+          String action = ACTION_UNAUTHORIZED;
+          if (response.body().message() != null && response.body().message()
+              .equals(USER_BLOCKED_MSG_RESPONSE)) {
+            action = ACTION_USER_BLOCKED;
+          }
+          Intent intent = new Intent(action);
+          LocalBroadcastManager.getInstance(App.instance())
+              .sendBroadcast(intent);
+        }
+
+      }
+
+      return response.body();
+    } catch (IOException e) {
+      return NetworkUtil.handleError(e);
+    }
   }
 }

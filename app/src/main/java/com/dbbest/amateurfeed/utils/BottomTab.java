@@ -25,7 +25,7 @@ public enum BottomTab {
       UserNewsPreviewFragment.class),
   EDIT_PROFILE(HomeActivity.EDIT_PROFILE_FRAGMENT_TAG, R.drawable.ic_perm_identity_black_18dp,
       EditProfileFragment.class),
-  PREFERENCES(HomeActivity.USER_PREFERNCES_TAG, R.drawable.ic_perm_identity_black_18dp,
+  PREFERENCES(HomeActivity.USER_PREFERENCES_TAG, R.drawable.ic_perm_identity_black_18dp,
       PreferFragment.class),
   CHANGE_PASSWORD(HomeActivity.CHANGE_PASSWORD_TAG, R.drawable.ic_perm_identity_black_18dp,
       ChangePasswordFragment.class);
@@ -35,12 +35,6 @@ public enum BottomTab {
   @DrawableRes
   int iconRes;
   public Class fragmentClass;
-
-  BottomTab(String tag, @DrawableRes int iconRes, Class fragmentClass) {
-    this.tag = tag;
-    this.iconRes = iconRes;
-    this.fragmentClass = fragmentClass;
-  }
 
   @Nullable
   public static BottomTab getByTag(String tag) {
@@ -52,6 +46,12 @@ public enum BottomTab {
       }
     }
     return null;
+  }
+
+  BottomTab(String t, @DrawableRes int icon, Class fragment) {
+    this.tag = t;
+    this.iconRes = icon;
+    this.fragmentClass = fragment;
   }
 
   public String getTag() {

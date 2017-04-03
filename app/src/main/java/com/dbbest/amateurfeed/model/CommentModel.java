@@ -6,54 +6,54 @@ import com.google.gson.annotations.SerializedName;
 public class CommentModel {
 
   @SerializedName("id")
-  private int mId;
+  private int id;
 
   @SerializedName("postId")
-  private int mPostId;
+  private int postId;
 
   @SerializedName("body")
-  private String mBody;
+  private String body;
 
   @SerializedName("parentCommentId")
-  private int mParentCommentId;
+  private int parentCommentId;
 
   @SerializedName("creator")
-  private int mCreator;
+  private int creator;
 
   @SerializedName("createDate")
-  private String mCreateDate;
+  private String createDate;
 
   public CommentModel(int id, int postId, int creator, String body, int parentCommentId,
       String createDate) {
-    mId = id;
-    mPostId = postId;
-    mBody = body;
-    mParentCommentId = parentCommentId;
-    mCreator = creator;
-    mCreateDate = createDate;
+    this.id = id;
+    this.postId = postId;
+    this.body = body;
+    this.parentCommentId = parentCommentId;
+    this.creator = creator;
+    this.createDate = createDate;
   }
 
   public int getId() {
-    return mId;
+    return id;
   }
 
   public int getPostId() {
-    return mPostId;
+    return postId;
   }
 
   public String getBody() {
-    return mBody;
+    return body;
   }
 
   public int getParentCommentId() {
-    return mParentCommentId;
+    return parentCommentId;
   }
 
   public int getCreator() {
-    return mCreator;
+    return creator;
   }
 
   public String getCreatedate() {
-    return mCreateDate;
+    return createDate;
   }
 }

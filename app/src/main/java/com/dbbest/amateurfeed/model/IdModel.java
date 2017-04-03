@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class IdModel implements Parcelable {
 
-  @SuppressWarnings("unused")
   public static final Parcelable.Creator<IdModel> CREATOR = new Parcelable.Creator<IdModel>() {
     @Override
     public IdModel createFromParcel(Parcel in) {
@@ -20,18 +19,14 @@ public class IdModel implements Parcelable {
     }
   };
   @SerializedName("id")
-  private long _ID;
+  private long id;
 
   public IdModel(Parcel in) {
-    _ID = in.readInt();
+    id = in.readInt();
   }
 
   public IdModel(long id) {
-    _ID = id;
-  }
-
-  public long get_ID() {
-    return _ID;
+    this.id = id;
   }
 
   @Override
@@ -41,6 +36,10 @@ public class IdModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeLong(_ID);
+    dest.writeLong(id);
+  }
+
+  public long getId() {
+    return id;
   }
 }

@@ -69,7 +69,6 @@ public class CommandResultReceiver extends
     send(CODE_PROGRESS, bundle);
   }
 
-
   public interface CommandListener {
 
     void onSuccess(int code, Bundle data);

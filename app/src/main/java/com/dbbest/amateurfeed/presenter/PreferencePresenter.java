@@ -3,7 +3,6 @@ package com.dbbest.amateurfeed.presenter;
 import android.common.framework.Presenter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import com.dbbest.amateurfeed.app.net.command.ChangePasswordCommand;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.LogoutCommand;
@@ -14,27 +13,20 @@ public class PreferencePresenter extends Presenter<PreferenceView> implements
 
   private static final int CODE_LOGOUT = 0;
 
-  private CommandResultReceiver mResetReceiver;
-
-  public void logout() {
-    Command logoutCommand = new LogoutCommand();
-    logoutCommand.send(CODE_LOGOUT, mResetReceiver);
-  }
-
-
+  private CommandResultReceiver resetReceiver;
 
   @Override
   protected void onAttachView(@NonNull PreferenceView view) {
-    if (mResetReceiver == null) {
-      mResetReceiver = new CommandResultReceiver();
+    if (resetReceiver == null) {
+      resetReceiver = new CommandResultReceiver();
     }
-    mResetReceiver.setListener(this);
+    resetReceiver.setListener(this);
   }
 
   @Override
   protected void onDetachView(@NonNull PreferenceView view) {
-    if (mResetReceiver != null) {
-      mResetReceiver.setListener(null);
+    if (resetReceiver != null) {
+      resetReceiver.setListener(null);
     }
   }
 
@@ -49,12 +41,16 @@ public class PreferencePresenter extends Presenter<PreferenceView> implements
 
   @Override
   public void onFail(int code, Bundle data) {
-    if (getView() != null) {
-    }
+
   }
 
   @Override
   public void onProgress(int code, Bundle data, int progress) {
 
+  }
+
+  public void logout() {
+    Command logoutCommand = new LogoutCommand();
+    logoutCommand.send(CODE_LOGOUT, resetReceiver);
   }
 }

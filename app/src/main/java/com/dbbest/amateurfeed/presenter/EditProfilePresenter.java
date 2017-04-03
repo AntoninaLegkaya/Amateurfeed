@@ -21,39 +21,31 @@ public class EditProfilePresenter extends Presenter<EditProfileView> implements
   private static final int PERMISSION_LOCATION = 1;
   private static final int CODE_UPDATE_PROFILE = 2;
   private static final int CODE_USER_PREF = 3;
-  private static String TAG = EditProfilePresenter.class.getName();
-  private CommandResultReceiver mResultReceiver;
-  private UserLocationProvider mLocationProvider;
-
-
-  public void updateUserProfile(String userName, String email, String image, String phone,
-      String job) {
-
-    Command command = new UpdateUserProfileCommand(userName, email, image, phone, job);
-    command.send(CODE_UPDATE_PROFILE, mResultReceiver);
-  }
+  private static final String TAG = EditProfilePresenter.class.getName();
+  private CommandResultReceiver resultReceiver;
+  private UserLocationProvider locationProvider;
 
   @Override
   protected void onAttachView(@NonNull EditProfileView view) {
-    if (mResultReceiver == null) {
-      mResultReceiver = new CommandResultReceiver();
+    if (resultReceiver == null) {
+      resultReceiver = new CommandResultReceiver();
     }
-    mResultReceiver.setListener(this);
-    if (mLocationProvider == null) {
-      mLocationProvider = new UserLocationProvider(view.getContext());
+    resultReceiver.setListener(this);
+    if (locationProvider == null) {
+      locationProvider = new UserLocationProvider(view.getContext());
     }
 
-    mLocationProvider.setListener(this);
-    mLocationProvider.update();
+    locationProvider.setListener(this);
+    locationProvider.update();
   }
 
   @Override
   protected void onDetachView(@NonNull EditProfileView view) {
-    if (mResultReceiver != null) {
-      mResultReceiver.setListener(null);
+    if (resultReceiver != null) {
+      resultReceiver.setListener(null);
     }
-    if (mLocationProvider != null) {
-      mLocationProvider.setListener(null);
+    if (locationProvider != null) {
+      locationProvider.setListener(null);
     }
   }
 
@@ -62,7 +54,7 @@ public class EditProfilePresenter extends Presenter<EditProfileView> implements
     if (getView() != null) {
       if (code == CODE_UPDATE_PROFILE) {
         UserProfileCommand userProfileCommand = new UserProfileCommand();
-        userProfileCommand.send(CODE_USER_PREF, mResultReceiver);
+        userProfileCommand.send(CODE_USER_PREF, resultReceiver);
       }
       if (code == CODE_USER_PREF) {
         getView().refreshFeed();
@@ -75,7 +67,9 @@ public class EditProfilePresenter extends Presenter<EditProfileView> implements
   public void onFail(int code, Bundle data) {
     if (getView() != null) {
       if (code == CODE_UPDATE_PROFILE) {
-        getView().showErrorEditProfileDialog();
+        if (getView() != null) {
+          getView().showErrorEditProfileDialog();
+        }
       }
     }
   }
@@ -87,7 +81,9 @@ public class EditProfilePresenter extends Presenter<EditProfileView> implements
 
   @Override
   public void onUserLocationUpdated(LatLng location) {
-    getView().getGeocodeAddress(location);
+    if (getView() != null) {
+      getView().getGeocodeAddress(location);
+    }
   }
 
   @Override
@@ -97,6 +93,13 @@ public class EditProfilePresenter extends Presenter<EditProfileView> implements
       getView().requestPermission(PERMISSION_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
           Manifest.permission.ACCESS_FINE_LOCATION);
     }
+  }
+
+  public void updateUserProfile(String userName, String email, String image, String phone,
+      String job) {
+
+    Command command = new UpdateUserProfileCommand(userName, email, image, phone, job);
+    command.send(CODE_UPDATE_PROFILE, resultReceiver);
   }
 
   public void onPermissionsRequestResult(int requestCode, @NonNull int[] grantResults) {
@@ -112,7 +115,7 @@ public class EditProfilePresenter extends Presenter<EditProfileView> implements
       }
       if (isLocationPermissionGranted) {
         Log.i(TAG, "Location permission granted");
-        mLocationProvider.update();
+        locationProvider.update();
       }
     }
   }

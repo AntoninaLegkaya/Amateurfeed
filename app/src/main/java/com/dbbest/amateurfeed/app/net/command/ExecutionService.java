@@ -8,19 +8,16 @@ public class ExecutionService extends IntentService {
 
   private static final String ACTION_EXECUTE = "ACTION_EXECUTE";
   private static final String KEY_COMMAND = "COMMAND";
-  private String TAG = ExecutionService.class.getName();
-
-  public ExecutionService() {
-    super("Execution Service");
-  }
 
   static void send(Command command) {
-    if (command == null) {
-    }
     Intent intent = new Intent(App.instance(), ExecutionService.class);
     intent.setAction(ACTION_EXECUTE);
     intent.putExtra(KEY_COMMAND, command);
     App.instance().startService(intent);
+  }
+
+  public ExecutionService() {
+    super("Execution Service");
   }
 
   @Override

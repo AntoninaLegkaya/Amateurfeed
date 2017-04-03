@@ -8,5 +8,4 @@ public interface PreferenceView extends IView {
   void navigateToStartScreen();
 
 
-
 }

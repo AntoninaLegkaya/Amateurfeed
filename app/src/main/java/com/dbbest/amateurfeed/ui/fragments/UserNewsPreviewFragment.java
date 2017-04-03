@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -22,11 +23,7 @@ import com.dbbest.amateurfeed.ui.activity.HomeActivity;
 
 public class UserNewsPreviewFragment extends Fragment {
 
-  private ImageView mPreviewImage;
-  private TextView mPreviewTitle;
-  private TextView mPreviewUpdateDate;
-  private TextView mPreviewStatus;
-  private TextView mPreviewCountLikes;
+  public static final String MODEL = "model";
   private UserNewsModel userNewsModel;
 
 
@@ -34,22 +31,14 @@ public class UserNewsPreviewFragment extends Fragment {
     setHasOptionsMenu(true);
   }
 
-  public static UserNewsPreviewFragment newInstance(Bundle bundle) {
-    UserNewsPreviewFragment fragment = new UserNewsPreviewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    String upTitle = null;
-    String upDescription = null;
     switch (item.getItemId()) {
       case android.R.id.home:
         Toast.makeText(getActivity(), "Go to Profile Screen--->", Toast.LENGTH_SHORT).show();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
             .beginTransaction();
-        ((HomeActivity)getActivity()).refreshContent();
+        ((HomeActivity) getActivity()).refreshContent();
         transaction.attach(getActivity().getSupportFragmentManager().findFragmentByTag(
             HomeActivity.PROFILE_FRAGMENT_TAG));
         transaction.commit();
@@ -63,41 +52,44 @@ public class UserNewsPreviewFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View rootView = inflater.inflate(R.layout.fragment_my_news, container, false);
+    final View rootView = inflater.inflate(R.layout.fragment_user_news, container, false);
     Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(null);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setDisplayShowTitleEnabled(false);
+      actionBar.setTitle(null);
+    }
     Bundle arguments = getArguments();
     if (arguments != null) {
-      userNewsModel = arguments.getParcelable("model");
+      userNewsModel = arguments.getParcelable(MODEL);
     }
-    mPreviewTitle = (TextView) rootView.findViewById(R.id.my_item_title);
-    mPreviewUpdateDate = (TextView) rootView.findViewById(R.id.my_item_update_date);
-    mPreviewStatus = (TextView) rootView.findViewById(R.id.my_item_status);
-    mPreviewCountLikes = (TextView) rootView.findViewById(R.id.my_item_amount_likes);
-    mPreviewImage = (ImageView) rootView.findViewById(R.id.my_item_image);
+    TextView previewTitle = (TextView) rootView.findViewById(R.id.text_user_news_title);
+    TextView previewUpdateDate = (TextView) rootView.findViewById(R.id.text_uaser_news_update_date);
+    TextView previewStatus = (TextView) rootView.findViewById(R.id.text_status_user_news);
+    TextView previewCountLikes = (TextView) rootView.findViewById(R.id.text_user_amount_likes);
+    ImageView previewImage = (ImageView) rootView.findViewById(R.id.image_user_photo);
     if (userNewsModel != null) {
 
-      if (mPreviewTitle != null && userNewsModel.getTitle() != null) {
-        mPreviewTitle.setText(userNewsModel.getTitle());
+      if (previewTitle != null && userNewsModel.getTitle() != null) {
+        previewTitle.setText(userNewsModel.getTitle());
       }
-      if (mPreviewUpdateDate != null && userNewsModel.getUpdateDate() != null) {
-        mPreviewUpdateDate.setText(userNewsModel.getUpdateDate());
+      if (previewUpdateDate != null && userNewsModel.getUpdateDate() != null) {
+        previewUpdateDate.setText(userNewsModel.getUpdateDate());
       }
-      if (mPreviewStatus != null && userNewsModel.getStatus() != null) {
-        mPreviewStatus.setText(userNewsModel.getStatus());
+      if (previewStatus != null && userNewsModel.getStatus() != null) {
+        previewStatus.setText(userNewsModel.getStatus());
       }
-      if (mPreviewCountLikes != null) {
-        mPreviewCountLikes.setText(String.valueOf(userNewsModel.getLikes()));
+      if (previewCountLikes != null) {
+        previewCountLikes.setText(String.valueOf(userNewsModel.getLikes()));
       }
-      if (mPreviewImage != null && userNewsModel.getImage() != null) {
+      if (previewImage != null && userNewsModel.getImage() != null) {
         Glide.with(App.instance().getApplicationContext())
             .load(userNewsModel.getImage())
             .error(R.drawable.art_snow)
             .crossFade()
-            .into(mPreviewImage);
+            .into(previewImage);
       }
     }
     return rootView;

@@ -18,39 +18,39 @@ import com.dbbest.amateurfeed.view.ResetPasswordView;
 
 public class ResetPasswordActivity extends AppCompatActivity implements ResetPasswordView {
 
-  private PasswordResetPresenter mPresenter;
-  private AppCompatEditText mEmailEdit;
-  private Button mResetBtn;
-  private DialogFragment mProgressDialog;
-  private TextView mLoginScreenLink;
-  private TextView mSignUpLink;
+  private PasswordResetPresenter presenter;
+  private AppCompatEditText emailEdit;
+  private Button resetBtn;
+  private DialogFragment progressDialog;
+  private TextView loginScreenLink;
+  private TextView signUpLink;
 
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.reset_password);
-    mPresenter = new PasswordResetPresenter();
-    mEmailEdit = (AppCompatEditText) findViewById(R.id.login);
-    mResetBtn = (Button) findViewById(R.id.reset_button);
-    mResetBtn.setOnClickListener(new View.OnClickListener() {
+    setContentView(R.layout.activity_reset_password);
+    presenter = new PasswordResetPresenter();
+    emailEdit = (AppCompatEditText) findViewById(R.id.text_login);
+    resetBtn = (Button) findViewById(R.id.button_reset_password);
+    resetBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        mPresenter.resetPassword(mEmailEdit.getText().toString());
+        presenter.resetPassword(emailEdit.getText().toString());
       }
     });
-    mLoginScreenLink = (TextView) findViewById(R.id.login_link);
-    mLoginScreenLink.setOnClickListener(new View.OnClickListener() {
+    loginScreenLink = (TextView) findViewById(R.id.text_login_link);
+    loginScreenLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         startActivity(UiActivityNavigation.startActivity(ResetPasswordActivity.this));
       }
     });
-    mSignUpLink = (TextView) findViewById(R.id.sign_up_link);
-    mSignUpLink.setOnClickListener(new View.OnClickListener() {
+    signUpLink = (TextView) findViewById(R.id.text_sign_up_link);
+    signUpLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        if (view.getId() == R.id.sign_up_link) {
+        if (view.getId() == R.id.text_sign_up_link) {
           startActivity(UiActivityNavigation.registerActivity(ResetPasswordActivity.this));
         }
       }
@@ -60,13 +60,13 @@ public class ResetPasswordActivity extends AppCompatActivity implements ResetPas
   @Override
   protected void onStart() {
     super.onStart();
-    mPresenter.attachView(this);
+    presenter.attachView(this);
   }
 
   @Override
   protected void onStop() {
     super.onStop();
-    mPresenter.detachView();
+    presenter.detachView();
   }
 
   @Override
@@ -95,14 +95,14 @@ public class ResetPasswordActivity extends AppCompatActivity implements ResetPas
 
   @Override
   public void showProgressDialog() {
-    mProgressDialog = UIDialogNavigation.showProgressDialog();
-    mProgressDialog.show(getSupportFragmentManager(), "progress");
+    progressDialog = UIDialogNavigation.showProgressDialog();
+    progressDialog.show(getSupportFragmentManager(), "progress");
   }
 
   @Override
   public void dismissProgressDialog() {
-    if (mProgressDialog != null) {
-      mProgressDialog.dismiss();
+    if (progressDialog != null) {
+      progressDialog.dismiss();
     }
   }
 

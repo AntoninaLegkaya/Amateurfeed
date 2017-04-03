@@ -21,8 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.data.FeedProvider;
+import com.dbbest.amateurfeed.data.PreviewEntry;
 import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter;
 import com.dbbest.amateurfeed.data.adapter.UserNewsAdapter.UserNewsHolder;
 import com.dbbest.amateurfeed.presenter.SearchPresenter;
@@ -34,28 +34,18 @@ import java.util.ArrayList;
 public class SearchFragment extends Fragment implements SearchView,
     LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
-  private static final String PARAM_KEY = "param_key";
+  public static final String TAG = SearchFragment.class.getName();
+  public static final String IDS = "ids";
   private static final int SEARCH_NEWS_LOADER = 3;
-  public static String TAG = SearchFragment.class.getName();
-  private AppCompatEditText mSearchField;
-  private ImageButton mDeleteSearchParam;
-  private ImageButton mSearchButton;
-  private UserNewsAdapter mUserNewsAdapter;
-  private RecyclerView mRecyclerView;
-  private SearchPresenter mPresenter;
+  private AppCompatEditText searchField;
+  private UserNewsAdapter userNewsAdapter;
+  private SearchPresenter presenter;
 
-  public static SearchFragment newInstance(String key) {
-    SearchFragment fragment = new SearchFragment();
-    Bundle bundle = new Bundle();
-    bundle.putString(PARAM_KEY, key);
-    fragment.setArguments(bundle);
-    return fragment;
-  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mPresenter = new SearchPresenter();
+    presenter = new SearchPresenter();
   }
 
   @Override
@@ -66,43 +56,43 @@ public class SearchFragment extends Fragment implements SearchView,
   @Override
   public void onStart() {
     super.onStart();
-    mPresenter.attachView(this);
+    presenter.attachView(this);
   }
 
   @Override
   public void onStop() {
     super.onStop();
-    mPresenter.detachView();
+    presenter.detachView();
   }
 
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_search, container, false);
-    mSearchField = (AppCompatEditText) view.findViewById(R.id.item_search_text);
-    mDeleteSearchParam = (ImageButton) view.findViewById(R.id.delete_param_button);
-    mDeleteSearchParam.setOnClickListener(this);
-    mSearchButton = (ImageButton) view.findViewById(R.id.search_button);
-    mSearchButton.setOnClickListener(new View.OnClickListener() {
+    searchField = (AppCompatEditText) view.findViewById(R.id.text_search);
+    ImageButton deleteSearchParam = (ImageButton) view.findViewById(R.id.button_clear_search_param);
+    deleteSearchParam.setOnClickListener(this);
+    ImageButton searchButton = (ImageButton) view.findViewById(R.id.button_search);
+    searchButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mUserNewsAdapter.changeCursor(null);
-        mPresenter.searchNews(mSearchField.getText().toString());
+        userNewsAdapter.changeCursor(null);
+        presenter.searchNews(searchField.getText().toString());
       }
     });
-    mRecyclerView = (RecyclerView) view.findViewById(R.id.search_feed_list_view);
+    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.view_search_feed_list);
 
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    mUserNewsAdapter = new UserNewsAdapter(null, 0,
-        new UserNewsAdapter.SearchAdapterShowItemDetails() {
-          @Override
-          public void showItemDetailsFragment(UserNewsHolder vh, Uri uri,
-              int typeItem) {
-            ((Callback) getActivity()).showItemDetailsFragment(vh, uri, typeItem);
-          }
-        });
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setHasFixedSize(true);
+    userNewsAdapter = new UserNewsAdapter(null, new UserNewsAdapter.SearchAdapterShowItemDetails() {
+      @Override
+      public void showItemDetailsFragment(UserNewsHolder vh, Uri uri,
+          int typeItem) {
+        ((Callback) getActivity()).showItemDetailsFragment(vh, uri, typeItem);
+      }
+    });
     GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
-    mRecyclerView.setLayoutManager(layoutManager);
-    mRecyclerView.setAdapter(mUserNewsAdapter);
+    recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setAdapter(userNewsAdapter);
     return view;
   }
 
@@ -110,9 +100,9 @@ public class SearchFragment extends Fragment implements SearchView,
   @Override
   public void onClick(View view) {
     if (view != null) {
-      if (view.getId() == R.id.delete_param_button) {
-        if (mSearchField != null) {
-          mSearchField.setText("");
+      if (view.getId() == R.id.button_clear_search_param) {
+        if (searchField != null) {
+          searchField.setText("");
         }
       }
     }
@@ -120,16 +110,16 @@ public class SearchFragment extends Fragment implements SearchView,
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
-    String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
+    Uri previewListUri = PreviewEntry.CONTENT_URI;
+    String sortOrder = PreviewEntry.COLUMN_CREATE_DATE + " DESC";
     String selection;
     ArrayList<String> selectionArgList = args.getStringArrayList("ids");
     String[] selectionArg;
     if (selectionArgList != null && !selectionArgList.isEmpty()) {
       selectionArg = selectionArgList.toArray(new String[selectionArgList.size()]);
       selection = FeedProvider.sPreviewSelectionId + " IN (";
-      for (int i = 0; i < selectionArg.length; i++) {
-        selection += selectionArg[i] + ", ";
+      for (String aSelectionArg : selectionArg) {
+        selection += aSelectionArg + ", ";
       }
       selection = selection.substring(0, selection.length() - 2) + ")";
       Log.i(TAG, "Query to  DB:  get Preview info : selection: " + selection
@@ -148,10 +138,8 @@ public class SearchFragment extends Fragment implements SearchView,
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    Log.i(TAG, " Loading finished");
     if (loader.getId() == SEARCH_NEWS_LOADER && data != null) {
-      Log.i(TAG, " Loading finished, data not Null");
-      mUserNewsAdapter.swapCursor(data);
+      userNewsAdapter.swapCursor(data);
     } else {
       showEmptySearchDialog();
     }
@@ -159,14 +147,13 @@ public class SearchFragment extends Fragment implements SearchView,
 
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
-    Log.i(TAG, "Reset Loader");
-    mUserNewsAdapter.swapCursor(null);
+    userNewsAdapter.swapCursor(null);
   }
 
   @Override
   public void initLoader(Bundle data) {
-    ArrayList<String> list = data.getStringArrayList("ids");
-    if (!list.isEmpty()) {
+    ArrayList<String> list = data.getStringArrayList(IDS);
+    if (list != null && !list.isEmpty()) {
       if (getLoaderManager().getLoader(SEARCH_NEWS_LOADER) != null) {
         getLoaderManager().restartLoader(SEARCH_NEWS_LOADER, data, this);
       } else if (getLoaderManager().getLoader(SEARCH_NEWS_LOADER) == null) {
@@ -184,7 +171,6 @@ public class SearchFragment extends Fragment implements SearchView,
   }
 
   public interface Callback {
-
-    public void showItemDetailsFragment(UserNewsHolder vh, Uri uri, int typeItem);
+    void showItemDetailsFragment(UserNewsHolder vh, Uri uri, int typeItem);
   }
 }

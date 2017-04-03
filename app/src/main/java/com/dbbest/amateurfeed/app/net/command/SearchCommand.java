@@ -22,32 +22,33 @@ public class SearchCommand extends Command {
       return new SearchCommand[size];
     }
   };
-  private String mSearchParam;
+  public static final String DICTIONARY = "dictionary";
+  private String searchParam;
 
   public SearchCommand(String searchParam) {
-    mSearchParam = searchParam;
+    this.searchParam = searchParam;
   }
 
   private SearchCommand(Parcel in) {
     super(in);
-    mSearchParam = in.readString();
+    searchParam = in.readString();
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeString(mSearchParam);
+    dest.writeString(searchParam);
   }
 
   @Override
   public void execute() {
     RestApiClient apiClient = App.getApiFactory().restClient();
-    ResponseWrapper<Dictionary> response = apiClient.searchNews(mSearchParam);
+    ResponseWrapper<Dictionary> response = apiClient.searchNews(searchParam);
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         Bundle bundle = new Bundle();
         Dictionary dictionary = response.data();
         if (dictionary != null) {
-          bundle.putParcelable("dictionary", dictionary);
+          bundle.putParcelable(DICTIONARY, dictionary);
           notifySuccess(bundle);
         } else {
           notifyError(Bundle.EMPTY);

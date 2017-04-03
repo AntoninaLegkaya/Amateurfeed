@@ -20,80 +20,80 @@ public class UserNewsModel implements Parcelable {
   };
 
   @SerializedName("id")
-  private int mId;
+  private int id;
 
   @SerializedName("title")
-  private String mTitle;
+  private String title;
 
   @SerializedName("updateDate")
-  private String mUpdateDate;
+  private String updateDate;
 
 
   @SerializedName("status")
-  private String mStatus;
+  private String status;
 
   @SerializedName("image")
-  private String mImage;
+  private String image;
 
   @SerializedName("likes")
-  private int mLikes;
+  private int likes;
 
   public UserNewsModel(int id, String title, String updateDate, String status, String image,
       int likes) {
-    mId = id;
-    mTitle = title;
-    mUpdateDate = updateDate;
-    mStatus = status;
-    mImage = image;
-    mLikes = likes;
+    this.id = id;
+    this.title = title;
+    this.updateDate = updateDate;
+    this.status = status;
+    this.image = image;
+    this.likes = likes;
   }
 
   private UserNewsModel(Parcel in) {
-    mId = in.readInt();
-    mTitle = in.readString();
-    mUpdateDate = in.readString();
-    mStatus = in.readString();
-    mImage = in.readString();
-    mLikes = in.readInt();
+    id = in.readInt();
+    title = in.readString();
+    updateDate = in.readString();
+    status = in.readString();
+    image = in.readString();
+    likes = in.readInt();
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(mId);
-    dest.writeString(mTitle);
-    dest.writeString(mUpdateDate);
-    dest.writeString(mStatus);
-    dest.writeString(mImage);
-    dest.writeInt(mLikes);
-  }
-
-  public int getId() {
-    return mId;
-  }
-
-  public String getTitle() {
-    return mTitle;
-  }
-
-  public String getUpdateDate() {
-    return mUpdateDate;
-  }
-
-  public String getStatus() {
-    return mStatus;
-  }
-
-  public String getImage() {
-    return mImage;
-  }
-
-  public int getLikes() {
-    return mLikes;
+    dest.writeInt(id);
+    dest.writeString(title);
+    dest.writeString(updateDate);
+    dest.writeString(status);
+    dest.writeString(image);
+    dest.writeInt(likes);
   }
 
   @Override
   public int describeContents() {
     return 0;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getUpdateDate() {
+    return updateDate;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public int getLikes() {
+    return likes;
   }
 
 

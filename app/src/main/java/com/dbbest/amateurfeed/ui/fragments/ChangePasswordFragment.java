@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +18,6 @@ import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.presenter.ChangePasswordPresenter;
 import com.dbbest.amateurfeed.ui.fragments.ProfileFragment.ProfileShowDetails;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
-import com.dbbest.amateurfeed.ui.navigator.UiActivityNavigation;
 import com.dbbest.amateurfeed.utils.Utils;
 import com.dbbest.amateurfeed.view.ChangePasswordView;
 
@@ -57,13 +57,16 @@ public class ChangePasswordFragment extends Fragment implements ChangePasswordVi
     View view = inflater.inflate(R.layout.fragment_change_password, container, false);
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setDisplayShowTitleEnabled(false);
+    }
 
-    mCurrentPassEditView = (AppCompatEditText) view.findViewById(R.id.input_item_current_password);
-    mPassEditView = (AppCompatEditText) view.findViewById(R.id.input_item_new_password);
+    mCurrentPassEditView = (AppCompatEditText) view.findViewById(R.id.text_current_password);
+    mPassEditView = (AppCompatEditText) view.findViewById(R.id.text_new_password);
     mConfirmPassEditView = (AppCompatEditText) view
-        .findViewById(R.id.input_item_new_password_again);
+        .findViewById(R.id.text_confirm_password);
     return view;
   }
 
@@ -74,8 +77,6 @@ public class ChangePasswordFragment extends Fragment implements ChangePasswordVi
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    String upTitle = null;
-    String upDescription = null;
     switch (item.getItemId()) {
       case android.R.id.home:
         ((ProfileShowDetails) getActivity()).showPreferencesFragment();

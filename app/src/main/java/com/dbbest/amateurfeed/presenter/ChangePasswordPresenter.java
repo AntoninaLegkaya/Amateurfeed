@@ -13,26 +13,20 @@ public class ChangePasswordPresenter extends Presenter<ChangePasswordView> imple
 
   private static final int CODE_CHANGE_PASSWORD = 0;
 
-  private CommandResultReceiver mResetReceiver;
-
-  public void changePassword(String currentPassword, String password, String confirmPassword) {
-    Command changePasswordCommand = new ChangePasswordCommand(currentPassword, password,
-        confirmPassword);
-    changePasswordCommand.send(CODE_CHANGE_PASSWORD, mResetReceiver);
-  }
+  private CommandResultReceiver resetReceiver;
 
   @Override
   protected void onAttachView(@NonNull ChangePasswordView view) {
-    if (mResetReceiver == null) {
-      mResetReceiver = new CommandResultReceiver();
+    if (resetReceiver == null) {
+      resetReceiver = new CommandResultReceiver();
     }
-    mResetReceiver.setListener(this);
+    resetReceiver.setListener(this);
   }
 
   @Override
   protected void onDetachView(@NonNull ChangePasswordView view) {
-    if (mResetReceiver != null) {
-      mResetReceiver.setListener(null);
+    if (resetReceiver != null) {
+      resetReceiver.setListener(null);
     }
   }
 
@@ -49,12 +43,20 @@ public class ChangePasswordPresenter extends Presenter<ChangePasswordView> imple
   @Override
   public void onFail(int code, Bundle data) {
     if (code == CODE_CHANGE_PASSWORD) {
-      getView().showErrorChangePasswordDialog();
+      if (getView() != null) {
+        getView().showErrorChangePasswordDialog();
+      }
     }
   }
 
   @Override
   public void onProgress(int code, Bundle data, int progress) {
 
+  }
+
+  public void changePassword(String currentPassword, String password, String confirmPassword) {
+    Command changePasswordCommand = new ChangePasswordCommand(currentPassword, password,
+        confirmPassword);
+    changePasswordCommand.send(CODE_CHANGE_PASSWORD, resetReceiver);
   }
 }

@@ -2,7 +2,6 @@ package com.dbbest.amateurfeed.app.azur.service;
 
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +17,8 @@ public class BlobUploadService extends IntentService {
   public static final int STATUS_FINISHED = 1;
   public static final int STATUS_ERROR = 2;
   private String TAG = BlobUploadService.class.getName();
-  private AzureStorage mAzureStorage;
-  private Uri mFilePath;
-  private Context mContext;
-
+  private AzureStorage azureStorage;
+  private Uri filePath;
 
   /**
    * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -38,25 +35,17 @@ public class BlobUploadService extends IntentService {
     String path = null;
     Bundle bundle = new Bundle();
     final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-    mFilePath = intent.getParcelableExtra("uri");
-    try {
-      mAzureStorage = new AzureStorage(mContext);
-      String nameFile = mAzureStorage.uploadToStorage(mFilePath);
-      CloudPreferences preferences = new CloudPreferences();
-      if (nameFile != null) {
-        path = preferences.getStorageUrl() + preferences.getContainer() + "/" + nameFile;
-      }
-      if (null != path) {
-        Log.i(TAG, "Upload url: " + path);
-        bundle.putString("result", path);
-        receiver.send(STATUS_FINISHED, bundle);
-      }
-
-    } catch (Exception e) {
-      bundle.putString(Intent.EXTRA_TEXT, e.toString());
-      receiver.send(STATUS_ERROR, bundle);
+    filePath = intent.getParcelableExtra("uri");
+    azureStorage = new AzureStorage();
+    String nameFile = azureStorage.uploadToStorage(filePath, receiver);
+    CloudPreferences preferences = new CloudPreferences();
+    if (nameFile != null) {
+      path = preferences.getStorageUrl() + preferences.getContainer() + "/" + nameFile;
     }
-
-
+    if (null != path) {
+      Log.i(TAG, "Upload url: " + path);
+      bundle.putString("result", path);
+      receiver.send(STATUS_FINISHED, bundle);
+    }
   }
 }

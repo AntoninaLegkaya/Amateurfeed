@@ -4,18 +4,16 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-/**
- * The service which allows the sync adapter framework to access the authenticator.
- */
+
 public class AmateurfeedAuthenticatorService extends Service {
 
   // Instance field that stores the authenticator object
-  private AmateurfeedAuthenticator mAuthenticator;
+  private AmateurfeedAuthenticator authenticator;
 
   @Override
   public void onCreate() {
     // Create a new authenticator object
-    mAuthenticator = new AmateurfeedAuthenticator(this);
+    authenticator = new AmateurfeedAuthenticator(this);
   }
 
   /*
@@ -24,6 +22,6 @@ public class AmateurfeedAuthenticatorService extends Service {
    */
   @Override
   public IBinder onBind(Intent intent) {
-    return mAuthenticator.getIBinder();
+    return authenticator.getIBinder();
   }
 }

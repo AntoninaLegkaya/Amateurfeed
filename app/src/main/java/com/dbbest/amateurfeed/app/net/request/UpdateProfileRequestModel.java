@@ -21,49 +21,29 @@ public class UpdateProfileRequestModel implements Parcelable {
   @SerializedName("fullName")
   private String fullName;
   @SerializedName("email")
-  private String mEmail;
+  private String email;
   @SerializedName("image")
-  private String mImage;
+  private String image;
   @SerializedName("phone")
-  private String mPhone;
+  private String phone;
   @SerializedName("job")
-  private String mJob;
+  private String job;
 
   public UpdateProfileRequestModel(String fullName, String email, String image, String phone,
       String job) {
     this.fullName = fullName;
-    mEmail = email;
-    mImage = image;
-    mPhone = phone;
-    mJob = job;
+    this.email = email;
+    this.image = image;
+    this.phone = phone;
+    this.job = job;
   }
 
-  protected UpdateProfileRequestModel(Parcel in) {
+  private UpdateProfileRequestModel(Parcel in) {
     fullName = in.readString();
-    mEmail = in.readString();
-    mImage = in.readString();
-    mPhone = in.readString();
-    mJob = in.readString();
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public String getEmail() {
-    return mEmail;
-  }
-
-  public String getImage() {
-    return mImage;
-  }
-
-  public String getPhone() {
-    return mPhone;
-  }
-
-  public String getJob() {
-    return mJob;
+    email = in.readString();
+    image = in.readString();
+    phone = in.readString();
+    job = in.readString();
   }
 
   @Override
@@ -74,9 +54,29 @@ public class UpdateProfileRequestModel implements Parcelable {
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(fullName);
-    dest.writeString(mEmail);
-    dest.writeString(mImage);
-    dest.writeString(mPhone);
-    dest.writeString(mJob);
+    dest.writeString(email);
+    dest.writeString(image);
+    dest.writeString(phone);
+    dest.writeString(job);
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public String getJob() {
+    return job;
   }
 }

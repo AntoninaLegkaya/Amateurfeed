@@ -22,31 +22,31 @@ public class SetLikeCommand extends Command {
       return new SetLikeCommand[size];
     }
   };
-  private final long mId;
-  private LikeModel mLikeRequestModel;
+  private final long id;
+  private LikeModel likeRequestModel;
+
+  public SetLikeCommand(long id, boolean isLike) {
+    this.id = id;
+    likeRequestModel = new LikeModel(isLike);
+  }
 
   private SetLikeCommand(Parcel in) {
     super(in);
-    mLikeRequestModel = in.readParcelable(LikeModel.class.getClassLoader());
-    mId = in.readInt();
-  }
-
-  public SetLikeCommand(long id, boolean isLike) {
-    mId = id;
-    mLikeRequestModel = new LikeModel(isLike);
+    likeRequestModel = in.readParcelable(LikeModel.class.getClassLoader());
+    id = in.readInt();
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeParcelable(mLikeRequestModel, flags);
-    dest.writeLong(mId);
+    dest.writeParcelable(likeRequestModel, flags);
+    dest.writeLong(id);
   }
 
   @Override
   public void execute() {
     AuthToken authToken = new AuthToken();
     RestApiClient apiClient = App.getApiFactory().restClient();
-    ResponseWrapper<Object> response = apiClient.isLike(authToken.bearer(), mId, mLikeRequestModel);
+    ResponseWrapper<Object> response = apiClient.isLike(authToken.bearer(), id, likeRequestModel);
     if (response != null) {
       if (response.isSuccessful()) {
         notifySuccess(Bundle.EMPTY);
@@ -56,6 +56,5 @@ public class SetLikeCommand extends Command {
     } else {
       notifyError(Bundle.EMPTY);
     }
-
   }
 }

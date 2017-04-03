@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <files-path path="images/" name="myimages" />
-    <external-path name="external_files" path="."/>
+  <files-path
+    name="myimages"
+    path="images/" />
+  <external-path
+    name="external_files"
+    path="." />
 
 </paths>

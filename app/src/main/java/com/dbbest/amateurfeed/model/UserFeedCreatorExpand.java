@@ -19,39 +19,39 @@ public class UserFeedCreatorExpand implements Parcelable {
         }
       };
   @SerializedName("id")
-  private int mId;
+  private int id;
   @SerializedName("name")
-  private String mName;
+  private String name;
   @SerializedName("isAdmin")
-  private boolean mIsAdmin;
+  private boolean isAdmin;
   @SerializedName("image")
-  private String mImage;
+  private String image;
   @SerializedName("email")
-  private String mEmail;
+  private String email;
 
   public UserFeedCreatorExpand(String name, int id, boolean isAdmin, String email, String image) {
-    mId = id;
-    mName = name;
-    mIsAdmin = isAdmin;
-    mImage = image;
-    mEmail = email;
+    this.id = id;
+    this.name = name;
+    this.isAdmin = isAdmin;
+    this.image = image;
+    this.email = email;
   }
 
-  protected UserFeedCreatorExpand(Parcel in) {
-    mId = in.readInt();
-    mName = in.readString();
-    mIsAdmin = in.readByte() != 0;
-    mImage = in.readString();
-    mEmail = in.readString();
+  private UserFeedCreatorExpand(Parcel in) {
+    id = in.readInt();
+    name = in.readString();
+    isAdmin = in.readByte() != 0;
+    image = in.readString();
+    email = in.readString();
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(mId);
-    dest.writeString(mName);
-    dest.writeByte((byte) (mIsAdmin ? 1 : 0));
-    dest.writeString(mImage);
-    dest.writeString(mEmail);
+    dest.writeInt(id);
+    dest.writeString(name);
+    dest.writeByte((byte) (isAdmin ? 1 : 0));
+    dest.writeString(image);
+    dest.writeString(email);
   }
 
   @Override
@@ -59,34 +59,34 @@ public class UserFeedCreatorExpand implements Parcelable {
     return 0;
   }
 
-  public int getId() {
-    return mId;
-  }
-
-  public String getName() {
-    return mName;
-  }
-
-  public boolean isAdmin() {
-    return mIsAdmin;
-  }
-
-  public String getImage() {
-    return mImage;
-  }
-
-  public String getEmail() {
-    return mEmail;
-  }
-
   @Override
   public String toString() {
     return "UserFeedCreator {" +
-        "mId=" + mId +
-        ", mName='" + mName + '\n' +
-        ", mIsAdmin='" + mIsAdmin + '\n' +
-        ", mIsAdmin='" + mIsAdmin + '\n' +
-        ", mEmail='" + mEmail + '\n' +
+        "id=" + id +
+        ", name='" + name + '\n' +
+        ", isAdmin='" + isAdmin + '\n' +
+        ", isAdmin='" + isAdmin + '\n' +
+        ", email='" + email + '\n' +
         '}';
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public boolean isAdmin() {
+    return isAdmin;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public String getEmail() {
+    return email;
   }
 }

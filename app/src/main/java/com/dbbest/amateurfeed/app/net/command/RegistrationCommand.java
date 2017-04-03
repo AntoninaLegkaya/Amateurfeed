@@ -26,38 +26,38 @@ public class RegistrationCommand extends Command {
           return new RegistrationCommand[size];
         }
       };
-  private final RegistrationRequestModel mRegistrationRequest;
-  private String TAG = RegistrationCommand.class.getName();
+  private final RegistrationRequestModel registrationRequest;
+  private final String TAG = RegistrationCommand.class.getName();
 
   public RegistrationCommand(String email, String fullName, String phone, String address,
       String password, String deviceId, String osType, String deviceToken) {
-    mRegistrationRequest = new RegistrationRequestModel(email, fullName, phone, address, password,
+    registrationRequest = new RegistrationRequestModel(email, fullName, phone, address, password,
         deviceId, osType, deviceToken);
   }
 
-  protected RegistrationCommand(Parcel in) {
+  private RegistrationCommand(Parcel in) {
     super(in);
-    mRegistrationRequest = in.readParcelable(RegistrationRequestModel.class.getClassLoader());
+    registrationRequest = in.readParcelable(RegistrationRequestModel.class.getClassLoader());
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeParcelable(mRegistrationRequest, flags);
+    dest.writeParcelable(registrationRequest, flags);
   }
 
   @Override
   public void execute() {
     RestApiClient apiClient = App.getApiFactory().restClient();
-    ResponseWrapper<LoginResponseModel> response = apiClient.registration(mRegistrationRequest);
+    ResponseWrapper<LoginResponseModel> response = apiClient.registration(registrationRequest);
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
 
         LoginResponseModel data = response.data();
         AuthToken authToken = new AuthToken();
         authToken.update(data.getAccessToken());
-        authToken.updateFcmToken(mRegistrationRequest.getmDeviceToken());
-        authToken.updateDeviceId(mRegistrationRequest.getmDeviceId());
-        authToken.updateDeviceOs(mRegistrationRequest.getmOsType());
+        authToken.updateFcmToken(registrationRequest.getDeviceToken());
+        authToken.updateDeviceId(registrationRequest.getDeviceId());
+        authToken.updateDeviceOs(registrationRequest.getOsType());
         Log.i(TAG, authToken.toString());
         notifySuccess(Bundle.EMPTY);
       } else {

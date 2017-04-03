@@ -35,7 +35,7 @@
     android:padding="@dimen/padding_5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
     <include
-      layout="@layout/item_detail_my_news"
+      layout="@layout/item_detail_user_news"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       app:layout_behavior="@string/appbar_scrolling_view_behavior" />

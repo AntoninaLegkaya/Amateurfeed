@@ -7,27 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class DeviceInfoModel implements Parcelable {
 
-  @SerializedName("osType")
-  private String mOsType;
-
-  @SerializedName("deviceToken")
-  private String mDeviceToken;
-
-  @SerializedName("deviceId")
-  private String mDeviceId;
-
-  public DeviceInfoModel(String osType, String deviceToken, String deviceId) {
-    mOsType = osType;
-    mDeviceToken = deviceToken;
-    mDeviceId = deviceId;
-  }
-
-  protected DeviceInfoModel(Parcel in) {
-    mOsType = in.readString();
-    mDeviceToken = in.readString();
-    mDeviceId = in.readString();
-  }
-
   public static final Creator<DeviceInfoModel> CREATOR = new Creator<DeviceInfoModel>() {
     @Override
     public DeviceInfoModel createFromParcel(Parcel in) {
@@ -39,17 +18,23 @@ public class DeviceInfoModel implements Parcelable {
       return new DeviceInfoModel[size];
     }
   };
+  @SerializedName("osType")
+  private String osType;
+  @SerializedName("deviceToken")
+  private String deviceToken;
+  @SerializedName("deviceId")
+  private String deviceId;
 
-  public String getOsType() {
-    return mOsType;
+  public DeviceInfoModel(String osType, String deviceToken, String deviceId) {
+    this.osType = osType;
+    this.deviceToken = deviceToken;
+    this.deviceId = deviceId;
   }
 
-  public String getDeviceToken() {
-    return mDeviceToken;
-  }
-
-  public String getDeviceId() {
-    return mDeviceId;
+  private DeviceInfoModel(Parcel in) {
+    osType = in.readString();
+    deviceToken = in.readString();
+    deviceId = in.readString();
   }
 
   @Override
@@ -59,8 +44,20 @@ public class DeviceInfoModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(mOsType);
-    dest.writeString(mDeviceToken);
-    dest.writeString(mDeviceId);
+    dest.writeString(osType);
+    dest.writeString(deviceToken);
+    dest.writeString(deviceId);
+  }
+
+  public String getOsType() {
+    return osType;
+  }
+
+  public String getDeviceToken() {
+    return deviceToken;
+  }
+
+  public String getDeviceId() {
+    return deviceId;
   }
 }

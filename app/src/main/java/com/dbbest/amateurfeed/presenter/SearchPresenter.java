@@ -10,9 +10,9 @@ import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.command.Command;
 import com.dbbest.amateurfeed.app.net.command.CommandResultReceiver;
 import com.dbbest.amateurfeed.app.net.command.SearchCommand;
-import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.PreviewEntry;
 import com.dbbest.amateurfeed.model.Dictionary;
-import com.dbbest.amateurfeed.model.News;
+import com.dbbest.amateurfeed.model.NewsModel;
 import com.dbbest.amateurfeed.view.SearchView;
 import java.util.ArrayList;
 
@@ -21,26 +21,21 @@ public class SearchPresenter extends Presenter<SearchView>
     implements CommandResultReceiver.CommandListener {
 
   private static final int CODE_SEARCH_NEWS = 0;
-  private CommandResultReceiver mResultReceiver;
+  private CommandResultReceiver resultReceiver;
   private String TAG = SearchPresenter.class.getName();
-
-  public void searchNews(String searchParam) {
-    Command command = new SearchCommand(searchParam);
-    command.send(CODE_SEARCH_NEWS, mResultReceiver);
-  }
 
   @Override
   protected void onAttachView(@NonNull SearchView view) {
-    if (mResultReceiver == null) {
-      mResultReceiver = new CommandResultReceiver();
+    if (resultReceiver == null) {
+      resultReceiver = new CommandResultReceiver();
     }
-    mResultReceiver.setListener(this);
+    resultReceiver.setListener(this);
   }
 
   @Override
   protected void onDetachView(@NonNull SearchView view) {
-    if (mResultReceiver != null) {
-      mResultReceiver.setListener(null);
+    if (resultReceiver != null) {
+      resultReceiver.setListener(null);
     }
   }
 
@@ -52,10 +47,10 @@ public class SearchPresenter extends Presenter<SearchView>
         if (data != null) {
           Dictionary dictionary = (Dictionary) data.get("dictionary");
           Bundle bundle = new Bundle();
-          for (News news : dictionary.getNews()) {
+          for (NewsModel news : dictionary.getNews()) {
 
             Cursor cursor = getPreviewByIdCursor(news.getId());
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
               ids.add(String.valueOf(news.getId()));
               Log.i(TAG, "news : "
                   + String.valueOf(news.getId())
@@ -70,16 +65,21 @@ public class SearchPresenter extends Presenter<SearchView>
     }
   }
 
-  protected Cursor getPreviewByIdCursor(long mIdPreview) {
-    Uri uriPreview = FeedContract.PreviewEntry.buildGetPreviewById(mIdPreview);
-    return App.instance().getContentResolver().query(uriPreview, null, null, null, null);
-  }
-
   @Override
   public void onFail(int code, Bundle data) {
   }
 
   @Override
   public void onProgress(int code, Bundle data, int progress) {
+  }
+
+  public void searchNews(String searchParam) {
+    Command command = new SearchCommand(searchParam);
+    command.send(CODE_SEARCH_NEWS, resultReceiver);
+  }
+
+  public Cursor getPreviewByIdCursor(long mIdPreview) {
+    Uri uriPreview = PreviewEntry.buildGetPreviewById(mIdPreview);
+    return App.instance().getContentResolver().query(uriPreview, null, null, null, null);
   }
 }

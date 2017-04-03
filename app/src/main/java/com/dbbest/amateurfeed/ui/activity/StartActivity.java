@@ -2,13 +2,12 @@ package com.dbbest.amateurfeed.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.Settings.Secure;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,76 +17,45 @@ import com.dbbest.amateurfeed.presenter.StartPresenter;
 import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
 import com.dbbest.amateurfeed.ui.navigator.UiActivityNavigation;
 import com.dbbest.amateurfeed.view.StartView;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 
 public class StartActivity extends AppCompatActivity implements StartView {
 
-  private final String TAG = StartActivity.class.getName();
-  private StartPresenter mPresenter;
-  private LoginButton mFacebookLoginButton;
-  private CallbackManager mCallbackManager;
-  private AppCompatEditText mLoginEdit;
-  private AppCompatEditText mPasswordEdit;
-  private Button mLoginBtn;
-  private TextView mSignUpLink;
-  private TextView mResetPswLink;
-  private DialogFragment mProgressDialog;
+  private StartPresenter presenter;
+  private AppCompatEditText loginEdit;
+  private AppCompatEditText passwordEdit;
+  private DialogFragment progressDialog;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.login);
-    mPresenter = new StartPresenter();
-    mLoginEdit = (AppCompatEditText) findViewById(R.id.login);
-    mPasswordEdit = (AppCompatEditText) findViewById(R.id.password);
-    mLoginBtn = (Button) findViewById(R.id.login_button);
-    final String deviceId = Secure.getString(
-        getApplicationContext().getContentResolver(),
-        Secure.ANDROID_ID);
-
-    mLoginBtn.setOnClickListener(new View.OnClickListener() {
+    presenter = new StartPresenter();
+    loginEdit = (AppCompatEditText) findViewById(R.id.text_login);
+    passwordEdit = (AppCompatEditText) findViewById(R.id.text_password);
+    Button loginBtn = (Button) findViewById(R.id.button_login);
+    final String deviceId = Settings.Secure.ANDROID_ID;
+    loginBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        mPresenter.login(mLoginEdit.getText().toString(), mPasswordEdit.getText().toString(),
-            deviceId,  getString(R.string.os_device),  BuildConfig.OPEN_FIREBASE_API_KEY);
+        presenter.login(loginEdit.getText().toString(), passwordEdit.getText().toString(),
+            deviceId, getString(R.string.os_device), BuildConfig.OPEN_FIREBASE_API_KEY);
       }
     });
-    mCallbackManager = CallbackManager.Factory.create();
-    mFacebookLoginButton = (LoginButton) findViewById(R.id.login_fb_button);
-    mFacebookLoginButton.setReadPermissions("email");
-    mFacebookLoginButton.setReadPermissions("public_profile");
-    mFacebookLoginButton.registerCallback(mCallbackManager,
-        new FacebookCallback<LoginResult>() {
-          @Override
-          public void onSuccess(LoginResult loginResult) {
-          }
-
-          @Override
-          public void onCancel() {
-          }
-
-          @Override
-          public void onError(FacebookException error) {
-          }
-        });
-    mSignUpLink = (TextView) findViewById(R.id.sign_up_link);
-    mSignUpLink.setOnClickListener(new View.OnClickListener() {
+//    CallbackManager callbackManager = CallbackManager.Factory.create();
+    TextView signUpLink = (TextView) findViewById(R.id.text_sign_up_link);
+    signUpLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        if (view.getId() == R.id.sign_up_link) {
+        if (view.getId() == R.id.text_sign_up_link) {
           startActivity(UiActivityNavigation.registerActivity(StartActivity.this));
         }
       }
     });
-    mResetPswLink = (TextView) findViewById(R.id.reset_link);
-    mResetPswLink.setOnClickListener(new View.OnClickListener() {
+    TextView resetPswLink = (TextView) findViewById(R.id.text_reset_link);
+    resetPswLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        if (view.getId() == R.id.reset_link) {
+        if (view.getId() == R.id.text_reset_link) {
           startActivity(UiActivityNavigation.resetPassActivity(StartActivity.this));
         }
       }
@@ -97,13 +65,13 @@ public class StartActivity extends AppCompatActivity implements StartView {
   @Override
   protected void onStart() {
     super.onStart();
-    mPresenter.attachView(this);
+    presenter.attachView(this);
   }
 
   @Override
   protected void onStop() {
     super.onStop();
-    mPresenter.detachView();
+    presenter.detachView();
   }
 
   @Override
@@ -138,14 +106,14 @@ public class StartActivity extends AppCompatActivity implements StartView {
 
   @Override
   public void showProgressDialog() {
-    mProgressDialog = UIDialogNavigation.showProgressDialog();
-    mProgressDialog.show(getSupportFragmentManager(), "progress");
+    progressDialog = UIDialogNavigation.showProgressDialog();
+    progressDialog.show(getSupportFragmentManager(), "progress");
   }
 
   @Override
   public void dismissProgressDialog() {
-    if (mProgressDialog != null) {
-      mProgressDialog.dismiss();
+    if (progressDialog != null) {
+      progressDialog.dismiss();
     }
   }
 
@@ -189,6 +157,6 @@ public class StartActivity extends AppCompatActivity implements StartView {
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    mPresenter.onPermissionsRequestResult(requestCode, grantResults);
+    presenter.onPermissionsRequestResult(requestCode, grantResults);
   }
 }

@@ -20,45 +20,22 @@ public class DetailPresenter extends Presenter<DetailView> implements
   private static final int CODE_EDIT_NEWS = 1;
   private static final int CODE_ADD_COMMENT = 2;
   private static final int CODE_ADD_NEW_ITEM = 3;
-  private CommandResultReceiver mResultReceiver;
-
-
-  public void checkTag(String tag) {
-    Command command = new CheckTagCommand(tag);
-    command.send(CODE_CHECK_TAG, mResultReceiver);
-  }
-
-  public void updateNews(ArrayList<TagModel> tagModels, String title, String text, String image,
-      int id) {
-    Command command = new EditNewsCommand(tagModels, title, text, image, id);
-    command.send(CODE_EDIT_NEWS, mResultReceiver);
-  }
-
-  public void postComment(int postId, String body, Integer parentCommentId) {
-    AddCommentCommand command = new AddCommentCommand(postId, body, parentCommentId);
-    command.send(CODE_ADD_COMMENT, mResultReceiver);
-  }
-
-  public void addNewNews(String title, String text, String image, ArrayList<TagModel> tagModels) {
-    Command command = new AddNewItemNewsCommand(tagModels, title, text, image);
-    command.send(CODE_ADD_NEW_ITEM, mResultReceiver);
-  }
+  private CommandResultReceiver resultReceiver;
 
   @Override
   protected void onAttachView(@NonNull DetailView view) {
-    if (mResultReceiver == null) {
-      mResultReceiver = new CommandResultReceiver();
+    if (resultReceiver == null) {
+      resultReceiver = new CommandResultReceiver();
     }
-    mResultReceiver.setListener(this);
+    resultReceiver.setListener(this);
   }
 
   @Override
   protected void onDetachView(@NonNull DetailView view) {
-    if (mResultReceiver != null) {
-      mResultReceiver.setListener(null);
+    if (resultReceiver != null) {
+      resultReceiver.setListener(null);
     }
   }
-
 
   @Override
   public void onSuccess(int code, Bundle data) {
@@ -84,11 +61,34 @@ public class DetailPresenter extends Presenter<DetailView> implements
   @Override
   public void onFail(int code, Bundle data) {
     if (code == CODE_CHECK_TAG) {
-      getView().checkUpdateImage();
+      if (getView() != null) {
+        getView().checkUpdateImage();
+      }
     }
   }
 
   @Override
   public void onProgress(int code, Bundle data, int progress) {
+  }
+
+  public void checkTag(String tag) {
+    Command command = new CheckTagCommand(tag);
+    command.send(CODE_CHECK_TAG, resultReceiver);
+  }
+
+  public void updateNews(ArrayList<TagModel> tagModels, String title, String text, String image,
+      int id) {
+    Command command = new EditNewsCommand(tagModels, title, text, image, id);
+    command.send(CODE_EDIT_NEWS, resultReceiver);
+  }
+
+  public void postComment(int postId, String body, Integer parentCommentId) {
+    AddCommentCommand command = new AddCommentCommand(postId, body, parentCommentId);
+    command.send(CODE_ADD_COMMENT, resultReceiver);
+  }
+
+  public void addNewNews(String title, String text, String image, ArrayList<TagModel> tagModels) {
+    Command command = new AddNewItemNewsCommand(tagModels, title, text, image);
+    command.send(CODE_ADD_NEW_ITEM, resultReceiver);
   }
 }

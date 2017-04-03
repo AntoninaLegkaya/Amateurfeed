@@ -8,103 +8,103 @@ import java.util.ArrayList;
 public class NewsPreviewResponseModel {
 
   @SerializedName("id")
-  private int mId;
+  private int id;
 
   @SerializedName("title")
-  private String mTitle;
+  private String title;
 
   @SerializedName("text")
-  private String mText;
+  private String text;
 
   @SerializedName("tags")
-  private ArrayList<TagModel> mTags;
+  private ArrayList<TagModel> tags;
 
   @SerializedName("likes")
-  private int mLikes;
+  private int likes;
 
   @SerializedName("isLike")
-  private boolean mIsLike;
+  private boolean isLike;
 
   @SerializedName("author")
-  private String mAuthor;
+  private String author;
 
   @SerializedName("authorImage")
-  private String mAuthorImage;
+  private String authorImage;
 
   @SerializedName("createDate")
-  private String mCreateDate;
+  private String createDate;
 
   @SerializedName("image")
-  private String mImage;
+  private String image;
 
   @SerializedName("isMy")
-  private boolean mIsMy;
+  private boolean isMy;
 
   @SerializedName("comments")
-  private ArrayList<UserFeedCommentModel> mComments;
+  private ArrayList<UserFeedCommentModel> comments;
 
   public NewsPreviewResponseModel(int id, String title, String text, ArrayList<TagModel> tags,
       int likes, boolean isLike, String author, String authorImage, String createDate, String image,
       boolean isMy, ArrayList<UserFeedCommentModel> comments) {
-    mId = id;
-    mTitle = title;
-    mText = text;
-    mTags = tags;
-    mLikes = likes;
-    mIsLike = isLike;
-    mAuthor = author;
-    mAuthorImage = authorImage;
-    mCreateDate = createDate;
-    mImage = image;
-    mIsMy = isMy;
-    mComments = comments;
+    this.id = id;
+    this.title = title;
+    this.text = text;
+    this.tags = tags;
+    this.likes = likes;
+    this.isLike = isLike;
+    this.author = author;
+    this.authorImage = authorImage;
+    this.createDate = createDate;
+    this.image = image;
+    this.isMy = isMy;
+    this.comments = comments;
   }
 
   public int getId() {
-    return mId;
+    return id;
   }
 
   public String getTitle() {
-    return mTitle;
+    return title;
   }
 
   public String getText() {
-    return mText;
+    return text;
   }
 
   public ArrayList<TagModel> getTags() {
-    return mTags;
+    return tags;
   }
 
   public int getLikes() {
-    return mLikes;
+    return likes;
   }
 
   public boolean isLike() {
-    return mIsLike;
+    return isLike;
   }
 
   public String getAuthor() {
-    return mAuthor;
+    return author;
   }
 
   public String getAuthorImage() {
-    return mAuthorImage;
+    return authorImage;
   }
 
   public String getCreateDate() {
-    return mCreateDate;
+    return createDate;
   }
 
   public String getImage() {
-    return mImage;
+    return image;
   }
 
   public boolean isMy() {
-    return mIsMy;
+    return isMy;
   }
 
   public ArrayList<UserFeedCommentModel> getComments() {
-    return mComments;
+    return comments;
   }
 }

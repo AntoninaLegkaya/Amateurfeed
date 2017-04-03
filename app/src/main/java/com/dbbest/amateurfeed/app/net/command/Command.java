@@ -15,15 +15,6 @@ public abstract class Command implements Parcelable {
   private int mCode = -1;
   private CommandResultReceiver mResultReceiver;
 
-  public Command() {
-
-  }
-
-  protected Command(Parcel in) {
-    mCode = in.readInt();
-    mResultReceiver = in.readParcelable(CommandResultReceiver.class.getClassLoader());
-  }
-
   /**
    * If no error code specified -1 will be return
    *
@@ -45,11 +36,31 @@ public abstract class Command implements Parcelable {
     return bundle.getString(KEY_ERR_TEXT, null);
   }
 
+  public Command() {
+
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public final void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(mCode);
+    dest.writeParcelable(mResultReceiver, flags);
+    writeToParcel(flags, dest);
+  }
+
   public void send(int code, CommandResultReceiver resultReceiver) {
     mCode = code;
     mResultReceiver = resultReceiver;
     selfExecute();
   }
+
+  public abstract void writeToParcel(int flags, Parcel dest);
+
+  public abstract void execute();
 
   /**
    * Send self command to concrete service
@@ -108,20 +119,9 @@ public abstract class Command implements Parcelable {
     return bundle;
   }
 
-  @Override
-  public int describeContents() {
-    return 0;
+  protected Command(Parcel in) {
+    mCode = in.readInt();
+    mResultReceiver = in.readParcelable(CommandResultReceiver.class.getClassLoader());
   }
-
-  @Override
-  public final void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(mCode);
-    dest.writeParcelable(mResultReceiver, flags);
-    writeToParcel(flags, dest);
-  }
-
-  public abstract void writeToParcel(int flags, Parcel dest);
-
-  public abstract void execute();
 
 }

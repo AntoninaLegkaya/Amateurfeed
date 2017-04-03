@@ -16,51 +16,6 @@ public class AuthToken implements ActiveRecord<AuthToken> {
   private static final String BEARER = "Bearer ";
 
   public AuthToken() {
-
-  }
-
-  public String value() {
-    return readToken();
-  }
-
-  public String bearer() {
-    String token = readToken();
-    if (TextUtils.isEmpty(token)) {
-      return null;
-    }
-    return BEARER + token;
-  }
-
-  public String getDeviceID() {
-
-    return readDeviceId();
-  }
-
-  public String getDeviceOs() {
-
-    return readDeviceOs();
-  }
-
-  public String getFcmToken() {
-
-    return readFcmToken();
-  }
-
-
-  public void update(String token) {
-    writeToken(token);
-  }
-
-  public void updateFcmToken(String token) {
-    writeFcmToken(token);
-  }
-
-  public void updateDeviceId(String id) {
-    writeDeviceId(id);
-  }
-
-  public void updateDeviceOs(String os) {
-    writeDeviceOs(os);
   }
 
   @Override
@@ -98,6 +53,48 @@ public class AuthToken implements ActiveRecord<AuthToken> {
         + '}';
   }
 
+  public String value() {
+    return readToken();
+  }
+
+  public String bearer() {
+    String token = readToken();
+    if (TextUtils.isEmpty(token)) {
+      return null;
+    }
+    return BEARER + token;
+  }
+
+  public String getDeviceID() {
+
+    return readDeviceId();
+  }
+
+  public String getDeviceOs() {
+
+    return readDeviceOs();
+  }
+
+  public String getFcmToken() {
+
+    return readFcmToken();
+  }
+
+  public void update(String token) {
+    writeToken(token);
+  }
+
+  public void updateFcmToken(String token) {
+    writeFcmToken(token);
+  }
+
+  public void updateDeviceId(String id) {
+    writeDeviceId(id);
+  }
+
+  public void updateDeviceOs(String os) {
+    writeDeviceOs(os);
+  }
 
   private String readToken() {
     if (preferences() != null) {
@@ -105,7 +102,6 @@ public class AuthToken implements ActiveRecord<AuthToken> {
     }
     return null;
   }
-
 
   private void writeFcmToken(String value) {
     preferences().edit().putString(KEY_FCM_AUTH_TOKEN, value).apply();
@@ -135,14 +131,12 @@ public class AuthToken implements ActiveRecord<AuthToken> {
     preferences().edit().putString(KEY_DEVICE_OS, value).apply();
   }
 
-
   private String readDeviceOs() {
     if (preferences() != null) {
       return preferences().getString(KEY_DEVICE_OS, null);
     }
     return null;
   }
-
 
   private void writeToken(String value) {
     preferences().edit().putString(KEY_AUTH_TOKEN, value).apply();

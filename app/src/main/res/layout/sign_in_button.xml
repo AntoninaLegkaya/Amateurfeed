@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:facebook="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-    >
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+  <Button
+    android:id="@+id/button_login"
+    style="@style/ButtonAppTheme"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/layout_height_0dp"
+    android:layout_weight="0.5"
+    android:layout_gravity="center"
+    android:text="@string/ok_button" />
+  <com.facebook.login.widget.LoginButton
+    android:id="@+id/button_login_fb"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/layout_height_0dp"
+    android:layout_weight="0.5"
+    android:layout_gravity="center"
+    android:visibility="gone" />
 
+  <include
+    layout="@layout/link_sign_up_screen"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/layout_height_0dp"
+    android:layout_weight="0.5" />
+  <include layout="@layout/link_reset_screen" />
 
-    <Button
-        android:id="@+id/login_button"
-        style="@style/ButtonAppTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:layout_gravity="center"
-        android:text="@string/ok_button"
-       />
-
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_fb_button"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
-
-    <include
-        layout="@layout/link_sign_up_screen"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        />
-    <include layout="@layout/link_reset_screen">
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-    </include>
 
 </LinearLayout>

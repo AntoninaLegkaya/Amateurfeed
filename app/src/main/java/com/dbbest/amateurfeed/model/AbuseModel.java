@@ -19,25 +19,25 @@ public class AbuseModel implements Parcelable {
     }
   };
   @SerializedName("newsId")
-  private int mNewsId;
+  private int newsId;
   @SerializedName("comment")
-  private String mComment;
-
-  protected AbuseModel(Parcel in) {
-    mNewsId = in.readInt();
-    mComment = in.readString();
-  }
+  private String comment;
 
   public AbuseModel(int newsId, String comment) {
 
-    mNewsId = newsId;
-    mComment = comment;
+    this.newsId = newsId;
+    this.comment = comment;
+  }
+
+  private AbuseModel(Parcel in) {
+    newsId = in.readInt();
+    comment = in.readString();
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(mNewsId);
-    dest.writeString(mComment);
+    dest.writeInt(newsId);
+    dest.writeString(comment);
   }
 
   @Override
@@ -46,10 +46,10 @@ public class AbuseModel implements Parcelable {
   }
 
   public int getNewsId() {
-    return mNewsId;
+    return newsId;
   }
 
   public String getComment() {
-    return mComment;
+    return comment;
   }
 }

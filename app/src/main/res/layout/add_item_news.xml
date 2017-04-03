@@ -1,92 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout
-    android:id="@+id/item_header"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    app:columnCount="2"
-    android:layout_gravity="center">
-
-
-    <ImageButton
-        android:id="@+id/add_image_item"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:maxHeight="@dimen/preview_icon"
-        android:maxWidth="@dimen/preview_icon"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        app:layout_gravity="center"
-        app:layout_rowSpan="2"
-        android:background="@mipmap/splash"
-        android:clickable="true"/>
-
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/titleInputLayout"
-        style="@style/AppTheme.Widget.InputCommentField"
-        android:layout_marginTop="8dp"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        app:layout_gravity="fill_horizontal"
-
-        >
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/item_title"
-            style="@style/Widget.Design.DetailTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:ems="4"
-            android:gravity="fill_horizontal"
-            android:hint="@string/title_hint"
-            android:inputType="textMultiLine"
-            android:paddingTop="2dp"
-            android:textColor="@color/app_black"
-            />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/descriptionInputLayout"
-        style="@style/AppTheme.Widget.InputCommentField"
-        android:layout_marginTop="8dp"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        app:layout_gravity="fill_horizontal"
-
-        >
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/item_description"
-            style="@style/Widget.Design.DetailTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:ems="16"
-            android:gravity="fill_horizontal"
-            android:hint="@string/description_hint"
-            android:inputType="textMultiLine"
-            android:paddingTop="2dp"
-            android:textColor="@color/app_black"
-            />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/publish_item_button"
-        android:layout_marginTop="@dimen/abc_dialog_list_padding_vertical_material"
-        style="@style/AddItemButton"
-        android:layout_height="40dp"
-        android:text="@string/publish_button"
-        app:layout_gravity="center"
-        android:clickable="true"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        />
-
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/layout_item_header"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/layout_margin"
+  android:layout_gravity="center"
+  app:columnCount="2">
+  <ImageButton
+    android:id="@+id/button_add_image_item"
+    android:layout_marginTop="@dimen/layout_margin_8dp"
+    android:adjustViewBounds="true"
+    android:background="@mipmap/splash"
+    android:clickable="true"
+    android:maxHeight="@dimen/preview_icon"
+    android:maxWidth="@dimen/preview_icon"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center"
+    app:layout_rowSpan="2" />
+  <android.support.design.widget.TextInputLayout
+    android:id="@+id/layout_title_input"
+    style="@style/AppTheme.Widget.InputCommentField"
+    android:layout_marginTop="@dimen/layout_margin_8dp"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal">
+    <android.support.v7.widget.AppCompatEditText
+      android:id="@+id/text_item_title"
+      style="@style/Widget.Design.DetailTextInputLayout"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/layout_height_40dp"
+      android:layout_gravity="center"
+      android:paddingTop="@dimen/padding_2dp"
+      android:ems="4"
+      android:gravity="fill_horizontal"
+      android:hint="@string/title_hint"
+      android:inputType="textMultiLine"
+      android:textColor="@color/app_black" />
+  </android.support.design.widget.TextInputLayout>
+  <android.support.design.widget.TextInputLayout
+    android:id="@+id/layout_description_input"
+    style="@style/AppTheme.Widget.InputCommentField"
+    android:layout_marginTop="@dimen/layout_margin_8dp"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal">
+    <android.support.v7.widget.AppCompatEditText
+      android:id="@+id/text_item_description"
+      style="@style/Widget.Design.DetailTextInputLayout"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/layout_height_100dp"
+      android:layout_gravity="center"
+      android:paddingTop="@dimen/padding_2dp"
+      android:ems="16"
+      android:gravity="fill_horizontal"
+      android:hint="@string/description_hint"
+      android:inputType="textMultiLine"
+      android:textColor="@color/app_black" />
+  </android.support.design.widget.TextInputLayout>
+  <Button
+    android:id="@+id/button_publish_item"
+    style="@style/AddItemButton"
+    android:layout_height="@dimen/layout_height_40dp"
+    android:layout_marginTop="@dimen/abc_dialog_list_padding_vertical_material"
+    android:clickable="true"
+    android:text="@string/publish_button"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center" />
 </android.support.v7.widget.GridLayout>

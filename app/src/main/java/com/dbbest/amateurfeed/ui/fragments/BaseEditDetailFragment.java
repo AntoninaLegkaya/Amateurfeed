@@ -8,13 +8,11 @@ import com.dbbest.amateurfeed.view.DetailView;
 
 public class BaseEditDetailFragment extends EditFragment implements DetailView {
 
-  public final static String TAG_BASE = BaseEditDetailFragment.class.getName();
-  public final static String DETAIL_FRAGMENT_COMMENT = "DetailFragmentI_comment";
   protected String TAG = BaseEditDetailFragment.class.getName();
-  protected DetailPresenter mPresenter;
-  protected Uri mUriPreview;
-  protected TextView mDescriptionView;
-  protected TextView mTitleView;
+  protected DetailPresenter presenter;
+  protected Uri uriPreview;
+  protected TextView descriptionView;
+  protected TextView titleView;
 
 
   @Override
@@ -65,14 +63,14 @@ public class BaseEditDetailFragment extends EditFragment implements DetailView {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mPresenter = new DetailPresenter();
+    presenter = new DetailPresenter();
 
   }
 
   @Override
   public void onStart() {
     super.onStart();
-    mPresenter.attachView(this);
+    presenter.attachView(this);
 
 
   }
@@ -80,27 +78,22 @@ public class BaseEditDetailFragment extends EditFragment implements DetailView {
   @Override
   public void onStop() {
     super.onStop();
-    mPresenter.detachView();
+    presenter.detachView();
 
   }
-
 
   public interface Callback {
 
-    public void onLikeItemSelected(Uri uri, int isLike, int count);
+    void onLikeItemSelected(Uri uri, int isLike, int count);
 
-    public void onCommentItemSelected(Uri uri);
+    void onEditItemSelected(Uri uri);
 
-    public void onEditItemSelected(Uri uri);
+    void onDeleteItemSelected(Uri uri);
 
-    public void onDeleteItemSelected(Uri uri);
+    void moveToFeedFragment();
 
-    public void moveToFeedFragment();
-
-    public void refreshFeed();
-
+    void refreshFeed();
 
   }
-
 
 }

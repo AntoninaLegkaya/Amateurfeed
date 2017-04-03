@@ -8,27 +8,27 @@ public class ResetRequestPasswordModel implements Parcelable {
 
   public static final Parcelable.Creator<ResetRequestPasswordModel> CREATOR =
       new Parcelable.Creator<ResetRequestPasswordModel>() {
-    @Override
-    public ResetRequestPasswordModel createFromParcel(Parcel source) {
-      return new ResetRequestPasswordModel(source);
-    }
+        @Override
+        public ResetRequestPasswordModel createFromParcel(Parcel source) {
+          return new ResetRequestPasswordModel(source);
+        }
 
-    @Override
-    public ResetRequestPasswordModel[] newArray(int size) {
-      return new ResetRequestPasswordModel[size];
-    }
-  };
+        @Override
+        public ResetRequestPasswordModel[] newArray(int size) {
+          return new ResetRequestPasswordModel[size];
+        }
+      };
   @SerializedName("email")
-  private String mEmail;
+  private String email;
 
 
   public ResetRequestPasswordModel(String email) {
-    mEmail = email;
+    this.email = email;
 
   }
 
   private ResetRequestPasswordModel(Parcel in) {
-    mEmail = in.readString();
+    email = in.readString();
 
   }
 
@@ -39,7 +39,7 @@ public class ResetRequestPasswordModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(mEmail);
+    dest.writeString(email);
 
   }
 }

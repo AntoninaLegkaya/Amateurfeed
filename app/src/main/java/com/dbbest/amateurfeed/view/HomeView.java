@@ -1,32 +1,32 @@
 package com.dbbest.amateurfeed.view;
 
 import android.common.framework.IView;
-import android.support.annotation.NonNull;
 
 
 public interface HomeView extends IView {
-    void showSuccessDialog();
 
-    void showErrorConnectionDialog();
+  void showSuccessDialog();
 
-    void showErrorDialog();
+  void showErrorConnectionDialog();
 
-    void showProgressDialog();
+  void showErrorDialog();
 
-    void dismissProgressDialog();
+  void showProgressDialog();
 
-    void navigateToScreen();
+  void dismissProgressDialog();
 
-    void showSuccessLikeDialog();
+  void navigateToScreen();
 
-    void showErrorLikeDialog();
+  void showSuccessLikeDialog();
 
-    void showSuccessDeleteDialog();
+  void showErrorLikeDialog();
 
-    void showErrorDeleteDialog();
+  void showSuccessDeleteDialog();
 
-    void updateColumnLikeInBd();
+  void showErrorDeleteDialog();
 
-    void refreshFragmentFeedLoader();
+  void updateColumnLikeInBd();
+
+  void refreshFragmentFeedLoader();
 
 }

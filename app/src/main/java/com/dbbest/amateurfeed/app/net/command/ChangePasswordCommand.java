@@ -23,14 +23,13 @@ public class ChangePasswordCommand extends Command {
           return new ChangePasswordCommand[size];
         }
       };
-  private static final String TAG = ChangePasswordCommand.class.getName();
   private ChangePasswordRequestModel requestModel;
 
   public ChangePasswordCommand(String currentPassword, String newPassword, String confirmPassword) {
     requestModel = new ChangePasswordRequestModel(currentPassword, newPassword, confirmPassword);
   }
 
-  public ChangePasswordCommand(Parcel in) {
+  private ChangePasswordCommand(Parcel in) {
     super(in);
     requestModel = in.readParcelable(ChangePasswordRequestModel.class.getClassLoader());
   }

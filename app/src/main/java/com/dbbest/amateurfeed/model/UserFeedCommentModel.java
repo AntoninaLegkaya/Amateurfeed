@@ -7,52 +7,52 @@ import java.util.ArrayList;
 public class UserFeedCommentModel {
 
   @SerializedName("id")
-  private int mId;
+  private int id;
 
   @SerializedName("postId")
-  private int mPostId;
+  private int postId;
 
   @SerializedName("body")
-  private String mBody;
+  private String body;
 
   @SerializedName("parentCommentId")
-  private int mParentCommentId;
+  private int parentCommentId;
 
   @SerializedName("creator")
   private UserFeedCreator mCreator;
 
   @SerializedName("createDate")
-  private String mCreatedate;
+  private String createdate;
 
   @SerializedName("children")
-  private ArrayList<UserFeedCommentModel> mChildren;
+  private ArrayList<UserFeedCommentModel> children;
 
 
   public UserFeedCommentModel(int id, int postId, String body, int parentCommentId,
       UserFeedCreator creator, String createDate, ArrayList<UserFeedCommentModel> children) {
-    mId = id;
-    mPostId = postId;
-    mBody = body;
-    mParentCommentId = parentCommentId;
+    this.id = id;
+    this.postId = postId;
+    this.body = body;
+    this.parentCommentId = parentCommentId;
     mCreator = creator;
-    mCreatedate = createDate;
-    mChildren = children;
+    createdate = createDate;
+    this.children = children;
   }
 
   public int getId() {
-    return mId;
+    return id;
   }
 
   public int getPostId() {
-    return mPostId;
+    return postId;
   }
 
   public String getBody() {
-    return mBody;
+    return body;
   }
 
   public int getParentCommentId() {
-    return mParentCommentId;
+    return parentCommentId;
   }
 
   public UserFeedCreator getCreator() {
@@ -60,10 +60,10 @@ public class UserFeedCommentModel {
   }
 
   public String getCreateDate() {
-    return mCreatedate;
+    return createdate;
   }
 
   public ArrayList<UserFeedCommentModel> getChildren() {
-    return mChildren;
+    return children;
   }
 }

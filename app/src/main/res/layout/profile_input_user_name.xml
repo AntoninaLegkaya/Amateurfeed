@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/layout_item_search"
+  android:id="@+id/layout_item_user_name"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   app:columnCount="3">
-
   <ImageButton
-    android:id="@+id/book_button"
+    android:id="@+id/iamge_book"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/ic_book_open_page_variant_black_24dp"
     android:clickable="true"
-    android:elevation="4dp"
     app:layout_gravity="center" />
-
   <EditText
-    android:id="@+id/profile_user_name"
-    android:layout_width="195dp"
+    android:id="@+id/text_profile_user_name"
+    android:layout_width="@dimen/layout_width_195dp"
+    android:text="@string/user_name"
     android:textColor="@color/app_blue_text"
-    android:textSize="14dp"
+    android:textSize="@dimen/text_size_14sp"
     app:layout_columnWeight="1"
-    app:layout_gravity="fill_horizontal|center"
-    android:text="@string/user_name" />
-
+    app:layout_gravity="fill_horizontal|center" />
   <ImageButton
-    android:id="@+id/clear_name_button"
+    android:id="@+id/button_clear_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_delete_image_button"
     android:clickable="true"
     app:layout_columnWeight="1"
     app:layout_gravity="center" />
-
 </android.support.v7.widget.GridLayout>

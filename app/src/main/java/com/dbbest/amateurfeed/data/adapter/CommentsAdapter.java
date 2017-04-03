@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.CreatorEntry;
 import com.dbbest.amateurfeed.data.adapter.CommentsAdapter.CommentViewHolder;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.utils.Utils;
@@ -34,25 +34,26 @@ public class CommentsAdapter extends CursorRecyclerAdapter<CommentViewHolder> {
 
   @Override
   public void onBindViewHolder(CommentViewHolder holder, @Nullable Cursor cursor, int position) {
-
-    if (cursor.moveToPosition(holder.getAdapterPosition())) {
-      if (holder.mCommentText != null) {
-        holder.mCommentText.setText(cursor.getString(FeedNewsFragment.COL_COMMENT_BODY));
-      }
-      if (holder.mCommentAuthor != null) {
-        String author = getAuthorComment(cursor.getInt(FeedNewsFragment.COL_COMMENT_CREATOR_KEY));
-        if (author != null) {
-          holder.mCommentAuthor.setText(author);
+    if (cursor != null) {
+      if (cursor.moveToPosition(holder.getAdapterPosition())) {
+        if (holder.mCommentText != null) {
+          holder.mCommentText.setText(cursor.getString(FeedNewsFragment.COL_COMMENT_BODY));
         }
-      }
-      if (holder.mCommentDate != null) {
-        String date = cursor.getString(FeedNewsFragment.COL_COMMENT_CREATE_DATE);
-        String day = Utils.getFriendlyDayString(App.instance().getApplicationContext(),
-            Utils.getLongFromString(date), true);
-        if (day == null) {
-          holder.mCommentDate.setText(date);
-        } else {
-          holder.mCommentDate.setText(day);
+        if (holder.mCommentAuthor != null) {
+          String author = getAuthorComment(cursor.getInt(FeedNewsFragment.COL_COMMENT_CREATOR_KEY));
+          if (author != null) {
+            holder.mCommentAuthor.setText(author);
+          }
+        }
+        if (holder.mCommentDate != null) {
+          String date = cursor.getString(FeedNewsFragment.COL_COMMENT_CREATE_DATE);
+          String day = Utils.getFriendlyDayString(App.instance().getApplicationContext(),
+              Utils.getLongFromString(date), true);
+          if (day == null) {
+            holder.mCommentDate.setText(date);
+          } else {
+            holder.mCommentDate.setText(day);
+          }
         }
       }
     }
@@ -60,7 +61,7 @@ public class CommentsAdapter extends CursorRecyclerAdapter<CommentViewHolder> {
 
 
   private String getAuthorComment(int idCreator) {
-    Uri uriAuthorCommentName = FeedContract.CreatorEntry.buildCreatorUriById(idCreator);
+    Uri uriAuthorCommentName = CreatorEntry.buildCreatorUriById(idCreator);
     Cursor cursor = App.instance().getContentResolver().query(
         uriAuthorCommentName,
         null,
@@ -68,10 +69,12 @@ public class CommentsAdapter extends CursorRecyclerAdapter<CommentViewHolder> {
         null,
         null
     );
-    if (cursor.moveToFirst()) {
-      String author = cursor.getString(FeedNewsFragment.COL_CREATOR_NAME);
-      cursor.close();
-      return author;
+    if (cursor != null) {
+      if (cursor.moveToFirst()) {
+        String author = cursor.getString(FeedNewsFragment.COL_CREATOR_NAME);
+        cursor.close();
+        return author;
+      }
     }
     return null;
   }
@@ -84,9 +87,9 @@ public class CommentsAdapter extends CursorRecyclerAdapter<CommentViewHolder> {
 
     public CommentViewHolder(final View view) {
       super(view);
-      mCommentText = (TextView) view.findViewById(R.id.item_list_text_comment);
-      mCommentAuthor = (TextView) view.findViewById(R.id.item_list_author_comment);
-      mCommentDate = (TextView) view.findViewById(R.id.item_list_date_comment);
+      mCommentText = (TextView) view.findViewById(R.id.text_comment);
+      mCommentAuthor = (TextView) view.findViewById(R.id.text_author_name);
+      mCommentDate = (TextView) view.findViewById(R.id.text_date_create);
     }
   }
 }

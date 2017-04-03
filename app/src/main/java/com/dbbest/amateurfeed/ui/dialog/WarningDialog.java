@@ -31,22 +31,22 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
 
   private static final String KEY_LISTENER_ATTACHED = "LISTENER_ATTACHED";
   @StringRes
-  private int mOkText;
+  private int okText;
   @StringRes
-  private int mCancelText;
+  private int cancelText;
   @StringRes
-  private int mMessageText;
-  private String mMessageTextStr;
-  private boolean mCancelable;
+  private int messageText;
+  private String messageTextStr;
+  private boolean cancelable;
   @ColorRes
-  private int mOkColor;
+  private int okColor;
   @ColorRes
-  private int mCancelColor;
+  private int cancelColor;
   @ColorRes
-  private int mMessageColor;
-  private int mCode;
-  private OnWarningOkClickDialogListener mOkListener;
-  private OnWarningDialogListener mBothListener;
+  private int messageColor;
+  private int code;
+  private OnWarningOkClickDialogListener okListener;
+  private OnWarningDialogListener bothListener;
 
   private static WarningDialog instance(Builder builder) {
     Bundle args = new Bundle();
@@ -54,16 +54,12 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
     args.putInt(KEY_CANCEL_TEXT, builder.cancelText);
     args.putInt(KEY_MESSAGE_TEXT, builder.messageText);
     args.putString(KEY_MESSAGE_TEXT_STR, builder.messageTextStr);
-
     args.putBoolean(KEY_CANCELABLE, builder.cancelable);
-
     args.putInt(KEY_OK_COLOR, builder.okColor);
     args.putInt(KEY_CANCEL_COLOR, builder.cancelColor);
     args.putInt(KEY_MESSAGE_COLOR, builder.messageColor);
-
     args.putInt(KEY_CODE, builder.code);
     args.putBoolean(KEY_LISTENER_ATTACHED, builder.listenerAttached);
-
     WarningDialog dialogFragment = new WarningDialog();
     dialogFragment.setArguments(args);
     return dialogFragment;
@@ -74,18 +70,18 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
     super.onCreate(savedInstanceState);
     Bundle args = getArguments();
     if (args != null) {
-      mOkText = args.getInt(KEY_OK_TEXT);
-      mCancelText = args.getInt(KEY_CANCEL_TEXT);
-      mMessageText = args.getInt(KEY_MESSAGE_TEXT);
-      mMessageTextStr = args.getString(KEY_MESSAGE_TEXT_STR);
+      okText = args.getInt(KEY_OK_TEXT);
+      cancelText = args.getInt(KEY_CANCEL_TEXT);
+      messageText = args.getInt(KEY_MESSAGE_TEXT);
+      messageTextStr = args.getString(KEY_MESSAGE_TEXT_STR);
 
-      mCancelable = args.getBoolean(KEY_CANCELABLE);
+      cancelable = args.getBoolean(KEY_CANCELABLE);
 
-      mOkColor = args.getInt(KEY_OK_COLOR);
-      mCancelColor = args.getInt(KEY_CANCEL_COLOR);
-      mMessageColor = args.getInt(KEY_MESSAGE_COLOR);
+      okColor = args.getInt(KEY_OK_COLOR);
+      cancelColor = args.getInt(KEY_CANCEL_COLOR);
+      messageColor = args.getInt(KEY_MESSAGE_COLOR);
 
-      mCode = args.getInt(KEY_CODE);
+      code = args.getInt(KEY_CODE);
     }
   }
 
@@ -93,42 +89,42 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    setCancelable(mCancelable);
+    setCancelable(cancelable);
 
     View rootView = inflater.inflate(R.layout.warning_dialog, container, false);
 
-    TextView okView = (TextView) rootView.findViewById(R.id.btn_ok);
-    TextView cancelView = (TextView) rootView.findViewById(R.id.btn_cancel);
-    TextView messageView = (TextView) rootView.findViewById(R.id.tv_message);
-    View dividerView = rootView.findViewById(R.id.v_divider);
+    TextView okView = (TextView) rootView.findViewById(R.id.button_ok);
+    TextView cancelView = (TextView) rootView.findViewById(R.id.button_cancel);
+    TextView messageView = (TextView) rootView.findViewById(R.id.text_message);
+    View dividerView = rootView.findViewById(R.id.view_divider);
 
-    if (mOkText != NO_VALUE) {
-      okView.setText(mOkText);
+    if (okText != NO_VALUE) {
+      okView.setText(okText);
     }
 
-    if (mOkColor != NO_VALUE) {
-      okView.setTextColor(ContextCompat.getColor(getContext(), mOkColor));
+    if (okColor != NO_VALUE) {
+      okView.setTextColor(ContextCompat.getColor(getContext(), okColor));
     }
 
-    if (mCancelText != NO_VALUE) {
-      cancelView.setText(mCancelText);
+    if (cancelText != NO_VALUE) {
+      cancelView.setText(cancelText);
     } else {
       cancelView.setVisibility(View.GONE);
       dividerView.setVisibility(View.GONE);
     }
 
-    if (mCancelColor != NO_VALUE) {
-      cancelView.setTextColor(ContextCompat.getColor(getContext(), mCancelColor));
+    if (cancelColor != NO_VALUE) {
+      cancelView.setTextColor(ContextCompat.getColor(getContext(), cancelColor));
     }
 
-    if (mMessageText != NO_VALUE) {
-      messageView.setText(mMessageText);
-    } else if (mMessageTextStr != null) {
-      messageView.setText(mMessageTextStr);
+    if (messageText != NO_VALUE) {
+      messageView.setText(messageText);
+    } else if (messageTextStr != null) {
+      messageView.setText(messageTextStr);
     }
 
-    if (mMessageColor != NO_VALUE) {
-      messageView.setTextColor(ContextCompat.getColor(getContext(), mMessageColor));
+    if (messageColor != NO_VALUE) {
+      messageView.setTextColor(ContextCompat.getColor(getContext(), messageColor));
     }
 
     okView.setOnClickListener(this);
@@ -148,20 +144,20 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
       boolean attached = false;
       if (parentFragment != null) {
         if (parentFragment instanceof OnWarningDialogListener) {
-          mBothListener = (OnWarningDialogListener) parentFragment;
+          bothListener = (OnWarningDialogListener) parentFragment;
           attached = true;
         } else if (parentFragment instanceof OnWarningOkClickDialogListener) {
-          mOkListener = (OnWarningOkClickDialogListener) parentFragment;
+          okListener = (OnWarningOkClickDialogListener) parentFragment;
           attached = true;
         }
       }
 
       if (!attached) {
         if (getActivity() instanceof OnWarningDialogListener) {
-          mBothListener = (OnWarningDialogListener) getActivity();
+          bothListener = (OnWarningDialogListener) getActivity();
           attached = true;
         } else if (getActivity() instanceof OnWarningOkClickDialogListener) {
-          mOkListener = (OnWarningOkClickDialogListener) getActivity();
+          okListener = (OnWarningOkClickDialogListener) getActivity();
           attached = true;
         }
       }
@@ -176,36 +172,26 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
   @Override
   public void onDetach() {
     super.onDetach();
-    mOkListener = null;
+    okListener = null;
   }
 
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.btn_ok) {
-      if (mOkListener != null) {
-        mOkListener.onWarningDialogOkClicked(mCode);
-      } else if (mBothListener != null) {
-        mBothListener.onWarningDialogOkClicked(mCode);
+    if (v.getId() == R.id.button_ok) {
+      if (okListener != null) {
+        okListener.onWarningDialogOkClicked(code);
+      } else if (bothListener != null) {
+        bothListener.onWarningDialogOkClicked(code);
       }
       dismissAllowingStateLoss();
-    } else if (v.getId() == R.id.btn_cancel) {
-      if (mBothListener != null) {
-        mBothListener.onWarningDialogCancelClicked(mCode);
+    } else if (v.getId() == R.id.button_cancel) {
+      if (bothListener != null) {
+        bothListener.onWarningDialogCancelClicked(code);
       }
       dismissAllowingStateLoss();
     }
   }
 
-
-  public interface OnWarningOkClickDialogListener {
-
-    void onWarningDialogOkClicked(int dialogCode);
-  }
-
-  public interface OnWarningDialogListener extends OnWarningOkClickDialogListener {
-
-    void onWarningDialogCancelClicked(int dialogCode);
-  }
 
   public final static class Builder {
 
@@ -215,11 +201,8 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
     private int cancelText = NO_VALUE;
     @StringRes
     private int messageText = NO_VALUE;
-
     private String messageTextStr;
-
     private boolean cancelable;
-
     @ColorRes
     private int okColor = NO_VALUE;
     @ColorRes
@@ -230,50 +213,32 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
     private int code = NO_VALUE;
     private boolean listenerAttached;
 
-    public Builder setCode(int code) {
-      this.code = code;
+    public Builder setCode(int c) {
+      this.code = c;
       return this;
     }
 
-    public Builder setOkText(int okText) {
-      this.okText = okText;
+    public Builder setOkText(int okLabel) {
+      this.okText = okLabel;
       return this;
     }
 
-    public Builder setCancelText(int cancelText) {
-      this.cancelText = cancelText;
+    public Builder setCancelText(int cancelLabel) {
+      this.cancelText = cancelLabel;
       return this;
     }
 
-    public Builder setMessageText(int messageText) {
-      this.messageText = messageText;
+    public Builder setMessageText(int mess
+    ) {
+      this.messageText = mess;
       return this;
     }
 
-    public Builder setMessageText(String messageText) {
-      this.messageTextStr = messageText;
+    public Builder setCancelable(boolean cancel) {
+      this.cancelable = cancel;
       return this;
     }
 
-    public Builder setCancelable(boolean cancelable) {
-      this.cancelable = cancelable;
-      return this;
-    }
-
-    public Builder setOkColor(int okColor) {
-      this.okColor = okColor;
-      return this;
-    }
-
-    public Builder setCancelColor(int cancelColor) {
-      this.cancelColor = cancelColor;
-      return this;
-    }
-
-    public Builder setMessageColor(int messageColor) {
-      this.messageColor = messageColor;
-      return this;
-    }
 
     /**
      * listener will be attached on dialogFragment onAttach called
@@ -303,4 +268,15 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
       return WarningDialog.instance(this);
     }
   }
+
+  interface OnWarningOkClickDialogListener {
+
+    void onWarningDialogOkClicked(int dialogCode);
+  }
+
+  public interface OnWarningDialogListener extends OnWarningOkClickDialogListener {
+
+    void onWarningDialogCancelClicked(int dialogCode);
+  }
+
 }

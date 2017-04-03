@@ -25,13 +25,13 @@ public class DeleteNewsCommand extends Command {
       };
   private AbuseModel mAbuseModel;
 
-  public DeleteNewsCommand(Parcel in) {
-    super(in);
-    mAbuseModel = in.readParcelable(AbuseModel.class.getClassLoader());
-  }
-
   public DeleteNewsCommand(int id, String comment) {
     mAbuseModel = new AbuseModel(id, comment);
+  }
+
+  private DeleteNewsCommand(Parcel in) {
+    super(in);
+    mAbuseModel = in.readParcelable(AbuseModel.class.getClassLoader());
   }
 
   @Override

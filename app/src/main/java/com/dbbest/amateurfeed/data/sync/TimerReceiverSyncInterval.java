@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import java.util.Calendar;
 
 
@@ -24,18 +23,11 @@ public class TimerReceiverSyncInterval extends BroadcastReceiver {
 
     localAlarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
         60000, localPendingIntent);
-
-    Log.i(TAG, "Sync------");
-
   }
 
   @Override
   public void onReceive(Context context, Intent intent) {
-
-    Log.d(TAG, "Sync OnReceive--");
-
     scheduleAlarms(context);
     context.startService(new Intent(context, NotificationServiceSyncInterval.class));
-
   }
 }

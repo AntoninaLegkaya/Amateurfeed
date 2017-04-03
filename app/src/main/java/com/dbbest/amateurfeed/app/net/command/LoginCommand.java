@@ -28,36 +28,36 @@ public class LoginCommand extends Command {
       return new LoginCommand[size];
     }
   };
-  private final LoginRequestModel mLoginRequest;
-  private String TAG = LoginCommand.class.getName();
+  private final LoginRequestModel loginRequestModel;
+  private final String TAG = LoginCommand.class.getName();
 
   public LoginCommand(String email, String password, String deviceId, String osType,
       String deviceToken) {
-    mLoginRequest = new LoginRequestModel(email, password, deviceId, osType, deviceToken);
+    loginRequestModel = new LoginRequestModel(email, password, deviceId, osType, deviceToken);
   }
 
   private LoginCommand(Parcel in) {
     super(in);
-    mLoginRequest = in.readParcelable(RegistrationRequestModel.class.getClassLoader());
+    loginRequestModel = in.readParcelable(RegistrationRequestModel.class.getClassLoader());
   }
 
   @Override
   public void writeToParcel(int flags, Parcel dest) {
-    dest.writeParcelable(mLoginRequest, flags);
+    dest.writeParcelable(loginRequestModel, flags);
   }
 
   @Override
   public void execute() {
     RestApiClient apiClient = App.getApiFactory().restClient();
-    ResponseWrapper<LoginResponseModel> response = apiClient.login(mLoginRequest);
+    ResponseWrapper<LoginResponseModel> response = apiClient.login(loginRequestModel);
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         LoginResponseModel data = response.data();
         AuthToken authToken = new AuthToken();
         authToken.update(data.getAccessToken());
-        authToken.updateFcmToken(mLoginRequest.getmDeviceToken());
-        authToken.updateDeviceId(mLoginRequest.getmDeviceId());
-        authToken.updateDeviceOs(mLoginRequest.getmOsType());
+        authToken.updateFcmToken(loginRequestModel.getDeviceToken());
+        authToken.updateDeviceId(loginRequestModel.getDeviceId());
+        authToken.updateDeviceOs(loginRequestModel.getOsType());
         Log.i(TAG, authToken.toString());
         notifySuccess(Bundle.EMPTY);
         CurrentUser user = new CurrentUser();
