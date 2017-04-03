@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.format.Time;
 import android.util.Log;
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
@@ -111,16 +112,16 @@ public class Utils {
     // For the next 5 days: "Wednesday" (just the day name)
     // For all days after that: "Mon Jun 8"
 
-//    Time time = new Time();
-//    time.setToNow();
-//    long currentTime = System.currentTimeMillis();
-//    int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
-//    int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
+    Time time = new Time();
+    time.setToNow();
+    long currentTime = System.currentTimeMillis();
+    int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
+    int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
 
     // If the date we're building the String for is today's date, the format
     // is "Today, June 24"
-//    if (displayLongToday && julianDay == currentJulianDay) {
-    if (displayLongToday && dateInMillis == getTodayLongDate()) {
+    if (displayLongToday && julianDay == currentJulianDay) {
+//    if (displayLongToday && dateInMillis==getTodayLongDate()) {
       String today = context.getString(R.string.today);
       int formatId = R.string.format_full_friendly_date;
       return String.format(context.getString(formatId), today, getFormattedMonthDay(dateInMillis));

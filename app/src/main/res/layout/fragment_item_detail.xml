@@ -3,8 +3,8 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/layout_item_content"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:fitsSystemWindows="true">
+  android:layout_height="match_parent"
+  >
   <android.support.design.widget.AppBarLayout
     android:id="@+id/layout_bar"
     android:layout_width="match_parent"
@@ -32,11 +32,10 @@
   <android.support.v4.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
     <include
       layout="@layout/item_detail_news"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content" />
+      android:layout_height="match_parent" />
   </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
