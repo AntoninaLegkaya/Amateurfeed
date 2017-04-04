@@ -3,24 +3,23 @@ package com.dbbest.amateurfeed.data.sync;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 public class AmateurfeedSyncService extends Service {
-    private static final Object sSyncAdapterLock = new Object();
-    private static AmateurfeedSyncAdapter sSunshineSyncAdapter = null;
 
-    @Override
-    public void onCreate() {
-        Log.d("SunshineSyncService", "onCreate - SunshineSyncService");
-        synchronized (sSyncAdapterLock) {
-            if (sSunshineSyncAdapter == null) {
-                sSunshineSyncAdapter = new AmateurfeedSyncAdapter(getApplicationContext(), true);
-            }
-        }
-    }
+  private static final Object syncAdapterLock = new Object();
+  private static AmateurfeedSyncAdapter amateurfeedSyncAdapter = null;
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return sSunshineSyncAdapter.getSyncAdapterBinder();
+  @Override
+  public void onCreate() {
+    synchronized (syncAdapterLock) {
+      if (amateurfeedSyncAdapter == null) {
+        amateurfeedSyncAdapter = new AmateurfeedSyncAdapter(getApplicationContext(), true);
+      }
     }
+  }
+
+  @Override
+  public IBinder onBind(Intent intent) {
+    return amateurfeedSyncAdapter.getSyncAdapterBinder();
+  }
 }

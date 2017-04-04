@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/layout_item_user"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/layout_margin"
+  app:columnCount="3">
+  <android.support.design.widget.TextInputLayout
+    android:id="@+id/layout_description_input"
+    style="@style/AppTheme.Widget.InputCommentField"
+    app:layout_columnSpan="3"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal">
+    <android.support.v7.widget.AppCompatEditText
+      android:id="@+id/text_description"
+      style="@style/Widget.Design.DetailTextInputLayout"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_gravity="center"
+      android:paddingTop="@dimen/padding_2dp"
+      android:ems="4"
+      android:gravity="fill_horizontal"
+      android:hint="@string/description_hint"
+      android:inputType="textMultiLine"
+      android:textColor="@color/app_black" />
+  </android.support.design.widget.TextInputLayout>
+  <LinearLayout
+    android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center"
+    app:layout_rowSpan="2">
+    <ImageButton
+      android:id="@+id/button_like"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+      android:layout_gravity="center_vertical"
+      android:background="@drawable/ic_favorite_border_white_24dp" />
+    <TextView
+      android:id="@+id/text_count_likes"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:fontFamily="sans-serif"
+      android:text="@string/count_likes"
+      android:textColor="@color/secondary_text"
+      app:layout_gravity="right"
+      tools:text="0" />
+  </LinearLayout>
+  <LinearLayout
+    android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_columnWeight="1"
+    app:layout_rowSpan="2">
+    <TextView
+      android:id="@+id/text_change_image_link"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:clickable="true"
+      android:contextClickable="true"
+      android:text="@string/item_image_change_link"
+      android:textColor="@drawable/tab_text_link" />
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <TextView
+        android:id="@+id/text_comment_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
+        android:fontFamily="sans-serif"
+        android:gravity="center_horizontal"
+        android:textColor="@drawable/tab_text_link"
+        tools:text="0" />
+      <TextView
+        android:id="@+id/text_comment_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:contextClickable="true"
+        android:text="@string/item_comment_label"
+        android:textColor="@drawable/tab_text_link" />
+    </LinearLayout>
+  </LinearLayout>
+  <LinearLayout
+    android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center_vertical|right"
+    app:layout_rowSpan="2">
+    <ImageButton
+      android:id="@+id/button_delete_item_news"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:background="@drawable/ic_delete_black_24dp" />
+  </LinearLayout>
+</android.support.v7.widget.GridLayout>

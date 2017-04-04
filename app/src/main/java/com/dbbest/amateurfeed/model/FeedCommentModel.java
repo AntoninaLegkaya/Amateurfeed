@@ -1,38 +1,73 @@
 package com.dbbest.amateurfeed.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antonina on 26.01.17.
- */
+public class FeedCommentModel implements Parcelable {
 
-public class FeedCommentModel {
-
-    @SerializedName("postId")
-    private int mPostId;
-
-    @SerializedName("body")
-    private String mBody;
-
-    @SerializedName("parentCommentId")
-    private int mParentCommentId;
-
-    public int getPostId() {
-        return mPostId;
+  public static final Creator<FeedCommentModel> CREATOR = new Creator<FeedCommentModel>() {
+    @Override
+    public FeedCommentModel createFromParcel(Parcel in) {
+      return new FeedCommentModel(in);
     }
 
-    public String getBody() {
-        return mBody;
+    @Override
+    public FeedCommentModel[] newArray(int size) {
+      return new FeedCommentModel[size];
     }
+  };
+  @SerializedName("postId")
+  private int postId;
+  @SerializedName("body")
+  private String body;
+  @SerializedName("parentCommentId")
+  private Integer parentCommentId;
 
-    public int getParentCommentId() {
-        return mParentCommentId;
-    }
 
-    public FeedCommentModel(int postId, String body, int parentCommentId) {
+  public FeedCommentModel(int postId, String body, Integer parentCommentId) {
+    this.postId = postId;
+    this.body = body;
+    this.parentCommentId = parentCommentId;
+  }
 
-        mPostId = postId;
-        mBody = body;
-        mParentCommentId = parentCommentId;
-    }
+  private FeedCommentModel(Parcel in) {
+    postId = in.readInt();
+    body = in.readString();
+    parentCommentId = (Integer) in.readSerializable();
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(postId);
+    dest.writeString(body);
+    dest.writeSerializable(parentCommentId);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public String toString() {
+
+    return "FeedCommentModel{"
+        + "postId=" + postId + '\n'
+        + "body=" + body + '\n'
+        + "parentCommentId=" + parentCommentId
+        + '}';
+  }
+
+  public int getPostId() {
+    return postId;
+  }
+
+  public String getBody() {
+    return body;
+  }
+
+  public Integer getParentCommentId() {
+    return parentCommentId;
+  }
 }

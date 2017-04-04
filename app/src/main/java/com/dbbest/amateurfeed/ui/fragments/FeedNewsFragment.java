@@ -1,429 +1,311 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
-import android.app.Activity;
+import android.common.framework.IView;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.data.FeedContract;
+import com.dbbest.amateurfeed.data.PreviewEntry;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter.FeedAdapterLoadNews;
-import com.dbbest.amateurfeed.presenter.FeedListPresenter;
 import com.dbbest.amateurfeed.utils.Utils;
-import com.dbbest.amateurfeed.view.FeedView;
-import com.melnykov.fab.FloatingActionButton;
-
-/**
- * Created by antonina on 20.01.17.
- */
-
-public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener, FeedView {
-
-    private static final String PARAM_KEY = "param_key";
-    private RecyclerView mRecyclerView;
-    private int mPosition = RecyclerView.NO_POSITION;
-
-    private FeedListPresenter mPresenter;
-    private PreviewAdapter mPreviewAdapter;
-    private static final int NEWS_LOADER = 0;
-
-    private int mChoiceMode;
-
-    private static final String SELECTED_KEY = "selected_position";
-    private boolean mHoldForTransition;
-    private long mInitialSelectedDate = -1;
-    private boolean mAutoSelectView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
-    public static final String[] PREVIEW_COLUMNS = {
+public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+    SharedPreferences.OnSharedPreferenceChangeListener,
+    View.OnClickListener, IView {
+
+  public static final String[] PREVIEW_COLUMNS = {
+      PreviewEntry.TABLE_NAME + "." + PreviewEntry._ID,
+      PreviewEntry.COLUMN_TITLE,
+      PreviewEntry.COLUMN_TEXT,
+      PreviewEntry.COLUMN_LIKES,
+      PreviewEntry.COLUMN_IS_LIKE,
+      PreviewEntry.COLUMN_AUTHOR,
+      PreviewEntry.COLUMN_AUTHOR_IMAGE,
+      PreviewEntry.COLUMN_CREATE_DATE,
+      PreviewEntry.COLUMN_IMAGE,
+      PreviewEntry.COLUMN_IS_MY
+  };
+
+  public static final int COL_FEED_ID = 0;
+  public static final int COL_TITLE = 1;
+  public static final int COL_TEXT = 2;
+  public static final int COL_LIKES = 3;
+  public static final int COL_IS_LIKE = 4;
+  public static final int COL_AUTHOR = 5;
+  public static final int COL_AUTHOR_IMAGE = 6;
+  public static final int COL_CREATE_DATE = 7;
+  public static final int COL_IMAGE = 8;
+  public static final int COL_IS_MY = 9;
+  public static final int COL_TAG_NAME = 1;
+  public static final int COL_TAG_ID = 2;
+  public static final int COL_COMMENT_CREATOR_KEY = 2;
+  public static final int COL_COMMENT_BODY = 3;
+  public static final int COL_COMMENT_CREATE_DATE = 5;
+  public static final int COL_CREATOR_UNIC_ID = 0;
+  public static final int COL_CREATOR_NAME = 1;
+  private static final int NEWS_LOADER = 0;
+  private static final String SELECTED_KEY = "selected_position";
+  private static String FEED_FRAGMENT = "Feed Fragment ";
+  private RecyclerView recyclerView;
+  private int position = RecyclerView.NO_POSITION;
+  private PreviewAdapter previewAdapter;
+  //  private int choiceMode;
+//  private boolean holdForTransition;
+  private long initialSelectedDate = -1;
+//  private boolean autoSelectView;
 
 
-            FeedContract.PreviewEntry.TABLE_NAME + "." + FeedContract.PreviewEntry._ID,
-            FeedContract.PreviewEntry.COLUMN_TITLE,
-            FeedContract.PreviewEntry.COLUMN_TEXT,
-            FeedContract.PreviewEntry.COLUMN_LIKES,
-            FeedContract.PreviewEntry.COLUMN_IS_LIKE,
-            FeedContract.PreviewEntry.COLUMN_AUTHOR,
-            FeedContract.PreviewEntry.COLUMN_AUTHOR_IMAGE,
-            FeedContract.PreviewEntry.COLUMN_CREATE_DATE,
-            FeedContract.PreviewEntry.COLUMN_IMAGE,
-            FeedContract.PreviewEntry.COLUMN_IS_MY
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+  }
+
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    getLoaderManager().initLoader(NEWS_LOADER, null, this);
+    super.onActivityCreated(savedInstanceState);
+  }
 
 
-    };
+  @Override
+  public void onStop() {
+    super.onStop();
+  }
 
-    public static final int COL_FEED_ID = 0;
-    public static final int COL_TITLTE = 1;
-    public static final int COL_TEXT = 2;
-    public static final int COL_LIKES = 3;
-    public static final int COL_IS_LIKE = 4;
-    public static final int COL_AUTHOR = 5;
-    public static final int COL_AUTHOR_IMAGE = 6;
-    public static final int COL_CREATE_DATE = 7;
-    public static final int COL_IMAGE = 8;
-    public static final int COL_IS_MY = 9;
+//  @Override
+//  public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
+//    super.onInflate(activity, attrs, savedInstanceState);
+//    TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.FeedNewsFragment,
+//        0, 0);
+//    choiceMode = a
+//        .getInt(R.styleable.FeedNewsFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
+//    autoSelectView = a.getBoolean(R.styleable.FeedNewsFragment_autoSelectView, false);
+//    holdForTransition = a.getBoolean(R.styleable.FeedNewsFragment_sharedElementTransitions, false);
+//    a.recycle();
+//  }
 
-    public static final String[] TAG_COLUMNS = {
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
 
+    final View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
 
-            FeedContract.TagEntry.TABLE_NAME + "." + FeedContract.TagEntry._ID,
-            FeedContract.TagEntry.COLUMN_NAME,
-            FeedContract.TagEntry.COLUMN_TAG_ID,
-            FeedContract.TagEntry.COLUMN_PREVIEW_ID,
+    FloatingActionButton mFloatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
+    mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        ((Callback) getActivity()).addNewItemDetail();
+      }
+    });
+    recyclerView = (RecyclerView) rootView.findViewById(R.id.view_feed_list);
 
-    };
+    setInitialSelectedDate(Utils.getTodayLongDate());
 
-    public static final int COL_TAG_UNIC_ID = 0;
-    public static final int COL_TAG_NAME = 1;
-    public static final int COL_TAG_ID = 2;
-    public static final int COL_TAG_PREVIEW_ID = 3;
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+    recyclerView.setHasFixedSize(true);
 
-    public static FeedNewsFragment newInstance(String key) {
-        FeedNewsFragment fragment = new FeedNewsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(PARAM_KEY, key);
-        fragment.setArguments(bundle);
-        return fragment;
+    previewAdapter = new PreviewAdapter(null, 0,
+
+        new PreviewAdapter.FeedAdapterOnClickHandler() {
+          @Override
+          public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
+            ((Callback) getActivity())
+                .onItemSelected(PreviewEntry.buildPreviewUriById(id), vh);
+            position = vh.getAdapterPosition();
+          }
+        },
+        new PreviewAdapter.FeedCommentAdapterOnClickHandler() {
+          @Override
+          public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
+            ((Callback) getActivity())
+                .onCommentItemSelected(PreviewEntry.buildPreviewUriById(id), vh);
+            position = vh.getAdapterPosition();
+          }
+        },
+        new PreviewAdapter.FeedLikeAdapterOnClickHandler() {
+          @Override
+          public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
+            ((Callback) getActivity())
+                .onLikeItemSelected(PreviewEntry.buildPreviewUriById(id), vh);
+            position = vh.getAdapterPosition();
+
+          }
+        },
+        new PreviewAdapter.FeedEditAdapterOnClickHandler() {
+          @Override
+          public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
+            ((Callback) getActivity())
+                .onEditItemSelected(PreviewEntry.buildPreviewUriById(id), vh);
+            position = vh.getAdapterPosition();
+          }
+        },
+        new PreviewAdapter.FeedRemoveAdapterOnClickHandler() {
+          @Override
+          public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
+            ((Callback) getActivity())
+                .onDeleteItemSelected(PreviewEntry.buildPreviewUriById(id), vh);
+
+          }
+        }, new FeedAdapterLoadNews() {
+
+      @Override
+      public void load(PreviewAdapter.PreviewAdapterViewHolder vh, int offset, int count) {
+        ((Callback) getActivity()).upLoadNewsItems(offset, count);
+        position = vh.getAdapterPosition() - 1;
+      }
     }
+    );
 
+    recyclerView.setAdapter(previewAdapter);
 
-    public interface Callback {
-
-        public void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
-
-        public void upLoadNewsItems(int count, int offset);
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(SELECTED_KEY)) {
+        position = savedInstanceState.getInt(SELECTED_KEY);
+      }
     }
+    return rootView;
+  }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPresenter = new FeedListPresenter();
+  @Override
+  public void onClick(View view) {
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    if (position != RecyclerView.NO_POSITION) {
+      outState.putInt(SELECTED_KEY, position);
     }
+    super.onSaveInstanceState(outState);
+  }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+  }
 
-    }
+  @Override
+  public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    Uri previewListUri = PreviewEntry.CONTENT_URI;
+    String sortOrder = PreviewEntry.COLUMN_CREATE_DATE + " DESC";
+    return new CursorLoader(getActivity(),
+        previewListUri,
+        PREVIEW_COLUMNS,
+        null,
+        null,
+        sortOrder
+    );
+  }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.attachView(this);
-        if (getArguments() != null) {
-            mPresenter.search(getArguments().getString(PARAM_KEY, ""));
-        } else {
-            mPresenter.search("");
-        }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-
-        // We hold for transition here just in-case the activity
-        // needs to be re-created. In a standard return transition,
-        // this doesn't actually make a difference.
-        if (mHoldForTransition) {
-            getActivity().supportPostponeEnterTransition();
-        }
-        getLoaderManager().initLoader(NEWS_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mPresenter.detachView();
-    }
-
-    @Override
-    public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
-        super.onInflate(activity, attrs, savedInstanceState);
-        TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.FeedNewsFragment,
-                0, 0);
-        mChoiceMode = a.getInt(R.styleable.FeedNewsFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
-        mAutoSelectView = a.getBoolean(R.styleable.FeedNewsFragment_autoSelectView, false);
-        mHoldForTransition = a.getBoolean(R.styleable.FeedNewsFragment_sharedElementTransitions, false);
-        a.recycle();
-    }
-
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
-        final View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
-        View emptyView = rootView.findViewById(R.id.recycle_feed_empty);
-
-
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.feed_list_view);
-
-        setInitialSelectedDate(Utils.getTodayLongDate());
-
-
-        // Set the layout manager
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        final View parallaxView = rootView.findViewById(R.id.parallax_bar);
-//        if (null != parallaxView) {
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//
-//
-//                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-//                    @Override
-//                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                        super.onScrolled(recyclerView, dx, dy);
-//                        int max = parallaxView.getHeight();
-//                        if (dy > 0) {
-//
-//                            parallaxView.setTranslationY(Math.max(-max, parallaxView.getTranslationY() - dy / 2));
-//
-//
-//                        } else {
-//                            parallaxView.setTranslationY(Math.min(0, parallaxView.getTranslationY() - dy / 2));
-//                        }
-//
-//
-//                    }
-//                });
-//
-//            }
-//
-//
-//        }
-
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-
-        mPreviewAdapter = new PreviewAdapter(getContext(), emptyView, mChoiceMode,
-
-                new PreviewAdapter.FeedAdapterOnClickHandler() {
-                    @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
-                        ((Callback) getActivity()).onItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
-                        mPosition = vh.getAdapterPosition();
-                    }
-                },
-                new PreviewAdapter.FeedCommentAdapterOnClickHandler() {
-                    @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
-                        ((Callback) getActivity()).onCommentItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
-                    }
-                },
-                new PreviewAdapter.FeedLikeAdapterOnClickHandler() {
-                    @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
-                        ((Callback) getActivity()).onLikeItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
-                        mPosition = vh.getAdapterPosition();
-
-                    }
-                },
-                new PreviewAdapter.FeedEditAdapterOnClickHandler() {
-                    @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
-                        ((Callback) getActivity()).onEditItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
-                    }
-                },
-                new PreviewAdapter.FeedRemoveAdapterOnClickHandler() {
-                    @Override
-                    public void onClick(PreviewAdapter.PreviewAdapterViewHolder vh, long id) {
-                        Uri uri = null;
-                        ((Callback) getActivity()).onDeleteItemSelected(FeedContract.PreviewEntry.buildPreviewUriById(id), vh);
-
-                    }
-                }, new FeedAdapterLoadNews() {
-
+  @Override
+  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    previewAdapter.swapCursor(data);
+    if (data.getCount() == 0) {
+      getActivity().supportStartPostponedEnterTransition();
+    } else {
+      recyclerView.getViewTreeObserver()
+          .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
-            public void load(PreviewAdapter.PreviewAdapterViewHolder vh, int offset, int count) {
-                ((Callback) getActivity()).upLoadNewsItems(offset, count);
-                mPosition = vh.getAdapterPosition() - 1;
-            }
-        }
-        );
+            public boolean onPreDraw() {
+              // Since we know we're going to get items, we keep the listener around until
+              // we see Children.
+              if (recyclerView.getChildCount() > 0) {
+                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                int pos = FeedNewsFragment.this.position;
 
-        mPreviewAdapter.swapCursor(null);
-        mRecyclerView.setAdapter(mPreviewAdapter);
-
-
-
-
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(SELECTED_KEY)) {
-                // The RecyclerView probably hasn't even been populated yet.  Actually perform the
-                // swapout in onLoadFinished.
-                mPosition = savedInstanceState.getInt(SELECTED_KEY);
-            }
-            mPreviewAdapter.onRestoreInstanceState(savedInstanceState);
-        }
-        return rootView;
-    }
-
-
-    public void refreshFragmentLoader() {
-        if (getLoaderManager().getLoader(NEWS_LOADER) != null) {
-            getLoaderManager().restartLoader(NEWS_LOADER, null, this);
-        }
-
-    }
-
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
-    private void updateEmptyView() {
-
-
-        if (mPreviewAdapter.getItemCount() == 0) {
-
-            TextView tv = (TextView) getView().findViewById(R.id.recycle_feed_empty);
-            if (null != tv) {
-
-                //if cursor is empty, why? do we have an invalid location
-
-                int message = R.string.empty_feed_list;
-
-                tv.setText(message);
-
-            }
-
-        }
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        // When tablets rotate, the currently selected list item needs to be saved.
-        // When no item is selected, mPosition will be set to RecyclerView.NO_POSITION,
-        // so check for that before storing.
-        if (mPosition != RecyclerView.NO_POSITION) {
-            outState.putInt(SELECTED_KEY, mPosition);
-        }
-        mPreviewAdapter.onSaveInstanceState(outState);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        updateEmptyView();
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        Uri previewListUri = FeedContract.PreviewEntry.CONTENT_URI;
-
-        // Sort order:  Ascending, by date.
-        String sortOrder = FeedContract.PreviewEntry.COLUMN_CREATE_DATE + " DESC";
-        Log.i(Utils.TAG_LOG, "Query to  DB get Preview Table All items");
-        return new CursorLoader(getActivity(),
-                previewListUri,
-                PREVIEW_COLUMNS,
-                null,
-                null,
-                sortOrder
-        );
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mPreviewAdapter.swapCursor(data);
-
-
-        updateEmptyView();
-        if (data.getCount() == 0) {
-
-            getActivity().supportStartPostponedEnterTransition();
-
-
-        } else {
-
-            mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    // Since we know we're going to get items, we keep the listener around until
-                    // we see Children.
-                    if (mRecyclerView.getChildCount() > 0) {
-                        mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int position = mPosition;
-//                                mPreviewAdapter.getSelectedItemPosition();
-
-//                        Log.i(Utils.TAG_LOG, "Position Adapter: " + position);
-                        if (position == RecyclerView.NO_POSITION &&
-                                -1 != mInitialSelectedDate) {
-                            Cursor data = mPreviewAdapter.getCursor();
-                            int count = data.getCount();
-                            int dateColumn = data.getColumnIndex(FeedContract.PreviewEntry.COLUMN_CREATE_DATE);
-                            for (int i = 0; i < count; i++) {
-                                data.moveToPosition(i);
-                                if (Utils.getLongFromString(data.getString(dateColumn)) == mInitialSelectedDate) {
-                                    position = i;
-                                    Log.i(Utils.TAG_LOG, "Position Adapter: Get position current day " + position);
-                                    break;
-                                }
-                            }
-                        }
-                        if (position == RecyclerView.NO_POSITION) position = 0;
-//                        Log.i(Utils.TAG_LOG, "Position Adapter: Move to " + position);
-                        mRecyclerView.smoothScrollToPosition(position);
-                        RecyclerView.ViewHolder vh = mRecyclerView.findViewHolderForAdapterPosition(position);
-                        if (null != vh && mAutoSelectView) {
-                            mPreviewAdapter.selectView(vh);
-                        }
-                        if (mHoldForTransition) {
-                            getActivity().supportStartPostponedEnterTransition();
-                        }
-                        return true;
+                if (pos == RecyclerView.NO_POSITION &&
+                    -1 != initialSelectedDate) {
+                  Cursor createData = previewAdapter.getCursor();
+                  int count = createData.getCount();
+                  int dateColumn = createData
+                      .getColumnIndex(PreviewEntry.COLUMN_CREATE_DATE);
+                  for (int i = 0; i < count; i++) {
+                    createData.moveToPosition(i);
+                    if (Utils.getLongFromString(createData.getString(dateColumn))
+                        == initialSelectedDate) {
+                      pos = i;
+                      Log.i(FEED_FRAGMENT,
+                          "Position Adapter: Get pos current day " + pos);
+                      break;
                     }
-                    return false;
+                  }
                 }
-            });
-        }
+                if (pos == RecyclerView.NO_POSITION) {
+                  pos = 0;
+                }
+                recyclerView.smoothScrollToPosition(pos);
+                RecyclerView.ViewHolder vh = recyclerView
+                    .findViewHolderForAdapterPosition(pos);
+                if (null != vh) {
+                  previewAdapter.selectView(vh);
+                }
+
+                return true;
+              }
+              return false;
+            }
+          });
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mPreviewAdapter.swapCursor(null);
-    }
 
-    public void setInitialSelectedDate(long initialSelectedDate) {
-        mInitialSelectedDate = initialSelectedDate;
+  }
+
+  @Override
+  public void onLoaderReset(Loader<Cursor> loader) {
+    previewAdapter.swapCursor(null);
+  }
+
+  public void refreshFragmentLoader() {
+    if (getLoaderManager().getLoader(NEWS_LOADER) != null) {
+      getLoaderManager().restartLoader(NEWS_LOADER, null, this);
     }
+  }
+
+  public void setInitialSelectedDate(long initDate) {
+    this.initialSelectedDate = initDate;
+  }
+
+  public interface Callback {
+
+    void onItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+    void onLikeItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+    void onCommentItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+    void onEditItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+    void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh);
+
+    void upLoadNewsItems(int count, int offset);
+
+    void addNewItemDetail();
+  }
 }

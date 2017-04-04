@@ -1,51 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout
-    android:id="@+id/layout_item_comment"
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/layout_item_comment"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/layout_margin"
+  app:columnCount="3">
+  <android.support.design.widget.TextInputLayout
+    android:id="@+id/layout_input_comment"
     style="@style/AppTheme.Widget.InputCommentField"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_link_margin"
-    app:columnCount="3">
-
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/commentInputLayout"
-        style="@style/Widget.Design.TextInputLayout"
-        android:layout_width="wrap_content"
-        android:layout_margin="@dimen/activity_link_margin"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        app:layout_gravity="fill_horizontal"
-
-        >
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/item_comment_text"
-            style="@style/Widget.Design.DetailTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:ems="4"
-            android:gravity="fill_horizontal"
-            android:hint="@string/comment_hint"
-            android:inputType="textMultiLine"
-            android:textColor="@color/app_black"
-
-            />
-
-    </android.support.design.widget.TextInputLayout>
-
-
-    <Button
-        android:id="@+id/add_comment_button"
-        style="@style/ButtonAppTheme"
-        android:layout_height="wrap_content"
-        android:text="@string/ok_button"
-        app:layout_columnWeight="1"
-        app:layout_gravity="center"
-        />
-
+    android:layout_margin="@dimen/layout_margin"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal">
+    <android.support.v7.widget.AppCompatEditText
+      android:id="@+id/item_comment_text"
+      style="@style/Widget.Design.DetailTextInputLayout"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/layout_height_40dp"
+      android:layout_gravity="center_vertical"
+      android:paddingTop="@dimen/padding_2dp"
+      android:ems="2"
+      android:gravity="fill_horizontal"
+      android:hint="@string/comment_hint"
+      android:inputType="textMultiLine"
+      android:textColor="@color/app_black" />
+  </android.support.design.widget.TextInputLayout>
+  <Button
+    android:id="@+id/button_add_comment"
+    style="@style/ButtonComment"
+    android:layout_width="@dimen/layout_width_50dp"
+    android:layout_height="@dimen/layout_height_40dp"
+    android:clickable="true"
+    android:text="@string/ok_button"
+    app:layout_columnWeight="0"
+    app:layout_gravity="center" />
 </android.support.v7.widget.GridLayout>

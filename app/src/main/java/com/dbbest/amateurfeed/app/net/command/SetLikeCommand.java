@@ -1,92 +1,60 @@
 package com.dbbest.amateurfeed.app.net.command;
 
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
 import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.app.net.request.LikeModel;
 import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
-import com.dbbest.amateurfeed.data.FeedContract;
 import com.dbbest.amateurfeed.model.AuthToken;
-import com.dbbest.amateurfeed.model.IdModel;
-import com.dbbest.amateurfeed.utils.Utils;
-
-/**
- * Created by antonina on 10.02.17.
- */
 
 public class SetLikeCommand extends Command {
-    private LikeModel mLikeRequestModel;
-    private final long mId;
-    private boolean mIsLike;
 
-    private SetLikeCommand(Parcel in) {
-        super(in);
-        mLikeRequestModel = in.readParcelable(LikeModel.class.getClassLoader());
-        mId = in.readInt();
-    }
-
-    public SetLikeCommand(long id, boolean isLike) {
-        mId = id;
-        mIsLike = isLike;
-        mLikeRequestModel = new LikeModel(mIsLike);
+  public static final Parcelable.Creator<SetLikeCommand> CREATOR = new Parcelable.Creator<SetLikeCommand>() {
+    @Override
+    public SetLikeCommand createFromParcel(Parcel source) {
+      return new SetLikeCommand(source);
     }
 
     @Override
-    public void writeToParcel(int flags, Parcel dest) {
-        dest.writeParcelable(mLikeRequestModel, flags);
-        dest.writeLong(mId);
+    public SetLikeCommand[] newArray(int size) {
+      return new SetLikeCommand[size];
     }
+  };
+  private final long id;
+  private LikeModel likeRequestModel;
 
+  public SetLikeCommand(long id, boolean isLike) {
+    this.id = id;
+    likeRequestModel = new LikeModel(isLike);
+  }
 
-    @Override
-    public void execute() {
+  private SetLikeCommand(Parcel in) {
+    super(in);
+    likeRequestModel = in.readParcelable(LikeModel.class.getClassLoader());
+    id = in.readInt();
+  }
 
-        Log.i(Utils.TAG_LOG, "Execute Set Like command");
-        Log.i(Utils.TAG_LOG, "Like command isLike: " + mLikeRequestModel.isLike());
-        Log.i(Utils.TAG_LOG, "Like command id: " + mId);
+  @Override
+  public void writeToParcel(int flags, Parcel dest) {
+    dest.writeParcelable(likeRequestModel, flags);
+    dest.writeLong(id);
+  }
 
-        AuthToken authToken = new AuthToken();
-        RestApiClient apiClient = App.getApiFactory().restClient();
-        Log.i(Utils.TAG_LOG, "Like command (long) id: " +mId);
-        ResponseWrapper<Object> response = apiClient.isLike(authToken.bearer(),mId, mLikeRequestModel);
-        if (response != null) {
-            if (response.isSuccessful()) {
-                Log.i(Utils.TAG_LOG, "Response message: " + response.message());
-                Log.i(Utils.TAG_LOG, "Response message: isSuccessful: " + response.isSuccessful());
-                Log.i(Utils.TAG_LOG, "Response message code: " + response.code());
-
-
-
-                notifySuccess(Bundle.EMPTY);
-
-
-
-            } else {
-                notifyError(Bundle.EMPTY);
-            }
-
-
-        } else {
-            notifyError(Bundle.EMPTY);
-        }
-
+  @Override
+  public void execute() {
+    AuthToken authToken = new AuthToken();
+    RestApiClient apiClient = App.getApiFactory().restClient();
+    ResponseWrapper<Object> response = apiClient.isLike(authToken.bearer(), id, likeRequestModel);
+    if (response != null) {
+      if (response.isSuccessful()) {
+        notifySuccess(Bundle.EMPTY);
+      } else {
+        notifyError(Bundle.EMPTY);
+      }
+    } else {
+      notifyError(Bundle.EMPTY);
     }
-
-
-    public static final Parcelable.Creator<SetLikeCommand> CREATOR = new Parcelable.Creator<SetLikeCommand>() {
-        @Override
-        public SetLikeCommand createFromParcel(Parcel source) {
-            return new SetLikeCommand(source);
-        }
-
-        @Override
-        public SetLikeCommand[] newArray(int size) {
-            return new SetLikeCommand[size];
-        }
-    };
+  }
 }

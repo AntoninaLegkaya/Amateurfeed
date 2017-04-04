@@ -2,69 +2,67 @@ package com.dbbest.amateurfeed.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
 public class UserProfileModel {
 
 
-    @SerializedName("fullName")
-    private String fullName;
+  @SerializedName("fullName")
+  private String fullName;
 
-    @SerializedName("email")
-    private String mEmail;
+  @SerializedName("email")
+  private String email;
 
-    @SerializedName("image")
-    private String mImage;
+  @SerializedName("image")
+  private String image;
 
-    @SerializedName("skype")
-    private String mSkype;
+  @SerializedName("skype")
+  private String skype;
 
-    @SerializedName("address")
-    private String mAddress;
+  @SerializedName("address")
+  private String address;
 
-    @SerializedName("job")
-    private String mJob;
+  @SerializedName("job")
+  private String job;
 
-    @SerializedName("phone")
-    private String mPhone;
+  @SerializedName("phone")
+  private String phone;
 
-    public UserProfileModel(String fullName, String email, String image, String skype, String address, String job, String phone) {
-        this.fullName = fullName;
-        mEmail = email;
-        mImage = image;
-        mSkype = skype;
-        mAddress = address;
-        mJob = job;
-        mPhone = phone;
-    }
+  public UserProfileModel(String fullName, String email, String image, String skype, String address,
+      String job, String phone) {
+    this.fullName = fullName;
+    this.email = email;
+    this.image = image;
+    this.skype = skype;
+    this.address = address;
+    this.job = job;
+    this.phone = phone;
+  }
 
-    public String getFullName() {
-        return fullName;
-    }
+  public String getFullName() {
+    return fullName;
+  }
 
-    public String getEmail() {
-        return mEmail;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getImage() {
-        return mImage;
-    }
+  public String getImage() {
+    return image;
+  }
 
-    public String getSkype() {
-        return mSkype;
-    }
+  public String getSkype() {
+    return skype;
+  }
 
-    public String getAddress() {
-        return mAddress;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getJob() {
-        return mJob;
-    }
+  public String getJob() {
+    return job;
+  }
 
-    public String getPhone() {
-        return mPhone;
-    }
+  public String getPhone() {
+    return phone;
+  }
 }

@@ -1,52 +1,76 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="activity_link_margin">4dp</dimen>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="horizontal_margin">16dp</dimen>
+  <dimen name="vertical_margin">16dp</dimen>
+  <dimen name="layout_margin">4dp</dimen>
+  <dimen name="layout_width_0dp">0dp</dimen>
+  <dimen name="layout_width_195dp">195dp</dimen>
+  <dimen name="layout_width_120dp">120dp</dimen>
+  <dimen name="layout_width_50dp">50dp</dimen>
+  <dimen name="layout_height_40dp">40dp</dimen>
+  <dimen name="layout_height_0dp">0dp</dimen>
+  <dimen name="layout_height_100dp">100dp</dimen>
+  <dimen name="layout_margin_8dp">8dp</dimen>
+  <dimen name="layout_margin_4dp">-4dp</dimen>
+  <dimen name="fb_top_margin">-22dp</dimen>
+  <dimen name="padding_2dp">2dp</dimen>
+  <dimen name="padding_1dp">1dp</dimen>
+  <dimen name="padding_5dp">5dp</dimen>
+  <dimen name="padding_4dp">4dp</dimen>
+  <dimen name="padding_20dp">20dp</dimen>
+  <dimen name="abc_dialog_list_padding_vertical_material">8dp</dimen>
 
-    <!--Warning Dialog-->
-    <dimen name="dialog_corner_radius">16dp</dimen>
-    <dimen name="warning_dialog_width">300dp</dimen>
-    <dimen name="warning_dialog_height">120dp</dimen>
-    <dimen name="warning_dialog_button_height">40dp</dimen>
-    <dimen name="warning_dialog_message_text_size">16sp</dimen>
-    <dimen name="warning_dialog_button_text_size">18sp</dimen>
-    <dimen name="warning_dialog_divider_size">1dp</dimen>
-    <dimen name="warning_dialog_content_horizontal_padding">10dp</dimen>
-    <dimen name="match_dialog_height">245dp</dimen>
-    <dimen name="match_dialog_content_margin">10dp</dimen>
-    <dimen name="match_dialog_avatar_size">120dp</dimen>
+  <!--Warning Dialog-->
+  <dimen name="dialog_corner_radius">16dp</dimen>
+  <dimen name="warning_dialog_width">300dp</dimen>
+  <dimen name="warning_dialog_height">120dp</dimen>
+  <dimen name="warning_dialog_button_height">40dp</dimen>
+  <dimen name="warning_dialog_message_text_size">16sp</dimen>
+  <dimen name="warning_dialog_button_text_size">18sp</dimen>
+  <dimen name="warning_dialog_divider_size">1dp</dimen>
+  <dimen name="warning_dialog_content_horizontal_padding">10dp</dimen>
+  <dimen name="match_dialog_height">245dp</dimen>
+  <dimen name="match_dialog_content_margin">10dp</dimen>
+  <dimen name="match_dialog_avatar_size">120dp</dimen>
 
-    <!--TabHome-->
-    <dimen name="tab_item_text_size">14sp</dimen>
-    <!--Tool Bar Home-->
-    <dimen name="tool_bar_item_text_size">48sp</dimen>
-    <!--Profile item-->
-    <dimen name="profile_item_extra_padding">0dp</dimen>
-    <dimen name="profile_info_horizontal_padding">32dp</dimen>
-    <dimen name="profile_padding_bottom">16dp</dimen>
-    <dimen name="profile_padding_top">16dp</dimen>
-    <dimen name="profile_padding_right">16dp</dimen>
-    <dimen name="profile_padding_left">16dp</dimen>
-    <dimen name="profile_icon">60dp</dimen>
+  <!--TabHome-->
+  <dimen name="tab_item_text_size">14sp</dimen>
+  <!--Tool Bar Home-->
+  <dimen name="tool_bar_item_text_size">48sp</dimen>
+  <!--Profile item-->
+  <dimen name="profile_item_extra_padding">0dp</dimen>
+  <dimen name="profile_info_horizontal_padding">32dp</dimen>
+  <dimen name="profile_padding_bottom">16dp</dimen>
+  <dimen name="profile_padding_top">16dp</dimen>
+  <dimen name="profile_padding_right">16dp</dimen>
+  <dimen name="profile_padding_left">16dp</dimen>
+  <dimen name="profile_icon">60dp</dimen>
 
-    <!--Progress Dialog-->
-    <dimen name="progress_progressbar_size">60dp</dimen>
+  <!--Progress Dialog-->
+  <dimen name="progress_progressbar_size">60dp</dimen>
 
-    <!--Button-->
-    <dimen name="button_corner_radius">7dp</dimen>
-    <!--Field-->
-    <dimen name="field_corner_radius">5dp</dimen>
+  <!--Button-->
+  <dimen name="button_corner_radius">7dp</dimen>
+  <!--Field-->
+  <dimen name="field_corner_radius">5dp</dimen>
 
 
-    <!--Image User-->
-    <dimen name="user_icon">100dp</dimen>
+  <!--Image User-->
+  <dimen name="user_icon">100dp</dimen>
 
-    <!--Image User Preview-->
-    <dimen name="preview_icon">150dp</dimen>
+  <!--Image User Preview-->
+  <dimen name="preview_icon">150dp</dimen>
 
-    <!--ToolBar Image-->
-    <dimen name="toolbar_icon">40dp</dimen>
-    <!--Grid  Recycle Layout Image-->
-    <dimen name="grid__recycle_icon">100dp</dimen>
+  <!--ToolBar Image-->
+  <dimen name="toolbar_icon">40dp</dimen>
+  <!--Grid  Recycle Layout Image-->
+  <dimen name="grid__recycle_icon">100dp</dimen>
+
+  <!--Elevation-->
+  <dimen name="elevation">4dp</dimen>
+
+  <!--Text size-->
+  <dimen name="text_size_16sp">16sp</dimen>
+  <dimen name="text_size_14sp">14sp</dimen>
+  <dimen name="text_size_12sp">12sp</dimen>
 </resources>

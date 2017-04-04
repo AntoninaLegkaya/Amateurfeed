@@ -1,0 +1,11 @@
+ 
+ 
+Output Files: 
+ 
+/mnt/customshare/Android_Student/lehka.a/AmateurFeed/#1/*.apk
+ 
+ 
+ 
+ 
+Gitlab link: http://gitlab.kharkov.dbbest.com/lehka.a/Amateurfeed/commit/62562ee05567c617f7665d0ebcded159f0172657
+ 

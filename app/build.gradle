@@ -1,50 +1,65 @@
-apply plugin: 'com.android.application'
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
 
+    dependencies {
+        // These docs use an open ended version so that our plugin
+        // can be updated quickly in response to Android tooling updates
 
-def buildNumber() {
-    if (project.hasProperty('buildNumber')) {
-        return "." + buildNumber
-    } else {
-        return ""
+        // We recommend changing it to the latest version from our changelog:
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
-def buildNumberInt() {
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+apply from: "$project.rootDir/keystore/signing-config.gradle"
+
+def buildNumber() {
     if (project.hasProperty('buildNumber')) {
         return Integer.parseInt(buildNumber)
     } else {
         return 0
     }
 }
+
 android {
-
-
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion "${rootProject.ext.buildToolsVersion}"
 
     defaultConfig {
         def versionMajor = 0
-
         applicationId "com.dbbest.amateurfeed"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode versionMajor + buildNumberInt()
-        versionName "${versionMajor}${buildNumber()}"
+        versionCode buildNumber()
+        versionName "${versionMajor}.${buildNumber()}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
         multiDexEnabled true
-
-
     }
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            if (project.hasProperty('changeLog') && changeLog.length() > 0) {
+                ext.betaDistributionReleaseNotes = changeLog
+            }
+            ext.betaDistributionEmailsFilePath = "$project.rootDir/beta-distribution-emails.txt"
+            ext.betaDistributionNotifications = true
         }
     }
     buildTypes.each {
         it.buildConfigField 'String', 'OPEN_FIREBASE_API_KEY', FirebaseApiKey
-        it.buildConfigField 'String','API_SERVER_URL', ApiServerUrl
+        it.buildConfigField 'String', 'API_SERVER_URL', ApiServerUrl
     }
 }
 
@@ -52,47 +67,44 @@ ext {
     multidex = '1.0.0'
     retrofit = '2.1.0'
     okhttp = '3.4.1'
-    googlePlaySevices = '10.0.1'
+    googlePlaySevices = '10.2.1'
     facebookSdk = '4.16.0'
     glide = '3.7.0'
     stetho = '1.4.1'
+    azureStorage = '1.0.0@aar'
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    testCompile 'junit:junit:4.12'
-
+    compile project(path: ':common-library')
     compile "com.android.support:multidex:${multidex}"
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
-    compile 'com.takisoft.fix:preference-v7:25.0.1.0'
-
+    compile "com.android.support:preference-v14:${rootProject.ext.supportLibraryVersion}"
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
     compile "com.squareup.retrofit2:converter-gson:${retrofit}"
-
     compile "com.facebook.stetho:stetho:${stetho}"
     compile "com.facebook.stetho:stetho-okhttp3:${stetho}"
     compile "com.squareup.okhttp3:logging-interceptor:${okhttp}"
-
-
     compile "com.facebook.android:facebook-android-sdk:${facebookSdk}"
-    compile project(path: ':common-library')
-
     compile "com.google.firebase:firebase-core:${googlePlaySevices}"
     compile "com.google.firebase:firebase-messaging:${googlePlaySevices}"
-
     compile "com.google.android.gms:play-services-location:${googlePlaySevices}"
     compile "com.google.android.gms:play-services-maps:${googlePlaySevices}"
     compile "com.google.android.gms:play-services-places:${googlePlaySevices}"
 
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
+    compile "com.android.support:design:${rootProject.ext.supportLibraryVersion}"
+    compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibraryVersion}"
+    compile "com.android.support:gridlayout-v7:${rootProject.ext.supportLibraryVersion}"
 
-    compile 'com.android.support:cardview-v7:25.1.0'
-    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:gridlayout-v7:25.1.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile "com.github.bumptech.glide:glide:${glide}"
+    compile "com.microsoft.azure.android:azure-storage-android:${azureStorage}"
+
+    testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+        transitive = true;
+    }
 }
 apply plugin: 'com.google.gms.google-services'

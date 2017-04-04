@@ -2,63 +2,60 @@ package com.dbbest.amateurfeed.app.net.response;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antonina on 19.01.17.
- */
 
 public class LoginResponseModel {
-    @SerializedName("userId")
-    private int mUserId;
 
-    @SerializedName("access_token")
-    private String mAccessToken;
+  @SerializedName("userId")
+  private int userId;
 
-    @SerializedName("userName")
-    private String mUserName;
+  @SerializedName("access_token")
+  private String accessToken;
 
-    @SerializedName("role")
-    private String mRole;
+  @SerializedName("userName")
+  private String userName;
 
-    @SerializedName("profileImage")
-    private String mProfileImage;
+  @SerializedName("role")
+  private String role;
 
-
-    public LoginResponseModel(int userId, String accessToken, String userName, String role, String profileImage) {
-        mUserId = userId;
-        mAccessToken = accessToken;
-        mUserName = userName;
-        mRole = role;
-        mProfileImage = profileImage;
-    }
-
-    public int getUserId() {
-        return mUserId;
-    }
-
-    public String getAccessToken() {
-        return mAccessToken;
-    }
-
-    public String getUserName() {
-        return mUserName;
-    }
-
-    public String getRole() {
-        return mRole;
-    }
-
-    public String getProfileImage() {
-        return mProfileImage;
-    }
+  @SerializedName("profileImage")
+  private String profileImage;
 
 
-    @Override
-    public String toString() {
-        return "RegistrationResponse{" +
-                "mUserId=" + mUserId +
-                ", mAccessToken='" + mAccessToken + '\'' +
-                ", mUserName='" + mUserName + '\'' +
-                ", mProfileImage='" + mProfileImage + '\'' +
-                '}';
-    }
+  public LoginResponseModel(int userId, String accessToken, String userName, String role, String profileImage) {
+    this.userId = userId;
+    this.accessToken = accessToken;
+    this.userName = userName;
+    this.role = role;
+    this.profileImage = profileImage;
+  }
+
+  @Override
+  public String toString() {
+    return "RegistrationResponse{" +
+        "userId=" + userId +
+        ", accessToken='" + accessToken + '\'' +
+        ", userName='" + userName + '\'' +
+        ", profileImage='" + profileImage + '\'' +
+        '}';
+  }
+
+  public int getUserId() {
+    return userId;
+  }
+
+  public String getAccessToken() {
+    return accessToken;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public String getProfileImage() {
+    return profileImage;
+  }
 }

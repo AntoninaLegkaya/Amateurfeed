@@ -1,114 +1,61 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:fab="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:paddingBottom="@dimen/profile_padding_bottom"
-              android:paddingLeft="@dimen/profile_item_extra_padding"
-              android:paddingRight="@dimen/profile_item_extra_padding">
-
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+  <android.support.v7.widget.GridLayout
+    android:id="@+id/layout_item_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:columnCount="3"
+    app:rowCount="4">
+    <ImageView
+      android:id="@+id/image_user_icon"
+      android:layout_width="@dimen/profile_icon"
+      android:layout_height="@dimen/profile_icon"
+      android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
+      android:adjustViewBounds="true"
+      android:maxHeight="@dimen/profile_icon"
+      android:maxWidth="@dimen/profile_icon"
+      app:layout_columnWeight="1"
+      app:layout_gravity="center"
+      app:layout_rowSpan="3"
+      tools:src="@mipmap/splash" />
+    <TextView
+      android:id="@+id/text_user_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
+      android:fontFamily="sans-serif-condensed"
+      android:text="User"
+      android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+      android:textColor="@color/secondary_text"
+      app:layout_columnWeight="1"
+      app:layout_gravity="left|center"
+      app:layout_rowSpan="3" />
     <ImageButton
-        android:id="@+id/settings_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:paddingRight="@dimen/profile_padding_right"
-        android:scaleType="center"
+      android:id="@+id/button_settings"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
+      android:background="@drawable/selector_settings_image_button"
+      app:layout_columnSpan="1"
+      app:layout_columnWeight="1"
+      app:layout_gravity="top|right"
+      app:layout_rowSpan="3" />
+    <ImageView
+      android:id="@+id/image_divider"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+      android:paddingTop="@dimen/padding_1dp"
+      android:paddingBottom="@dimen/padding_1dp"
+      android:background="@color/app_black"
+      android:gravity="center"
+      android:src="@drawable/line_horizontal"
+      app:layout_columnSpan="3"
+      app:layout_columnWeight="1" />
+  </android.support.v7.widget.GridLayout>
+</android.support.design.widget.CoordinatorLayout>
 
-        android:background="@drawable/ic_settings_black_24dp"
-        android:elevation="8dp"
-       />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material">
-
-
-        <ImageView
-            android:id="@+id/user_icon"
-            android:layout_width="@dimen/profile_icon"
-            android:layout_height="@dimen/profile_icon"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/abc_list_item_padding_horizontal_material"
-            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:adjustViewBounds="true"
-            android:src="@drawable/background_splash"
-            />
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/secondary_text"
-                android:text="User"
-                />
-
-            <TextView
-                android:id="@+id/user_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/secondary_text"
-                android:text="User@email.com"/>
-
-            <TextView
-                android:id="@+id/user_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/secondary_text"
-                android:text="+1111111111"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/divides_text"
-            android:paddingBottom="0.5dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="5dp"
-            android:paddingTop="0.5dp"
-            android:src="@drawable/line_horizontal"
-            />
-
-
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/fab_edit"
-            android:layout_width="9dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginLeft="26dp"
-            android:src="@drawable/ic_edit_black_24dp"
-            fab:elevation="8dp"
-            fab:fab_colorNormal="@color/primary"
-            fab:fab_colorPressed="@color/primary_dark"
-            fab:fab_colorRipple="@color/primary_light"
-            fab:fab_shadow="true"
-            fab:fab_type="mini"/>
-    </FrameLayout>
-
-</LinearLayout>

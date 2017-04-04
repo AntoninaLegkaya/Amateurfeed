@@ -1,47 +1,76 @@
 package com.dbbest.amateurfeed.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
-public class NewsUpdateModel {
-    @SerializedName("title")
-    private String mTitle;
+public class NewsUpdateModel implements Parcelable {
 
-    @SerializedName("text")
-    private String mText;
+  public static final Parcelable.Creator<NewsUpdateModel> CREATOR =
+      new Parcelable.Creator<NewsUpdateModel>() {
+        @Override
+        public NewsUpdateModel createFromParcel(Parcel in) {
+          return new NewsUpdateModel(in);
+        }
 
-    @SerializedName("image")
-    private String mImage;
+        @Override
+        public NewsUpdateModel[] newArray(int size) {
+          return new NewsUpdateModel[size];
+        }
+      };
+  @SerializedName("title")
+  private String title;
+  @SerializedName("text")
+  private String text;
+  @SerializedName("image")
+  private String image;
+  @SerializedName("tags")
+  private ArrayList<TagModel> tags = new ArrayList<>();
 
-    @SerializedName("tags")
-    private ArrayList<TagModel> mTags;
+  public NewsUpdateModel(ArrayList<TagModel> tags, String title, String text, String image) {
 
-    public String getTitle() {
-        return mTitle;
-    }
+    this.title = title;
+    this.text = text;
+    this.image = image;
+    this.tags = tags;
+  }
 
-    public String getText() {
-        return mText;
-    }
+  private NewsUpdateModel(Parcel in) {
+    title = in.readString();
+    text = in.readString();
+    image = in.readString();
+    tags = new ArrayList<TagModel>();
+    in.readTypedList(tags, TagModel.CREATOR);
+  }
 
-    public String getImage() {
-        return mImage;
-    }
+  @Override
+  public int describeContents() {
+    return 0;
+  }
 
-    public ArrayList<TagModel> getTags() {
-        return mTags;
-    }
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(title);
+    dest.writeString(text);
+    dest.writeString(image);
+    dest.writeTypedList(tags);
+  }
 
-    public NewsUpdateModel(String title, String text, String image, ArrayList<TagModel> tags) {
+  public String getTitle() {
+    return title;
+  }
 
-        mTitle = title;
-        mText = text;
-        mImage = image;
-        mTags = tags;
-    }
+  public String getText() {
+    return text;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public ArrayList<TagModel> getTags() {
+    return tags;
+  }
 }

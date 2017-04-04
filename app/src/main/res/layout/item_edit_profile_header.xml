@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/layout_item_header"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  app:columnCount="2">
+  <include
+    android:id="@+id/profile_input_user_name"
+    layout="@layout/profile_input_user_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_columnWeight="1" />
+  <ImageButton
+    android:id="@+id/button_get_profile_image"
+    android:layout_width="@dimen/profile_icon"
+    android:layout_height="@dimen/profile_icon"
+    android:adjustViewBounds="true"
+    android:background="@mipmap/splash"
+    android:clickable="true"
+    android:maxHeight="@dimen/profile_icon"
+    android:maxWidth="@dimen/profile_icon"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center"
+    app:layout_rowSpan="4" />
+  <include
+    android:id="@+id/profile_input_user_email"
+    layout="@layout/profile_input_user_email"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_columnWeight="1" />
+  <include
+    android:id="@+id/profile_input_user_phone"
+    layout="@layout/profile_input_user_phone"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_columnWeight="1" />
+  <include
+    android:id="@+id/profile_input_user_location"
+    layout="@layout/profile_input_user_location"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_columnWeight="1" />
+
+</android.support.v7.widget.GridLayout>

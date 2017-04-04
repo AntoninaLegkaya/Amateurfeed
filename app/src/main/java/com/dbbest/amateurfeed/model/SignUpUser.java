@@ -3,161 +3,159 @@ package com.dbbest.amateurfeed.model;
 import android.common.util.TextUtils;
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.dbbest.amateurfeed.App;
-import com.dbbest.amateurfeed.ui.util.exception.NotImplementedException;
+import com.dbbest.amateurfeed.ui.navigator.NotImplementedException;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
 public class SignUpUser implements ActiveRecord<SignUpUser> {
 
-    private static final String CURRENT_USER_FILE = ".user";
+  private static final String CURRENT_USER_FILE = ".user";
+  private static final String KEY_EMAIL = "USER_EMAIL";
+  private static final String KEY_FULL_NAME = "USER_FULL_NAME";
+  private static final String KEY_ADDRESS = "USER_ADDRESS";
+  private static final String KEY_PASSWORD = "USER_PASSWORD";
+  private static final String KEY_DEVICE_ID = "DEVICE_ID";
+  private static final String KEY_OS_TYPE = "USER_OS_TYPE";
+  private static final String KEY_DEVICE_TOKEN = "DEVICE_TOKEN";
 
-    private static final String KEY_EMAIL = "USER_EMAIL";
-    private static final String KEY_FULL_NAME = "USER_FULL_NAME";
-    private static final String KEY_ADRESS = "USER_ADDRESS";
-    private static final String KEY_PASSWORD = "USER_PASSWORD";
-    private static final String KEY_DIVICE_ID = "DEVICE_ID";
-    private static final String KEY_OS_TYPE = "USER_OS_TYPE";
-    private static final String KEY_DEVICE_TOKEN = "DEVICE_TOKEN";
+  private String userEmail;
+  private String userFullName;
+  private String address;
+  private String password;
+  private String deviceId;
+  private String osType;
+  private String deviceToken;
 
-    private String mUserEmail;
-    private String mUserFullName;
-    private String mAddress;
-    private String mPassword;
-    private String mDeviceId;
-    private String mOsType;
-    private String mDeviceToken;
+  public SignUpUser(String userEmail, String userFullName, String adress, String password,
+      String deviceId, String osType, String deviceToken) {
+    this.userEmail = userEmail;
+    this.userFullName = userFullName;
+    address = adress;
+    this.password = password;
+    this.deviceId = deviceId;
+    this.osType = osType;
+    this.deviceToken = deviceToken;
+  }
 
-    public SignUpUser(String userEmail, String userFullName, String adress, String password, String deviceId, String osType, String deviceToken) {
-        mUserEmail = userEmail;
-        mUserFullName = userFullName;
-        mAddress = adress;
-        mPassword = password;
-        mDeviceId = deviceId;
-        mOsType = osType;
-        mDeviceToken = deviceToken;
-    }
+  public SignUpUser() {
+    SharedPreferences preferences = preferences();
+    userEmail = preferences.getString(KEY_EMAIL, null);
+    userFullName = preferences.getString(KEY_FULL_NAME, null);
+    address = preferences.getString(KEY_ADDRESS, null);
+    password = preferences.getString(KEY_PASSWORD, null);
+    deviceId = preferences.getString(KEY_DEVICE_ID, null);
+    osType = preferences.getString(KEY_OS_TYPE, null);
+    deviceToken = preferences.getString(KEY_DEVICE_TOKEN, null);
+  }
 
-    public SignUpUser() {
-        SharedPreferences preferences = preferences();
-        mUserEmail = preferences.getString(KEY_EMAIL, null);
-        mUserFullName = preferences.getString(KEY_FULL_NAME, null);
-        mAddress = preferences.getString(KEY_ADRESS, null);
-        mPassword = preferences.getString(KEY_PASSWORD, null);
-        mDeviceId = preferences.getString(KEY_DIVICE_ID, null);
-        mOsType = preferences.getString(KEY_OS_TYPE, null);
-        mDeviceToken = preferences.getString(KEY_DEVICE_TOKEN, null);
-    }
+  @Override
+  public void purge() {
+    preferences().edit().clear().apply();
+    userEmail = null;
+    userFullName = null;
+    address = null;
+    password = null;
+    deviceId = null;
+    osType = null;
+    deviceToken = null;
 
-    private SharedPreferences preferences() {
-        return App.instance().getSharedPreferences(CURRENT_USER_FILE, Context.MODE_PRIVATE);
-    }
+  }
 
-    public String getUserEmail() {
-        return mUserEmail;
-    }
+  @Override
+  public boolean isValid() {
+    return !TextUtils.isEmpty(userEmail) && !TextUtils.isEmpty(userFullName) && !TextUtils
+        .isEmpty(address) && !TextUtils.isEmpty(password) &&
+        !TextUtils.isEmpty(deviceId) && !TextUtils.isEmpty(osType) && !TextUtils
+        .isEmpty(deviceToken);
+  }
 
-    public void setUserEmail(String userEmail) {
-        mUserEmail = userEmail;
-        preferences().edit().putString(KEY_EMAIL, mUserEmail).apply();
-    }
+  @Override
+  public void subscribeChanges(OnRecordChangeListener<SignUpUser> listener) {
+    throw new NotImplementedException("subscribe changes");
+  }
 
-    public String getUserFullName() {
-        return mUserFullName;
-    }
+  @Override
+  public void unsubscribeChanges() {
+    throw new NotImplementedException("unsubscribe changes");
+  }
 
-    public void setUserFullName(String userFullName) {
-        mUserFullName = userFullName;
-        preferences().edit().putString(KEY_FULL_NAME, mUserFullName).apply();
-    }
+  @Override
+  public String toString() {
+    return "CurrentUser{"
+        + "userEmail=" + userEmail
+        + ", userFullName='" + userFullName + '\''
+        + ", address='" + address + '\''
+        + ", password='" + password + '\''
+        + ", deviceId='" + deviceId + '\''
+        + ", osType='" + osType + '\''
+        + ", deviceToken='" + deviceToken + '\''
+        + '}';
+  }
 
-    public String getAddress() {
-        return mAddress;
-    }
+  public String getUserEmail() {
+    return userEmail;
+  }
 
-    public void setAddress(String address) {
-        mAddress = address;
-        preferences().edit().putString(KEY_ADRESS, mAddress).apply();
-    }
+  public void setUserEmail(String userEmail) {
+    this.userEmail = userEmail;
+    preferences().edit().putString(KEY_EMAIL, this.userEmail).apply();
+  }
 
-    public String getPassword() {
-        return mPassword;
-    }
+  public String getUserFullName() {
+    return userFullName;
+  }
 
-    public void setPassword(String password) {
-        mPassword = password;
-        preferences().edit().putString(KEY_PASSWORD, mPassword).apply();
-    }
+  public void setUserFullName(String userFullName) {
+    this.userFullName = userFullName;
+    preferences().edit().putString(KEY_FULL_NAME, this.userFullName).apply();
+  }
 
-    public String getDeviceId() {
-        return mDeviceId;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public void setDeviceId(String deviceId) {
-        mDeviceId = deviceId;
-        preferences().edit().putString(KEY_DIVICE_ID, mDeviceId).apply();
-    }
+  public void setAddress(String address) {
+    this.address = address;
+    preferences().edit().putString(KEY_ADDRESS, this.address).apply();
+  }
 
-    public String getOsType() {
-        return mOsType;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setOsType(String osType) {
-        mOsType = osType;
-        preferences().edit().putString(KEY_OS_TYPE, mOsType).apply();
-    }
+  public void setPassword(String password) {
+    this.password = password;
+    preferences().edit().putString(KEY_PASSWORD, this.password).apply();
+  }
 
-    public String getDeviceToken() {
-        return mDeviceToken;
-    }
+  public String getDeviceId() {
+    return deviceId;
+  }
 
-    public void setDeviceToken(String deviceToken) {
-        mDeviceToken = deviceToken;
-        preferences().edit().putString(KEY_DEVICE_TOKEN, mDeviceToken).apply();
-    }
+  public void setDeviceId(String deviceId) {
+    this.deviceId = deviceId;
+    preferences().edit().putString(KEY_DEVICE_ID, this.deviceId).apply();
+  }
 
-    @Override
-    public void purge() {
-        preferences().edit().clear().apply();
-        mUserEmail = null;
-        mUserFullName = null;
-        mAddress = null;
-        mPassword = null;
-        mDeviceId = null;
-        mOsType = null;
-        mDeviceToken = null;
+  public String getOsType() {
+    return osType;
+  }
 
-    }
+  public void setOsType(String osType) {
+    this.osType = osType;
+    preferences().edit().putString(KEY_OS_TYPE, this.osType).apply();
+  }
 
-    @Override
-    public boolean isValid() {
-        return !TextUtils.isEmpty(mUserEmail) && !TextUtils.isEmpty(mUserFullName) && !TextUtils.isEmpty(mAddress) && !TextUtils.isEmpty(mPassword) &&
-                !TextUtils.isEmpty(mDeviceId) && !TextUtils.isEmpty(mOsType) && !TextUtils.isEmpty(mDeviceToken);
-    }
+  public String getDeviceToken() {
+    return deviceToken;
+  }
 
-    @Override
-    public void subscribeChanges(OnRecordChangeListener<SignUpUser> listener) {
-        throw new NotImplementedException("subscribe changes");
-    }
+  public void setDeviceToken(String deviceToken) {
+    this.deviceToken = deviceToken;
+    preferences().edit().putString(KEY_DEVICE_TOKEN, this.deviceToken).apply();
+  }
 
-    @Override
-    public void unsubscribeChanges() {
-        throw new NotImplementedException("unsubscribe changes");
-    }
-
-    @Override
-    public String toString() {
-        return "CurrentUser{"
-                + "mUserEmail=" + mUserEmail
-                + ", mUserFullName='" + mUserFullName + '\''
-                + ", mAddress='" + mAddress + '\''
-                + ", mPassword='" + mPassword + '\''
-                + ", mDeviceId='" + mDeviceId + '\''
-                + ", mOsType='" + mOsType + '\''
-                + ", mDeviceToken='" + mDeviceToken + '\''
-                + '}';
-    }
+  private SharedPreferences preferences() {
+    return App.instance().getSharedPreferences(CURRENT_USER_FILE, Context.MODE_PRIVATE);
+  }
 }

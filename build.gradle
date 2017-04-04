@@ -1,15 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.google.gms:google-services:3.0.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
@@ -23,12 +19,14 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
+//    supportLibraryVersion = '25.0.1'
+//    buildToolsVersion = '25.0.1'
     supportLibraryVersion = '24.2.1'
     buildToolsVersion = '24.0.2'
+    ignoreFailures = false
     minSdkVersion = 19
     minSdkDevelopVersion = 21
-    compileSdkVersion = 25
-    targetSdkVersion = 25
-
-
+    compileSdkVersion = 24
+    targetSdkVersion = 24
 }
+

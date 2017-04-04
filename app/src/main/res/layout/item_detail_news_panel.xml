@@ -1,113 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout
-    android:id="@+id/item_my"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:elevation="8dp"
-    app:columnCount="3"
-    android:layout_margin="@dimen/activity_link_margin">
-
-
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/layout_item_user"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/layout_margin"
+  app:columnCount="3">
+  <TextView
+    android:id="@+id/text_description"
+    style="@style/AppTheme.Widget.InputCommentField"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:textColor="@color/app_black"
+    app:layout_columnSpan="3"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal"
+    app:layout_rowSpan="3"
+    tools:text="This is description" />
+  <LinearLayout
+    android:paddingTop="@dimen/padding_1dp"
+    android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center"
+    app:layout_rowSpan="2">
+    <ImageButton
+      android:id="@+id/button_like"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+      android:layout_gravity="center_vertical"
+      android:background="@drawable/ic_favorite_border_white_24dp" />
     <TextView
-
-        android:id="@+id/list_item_description"
-        android:layout_width="wrap_content"
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
-        style="@style/AppTheme.Widget.InputCommentField"
-        android:text="This is description"
-        android:textColor="@color/app_black"
-        app:layout_columnSpan="3"
-        app:layout_columnWeight="1"
-        app:layout_gravity="fill_horizontal"
-        app:layout_rowSpan="3"
-        tools:text="This is description"
-        />
-
-
-    <LinearLayout
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-        app:layout_columnWeight="1"
-        app:layout_gravity="center"
-        app:layout_rowSpan="2">
-
-        <ImageButton
-            android:id="@+id/like_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:background="@drawable/ic_favorite_border_white_24dp"
-            android:elevation="4dp"
-            />
-
-        <TextView
-            android:id="@+id/list_item_likes_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:gravity="center_horizontal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/secondary_text"
-            app:layout_gravity="right"
-            android:text="0"
-            tools:text="0"/>
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        app:layout_columnWeight="1"
-        app:layout_gravity="center"
-        app:layout_rowSpan="2"
-       >
-
-
-        <TextView
-            android:id="@+id/list_item_comment_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-            android:textColor="@drawable/tab_text_link"
-            tools:text="0"/>
-
-        <TextView
-            android:id="@+id/item_comment_label_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:contextClickable="true"
-            android:text="@string/item_comment_label"
-            android:textColor="@drawable/tab_text_link"
-            />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
-        app:layout_columnWeight="1"
-        app:layout_gravity="right"
-        app:layout_rowSpan="2"
-        >
-
-
-        <ImageButton
-            android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_delete_black_24dp"
-            android:elevation="8dp"
-            />
-
-
-    </LinearLayout>
-
-
+      android:id="@+id/text_count_likes"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:fontFamily="sans-serif"
+      android:textColor="@color/secondary_text"
+      tools:text="0" />
+  </LinearLayout>
+  <LinearLayout
+    app:layout_columnWeight="1"
+    app:layout_gravity="center_vertical"
+    app:layout_rowSpan="2">
+    <TextView
+      android:id="@+id/text_comment_count"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+      android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+      android:fontFamily="sans-serif"
+      android:textColor="@drawable/tab_text_link"
+      tools:text="0" />
+    <TextView
+      android:id="@+id/text_comment_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:clickable="true"
+      android:contextClickable="true"
+      android:text="@string/item_comment_label"
+      android:textColor="@drawable/tab_text_link" />
+  </LinearLayout>
+  <LinearLayout
+    android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+    app:layout_columnWeight="1"
+    app:layout_gravity="right"
+    app:layout_rowSpan="2">
+    <ImageButton
+      android:id="@+id/button_delete_item_news"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:background="@drawable/ic_delete_black_24dp" />
+  </LinearLayout>
 </android.support.v7.widget.GridLayout>

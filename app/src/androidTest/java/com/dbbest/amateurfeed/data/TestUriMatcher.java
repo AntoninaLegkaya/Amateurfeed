@@ -22,26 +22,22 @@ import android.test.AndroidTestCase;
 
 public class TestUriMatcher extends AndroidTestCase {
 
-    // content://com.dbbest.amateurfeed.app/preview"
-    private static final Uri TEST_PREVIEW_DIR = FeedContract.PreviewEntry.CONTENT_URI;
-    // content://com.dbbest.amateurfeed.app/comment"
-    private static final Uri TEST_COMMENT_DIR = FeedContract.CommentEntry.CONTENT_URI;
-    private static final Uri TEST_PREVIEW_TAG_ID = FeedContract.PreviewTagEntry.buildTagUriById(FeedProvider.TEST_ID);
-    private static final Uri TEST_PREVIEW_ITEM = FeedContract.PreviewEntry.buildPreviewUriById(FeedProvider.TEST_ID);
+  // content://com.dbbest.amateurfeed.app/preview"
+  private static final Uri TEST_PREVIEW_DIR = PreviewEntry.CONTENT_URI;
+  // content://com.dbbest.amateurfeed.app/comment"
+  private static final Uri TEST_COMMENT_DIR = CommentEntry.CONTENT_URI;
+  private static final Uri TEST_PREVIEW_ITEM = PreviewEntry.buildPreviewUriById(FeedProvider.TEST_ID);
 
 
-    public void testUriMatcher() {
-        UriMatcher testMatcher = FeedProvider.buildUriMatcher();
+  public void testUriMatcher() {
+    UriMatcher testMatcher = FeedProvider.buildUriMatcher();
 
-        assertEquals("Error: The PREVIEW URI was matched incorrectly.",
-                testMatcher.match(TEST_PREVIEW_DIR), FeedProvider.PREVIEW);
-        assertEquals("Error: The COMMENT URI was matched incorrectly.",
-                testMatcher.match(TEST_COMMENT_DIR), FeedProvider.COMMENT);
-        assertEquals("Error: The PREVIEW URI By ID query was matched incorrectly.",
-                testMatcher.match(TEST_PREVIEW_ITEM), FeedProvider.PREVIEW_ID);
+    assertEquals("Error: The PREVIEW URI was matched incorrectly.",
+        testMatcher.match(TEST_PREVIEW_DIR), FeedProvider.PREVIEW);
+    assertEquals("Error: The COMMENT URI was matched incorrectly.",
+        testMatcher.match(TEST_COMMENT_DIR), FeedProvider.COMMENT);
+    assertEquals("Error: The PREVIEW URI By ID query was matched incorrectly.",
+        testMatcher.match(TEST_PREVIEW_ITEM), FeedProvider.PREVIEW_ID);
 
-        assertEquals("Error: The PREVIEW URI in JOIN query was matched incorrectly.",
-                testMatcher.match(TEST_PREVIEW_TAG_ID), FeedProvider.PREVIEW_TAG_ID);
-
-    }
+  }
 }

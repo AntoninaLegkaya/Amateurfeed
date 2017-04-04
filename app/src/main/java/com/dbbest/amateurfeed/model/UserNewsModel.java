@@ -1,62 +1,100 @@
 package com.dbbest.amateurfeed.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
-public class UserNewsModel {
+public class UserNewsModel implements Parcelable {
 
-    @SerializedName("id")
-    private int mId;
-
-    @SerializedName("title")
-    private String mTitle;
-
-    @SerializedName("updateDate")
-    private String mUpdateDate;
-
-
-    @SerializedName("status")
-    private String mStatus;
-
-    @SerializedName("image")
-    private String mImage;
-
-    @SerializedName("likes")
-    private int mLikes;
-
-    public UserNewsModel(int id, String title, String updateDate, String status, String image, int likes) {
-        mId = id;
-        mTitle = title;
-        mUpdateDate = updateDate;
-        mStatus = status;
-        mImage = image;
-        mLikes = likes;
+  public static final Creator<UserNewsModel> CREATOR = new Creator<UserNewsModel>() {
+    @Override
+    public UserNewsModel createFromParcel(Parcel in) {
+      return new UserNewsModel(in);
     }
 
-    public int getId() {
-        return mId;
+    @Override
+    public UserNewsModel[] newArray(int size) {
+      return new UserNewsModel[size];
     }
+  };
 
-    public String getTitle() {
-        return mTitle;
-    }
+  @SerializedName("id")
+  private int id;
 
-    public String getUpdateDate() {
-        return mUpdateDate;
-    }
+  @SerializedName("title")
+  private String title;
 
-    public String getStatus() {
-        return mStatus;
-    }
+  @SerializedName("updateDate")
+  private String updateDate;
 
-    public String getImage() {
-        return mImage;
-    }
 
-    public int getLikes() {
-        return mLikes;
-    }
+  @SerializedName("status")
+  private String status;
+
+  @SerializedName("image")
+  private String image;
+
+  @SerializedName("likes")
+  private int likes;
+
+  public UserNewsModel(int id, String title, String updateDate, String status, String image,
+      int likes) {
+    this.id = id;
+    this.title = title;
+    this.updateDate = updateDate;
+    this.status = status;
+    this.image = image;
+    this.likes = likes;
+  }
+
+  private UserNewsModel(Parcel in) {
+    id = in.readInt();
+    title = in.readString();
+    updateDate = in.readString();
+    status = in.readString();
+    image = in.readString();
+    likes = in.readInt();
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(id);
+    dest.writeString(title);
+    dest.writeString(updateDate);
+    dest.writeString(status);
+    dest.writeString(image);
+    dest.writeInt(likes);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getUpdateDate() {
+    return updateDate;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public int getLikes() {
+    return likes;
+  }
+
+
 }

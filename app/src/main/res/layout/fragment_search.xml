@@ -1,60 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/search_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/layout_search_content"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <android.support.design.widget.AppBarLayout
+      android:id="@+id/layout_bar"
+      style="@style/CollapsingToolbarStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+      <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize"
+        android:animateLayoutChanges="true"
+        app:popupTheme="@style/Toolbar">
+        <TextView
+          android:id="@+id/text_toolbar_title"
+          style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="@string/search_toolbar_label"
+          android:textColor="@android:color/white" />
+      </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.Space
+      android:layout_width="wrap_content"
+      android:layout_height="?attr/actionBarSize" />
+    <include
+      layout="@layout/input_item_search"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/abc_dialog_list_padding_vertical_material"
+      android:gravity="center"
+      tools:ignore="PrivateResource" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:animateLayoutChanges="true"
-            app:popupTheme="@style/Toolbar">
-
-            <TextView
-                android:id="@+id/toolbar_title"
-                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/search_toolbar_label"
-                android:textColor="@android:color/white"
-                />
-        </android.support.v7.widget.Toolbar>
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="In this Place will be search results"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/search_feed_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="feed news items"/>
-
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/view_search_feed_list"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      tools:ignore="PrivateResource"
+      tools:text="feed news items" />
+  </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 
 

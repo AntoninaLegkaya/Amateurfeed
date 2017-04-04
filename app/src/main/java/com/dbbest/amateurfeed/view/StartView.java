@@ -3,32 +3,31 @@ package com.dbbest.amateurfeed.view;
 import android.common.framework.IView;
 import android.support.annotation.NonNull;
 
-/**
- * Created by antonina on 19.01.17.
- */
 
 public interface StartView extends IView {
 
-    void showEmptyEmailError();
+  void showEmptyEmailError();
 
-    void showEmailValidationError();
+  void showEmailValidationError();
 
-    void showEmptyPasswordError();
+  void showEmptyPasswordError();
 
-    void showPasswordLengthValidationError();
+  void showPasswordLengthValidationError();
 
-    void showPasswordValidationError();
+  void showPasswordValidationError();
 
-    void showErrorConnectionDialog();
+  void showErrorConnectionDialog();
 
-    void showErrorLoginDialog();
+  void showErrorLoginDialog();
 
-    void showProgressDialog();
+  void showProgressDialog();
 
-    void dismissProgressDialog();
+  void dismissProgressDialog();
 
-    void navigateToHomeScreen();
+  void navigateToHomeScreen();
 
-    void showErrorIncorrectPassword();
+  void showErrorIncorrectPassword();
+
+  void requestPermission(int code, @NonNull String... permissions);
 
 }

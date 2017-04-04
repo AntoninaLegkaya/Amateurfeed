@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:id="@+id/layout_tag"
-              android:padding="@dimen/abc_list_item_padding_horizontal_material"
-    >
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/layout_tag"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:padding="@dimen/abc_list_item_padding_horizontal_material"
+  android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/item_tag_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@drawable/tab_text_link"
-        tools:text="#Tag1"/>
+  <TextView
+    android:id="@+id/item_tag_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:fontFamily="sans-serif"
+    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+    android:textColor="@drawable/tab_text_link"
+    android:textSize="14sp"
+    tools:text="#Tag1" />
 </LinearLayout>

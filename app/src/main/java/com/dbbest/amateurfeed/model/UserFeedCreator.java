@@ -2,56 +2,53 @@ package com.dbbest.amateurfeed.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
 public class UserFeedCreator {
-    @SerializedName("id")
-    private int mId;
 
-    @SerializedName("name")
-    private String mName;
+  @SerializedName("id")
+  private int id;
 
-
-    @SerializedName("isAdmin")
-    private boolean mIsAdmin;
-
-    @SerializedName("image")
-    private String mImage;
-
-    public UserFeedCreator(int id, String name, boolean isAdmin, String image) {
-        mId = id;
-        mName = name;
-        mIsAdmin = isAdmin;
-        mImage = image;
-    }
-
-    public int getId() {
-        return mId;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public boolean isAdmin() {
-        return mIsAdmin;
-    }
-
-    public String getImage() {
-        return mImage;
-    }
+  @SerializedName("name")
+  private String name;
 
 
-    @Override
-    public String toString() {
-        return "UserFeedCreator {" +
-                "mId=" + mId +
-                ", mName='" + mName + '\'' +
-                ", mIsAdmin='" + mIsAdmin + '\'' +
-                ", mIsAdmin='" + mIsAdmin + '\'' +
+  @SerializedName("isAdmin")
+  private boolean isAdmin;
+
+  @SerializedName("image")
+  private String image;
+
+  public UserFeedCreator(int id, String name, boolean isAdmin, String image) {
+    this.id = id;
+    this.name = name;
+    this.isAdmin = isAdmin;
+    this.image = image;
+  }
+
+  @Override
+  public String toString() {
+    return "UserFeedCreator {" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", isAdmin='" + isAdmin + '\'' +
+        ", isAdmin='" + isAdmin + '\'' +
         '}';
-    }
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public boolean isAdmin() {
+    return isAdmin;
+  }
+
+  public String getImage() {
+    return image;
+  }
 
 }

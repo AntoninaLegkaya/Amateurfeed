@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BaseDialogStyle" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowFullscreen">false</item>
-    </style>
+  <style name="BaseDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowBackground">@null</item>
+    <item name="android:windowFullscreen">false</item>
+  </style>
+
+
 </resources>

@@ -2,21 +2,17 @@ package com.dbbest.amateurfeed.app.net.response;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
 public class NewsResponseModel {
 
-    @SerializedName("id")
-    private int mId;
+  @SerializedName("newsId")
+  private int id;
 
-    public int getId() {
-        return mId;
-    }
+  public NewsResponseModel(int id) {
+    this.id = id;
+  }
 
-    public NewsResponseModel(int id) {
-
-        mId = id;
-    }
+  public int getId() {
+    return id;
+  }
 }

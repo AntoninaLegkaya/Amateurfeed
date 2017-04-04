@@ -1,53 +1,82 @@
 package com.dbbest.amateurfeed.app.net.request;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antonina on 26.01.17.
- */
 
-public class UpdateProfileRequestModel {
+public class UpdateProfileRequestModel implements Parcelable {
 
-    @SerializedName("fullName")
-    private String fullName;
-
-    @SerializedName("email")
-    private String mEmail;
-
-    @SerializedName("image")
-    private String mImage;
-
-    @SerializedName("phone")
-    private String mPhone;
-
-    @SerializedName("job")
-    private String mJob;
-
-    public UpdateProfileRequestModel(String fullName, String email, String image, String phone, String job) {
-        this.fullName = fullName;
-        mEmail = email;
-        mImage = image;
-        mPhone = phone;
-        mJob = job;
+  public static final Creator<UpdateProfileRequestModel> CREATOR = new Creator<UpdateProfileRequestModel>() {
+    @Override
+    public UpdateProfileRequestModel createFromParcel(Parcel in) {
+      return new UpdateProfileRequestModel(in);
     }
 
-    public String getFullName() {
-        return fullName;
+    @Override
+    public UpdateProfileRequestModel[] newArray(int size) {
+      return new UpdateProfileRequestModel[size];
     }
+  };
+  @SerializedName("fullName")
+  private String fullName;
+  @SerializedName("email")
+  private String email;
+  @SerializedName("image")
+  private String image;
+  @SerializedName("phone")
+  private String phone;
+  @SerializedName("job")
+  private String job;
 
-    public String getEmail() {
-        return mEmail;
-    }
+  public UpdateProfileRequestModel(String fullName, String email, String image, String phone,
+      String job) {
+    this.fullName = fullName;
+    this.email = email;
+    this.image = image;
+    this.phone = phone;
+    this.job = job;
+  }
 
-    public String getImage() {
-        return mImage;
-    }
+  private UpdateProfileRequestModel(Parcel in) {
+    fullName = in.readString();
+    email = in.readString();
+    image = in.readString();
+    phone = in.readString();
+    job = in.readString();
+  }
 
-    public String getPhone() {
-        return mPhone;
-    }
+  @Override
+  public int describeContents() {
+    return 0;
+  }
 
-    public String getJob() {
-        return mJob;
-    }
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(fullName);
+    dest.writeString(email);
+    dest.writeString(image);
+    dest.writeString(phone);
+    dest.writeString(job);
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public String getJob() {
+    return job;
+  }
 }

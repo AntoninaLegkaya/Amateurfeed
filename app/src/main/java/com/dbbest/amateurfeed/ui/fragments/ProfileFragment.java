@@ -1,133 +1,182 @@
 package com.dbbest.amateurfeed.ui.fragments;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.dbbest.amateurfeed.App;
 import com.dbbest.amateurfeed.R;
-import com.dbbest.amateurfeed.data.adapter.GridViewAdapter;
+import com.dbbest.amateurfeed.data.UserNewsEntry;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.ShowItemDetailsCallback;
+import com.dbbest.amateurfeed.data.adapter.ItemNewsAdapter.UserNewsHolder;
+import com.dbbest.amateurfeed.model.UserNewsModel;
 import com.dbbest.amateurfeed.presenter.ProfilePresenter;
-import com.dbbest.amateurfeed.ui.HomeActivity;
-import com.dbbest.amateurfeed.ui.util.UiActivityNavigation;
+import com.dbbest.amateurfeed.ui.navigator.UIDialogNavigation;
+import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
 import com.dbbest.amateurfeed.view.ProfileView;
-import com.melnykov.fab.FloatingActionButton;
-
 import java.util.ArrayList;
 
-/**
- * Created by antonina on 23.01.17.
- */
+public class ProfileFragment extends Fragment implements ProfileView,
+    LoaderManager.LoaderCallbacks<Cursor> {
 
-public class ProfileFragment extends Fragment implements ProfileView {
-    private final String PREFERENCE_FRAGMENT_TAG = "PREFTAG";
-    private static final String PARAM_KEY = "param_key";
-    private RecyclerView mRecyclerView;
-    private ImageButton mSettingsBtn;
-    private ArrayList<String> stringArrayList;
-    private RecyclerView.Adapter adapter;
+  public static final int COL_MY_NEWS_ID = 0;
+  public static final int COL_MY_NEWS_TITLE = 1;
+  public static final int COL_MY_NEWS_UPDATE_DATE = 2;
+  public static final int COL_MY_NEWS_STATUS = 3;
+  public static final int COL_MY_NEWS_IMAGE = 4;
+  public static final int COL_MY_NEWS_LIKES = 5;
+  public static final String LIST = "list";
+  private final int LOAD_MY_NEWS = 0;
+  private ProfilePresenter presenter;
+  private ItemNewsAdapter itemNewsAdapter;
 
-    ProfilePresenter mPresenter;
 
-    public static ProfileFragment newInstance(String key) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(PARAM_KEY, key);
-        fragment.setArguments(bundle);
-        return fragment;
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    presenter = new ProfilePresenter();
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    presenter.attachView(this);
+    presenter.getNews();
+
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    presenter.detachView();
+  }
+
+  @Override
+  public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    Uri previewListUri = com.dbbest.amateurfeed.data.UserNewsEntry.CONTENT_URI;
+    String sortOrder = UserNewsEntry.COLUMN_UPDATE_DATE + " DESC";
+    return new CursorLoader(getActivity(),
+        previewListUri,
+        UserNewsEntry.NEWS_COLUMNS,
+        null,
+        null,
+        sortOrder
+    );
+  }
+
+  @Override
+  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    if (loader.getId() == LOAD_MY_NEWS) {
+      if (data.moveToFirst()) {
+        itemNewsAdapter.swapCursor(data);
+      }
     }
+  }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPresenter = new ProfilePresenter();
+  @Override
+  public void onLoaderReset(Loader<Cursor> loader) {
+    itemNewsAdapter.swapCursor(null);
+  }
+
+  @Override
+  public void initLoader(Bundle data) {
+    ArrayList<UserNewsModel> list = data.getParcelableArrayList(LIST);
+    if (list != null && !list.isEmpty()) {
+      getLoaderManager().initLoader(LOAD_MY_NEWS, data, this);
+    } else {
+      showEmptySearchDialog();
     }
+  }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+  @Override
+  public void showEmptySearchDialog() {
+    UIDialogNavigation.showWarningDialog(R.string.search_error)
+        .show(getActivity().getSupportFragmentManager(), "warn");
+  }
 
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+
+    final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+    ImageView profileImage = (ImageView) rootView.findViewById(R.id.image_user_icon);
+    TextView profileName = (TextView) rootView.findViewById(R.id.text_user_name);
+    UserPreferences userPreferences = new UserPreferences();
+    String name = userPreferences.getFullName();
+    String imagePath = userPreferences.getImage();
+
+    if (profileImage != null) {
+      Glide.with(App.instance().getApplicationContext())
+          .load(imagePath)
+          .error(R.drawable.art_snow)
+          .crossFade()
+          .into(profileImage);
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.attachView(this);
-
+    if (profileName != null && name != null) {
+      profileName.setText(name);
     }
+    RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.view_my_feed_list);
+    ImageButton settingsBtn = (ImageButton) rootView.findViewById(R.id.button_settings);
+    settingsBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (view.getId() == R.id.button_settings) {
+          ((ProfileShowDetails) getActivity()).showPreferencesFragment();
+        }
+      }
+    });
+    FloatingActionButton floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab_edit_profile);
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mPresenter.detachView();
-    }
+    floatingActionButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        ((ProfileShowDetails) getActivity()).showEditProfileFragment();
+      }
+    });
 
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    mRecyclerView.setHasFixedSize(true);
 
-        final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+    GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+    mRecyclerView.setLayoutManager(layoutManager);
+    itemNewsAdapter = new ItemNewsAdapter(null, new ShowItemDetailsCallback() {
+      @Override
+      public void showUserNewsDetailFragment(UserNewsHolder vh, int id) {
+        ((ShowItemDetailsCallback) getActivity()).showUserNewsDetailFragment(vh, id);
+      }
+    });
+    mRecyclerView.setAdapter(itemNewsAdapter);
+    return rootView;
+  }
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.grid_feed_list_view);
-        mSettingsBtn = (ImageButton) rootView.findViewById(R.id.settings_button);
-        mSettingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (view.getId() == R.id.settings_button) {
-                    Toast.makeText(getActivity(), "Go to Settings Screen--->", Toast.LENGTH_SHORT).show();
+  public interface ProfileShowDetails {
 
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new PrefFragment(), PREFERENCE_FRAGMENT_TAG).commit();
-//                    startActivity(UiActivityNavigation.settingsActivity(getActivity()));
+    void showEditProfileFragment();
 
-                }
+    void showPreferencesFragment();
 
-            }
-        });
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.attachToRecyclerView(mRecyclerView);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "AddItem", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        FloatingActionButton fabEditeProfileBtn = (FloatingActionButton) rootView.findViewById(R.id.fab_edit);
-        fabEditeProfileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        EditProfileFragment.newInstance(""), HomeActivity.EDITE_PROFILE_FRAGMENT_TAG).commit();
-            }
-        });
-
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
-
-        mRecyclerView.setHasFixedSize(true);
-
-        //set GridLayoutManager
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
-        mRecyclerView.setLayoutManager(layoutManager);
-        adapter = new GridViewAdapter(getActivity());
-        mRecyclerView.setAdapter(adapter);
-
-        return rootView;
-    }
-
+    void showChangePasswordFragment();
+  }
 
 }

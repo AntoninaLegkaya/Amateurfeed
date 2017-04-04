@@ -1,20 +1,17 @@
 package com.dbbest.amateurfeed.model;
 
-/**
- * Created by antonina on 19.01.17.
- */
-
 public interface ActiveRecord<V> {
 
-    void purge();
+  void purge();
 
-    boolean isValid();
+  boolean isValid();
 
-    void subscribeChanges(OnRecordChangeListener<V> listener);
+  void subscribeChanges(OnRecordChangeListener<V> listener);
 
-    void unsubscribeChanges();
+  void unsubscribeChanges();
 
-    interface OnRecordChangeListener<V> {
-        void onRecordChanged(V value);
-    }
+  interface OnRecordChangeListener<V> {
+
+    void onRecordChanged(V value);
+  }
 }

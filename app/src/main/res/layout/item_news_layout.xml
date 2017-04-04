@@ -1,114 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout
-    android:id="@+id/item_news"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:columnCount="2">
-
-
-    <include
-        layout="@layout/item_news_header"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        app:layout_rowSpan="2"
-        />
-
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/layout_item_news"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  app:columnCount="2">
+  <include
+    layout="@layout/item_news_header"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_rowSpan="2" />
+  <TextView
+    android:id="@+id/text_description"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    android:textColor="@color/app_black"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_gravity="fill_horizontal"
+    app:layout_rowSpan="2"
+    tools:text="This is description" />
+  <LinearLayout
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    app:layout_columnWeight="1"
+    app:layout_gravity="center">
+    <ImageButton
+      android:id="@+id/button_like"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/abc_list_item_padding_horizontal_material"
+      android:layout_gravity="center_vertical"
+      android:background="@drawable/ic_favorite_border_white_24dp" />
     <TextView
-        android:id="@+id/list_item_description"
+      android:id="@+id/text_count_likes"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif"
+      android:gravity="center_horizontal"
+      android:textAppearance="@style/TextAppearance.AppCompat.Title"
+      android:textColor="@color/secondary_text"
+      app:layout_columnWeight="1"
+      app:layout_gravity="right"
+      tools:text="0" />
+  </LinearLayout>
+  <LinearLayout
+    android:padding="@dimen/abc_list_item_padding_horizontal_material"
+    app:layout_columnWeight="1"
+    app:layout_gravity="right">
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+      android:orientation="horizontal">
+      <ImageButton
+        android:id="@+id/button_comment"
         android:layout_width="wrap_content"
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
-        android:textColor="@color/app_black"
-        app:layout_columnSpan="2"
-        app:layout_columnWeight="1"
-        app:layout_gravity="fill_horizontal"
-        app:layout_rowSpan="2"
-        tools:text="This is description"
-        />
-
-    <LinearLayout
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
-        app:layout_columnWeight="1"
-        app:layout_gravity="center"
-        >
-
-        <ImageButton
-            android:id="@+id/like_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
-            android:background="@drawable/ic_favorite_border_white_24dp"
-            android:elevation="8dp"
-            />
-
-        <TextView
-            android:id="@+id/list_item_likes_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:gravity="center_horizontal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/secondary_text"
-            app:layout_columnWeight="1"
-            app:layout_gravity="right"
-            tools:text="0"/>
-
-
-        >
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:padding="@dimen/abc_list_item_padding_horizontal_material"
-        app:layout_columnWeight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/ic_comment_black_24dp"
+        android:elevation="8dp" />
+      <TextView
+        android:id="@+id/text_comment_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+        android:fontFamily="sans-serif"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/secondary_text"
         app:layout_gravity="right"
-        >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingRight="@dimen/abc_list_item_padding_horizontal_material">
-
-            <ImageButton
-                android:id="@+id/comment_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_comment_black_24dp"
-                android:elevation="8dp"
-                />
-
-            <TextView
-                android:id="@+id/list_item_comment_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:gravity="center_horizontal"
-                android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/secondary_text"
-                app:layout_gravity="right"
-                tools:text="0"/>
-        </LinearLayout>
-
-
-        <ImageButton
-            android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_delete_black_24dp"
-            android:elevation="8dp"
-            />
-
-
+        tools:text="0" />
     </LinearLayout>
-
-
+    <ImageButton
+      android:id="@+id/button_delete_item_news"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:background="@drawable/ic_delete_black_24dp" />
+  </LinearLayout>
 </android.support.v7.widget.GridLayout>
 
 

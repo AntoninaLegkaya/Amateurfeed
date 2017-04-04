@@ -4,55 +4,51 @@ import com.dbbest.amateurfeed.BuildConfig;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by antonina on 20.01.17.
- */
 
 public class ApiFactory {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static Retrofit mRetrofit;
-    private RestApiClient mRestApiClient;
-    private Gson mGson;
+  private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+  private Retrofit retrofit;
+  private RestApiClient restApiClient;
+  private Gson gson;
 
 
-    public  Retrofit retrofit() {
-        if (mRetrofit == null) {
+  public Retrofit retrofit() {
+    if (retrofit == null) {
 
-            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+      HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+      httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            mRetrofit = new Retrofit.Builder()
-                    .baseUrl(BuildConfig.API_SERVER_URL)
-                    .client(new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).addInterceptor(new StethoInterceptor()).build())
-                    .addConverterFactory(GsonConverterFactory.create(gson()))
-                    .build();
-        }
-        return mRetrofit;
+      retrofit = new Retrofit.Builder()
+          .baseUrl(BuildConfig.API_SERVER_URL)
+          .client(new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor)
+              .addInterceptor(new StethoInterceptor()).build())
+          .addConverterFactory(GsonConverterFactory.create(gson()))
+          .build();
+    }
+    return retrofit;
+  }
+
+  public RestApiClient restClient() {
+    if (restApiClient == null) {
+      RestApiServices service = retrofit().create(RestApiServices.class);
+      restApiClient = new RestApiClient(service);
+    }
+    return restApiClient;
+  }
+
+  private Gson gson() {
+    if (gson == null) {
+      gson = new GsonBuilder()
+          .setDateFormat(DATE_FORMAT)
+          .create();
     }
 
-    private Gson gson() {
-        if (mGson == null) {
-            mGson = new GsonBuilder()
-                    .setDateFormat(DATE_FORMAT)
-                    .create();
-        }
-
-        return mGson;
-    }
-
-
-    public RestApiClient restClient() {
-        if (mRestApiClient == null) {
-            RestApiServices service = retrofit().create(RestApiServices.class);
-            mRestApiClient = new RestApiClient(service);
-        }
-        return mRestApiClient;
-    }
+    return gson;
+  }
 }
