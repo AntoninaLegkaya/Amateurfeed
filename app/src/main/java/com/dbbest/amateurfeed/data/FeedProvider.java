@@ -51,8 +51,8 @@ public class FeedProvider extends ContentProvider {
   public static long TEST_TAG_ID = 1;
   public static String TEST_TAG_AUTHOR = "Tony";
   public static long TEST_ID = 1;
-  private static HashMap<String, String> sUserNesProjectionMap = new HashMap<String, String>();
-  private static HashMap<String, String> sPreviewProjectionMap = new HashMap<String, String>();
+  private static HashMap<String, String> sUserNesProjectionMap = new HashMap<>();
+  private static HashMap<String, String> sPreviewProjectionMap = new HashMap<>();
 
   static {
     for (int i = 0; i < UserNewsEntry.NEWS_COLUMNS.length; i++) {
@@ -112,7 +112,6 @@ public class FeedProvider extends ContentProvider {
     sCommentByIdQueryBuilder.setTables(CommentEntry.TABLE_NAME);
   }
 
-  private final String TAG_LOG = FeedProvider.class.getName();
   private FeedDbHelper mOpenHelper;
 
   static UriMatcher buildUriMatcher() {
@@ -140,7 +139,9 @@ public class FeedProvider extends ContentProvider {
 
   @Override
   public boolean onCreate() {
-    getContext().deleteDatabase(FeedDbHelper.DATABASE_NAME);
+    if (getContext() != null) {
+      getContext().deleteDatabase(FeedDbHelper.DATABASE_NAME);
+    }
     mOpenHelper = new FeedDbHelper(getContext());
     return true;
   }
@@ -600,7 +601,7 @@ public class FeedProvider extends ContentProvider {
       String sortOrder) {
     sTagByIdQueryBuilder.appendWhere(TagEntry._ID + "=" + uri.getPathSegments()
         .get(TagEntry.TAG_ID_PATH_POSITION));
-    Cursor c = sTagByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+    return sTagByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
         projection,
         selection,
         selectionArgs,
@@ -608,7 +609,7 @@ public class FeedProvider extends ContentProvider {
         null,
         sortOrder
     );
-    return c;
+
   }
 
   private Cursor getTagsListByIdPreview(Uri uri, String[] projection, String selection,
@@ -616,7 +617,7 @@ public class FeedProvider extends ContentProvider {
 
     String id = uri.getPathSegments().get(TagEntry.TAG_ID_PATH_POSITION);
 
-    Cursor c = sTagByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+    return sTagByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
         projection,
         sTagsListSelection,
         new String[]{id},
@@ -624,7 +625,7 @@ public class FeedProvider extends ContentProvider {
         null,
         sortOrder
     );
-    return c;
+
   }
 
   private Cursor getCommentsListByPostId(Uri uri, String[] projection, String selection,
@@ -632,7 +633,7 @@ public class FeedProvider extends ContentProvider {
 
     String id = uri.getPathSegments().get(CommentEntry.COMMENT_ID_PATH_POSITION);
 
-    Cursor c = sCommentByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+    return sCommentByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
         projection,
         sCommentListSelection,
         new String[]{id},
@@ -640,7 +641,7 @@ public class FeedProvider extends ContentProvider {
         null,
         sortOrder
     );
-    return c;
+
   }
 
   private Cursor getCreatorById(Uri uri, String[] projection, String selection,
@@ -648,7 +649,7 @@ public class FeedProvider extends ContentProvider {
 
     String id = uri.getPathSegments().get(CreatorEntry.CREATOR_ID_PATH_POSITION);
 
-    Cursor c = sCreatorByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+    return sCreatorByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
         projection,
         sCreatorSelection,
         new String[]{id},
@@ -656,7 +657,7 @@ public class FeedProvider extends ContentProvider {
         null,
         sortOrder
     );
-    return c;
+
   }
 
   private Cursor getIdCreatorByAuthor(Uri uri, String[] projection, String sortOrder) {

@@ -55,18 +55,21 @@ public class EditFragment extends Fragment {
     switch (requestCode) {
       case PHOTO_REQUEST_GALLERY:
         if (data != null) {
-          File sourceFile = new File(getRealPathFromURI(data.getData()));
-          File destFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
-          Log.i(TAG_PARENT, "File path: " + data.getData().getPath());
-          try {
-            Utils.copyFile(sourceFile, destFile);
-            Uri photoURI = FileProvider.getUriForFile(getContext(),
-                BuildConfig.APPLICATION_ID + ".provider",
-                destFile);
-            Log.i(TAG_PARENT, "Crop image from Gallery by Url : " + photoURI);
-            crop(photoURI);
-          } catch (IOException e) {
-            e.printStackTrace();
+          String realPathFromURI = getRealPathFromURI(data.getData());
+          if (realPathFromURI != null) {
+            File sourceFile = new File(realPathFromURI);
+            File destFile = new File(dir.getAbsolutePath(), PHOTO_FILE_NAME);
+            Log.i(TAG_PARENT, "File path: " + data.getData().getPath());
+            try {
+              Utils.copyFile(sourceFile, destFile);
+              Uri photoURI = FileProvider.getUriForFile(getContext(),
+                  BuildConfig.APPLICATION_ID + ".provider",
+                  destFile);
+              Log.i(TAG_PARENT, "Crop image from Gallery by Url : " + photoURI);
+              crop(photoURI);
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
           }
         }
         break;

@@ -112,14 +112,13 @@ public class AmateurfeedSyncAdapter extends AbstractThreadedSyncAdapter implemen
         /*
          * Since we've created an account
          */
-    configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+//    configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
 
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
     Log.i(TAG, "Account: " + newAccount.toString());
-    ContentResolver
-        .setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
+//    ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
 
         /*
          * Finally, let's do a sync to get things started

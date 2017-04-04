@@ -74,8 +74,6 @@ public class GetNewsCommand extends Command {
           String image;
           boolean isMy;
           ArrayList<TagModel> mTags;
-          int _idTag;
-          String mNameTag;
 
           ArrayList<UserFeedCommentModel> mComments;
 

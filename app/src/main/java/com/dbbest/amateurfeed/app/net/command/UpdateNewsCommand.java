@@ -60,7 +60,6 @@ public class UpdateNewsCommand extends Command {
     if (response != null) {
       if (response.isSuccessful() && response.data() != null) {
         ArrayList<NewsPreviewResponseModel> data = response.data();
-        int i = 0;
         for (NewsPreviewResponseModel preview : data) {
           long id;
           String title;
@@ -73,8 +72,6 @@ public class UpdateNewsCommand extends Command {
           String image;
           boolean isMy;
           ArrayList<TagModel> tagsList;
-          int _idTag;
-          String mNameTag;
           ArrayList<UserFeedCommentModel> mComments;
           id = preview.getId();
           title = preview.getTitle();
