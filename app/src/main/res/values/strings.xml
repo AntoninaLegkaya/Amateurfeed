@@ -67,6 +67,7 @@
 
   <!--Feed-->
   <string name="feed_toolbar_label">News</string>
+  <string name="count_item" translatable="false">1</string>
 
   <!--Search-->
   <string name="search_toolbar_label">Search</string>

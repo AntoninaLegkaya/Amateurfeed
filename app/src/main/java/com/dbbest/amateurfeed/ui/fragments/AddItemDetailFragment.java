@@ -134,7 +134,7 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
   public void refreshFeedNews(Bundle data) {
     int newsId = data.getInt(NEWS_ID);
     uriPreview = PreviewEntry.buildPreviewUriById(newsId);
-    Vector<ContentValues> cVTagsVector = new Vector<>(1);
+    Vector<ContentValues> cVPreviewVector = new Vector<>(1);
     ContentValues previewValues = new ContentValues();
     previewValues.put(PreviewEntry._ID, newsId);
     previewValues.put(PreviewEntry.COLUMN_TITLE, upTitle);
@@ -148,10 +148,10 @@ public class AddItemDetailFragment extends BaseEditDetailFragment implements Det
     previewValues.put(PreviewEntry.COLUMN_CREATE_DATE, createDate);
     previewValues.put(PreviewEntry.COLUMN_IMAGE, uploadImagePath);
     previewValues.put(PreviewEntry.COLUMN_IS_MY, 1);
-    cVTagsVector.add(previewValues);
-    if (cVTagsVector.size() > 0) {
-      ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
-      cVTagsVector.toArray(cvArray);
+    cVPreviewVector.add(previewValues);
+    if (cVPreviewVector.size() > 0) {
+      ContentValues[] cvArray = new ContentValues[cVPreviewVector.size()];
+      cVPreviewVector.toArray(cvArray);
       App.instance().getContentResolver()
           .bulkInsert(PreviewEntry.CONTENT_URI, cvArray);
     }

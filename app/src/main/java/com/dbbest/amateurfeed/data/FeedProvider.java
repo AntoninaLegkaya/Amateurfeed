@@ -558,10 +558,9 @@ public class FeedProvider extends ContentProvider {
     qb.setProjectionMap(sPreviewProjectionMap);
     qb.appendWhere(PreviewEntry._ID + "=" + uri.getPathSegments()
         .get(PreviewEntry.PREVIEW_ID_PATH_POSITION));
-    String orderBy = null;
     SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
-    return qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+    return qb.query(db, projection, selection, selectionArgs, null, null, null);
   }
 
   private Cursor getUserNewsByIdSelection(Uri uri, String[] projection, String selection,
@@ -571,10 +570,9 @@ public class FeedProvider extends ContentProvider {
     qb.setProjectionMap(sUserNesProjectionMap);
     qb.appendWhere(UserNewsEntry._ID + "=" + uri.getPathSegments()
         .get(UserNewsEntry.PREVIEW_ID_PATH_POSITION));
-    String orderBy = null;
     SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
-    return qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+    return qb.query(db, projection, selection, selectionArgs, null, null, null);
   }
 
   private Cursor getPreviewByAuthor(Uri uri, String[] projection, String sortOrder) {
@@ -681,8 +679,8 @@ public class FeedProvider extends ContentProvider {
   private int updateColumnInPreview(Uri uri, ContentValues cv, String selection,
       String[] selectionArgs) {
     String id = uri.getPathSegments().get(PreviewEntry.PREVIEW_ID_PATH_POSITION);
-    int rowsUpdated = mOpenHelper.getWritableDatabase().update(
+    return  mOpenHelper.getWritableDatabase().update(
         PreviewEntry.TABLE_NAME, cv, sPreviewSelection, new String[]{id});
-    return rowsUpdated;
+
   }
 }

@@ -17,10 +17,9 @@ import com.dbbest.amateurfeed.utils.Utils;
 
 public class TagAdapter extends CursorRecyclerAdapter<TagViewHolder> {
 
-  private final String TAG = TagAdapter.class.getName();
 
-  public TagAdapter(Cursor c, int flags) {
-    super(c, flags);
+  public TagAdapter() {
+    super(null, 0);
   }
 
   @Override
@@ -49,11 +48,11 @@ public class TagAdapter extends CursorRecyclerAdapter<TagViewHolder> {
     }
   }
 
-  class TagViewHolder extends RecyclerView.ViewHolder {
+  static class TagViewHolder extends RecyclerView.ViewHolder {
 
     private TextView tagName;
 
-    public TagViewHolder(final View view) {
+    TagViewHolder(final View view) {
       super(view);
       tagName = (TextView) view.findViewById(R.id.item_tag_name);
     }

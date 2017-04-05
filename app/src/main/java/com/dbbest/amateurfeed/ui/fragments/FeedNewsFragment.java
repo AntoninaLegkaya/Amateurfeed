@@ -178,7 +178,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
         }, new FeedAdapterLoadNews() {
 
       @Override
-      public void load(PreviewAdapter.PreviewAdapterViewHolder vh, int offset, int count) {
+      public void uploadNextNews(PreviewAdapter.PreviewAdapterViewHolder vh, int offset, int count) {
         ((Callback) getActivity()).upLoadNewsItems(offset, count);
         position = vh.getAdapterPosition() - 1;
       }
@@ -266,15 +266,12 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
                 if (null != vh) {
                   previewAdapter.selectView(vh);
                 }
-
                 return true;
               }
               return false;
             }
           });
     }
-
-
   }
 
   @Override

@@ -7,18 +7,24 @@
   android:layout_margin="@dimen/layout_margin"
   android:layout_gravity="center"
   app:columnCount="2">
-  <ImageButton
-    android:id="@+id/button_add_image_item"
-    android:layout_marginTop="@dimen/layout_margin_8dp"
+  <com.dbbest.amateurfeed.ui.customView.SquareLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/layout_margin_8dp"
     android:adjustViewBounds="true"
-    android:background="@mipmap/splash"
     android:clickable="true"
-    android:maxHeight="@dimen/preview_icon"
-    android:maxWidth="@dimen/preview_icon"
     app:layout_columnSpan="2"
     app:layout_columnWeight="1"
     app:layout_gravity="center"
-    app:layout_rowSpan="2" />
+    app:layout_rowSpan="2">
+    <ImageButton
+      android:id="@+id/button_add_image_item"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@mipmap/splash"
+      android:scaleType="centerCrop" />
+  </com.dbbest.amateurfeed.ui.customView.SquareLayout>
+
   <android.support.design.widget.TextInputLayout
     android:id="@+id/layout_title_input"
     style="@style/AppTheme.Widget.InputCommentField"

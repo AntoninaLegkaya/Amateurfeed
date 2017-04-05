@@ -51,23 +51,38 @@
     app:layout_gravity="fill_horizontal"
     app:layout_rowSpan="2"
     tools:text="This is First Text " />
-  <ImageView
-    android:id="@+id/image_news_photo"
-    android:layout_width="@dimen/preview_icon"
-    android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+  <com.dbbest.amateurfeed.ui.customView.SquareLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/abc_list_item_padding_horizontal_material"
     android:adjustViewBounds="true"
-    android:maxHeight="@dimen/preview_icon"
-    android:maxWidth="@dimen/preview_icon"
     app:layout_columnSpan="2"
     app:layout_columnWeight="1"
     app:layout_gravity="center"
-    app:layout_rowSpan="2"
-    tools:src="@mipmap/splash" />
+    app:layout_rowSpan="2">
+    <ImageView
+      android:id="@+id/image_news_photo"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop"
+      tools:src="@mipmap/splash" />
+  </com.dbbest.amateurfeed.ui.customView.SquareLayout>
   <android.support.v7.widget.RecyclerView
     android:id="@+id/view_tags_list"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:fontFamily="sans-serif"
+    app:layout_columnSpan="2"
+    app:layout_columnWeight="1"
+    app:layout_rowSpan="2" />
+  <TextView
+    android:id="@+id/text_tags_list"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:fontFamily="sans-serif"
+    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+    android:textColor="@drawable/tab_text_link"
+    android:textSize="14sp"
     app:layout_columnSpan="2"
     app:layout_columnWeight="1"
     app:layout_rowSpan="2" />

@@ -11,18 +11,21 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_columnWeight="1" />
-  <ImageButton
-    android:id="@+id/button_get_profile_image"
+  <com.dbbest.amateurfeed.ui.customView.SquareLayout
     android:layout_width="@dimen/profile_icon"
     android:layout_height="@dimen/profile_icon"
     android:adjustViewBounds="true"
-    android:background="@mipmap/splash"
     android:clickable="true"
-    android:maxHeight="@dimen/profile_icon"
-    android:maxWidth="@dimen/profile_icon"
     app:layout_columnWeight="1"
     app:layout_gravity="center"
-    app:layout_rowSpan="4" />
+    app:layout_rowSpan="4">
+    <ImageButton
+      android:id="@+id/button_get_profile_image"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@mipmap/splash"
+      android:scaleType="centerCrop" />
+  </com.dbbest.amateurfeed.ui.customView.SquareLayout>
   <include
     android:id="@+id/profile_input_user_email"
     layout="@layout/profile_input_user_email"

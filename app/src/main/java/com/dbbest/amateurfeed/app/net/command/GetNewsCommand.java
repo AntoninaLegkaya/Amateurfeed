@@ -13,6 +13,7 @@ import com.dbbest.amateurfeed.app.net.response.ResponseWrapper;
 import com.dbbest.amateurfeed.app.net.retrofit.RestApiClient;
 import com.dbbest.amateurfeed.data.CommentEntry;
 import com.dbbest.amateurfeed.data.CreatorEntry;
+import com.dbbest.amateurfeed.data.FeedProvider;
 import com.dbbest.amateurfeed.data.PreviewEntry;
 import com.dbbest.amateurfeed.data.TagEntry;
 import com.dbbest.amateurfeed.model.AuthToken;
@@ -145,7 +146,7 @@ public class GetNewsCommand extends Command {
   private void putTagsInfo(long _id, ArrayList<TagModel> mTags) {
     int _idTag;
     String mNameTag;
-    Vector<ContentValues> cVTagsVector = new Vector<>(mTags.size());
+//    Vector<ContentValues> cVTagsVector = new Vector<>(mTags.size());
     for (TagModel tag : mTags) {
       ContentValues tagValues = new ContentValues();
       _idTag = tag.getId();
@@ -153,14 +154,28 @@ public class GetNewsCommand extends Command {
       tagValues.put(TagEntry.COLUMN_TAG_ID, _idTag);
       tagValues.put(TagEntry.COLUMN_NAME, mNameTag);
       tagValues.put(TagEntry.COLUMN_PREVIEW_ID, _id);
-      cVTagsVector.add(tagValues);
+
+      int rowUpdate = App.instance().getContentResolver()
+          .update(TagEntry.CONTENT_URI, tagValues,
+              FeedProvider.sMultipleTagSelection,
+              new String[]{String.valueOf(_idTag), String.valueOf(_id)});
+      if (rowUpdate == 0) {
+        Log.i(TAG,
+            "This tag not exist! try to insert it [tagId, preview_id, nameTag]: " + "["
+                + _idTag + " , " + _id + " , "
+                + mNameTag + "]");
+        App.instance().getContentResolver()
+            .insert(TagEntry.CONTENT_URI, tagValues);
+      }
+
+//      cVTagsVector.add(tagValues);
     }
-    if (cVTagsVector.size() > 0) {
-      ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
-      cVTagsVector.toArray(cvArray);
-      App.instance().getContentResolver()
-          .bulkInsert(TagEntry.CONTENT_URI, cvArray);
-    }
+//    if (cVTagsVector.size() > 0) {
+//      ContentValues[] cvArray = new ContentValues[cVTagsVector.size()];
+//      cVTagsVector.toArray(cvArray);
+//      App.instance().getContentResolver()
+//          .bulkInsert(TagEntry.CONTENT_URI, cvArray);
+//    }
   }
 
   private void getCommentModel(ArrayList<UserFeedCommentModel> mComments) {

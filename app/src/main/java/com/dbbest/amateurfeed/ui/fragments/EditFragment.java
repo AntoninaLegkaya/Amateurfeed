@@ -145,8 +145,8 @@ public class EditFragment extends Fragment {
     intent.putExtra("aspectX", 1);
     intent.putExtra("aspectY", 1);
     //Crop the output image size
-    intent.putExtra("outputX", 100);
-    intent.putExtra("outputY", 100);
+    intent.putExtra("outputX", 150);
+    intent.putExtra("outputY", 150);
     //image type
     intent.putExtra("outputFormat", "JPEG");
     intent.putExtra("noFaceDetection", true);

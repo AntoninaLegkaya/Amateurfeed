@@ -422,9 +422,8 @@ public class EditItemDetailFragment extends BaseEditDetailFragment implements
     RecyclerView horizontalList = (RecyclerView) itemView.findViewById(R.id.view_tags_list);
     horizontalList.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-    tagAdapter = new TagAdapter(null, 0);
+    tagAdapter = new TagAdapter();
     horizontalList.setAdapter(tagAdapter);
-
     RecyclerView commentList = (RecyclerView) itemView.findViewById(R.id.view_comments_list);
     commentList.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

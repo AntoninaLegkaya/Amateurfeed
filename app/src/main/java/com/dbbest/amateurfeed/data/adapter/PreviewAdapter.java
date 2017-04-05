@@ -2,9 +2,9 @@ package com.dbbest.amateurfeed.data.adapter;
 
 import android.common.widget.CursorRecyclerAdapter;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +33,6 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
   private final FeedEditAdapterOnClickHandler editClickHandler;
   private final FeedRemoveAdapterOnClickHandler removeClickHandler;
   private final FeedAdapterLoadNews loadNewsHandler;
-  private TagAdapter tagAdapter;
 
 
   public PreviewAdapter(Cursor cursor, int flags,
@@ -94,24 +93,42 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
   public void onBindViewHolder(PreviewAdapterViewHolder holder, @Nullable Cursor cursor,
       int position) {
     if ((position >= getItemCount() - 1)) {
-      Log.i(TAG, "Load new items : count = 5  offset: " + getItemCount());
-      loadNewsHandler.load(holder, getItemCount(), 5);
+      Log.i(TAG, "Load new items : count = " + getItemCount() + ";  offset: " + getItemCount());
+      loadNewsHandler.uploadNextNews(holder, getItemCount(), 5);
     }
-
     if (cursor != null) {
-      cursor.moveToPosition(position);
-
       long mIdPreview = cursor.getLong(FeedNewsFragment.COL_FEED_ID);
+      Uri uriTagsList = TagEntry.getTagsListById(mIdPreview);
+      String sortOrder = TagEntry.COLUMN_PREVIEW_ID + " DESC";
+      Cursor cursorTags = App.instance().getContentResolver().query(
+          uriTagsList,
+          null,
+          null,
+          null,
+          sortOrder
+      );
+      if (cursorTags != null) {
+        StringBuilder tag = new StringBuilder();
+        Log.d(TAG, " PREVIEW_ADAPTER: " + DatabaseUtils.dumpCursorToString(cursorTags));
+        if (holder.tagView != null) {
+          if (cursorTags.moveToFirst()) {
+            do {
+              tag.append(" " + Utils.formatTagName(App.instance().getApplicationContext(),
+                  cursorTags.getString(FeedNewsFragment.COL_TAG_NAME))+ " " );
+            } while (cursorTags.moveToNext());
+          }
+          holder.tagView.setText(tag);
+        }
+      }
+
       Glide.with(App.instance().getApplicationContext())
           .load(cursor.getString(FeedNewsFragment.COL_AUTHOR_IMAGE))
           .error(R.drawable.art_snow)
           .crossFade()
           .into(holder.iconView);
-
       String fullName =
           cursor.getString(FeedNewsFragment.COL_AUTHOR);
-      holder.fullNameView.setText(fullName);
-
+      holder.fullNameView.setText(fullName + " " + mIdPreview);
       String description = cursor.getString(FeedNewsFragment.COL_TEXT);
       if (description != null) {
         holder.descriptionView.setText(description);
@@ -123,7 +140,7 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
 
       String date =
           cursor.getString(FeedNewsFragment.COL_CREATE_DATE);
-     String day = Utils
+      String day = Utils
           .getFriendlyDayString(App.instance().getApplicationContext(), Utils.getLongFromString(date),
               true);
       if (day == null) {
@@ -149,9 +166,7 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
         holder.likeButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
         holder.likeButton.setTag("0");
       }
-
       Uri uriCommentList = CommentEntry.getCommentsListById(mIdPreview);
-
       Cursor cursorComments = App.instance().getContentResolver().query(
           uriCommentList,
           null,
@@ -161,19 +176,8 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
       );
       int count = cursorComments != null ? cursorComments.getCount() : 0;
       holder.commentCountView.setText(String.valueOf(count));
-
-
-      Uri uriTagsList = TagEntry.getTagsListById(mIdPreview);
-      Cursor cursorTags = App.instance().getContentResolver().query(
-          uriTagsList,
-          null,
-          null,
-          null,
-          null
-      );
-
-      if (cursorTags != null) {
-        tagAdapter.swapCursor(cursorTags);
+      if (cursorComments != null) {
+        cursorComments.close();
       }
     }
   }
@@ -194,6 +198,7 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
     TextView fullNameView;
     TextView titleView;
     TextView dateView;
+    TextView tagView;
     ImageView imageView;
     TextView commentCountView;
     TextView descriptionView;
@@ -250,18 +255,15 @@ public class PreviewAdapter extends CursorRecyclerAdapter<PreviewAdapterViewHold
       removeButton = (ImageButton) view.findViewById(R.id.button_delete_item_news);
       removeButton.setOnClickListener(this);
       view.setOnClickListener(this);
-      RecyclerView horizontalList = (RecyclerView) view.findViewById(R.id.view_tags_list);
-      horizontalList.setLayoutManager(
-          new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
-      tagAdapter = new TagAdapter(null, 0);
-      horizontalList.setAdapter(tagAdapter);
+       tagView = (TextView) view.findViewById(R.id.text_tags_list);
+
     }
 
   }
 
   public interface FeedAdapterLoadNews {
 
-    void load(PreviewAdapter.PreviewAdapterViewHolder vh, int count, int offset);
+    void uploadNextNews(PreviewAdapter.PreviewAdapterViewHolder vh, int count, int offset);
   }
 
   public interface FeedAdapterOnClickHandler {
