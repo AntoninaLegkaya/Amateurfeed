@@ -19,8 +19,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
-//    supportLibraryVersion = '25.0.1'
-//    buildToolsVersion = '25.0.1'
     supportLibraryVersion = '24.2.1'
     buildToolsVersion = '24.0.2'
     ignoreFailures = false
