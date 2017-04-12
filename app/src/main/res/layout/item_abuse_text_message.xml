@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:id="@+id/layout_item_search"
+  android:id="@+id/layout_item_abuse"
   style="@style/AppTheme.Widget.InputSearchParamField"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_margin="@dimen/layout_margin"
   app:columnCount="3">
 
-  <ImageButton
-    android:id="@+id/button_search"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/abc_list_item_padding_horizontal_material"
-    android:background="@drawable/selector_search_image_button"
-    android:clickable="true"
-    android:elevation="4dp"
-    app:layout_gravity="center_vertical" />
-
   <android.support.design.widget.TextInputLayout
-    android:id="@+id/layout_search_input"
+    android:id="@+id/layout_abuse_input"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/layout_margin"
     app:layout_columnWeight="1"
     app:layout_gravity="fill_horizontal">
     <android.support.v7.widget.AppCompatEditText
-      android:id="@+id/text_search"
+      android:id="@+id/text_abuse"
       style="@style/Widget.Design.DetailTextInputLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -34,14 +24,13 @@
       android:paddingTop="@dimen/padding_2dp"
       android:ems="1"
       android:gravity="fill_horizontal"
-      android:hint="@string/search_hint"
+      android:hint="@string/abuse_text_hint"
       android:imeOptions="actionSearch"
-      android:inputType="text"
-      android:maxLines="1"
+      android:inputType="textMultiLine"
       android:textColor="@color/app_black" />
   </android.support.design.widget.TextInputLayout>
   <ImageButton
-    android:id="@+id/button_clear_search_param"
+    android:id="@+id/button_clear_abuse_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"

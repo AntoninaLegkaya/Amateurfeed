@@ -43,6 +43,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements ResetPas
     loginScreenLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+        finish();
         startActivity(UiActivityNavigation.startActivity(ResetPasswordActivity.this));
       }
     });
@@ -51,6 +52,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements ResetPas
       @Override
       public void onClick(View view) {
         if (view.getId() == R.id.text_sign_up_link) {
+          finish();
           startActivity(UiActivityNavigation.registerActivity(ResetPasswordActivity.this));
         }
       }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/layout_bar"
@@ -42,7 +42,7 @@
         <include
             layout="@layout/item_user_news_details"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="@dimen/abc_dialog_list_padding_vertical_material"
             android:gravity="center" />
     </android.support.v4.widget.NestedScrollView>

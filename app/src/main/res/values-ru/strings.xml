@@ -91,4 +91,8 @@
   <string name="input_password_length_error">Длина пароля должа быть не меньше 6 символов</string>
   <string name="notifier_push">Проверьте включены ли уведомления</string>
   <string name="edit_profile_location">Место расположения</string>
+  <string name="status_news_active">Активна</string>
+  <string name="status_news_pending">В ожидании</string>
+  <string name="abuse_text_hint">"Введите сообщение "</string>
+  <string name="text_you_label">Вы</string>
 </resources>

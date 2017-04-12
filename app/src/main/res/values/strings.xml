@@ -96,6 +96,8 @@
   <string name="publish_button">Publish</string>
   <string name="count_likes" translatable="false">0</string>
   <string name="count_comments" translatable="false">0</string>
+  <string name="status_news_active">Active</string>
+  <string name="status_news_pending">Pending</string>
 
   <!--Change Password Screen-->
   <string name="change_toolbar_label">Change Password</string>
@@ -108,7 +110,7 @@
   <string name="input_password_error">Wrong input new password</string>
   <string name="input_confirm_password_error">Wrong input confirm password</string>
   <string name="pass_confirm_password_error">New password and confirm password do not match</string>
-  <string name="input_password_length_error">Length of password would be over 6 symbols </string>
+  <string name="input_password_length_error">Length of password would not be less 6 symbols and Must contain at least one character</string>
 
   <!-- Strings related to Notification Enabled preference -->
   <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>
@@ -125,7 +127,7 @@
   <string name="emptyEmailError">Please enter e-mail</string>
   <string name="emptyPasswordError">Please enter password</string>
   <string name="emptyNameError">Please enter name</string>
-  <string name="lengthPasswordError">Password should not be less than 6 characters </string>
+  <string name="lengthPasswordError">Password should not be less than 6 symbols and Must contain at least one character</string>
   <string name="characterPasswordError">Passwords must have at least one lowercase (\'a\'-\'z\')</string>
   <string name="incorrectEmail">Incorrect e-mail address</string>
   <string name="incorrectName">Incorrect Name</string>
@@ -165,6 +167,9 @@
   <string name="set_add_comment_success" translatable="false">You Added Comment </string>
   <string name="add_news_success" translatable="false">You Add News </string>
   <string name="add_news_image">Select Your Image</string>
+
+  <!--Abuse Dialog-->
+  <string name="abuse_text_hint">Enter you message here</string>
 
   <!--Edit Profile Screen-->
   <string name="update_profile_success">Profile was updated</string>
@@ -208,4 +213,6 @@
   <string name="user_email">User email</string>
   <string name="user_name">User name</string>
 
+  <!--Comment-->
+  <string name="text_you_label">You</string>
 </resources>

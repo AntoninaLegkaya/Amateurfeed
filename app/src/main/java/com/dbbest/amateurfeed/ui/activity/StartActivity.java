@@ -47,6 +47,7 @@ public class StartActivity extends AppCompatActivity implements StartView {
       @Override
       public void onClick(View view) {
         if (view.getId() == R.id.text_sign_up_link) {
+          finish();
           startActivity(UiActivityNavigation.registerActivity(StartActivity.this));
         }
       }
@@ -56,6 +57,7 @@ public class StartActivity extends AppCompatActivity implements StartView {
       @Override
       public void onClick(View view) {
         if (view.getId() == R.id.text_reset_link) {
+          finish();
           startActivity(UiActivityNavigation.resetPassActivity(StartActivity.this));
         }
       }
@@ -119,6 +121,7 @@ public class StartActivity extends AppCompatActivity implements StartView {
 
   @Override
   public void navigateToHomeScreen() {
+    finish();
     startActivity(UiActivityNavigation.homeActivity(StartActivity.this));
   }
 

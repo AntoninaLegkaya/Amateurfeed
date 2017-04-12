@@ -79,7 +79,9 @@ public class UserNewsPreviewFragment extends Fragment {
         previewUpdateDate.setText(userNewsModel.getUpdateDate());
       }
       if (previewStatus != null && userNewsModel.getStatus() != null) {
-        previewStatus.setText(userNewsModel.getStatus());
+        String s = (userNewsModel.getStatus().equals("1")) ? getContext().getString(R.string.status_news_active)
+            : getContext().getString(R.string.status_news_pending);
+        previewStatus.setText(s);
       }
       if (previewCountLikes != null) {
         previewCountLikes.setText(String.valueOf(userNewsModel.getLikes()));

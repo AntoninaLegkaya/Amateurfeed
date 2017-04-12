@@ -16,10 +16,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.FeedProvider;
 import com.dbbest.amateurfeed.data.PreviewEntry;
@@ -79,6 +82,18 @@ public class SearchFragment extends Fragment implements SearchView,
         presenter.searchNews(searchField.getText().toString());
       }
     });
+    searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+          userNewsAdapter.changeCursor(null);
+          presenter.searchNews(searchField.getText().toString());
+          return true;
+        }
+        return false;
+      }
+    });
+
     RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.view_search_feed_list);
 
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -171,6 +186,7 @@ public class SearchFragment extends Fragment implements SearchView,
   }
 
   public interface Callback {
+
     void showItemDetailsFragment(UserNewsHolder vh, Uri uri, int typeItem);
   }
 }

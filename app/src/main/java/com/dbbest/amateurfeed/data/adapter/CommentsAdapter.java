@@ -15,13 +15,14 @@ import com.dbbest.amateurfeed.data.CreatorEntry;
 import com.dbbest.amateurfeed.data.adapter.CommentsAdapter.CommentViewHolder;
 import com.dbbest.amateurfeed.ui.fragments.FeedNewsFragment;
 import com.dbbest.amateurfeed.utils.Utils;
+import com.dbbest.amateurfeed.utils.preferences.UserPreferences;
 
 
 public class CommentsAdapter extends CursorRecyclerAdapter<CommentViewHolder> {
 
-
   public CommentsAdapter(Cursor cursor, int flags) {
     super(cursor, flags);
+
   }
 
   @Override
@@ -40,9 +41,14 @@ public class CommentsAdapter extends CursorRecyclerAdapter<CommentViewHolder> {
           holder.mCommentText.setText(cursor.getString(FeedNewsFragment.COL_COMMENT_BODY));
         }
         if (holder.mCommentAuthor != null) {
+          UserPreferences userPreferences = new UserPreferences();
           String author = getAuthorComment(cursor.getInt(FeedNewsFragment.COL_COMMENT_CREATOR_KEY));
           if (author != null) {
-            holder.mCommentAuthor.setText(author);
+            if (author.equals(userPreferences.getFullName())) {
+              holder.mCommentAuthor.setText(R.string.text_you_label);
+            } else {
+              holder.mCommentAuthor.setText(author);
+            }
           }
         }
         if (holder.mCommentDate != null) {

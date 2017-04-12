@@ -14,11 +14,9 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import com.dbbest.amateurfeed.R;
 import com.dbbest.amateurfeed.data.PreviewEntry;
 import com.dbbest.amateurfeed.data.adapter.PreviewAdapter;
@@ -100,17 +98,6 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     super.onStop();
   }
 
-//  @Override
-//  public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
-//    super.onInflate(activity, attrs, savedInstanceState);
-//    TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.FeedNewsFragment,
-//        0, 0);
-//    choiceMode = a
-//        .getInt(R.styleable.FeedNewsFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
-//    autoSelectView = a.getBoolean(R.styleable.FeedNewsFragment_autoSelectView, false);
-//    holdForTransition = a.getBoolean(R.styleable.FeedNewsFragment_sharedElementTransitions, false);
-//    a.recycle();
-//  }
 
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -180,7 +167,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
       @Override
       public void uploadNextNews(PreviewAdapter.PreviewAdapterViewHolder vh, int offset, int count) {
         ((Callback) getActivity()).upLoadNewsItems(offset, count);
-        position = vh.getAdapterPosition() - 1;
+        position = vh.getAdapterPosition() ;
       }
     }
     );
@@ -190,6 +177,7 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
     if (savedInstanceState != null) {
       if (savedInstanceState.containsKey(SELECTED_KEY)) {
         position = savedInstanceState.getInt(SELECTED_KEY);
+        recyclerView.smoothScrollToPosition(position);
       }
     }
     return rootView;
@@ -227,51 +215,51 @@ public class FeedNewsFragment extends Fragment implements LoaderManager.LoaderCa
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
     previewAdapter.swapCursor(data);
-    if (data.getCount() == 0) {
-      getActivity().supportStartPostponedEnterTransition();
-    } else {
-      recyclerView.getViewTreeObserver()
-          .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-              // Since we know we're going to get items, we keep the listener around until
-              // we see Children.
-              if (recyclerView.getChildCount() > 0) {
-                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                int pos = FeedNewsFragment.this.position;
-
-                if (pos == RecyclerView.NO_POSITION &&
-                    -1 != initialSelectedDate) {
-                  Cursor createData = previewAdapter.getCursor();
-                  int count = createData.getCount();
-                  int dateColumn = createData
-                      .getColumnIndex(PreviewEntry.COLUMN_CREATE_DATE);
-                  for (int i = 0; i < count; i++) {
-                    createData.moveToPosition(i);
-                    if (Utils.getLongFromString(createData.getString(dateColumn))
-                        == initialSelectedDate) {
-                      pos = i;
-                      Log.i(FEED_FRAGMENT,
-                          "Position Adapter: Get pos current day " + pos);
-                      break;
-                    }
-                  }
-                }
-                if (pos == RecyclerView.NO_POSITION) {
-                  pos = 0;
-                }
-                recyclerView.smoothScrollToPosition(pos);
-                RecyclerView.ViewHolder vh = recyclerView
-                    .findViewHolderForAdapterPosition(pos);
-                if (null != vh) {
-                  previewAdapter.selectView(vh);
-                }
-                return true;
-              }
-              return false;
-            }
-          });
-    }
+//    if (data.getCount() == 0) {
+//      getActivity().supportStartPostponedEnterTransition();
+//    } else {
+//      recyclerView.getViewTreeObserver()
+//          .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//              // Since we know we're going to get items, we keep the listener around until
+//              // we see Children.
+//              if (recyclerView.getChildCount() > 0) {
+//                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+//                int pos = FeedNewsFragment.this.position;
+//
+//                if (pos == RecyclerView.NO_POSITION &&
+//                    -1 != initialSelectedDate) {
+//                  Cursor createData = previewAdapter.getCursor();
+//                  int count = createData.getCount();
+//                  int dateColumn = createData
+//                      .getColumnIndex(PreviewEntry.COLUMN_CREATE_DATE);
+//                  for (int i = 0; i < count; i++) {
+//                    createData.moveToPosition(i);
+//                    if (Utils.getLongFromString(createData.getString(dateColumn))
+//                        == initialSelectedDate) {
+//                      pos = i;
+//                      Log.i(FEED_FRAGMENT,
+//                          "Position Adapter: Get pos current day " + pos);
+//                      break;
+//                    }
+//                  }
+//                }
+//                if (pos == RecyclerView.NO_POSITION) {
+//                  pos = 0;
+//                }
+//                recyclerView.smoothScrollToPosition(pos);
+//                RecyclerView.ViewHolder vh = recyclerView
+//                    .findViewHolderForAdapterPosition(pos);
+//                if (null != vh) {
+//                  previewAdapter.selectView(vh);
+//                }
+//                return true;
+//              }
+//              return false;
+//            }
+//          });
+//    }
   }
 
   @Override

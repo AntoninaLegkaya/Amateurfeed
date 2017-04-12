@@ -31,5 +31,5 @@ public interface SignUpView extends IView {
 
   void dismissProgressDialog();
 
-  void navigateToStartScreen();
+  void navigateToHomeScreen();
 }

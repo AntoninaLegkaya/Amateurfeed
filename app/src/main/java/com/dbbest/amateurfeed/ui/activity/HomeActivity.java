@@ -69,8 +69,8 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   public static final String MANAGE_FRAGMENTS = "ManageFragments";
   public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
   public static final String MODEL = "model";
-  private static final String TAG = HomeActivity.class.getName();
   public static final String STACKS = "stacks";
+  private static final String TAG = HomeActivity.class.getName();
   private DialogFragment progressDialog;
   private int isLikeFlag = 0;
   private int countIsLikes = 0;
@@ -245,7 +245,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   public void onDeleteItemSelected(Uri uri, PreviewAdapter.PreviewAdapterViewHolder vh) {
     uriId = uri;
     UIDialogNavigation
-        .warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, true, 100, this)
+        .abuseDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, "Abuse taxt", true, 100, this)
         .show(getSupportFragmentManager(), "abuse_dialog");
   }
 
@@ -349,10 +349,10 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   }
 
   @Override
-  public void onWarningDialogOkClicked(int dialogCode) {
+  public void onWarningDialogOkClicked(int dialogCode, String textMessage) {
     if (uriId != null) {
       long id = PreviewEntry.getIdFromUri(uriId);
-      presenter.putDelete(id, "Comment");
+      presenter.putDelete(id, textMessage);
     }
   }
 
@@ -380,7 +380,7 @@ public class HomeActivity extends AppCompatActivity implements TabHost.OnTabChan
   public void onDeleteItemSelected(Uri uri) {
     uriId = uri;
     UIDialogNavigation
-        .warningDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel,
+        .abuseDialog(R.string.abuse_dialog, R.string.ok, R.string.cancel, "Abuse text",
             true, 100, this)
         .show(getSupportFragmentManager(), "abuse_dialog");
   }

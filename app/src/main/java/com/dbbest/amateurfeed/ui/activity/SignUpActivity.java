@@ -42,6 +42,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
     loginScreenLink.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+        finish();
         startActivity(UiActivityNavigation.startActivity(SignUpActivity.this));
       }
     });
@@ -50,6 +51,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
       @Override
       public void onClick(View view) {
         if (view.getId() == R.id.text_reset_link) {
+          finish();
           startActivity(UiActivityNavigation.resetPassActivity(SignUpActivity.this));
         }
       }
@@ -160,8 +162,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
   }
 
   @Override
-  public void navigateToStartScreen() {
-    startActivity(UiActivityNavigation.startActivity(SignUpActivity.this));
+  public void navigateToHomeScreen() {
+    startActivity(UiActivityNavigation.homeActivity(SignUpActivity.this));
   }
 
   @NonNull

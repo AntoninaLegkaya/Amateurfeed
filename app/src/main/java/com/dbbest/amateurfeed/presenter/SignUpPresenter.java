@@ -38,7 +38,7 @@ public class SignUpPresenter extends Presenter<SignUpView> implements
     if (getView() != null) {
       getView().dismissProgressDialog();
       getView().showSuccessDialog();
-      getView().navigateToStartScreen();
+      getView().navigateToHomeScreen();
     }
   }
 

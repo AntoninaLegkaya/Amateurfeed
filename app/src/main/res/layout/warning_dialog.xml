@@ -5,23 +5,27 @@
   android:layout_height="wrap_content"
   android:background="@drawable/progress_dialog_bg">
   <!-- Need one more nested layout for dialog layout params hack -->
-  <FrameLayout
+
+  <LinearLayout
     android:layout_width="@dimen/warning_dialog_width"
-    android:layout_height="@dimen/warning_dialog_height"
-    tools:ignore="UselessParent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <TextView
       android:id="@+id/text_message"
       style="@style/WarningDialogMessageTextStyle"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginBottom="@dimen/warning_dialog_button_height"
-      android:paddingStart="@dimen/warning_dialog_content_horizontal_padding"
-      android:paddingEnd="@dimen/warning_dialog_content_horizontal_padding"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/warning_dialog_content_horizontal_padding"
       tools:text="Warning dialog text" />
+    <include
+      android:id="@+id/layout_abuse_input"
+      layout="@layout/item_abuse_text_message"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/warning_dialog_content_horizontal_padding" />
     <View
       android:layout_width="match_parent"
       android:layout_height="@dimen/warning_dialog_divider_size"
-      android:layout_marginBottom="@dimen/warning_dialog_button_height"
       android:layout_gravity="bottom"
       android:background="@color/warning_dialog_divider_color" />
     <LinearLayout
@@ -49,5 +53,5 @@
         android:layout_weight="1"
         android:text="@string/ok" />
     </LinearLayout>
-  </FrameLayout>
+  </LinearLayout>
 </FrameLayout>

@@ -33,4 +33,18 @@ public class UIDialogNavigation {
         .setCode(code)
         .build();
   }
+
+  public static DialogFragment abuseDialog(@StringRes int message, @StringRes int okText, @StringRes int cancelText, String textMessage,
+      boolean cancelable, int code,
+      WarningDialog.OnWarningDialogListener listener) {
+    return new WarningDialog.Builder()
+        .setMessageText(message)
+        .setMessageTextStr(textMessage)
+        .setOkText(okText)
+        .setCancelText(cancelText)
+        .setListener(listener)
+        .setCancelable(cancelable)
+        .setCode(code)
+        .build();
+  }
 }

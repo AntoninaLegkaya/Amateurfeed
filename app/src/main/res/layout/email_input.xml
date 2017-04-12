@@ -16,7 +16,6 @@
     android:layout_gravity="center"
     android:gravity="fill"
     android:hint="@string/login"
-    android:text="@string/login_text"
     android:textColor="@color/black" />
 
 </android.support.design.widget.TextInputLayout>

@@ -133,8 +133,6 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
       Preference exercisesPref = findPreference(key);
       if (exercisesPref instanceof CheckBoxPreference) {
 
-//Todo send server request for push-notification
-
       }
     }
   }
@@ -152,6 +150,7 @@ public class PreferFragment extends PreferenceFragmentCompat implements Preferen
 
   @Override
   public void navigateToStartScreen() {
+    getActivity().finish();
     startActivity(UiActivityNavigation.startActivity(getContext()));
   }
 

@@ -7,9 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatEditText;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.dbbest.amateurfeed.R;
 
@@ -45,6 +48,7 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
   @ColorRes
   private int messageColor;
   private int code;
+  private AppCompatEditText editMessageView;
   private OnWarningOkClickDialogListener okListener;
   private OnWarningDialogListener bothListener;
 
@@ -97,6 +101,17 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
     TextView cancelView = (TextView) rootView.findViewById(R.id.button_cancel);
     TextView messageView = (TextView) rootView.findViewById(R.id.text_message);
     View dividerView = rootView.findViewById(R.id.view_divider);
+    editMessageView = (AppCompatEditText) rootView.findViewById(R.id.text_abuse);
+    View abuseView = rootView.findViewById(R.id.layout_abuse_input);
+    ImageButton clearButton = (ImageButton) rootView.findViewById(R.id.button_clear_abuse_text);
+    if (clearButton != null && editMessageView != null) {
+      clearButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          editMessageView.setText("");
+        }
+      });
+    }
 
     if (okText != NO_VALUE) {
       okView.setText(okText);
@@ -121,6 +136,11 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
       messageView.setText(messageText);
     } else if (messageTextStr != null) {
       messageView.setText(messageTextStr);
+    }
+    if (messageTextStr != null) {
+      abuseView.setVisibility(View.VISIBLE);
+    } else {
+      abuseView.setVisibility(View.GONE);
     }
 
     if (messageColor != NO_VALUE) {
@@ -179,9 +199,17 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
   public void onClick(View v) {
     if (v.getId() == R.id.button_ok) {
       if (okListener != null) {
-        okListener.onWarningDialogOkClicked(code);
+        if (editMessageView != null) {
+          okListener.onWarningDialogOkClicked(code, editMessageView.getText().toString());
+        } else {
+          okListener.onWarningDialogOkClicked(code, messageTextStr);
+        }
       } else if (bothListener != null) {
-        bothListener.onWarningDialogOkClicked(code);
+        if (editMessageView != null) {
+          bothListener.onWarningDialogOkClicked(code, editMessageView.getText().toString());
+        } else {
+          bothListener.onWarningDialogOkClicked(code, messageTextStr);
+        }
       }
       dismissAllowingStateLoss();
     } else if (v.getId() == R.id.button_cancel) {
@@ -201,7 +229,9 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
     private int cancelText = NO_VALUE;
     @StringRes
     private int messageText = NO_VALUE;
+
     private String messageTextStr;
+
     private boolean cancelable;
     @ColorRes
     private int okColor = NO_VALUE;
@@ -231,6 +261,12 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
     public Builder setMessageText(int mess
     ) {
       this.messageText = mess;
+      return this;
+    }
+
+    public Builder setMessageTextStr(String mess
+    ) {
+      this.messageTextStr = mess;
       return this;
     }
 
@@ -271,7 +307,7 @@ public class WarningDialog extends BaseDialogFragment implements View.OnClickLis
 
   interface OnWarningOkClickDialogListener {
 
-    void onWarningDialogOkClicked(int dialogCode);
+    void onWarningDialogOkClicked(int dialogCode, String textMessage);
   }
 
   public interface OnWarningDialogListener extends OnWarningOkClickDialogListener {
